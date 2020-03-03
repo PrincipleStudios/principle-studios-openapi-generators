@@ -1,0 +1,84 @@
+{{>partial_header}}
+using System;
+using System.Linq;
+using System.Text;
+using System.Collections.Generic;
+using System.Runtime.Serialization;
+using System.ComponentModel.DataAnnotations;
+using Newtonsoft.Json;
+
+{{#models}}
+{{#model}}
+namespace {{packageName}}
+{ {{#isEnum}}{{>enumClass}}{{/isEnum}}{{^isEnum}}
+    /// <summary>
+    /// {{description}}
+    /// </summary>
+    public partial class {{classname}} : {{#parent}}{{{parent}}}, {{/parent}}IEquatable<{{classname}}>
+    {
+        public {{classname}}(
+            {{#vars}}    [JsonProperty(PropertyName="{{baseName}}"){{#required}}, Required{{/required}}]{{!
+            data type: }} {{#isEnum}}{{{datatypeWithEnum}}}{{^isContainer}}?{{/isContainer}}{{/isEnum}}{{^isEnum}}{{{dataType}}}{{/isEnum}}{{!
+            name: }} {{name}}{{#hasMore}}, {{/hasMore}}
+            {{/vars}})
+        { {{#vars}}
+            this.{{name}} = {{name}};{{/vars}}
+        }
+
+        {{#vars}}{{#isEnum}}{{>enumClass}}{{/isEnum}}{{#items.isEnum}}{{#items}}{{>enumClass}}{{/items}}{{/items.isEnum}}
+        /// <summary>
+        /// Gets {{^description}}{{{name}}}{{/description}}{{#description}}{{description}}{{/description}}
+        /// </summary>
+        {{#required}}
+        [Required]
+        {{/required}}
+        [JsonProperty(PropertyName="{{baseName}}")]
+        public {{#isEnum}}{{{datatypeWithEnum}}}{{^isContainer}}?{{/isContainer}}{{/isEnum}}{{^isEnum}}{{{dataType}}}{{/isEnum}} {{name}} { get; }
+        {{/vars}}
+
+        public override bool Equals(object obj)
+        {
+            if (obj is null) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            return obj.GetType() == GetType() && Equals(({{classname}})obj);
+        }
+
+        public bool Equals({{classname}} other)
+        {
+            if (other is null) return false;
+            if (ReferenceEquals(this, other)) return true;
+
+            return {{#vars}}{{^isContainer}}
+                (
+                    {{name}} == other.{{name}} ||
+                    {{^isEnum}}{{name}} != null &&
+                    {{/isEnum}}{{name}}.Equals(other.{{name}})
+                ){{#hasMore}} && {{/hasMore}}{{/isContainer}}{{#isContainer}}
+                (
+                    {{name}} == other.{{name}} ||
+                    {{name}} != null &&
+                    {{name}}.SequenceEqual(other.{{name}})
+                ){{#hasMore}} && {{/hasMore}}{{/isContainer}}{{/vars}}{{^vars}}false{{/vars}};
+        }
+
+        /// <summary>
+        /// Gets the hash code
+        /// </summary>
+        /// <returns>Hash code</returns>
+        public override int GetHashCode()
+        {
+            unchecked // Overflow is fine, just wrap
+            {
+                var hashCode = 41;
+                {{#vars}}
+                if ({{name}} != null)
+                    hashCode = hashCode * 59 + {{name}}.GetHashCode();
+                {{/vars}}
+                return hashCode;
+            }
+        }
+    }
+{{/isEnum}}
+{{/model}}
+{{/models}}
+}

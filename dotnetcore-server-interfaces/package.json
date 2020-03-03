@@ -1,0 +1,24 @@
+{
+  "name": "@principlestudios/openapi-codegen-dotnetcore-server-interfaces",
+  "version": "0.0.1",
+  "description": "A dotnet server code generator for principled development",
+  "scripts": {
+    "test": "jest"
+  },
+  "author": "Matt DeKrey",
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {
+    "@babel/cli": "^7.8.4",
+    "@babel/core": "^7.8.6",
+    "@babel/plugin-proposal-class-properties": "^7.8.3",
+    "@babel/preset-env": "^7.8.6",
+    "@babel/preset-typescript": "^7.8.3",
+    "@types/jest": "^25.1.3",
+    "@types/node": "^13.7.7",
+    "@types/rimraf": "^2.0.3",
+    "jest": "^25.1.0",
+    "rimraf": "^3.0.2",
+    "typescript": "^3.8.3"
+  }
+}

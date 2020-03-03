@@ -1,0 +1,33 @@
+plugins {
+  id "com.github.johnrengelman.shadow" version "4.0.4"
+}
+apply plugin: 'java'
+apply plugin: 'maven'
+
+group = 'org.openapitools'
+version = '1.0.0'
+
+description = """default-openapi-generator"""
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+tasks.withType(JavaCompile) {
+	options.encoding = 'UTF-8'
+}
+
+configurations.all {
+}
+
+repositories {
+
+     mavenCentral()
+}
+dependencies {
+    compile group: 'org.openapitools', name: 'openapi-generator-cli', version:'4.2.3'
+}
+//packaging tests
+task packageTests(type: Jar) {
+  from sourceSets.test.output
+  classifier = 'tests'
+}
+artifacts.archives packageTests

@@ -1,0 +1,35 @@
+{{>partial_header}}
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using System.ComponentModel.DataAnnotations;
+
+namespace {{packageName}}
+{ {{#operations}}
+    /// <summary>
+    /// {{description}}
+    /// </summary>{{#description}}
+    [Description("{{description}}")]{{/description}}
+    public abstract class {{classname}}ControllerBase : ControllerBase
+    { {{#operation}}
+        /// <summary>
+        /// {{#summary}}{{summary}}{{/summary}}
+        /// </summary>{{#notes}}
+        /// <remarks>{{notes}}</remarks>{{/notes}}{{#allParams}}
+        /// <param name="{{paramName}}">{{description}}</param>{{/allParams}}
+        [{{httpMethod}}]
+        [Route("{{{basePathWithoutHost}}}{{{path}}}")]
+        {{!
+        }}{{#responses}}
+        [ProducesResponseType({{code}}{{#dataType}}, Type = typeof({{&dataType}}){{/dataType}})] // {{message}}{{/responses}}{{!
+        }}{{#authMethods}}
+        [Authorize("{{name}}")]{{/authMethods}}
+        public abstract Task<IActionResult> {{operationId}}({{#allParams}}
+            {{>pathParam}}{{>queryParam}}{{>bodyParam}}{{>formParam}}{{>headerParam}}{{#hasMore}},{{/hasMore}}{{/allParams}});
+        {{/operation}}
+    }
+{{/operations}}
+}
