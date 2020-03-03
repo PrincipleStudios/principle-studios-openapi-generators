@@ -1,4 +1,4 @@
 *.local.*
 node_modules/
-**/out.local/
+**/out.local*/
 **/*.tgz

@@ -26,6 +26,6 @@
     "tests/"
   ],
   "exclude": [
-    "tests/**/out.local/*"
+    "tests/**/out.local*/*"
   ]
 }
