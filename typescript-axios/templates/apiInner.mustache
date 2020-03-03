@@ -272,31 +272,20 @@ export class {{classname}} implements {{classname}}Interface {
 {{^withInterfaces}}
 export class {{classname}} {
 {{/withInterfaces}}
-    private readonly fp: ReturnType<typeof {{classname}}Fp>;
     constructor(
-        readonly axios: AxiosInstance,
-        readonly configuration?: Configuration,
-        readonly basePath: string = BASE_PATH
+        axios: AxiosInstance,
+        configuration?: Configuration,
+        basePath: string = BASE_PATH
     ) {
-        this.fp = {{classname}}Fp(this.axios, this.basePath, this.configuration);
+        const fp = {{classname}}Fp(axios, basePath, configuration);
+
+        {{#operation}}
+        this.{{nickname}} = fp.{{nickname}};
+        {{/operation}}
     }
 
     {{#operation}}
-    /**
-     * {{&notes}}
-     {{#summary}}
-     * @summary {{&summary}}
-     {{/summary}}
-     {{#allParams}}
-     * @param {{=<% %>=}}{<%&dataType%>}<%={{ }}=%> {{^required}}[{{/required}}{{paramName}}{{^required}}]{{/required}} {{description}}
-     {{/allParams}}
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof {{classname}}
-     */
-    public {{nickname}}({{#allParams}}{{paramName}}{{^required}}?{{/required}}: {{{dataType}}}, {{/allParams}}options?: any) {
-        return this.fp.{{nickname}}({{#allParams}}{{paramName}}, {{/allParams}}options);
-    }
+    public readonly {{nickname}}: ReturnType<typeof {{classname}}Fp>["{{nickname}}"];
 
     {{/operation}}
 }

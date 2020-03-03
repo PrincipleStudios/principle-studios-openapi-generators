@@ -763,114 +763,38 @@ export const PetApiFp = function(axios: AxiosInstance, basePath: string = BASE_P
  * @class PetApi
  */
 export class PetApi {
-    private readonly fp: ReturnType<typeof PetApiFp>;
     constructor(
-        readonly axios: AxiosInstance,
-        readonly configuration?: Configuration,
-        readonly basePath: string = BASE_PATH
+        axios: AxiosInstance,
+        configuration?: Configuration,
+        basePath: string = BASE_PATH
     ) {
-        this.fp = PetApiFp(this.axios, this.basePath, this.configuration);
+        const fp = PetApiFp(axios, basePath, configuration);
+
+        this.addPet = fp.addPet;
+        this.deletePet = fp.deletePet;
+        this.findPetsByStatus = fp.findPetsByStatus;
+        this.findPetsByTags = fp.findPetsByTags;
+        this.getPetById = fp.getPetById;
+        this.updatePet = fp.updatePet;
+        this.updatePetWithForm = fp.updatePetWithForm;
+        this.uploadFile = fp.uploadFile;
     }
 
-    /**
-     * 
-     * @summary Add a new pet to the store
-     * @param {Pet} pet Pet object that needs to be added to the store
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof PetApi
-     */
-    public addPet(pet: Pet, options?: any) {
-        return this.fp.addPet(pet, options);
-    }
+    public readonly addPet: ReturnType<typeof PetApiFp>[\\"addPet\\"];
 
-    /**
-     * 
-     * @summary Deletes a pet
-     * @param {number} petId Pet id to delete
-     * @param {string} [apiKey] 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof PetApi
-     */
-    public deletePet(petId: number, apiKey?: string, options?: any) {
-        return this.fp.deletePet(petId, apiKey, options);
-    }
+    public readonly deletePet: ReturnType<typeof PetApiFp>[\\"deletePet\\"];
 
-    /**
-     * Multiple status values can be provided with comma separated strings
-     * @summary Finds Pets by status
-     * @param {Array<'available' | 'pending' | 'sold'>} status Status values that need to be considered for filter
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof PetApi
-     */
-    public findPetsByStatus(status: Array<'available' | 'pending' | 'sold'>, options?: any) {
-        return this.fp.findPetsByStatus(status, options);
-    }
+    public readonly findPetsByStatus: ReturnType<typeof PetApiFp>[\\"findPetsByStatus\\"];
 
-    /**
-     * Muliple tags can be provided with comma separated strings. Use tag1, tag2, tag3 for testing.
-     * @summary Finds Pets by tags
-     * @param {Array<string>} tags Tags to filter by
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof PetApi
-     */
-    public findPetsByTags(tags: Array<string>, options?: any) {
-        return this.fp.findPetsByTags(tags, options);
-    }
+    public readonly findPetsByTags: ReturnType<typeof PetApiFp>[\\"findPetsByTags\\"];
 
-    /**
-     * Returns a single pet
-     * @summary Find pet by ID
-     * @param {number} petId ID of pet to return
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof PetApi
-     */
-    public getPetById(petId: number, options?: any) {
-        return this.fp.getPetById(petId, options);
-    }
+    public readonly getPetById: ReturnType<typeof PetApiFp>[\\"getPetById\\"];
 
-    /**
-     * 
-     * @summary Update an existing pet
-     * @param {Pet} pet Pet object that needs to be added to the store
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof PetApi
-     */
-    public updatePet(pet: Pet, options?: any) {
-        return this.fp.updatePet(pet, options);
-    }
+    public readonly updatePet: ReturnType<typeof PetApiFp>[\\"updatePet\\"];
 
-    /**
-     * 
-     * @summary Updates a pet in the store with form data
-     * @param {number} petId ID of pet that needs to be updated
-     * @param {string} [name] Updated name of the pet
-     * @param {string} [status] Updated status of the pet
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof PetApi
-     */
-    public updatePetWithForm(petId: number, name?: string, status?: string, options?: any) {
-        return this.fp.updatePetWithForm(petId, name, status, options);
-    }
+    public readonly updatePetWithForm: ReturnType<typeof PetApiFp>[\\"updatePetWithForm\\"];
 
-    /**
-     * 
-     * @summary uploads an image
-     * @param {number} petId ID of pet to update
-     * @param {any} [body] 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof PetApi
-     */
-    public uploadFile(petId: number, body?: any, options?: any) {
-        return this.fp.uploadFile(petId, body, options);
-    }
+    public readonly uploadFile: ReturnType<typeof PetApiFp>[\\"uploadFile\\"];
 
 }
 
@@ -1083,61 +1007,26 @@ export const StoreApiFp = function(axios: AxiosInstance, basePath: string = BASE
  * @class StoreApi
  */
 export class StoreApi {
-    private readonly fp: ReturnType<typeof StoreApiFp>;
     constructor(
-        readonly axios: AxiosInstance,
-        readonly configuration?: Configuration,
-        readonly basePath: string = BASE_PATH
+        axios: AxiosInstance,
+        configuration?: Configuration,
+        basePath: string = BASE_PATH
     ) {
-        this.fp = StoreApiFp(this.axios, this.basePath, this.configuration);
+        const fp = StoreApiFp(axios, basePath, configuration);
+
+        this.deleteOrder = fp.deleteOrder;
+        this.getInventory = fp.getInventory;
+        this.getOrderById = fp.getOrderById;
+        this.placeOrder = fp.placeOrder;
     }
 
-    /**
-     * For valid response try integer IDs with positive integer value. Negative or non-integer values will generate API errors
-     * @summary Delete purchase order by ID
-     * @param {number} orderId ID of the order that needs to be deleted
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof StoreApi
-     */
-    public deleteOrder(orderId: number, options?: any) {
-        return this.fp.deleteOrder(orderId, options);
-    }
+    public readonly deleteOrder: ReturnType<typeof StoreApiFp>[\\"deleteOrder\\"];
 
-    /**
-     * Returns a map of status codes to quantities
-     * @summary Returns pet inventories by status
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof StoreApi
-     */
-    public getInventory(options?: any) {
-        return this.fp.getInventory(options);
-    }
+    public readonly getInventory: ReturnType<typeof StoreApiFp>[\\"getInventory\\"];
 
-    /**
-     * For valid response try integer IDs with value >= 1 and <= 10. Other values will generated exceptions
-     * @summary Find purchase order by ID
-     * @param {number} orderId ID of pet that needs to be fetched
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof StoreApi
-     */
-    public getOrderById(orderId: number, options?: any) {
-        return this.fp.getOrderById(orderId, options);
-    }
+    public readonly getOrderById: ReturnType<typeof StoreApiFp>[\\"getOrderById\\"];
 
-    /**
-     * 
-     * @summary Place an order for a pet
-     * @param {Order} order order placed for purchasing the pet
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof StoreApi
-     */
-    public placeOrder(order: Order, options?: any) {
-        return this.fp.placeOrder(order, options);
-    }
+    public readonly placeOrder: ReturnType<typeof StoreApiFp>[\\"placeOrder\\"];
 
 }
 
@@ -1551,111 +1440,38 @@ export const UserApiFp = function(axios: AxiosInstance, basePath: string = BASE_
  * @class UserApi
  */
 export class UserApi {
-    private readonly fp: ReturnType<typeof UserApiFp>;
     constructor(
-        readonly axios: AxiosInstance,
-        readonly configuration?: Configuration,
-        readonly basePath: string = BASE_PATH
+        axios: AxiosInstance,
+        configuration?: Configuration,
+        basePath: string = BASE_PATH
     ) {
-        this.fp = UserApiFp(this.axios, this.basePath, this.configuration);
+        const fp = UserApiFp(axios, basePath, configuration);
+
+        this.createUser = fp.createUser;
+        this.createUsersWithArrayInput = fp.createUsersWithArrayInput;
+        this.createUsersWithListInput = fp.createUsersWithListInput;
+        this.deleteUser = fp.deleteUser;
+        this.getUserByName = fp.getUserByName;
+        this.loginUser = fp.loginUser;
+        this.logoutUser = fp.logoutUser;
+        this.updateUser = fp.updateUser;
     }
 
-    /**
-     * This can only be done by the logged in user.
-     * @summary Create user
-     * @param {User} user Created user object
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof UserApi
-     */
-    public createUser(user: User, options?: any) {
-        return this.fp.createUser(user, options);
-    }
+    public readonly createUser: ReturnType<typeof UserApiFp>[\\"createUser\\"];
 
-    /**
-     * 
-     * @summary Creates list of users with given input array
-     * @param {Array<User>} user List of user object
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof UserApi
-     */
-    public createUsersWithArrayInput(user: Array<User>, options?: any) {
-        return this.fp.createUsersWithArrayInput(user, options);
-    }
+    public readonly createUsersWithArrayInput: ReturnType<typeof UserApiFp>[\\"createUsersWithArrayInput\\"];
 
-    /**
-     * 
-     * @summary Creates list of users with given input array
-     * @param {Array<User>} user List of user object
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof UserApi
-     */
-    public createUsersWithListInput(user: Array<User>, options?: any) {
-        return this.fp.createUsersWithListInput(user, options);
-    }
+    public readonly createUsersWithListInput: ReturnType<typeof UserApiFp>[\\"createUsersWithListInput\\"];
 
-    /**
-     * This can only be done by the logged in user.
-     * @summary Delete user
-     * @param {string} username The name that needs to be deleted
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof UserApi
-     */
-    public deleteUser(username: string, options?: any) {
-        return this.fp.deleteUser(username, options);
-    }
+    public readonly deleteUser: ReturnType<typeof UserApiFp>[\\"deleteUser\\"];
 
-    /**
-     * 
-     * @summary Get user by user name
-     * @param {string} username The name that needs to be fetched. Use user1 for testing. 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof UserApi
-     */
-    public getUserByName(username: string, options?: any) {
-        return this.fp.getUserByName(username, options);
-    }
+    public readonly getUserByName: ReturnType<typeof UserApiFp>[\\"getUserByName\\"];
 
-    /**
-     * 
-     * @summary Logs user into the system
-     * @param {string} username The user name for login
-     * @param {string} password The password for login in clear text
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof UserApi
-     */
-    public loginUser(username: string, password: string, options?: any) {
-        return this.fp.loginUser(username, password, options);
-    }
+    public readonly loginUser: ReturnType<typeof UserApiFp>[\\"loginUser\\"];
 
-    /**
-     * 
-     * @summary Logs out current logged in user session
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof UserApi
-     */
-    public logoutUser(options?: any) {
-        return this.fp.logoutUser(options);
-    }
+    public readonly logoutUser: ReturnType<typeof UserApiFp>[\\"logoutUser\\"];
 
-    /**
-     * This can only be done by the logged in user.
-     * @summary Updated user
-     * @param {string} username name that need to be updated
-     * @param {User} user Updated user object
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof UserApi
-     */
-    public updateUser(username: string, user: User, options?: any) {
-        return this.fp.updateUser(username, user, options);
-    }
+    public readonly updateUser: ReturnType<typeof UserApiFp>[\\"updateUser\\"];
 
 }
 
