@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`typescript-client-fetch can generate the api file 1`] = `
-"// tslint:disable
+exports[`typescript-axios petstore.yaml can generate the api file 1`] = `
+"/* eslint-disable */
 /**
  * Swagger Petstore
  * A sample API that uses a petstore as an example to demonstrate features in the OpenAPI 3.0 specification
@@ -363,8 +363,8 @@ export class DefaultApi {
 "
 `;
 
-exports[`typescript-client-fetch can generate the base file 1`] = `
-"// tslint:disable
+exports[`typescript-axios petstore.yaml can generate the base file 1`] = `
+"/* eslint-disable */
 /**
  * Swagger Petstore
  * A sample API that uses a petstore as an example to demonstrate features in the OpenAPI 3.0 specification
@@ -416,8 +416,8 @@ export class RequiredError extends Error {
 "
 `;
 
-exports[`typescript-client-fetch can generate the configuration file 1`] = `
-"// tslint:disable
+exports[`typescript-axios petstore.yaml can generate the configuration file 1`] = `
+"/* eslint-disable */
 /**
  * Swagger Petstore
  * A sample API that uses a petstore as an example to demonstrate features in the OpenAPI 3.0 specification
@@ -441,8 +441,8 @@ export interface Configuration {
 "
 `;
 
-exports[`typescript-client-fetch can generate the index file 1`] = `
-"// tslint:disable
+exports[`typescript-axios petstore.yaml can generate the index file 1`] = `
+"/* eslint-disable */
 /**
  * Swagger Petstore
  * A sample API that uses a petstore as an example to demonstrate features in the OpenAPI 3.0 specification
@@ -457,6 +457,5 @@ exports[`typescript-client-fetch can generate the index file 1`] = `
 
 
 export * from \\"./api\\";
-export * from \\"./configuration\\";
-"
+export * from \\"./configuration\\";"
 `;
