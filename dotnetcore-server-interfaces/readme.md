@@ -1,9 +1,13 @@
 OpenAPI generator for ASP.Net Core Interfaces.
 
-To build:
+To install:
 
-    call ../gradlew shadowJar
+    npm i -D @principlestudios/openapi-codegen-dotnetcore-server-interfaces
 
-To generate:
+To generate, add this to your npm scripts:
 
-    java -cp build\libs\default-openapi-generator-1.0.0-all.jar org.openapitools.codegen.OpenAPIGenerator generate -i <openapi-file.yaml> -o <output-folder> -g dotnetcore-interfaces
+    "generateDotNet": "openapi-generator-dotnet generate -g com.principlestudios.codegen.DotNetCoreInterfacesGenerator -o outDir -i ../samples/petstore.yaml"
+
+Then:
+
+    npm run generateDotNet

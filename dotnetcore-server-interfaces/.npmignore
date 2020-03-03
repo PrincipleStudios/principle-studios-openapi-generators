@@ -6,7 +6,6 @@ tests/
 tsconfig.json
 .gitignore
 babel.config.js
-bin/
 .settings/
 .classpath
 .project
