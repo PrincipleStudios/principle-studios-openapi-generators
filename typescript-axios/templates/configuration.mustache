@@ -1,0 +1,10 @@
+// tslint:disable
+{{>licenseInfo}}
+
+export interface Configuration {
+    apiKey?: string | ((name: string) => string);
+    username?: string;
+    password?: string;
+    accessToken?: string | ((name?: string, scopes?: string[]) => string);
+    baseOptions?: any;
+}

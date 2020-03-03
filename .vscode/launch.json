@@ -1,0 +1,21 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Launch Generator",
+            "program": "${workspaceFolder}\\typescript-axios\\node_modules/@openapitools/openapi-generator-cli/bin/openapi-generator",
+            "args": [
+                "generate", "-i", "samples/petstore.yaml", "-g", "typescript-axios", "-o", "typescript-axios/out.local",
+                "-t", "typescript-axios/templates/"
+            ],
+            "outFiles": [
+                "${workspaceFolder}/**/*.js"
+            ]
+        }
+    ]
+}
