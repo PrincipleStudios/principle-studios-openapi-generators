@@ -1,10 +1,10 @@
-package org.openapitools.codegen;
+package com.principlestudios.codegen;
 
 import com.samskivert.mustache.Mustache;
 import io.swagger.v3.oas.models.OpenAPI;
 import org.openapitools.codegen.*;
 import org.openapitools.codegen.languages.*;
-import io.swagger.models.properties.*;
+// import io.swagger.models.properties.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

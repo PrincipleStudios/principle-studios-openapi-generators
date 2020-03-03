@@ -3,11 +3,14 @@
   "version": "0.0.1",
   "description": "A dotnet server code generator for principled development",
   "scripts": {
+    "build": "gradlew build",
     "test": "jest"
   },
   "author": "Matt DeKrey",
   "license": "MIT",
-  "dependencies": {},
+  "dependencies": {
+    "@openapitools/openapi-generator-cli": "^1.0.10-4.2.3"
+  },
   "devDependencies": {
     "@babel/cli": "^7.8.4",
     "@babel/core": "^7.8.6",

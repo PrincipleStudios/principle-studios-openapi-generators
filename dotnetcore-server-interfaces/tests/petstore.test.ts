@@ -7,7 +7,7 @@ describe('typescript-axios petstore.yaml', () => {
     const source = path.join(__dirname, "../../samples/petstore.yaml");
 
     beforeAll(async () => {
-        await runCodegen(outputDir, `generate -i "${source}" -g dotnetcore-interfaces --additional-properties packageName=PrincipleStudios.Demo`);
+        await runCodegen(outputDir, `generate -i "${source}" --additional-properties packageName=PrincipleStudios.Demo`);
     })
 
     verifyAllFiles(outputDir);
