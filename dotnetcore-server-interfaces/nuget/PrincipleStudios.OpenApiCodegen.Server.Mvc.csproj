@@ -15,7 +15,7 @@ Adds MSBuild targets to generate C# controller base classes from an OpenAPI spec
     <NuspecProperties>publishDir=$([MSBuild]::NormalizeDirectory($(IntermediatePackDir)))</NuspecProperties>
 
     <ToolsDir>$(MSBuildThisFileDirectory)../../tools/</ToolsDir>
-    <JavaRootDir>$(MSBuildThisFileDirectory)../</JavaRootDir>
+    <JavaRootDir>$(MSBuildThisFileDirectory)../java/</JavaRootDir>
     <NpmRootDir>$(MSBuildThisFileDirectory)../npm/</NpmRootDir>
   </PropertyGroup>
 
