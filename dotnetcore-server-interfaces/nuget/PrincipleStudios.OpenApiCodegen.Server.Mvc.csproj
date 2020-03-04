@@ -16,7 +16,7 @@ Adds MSBuild targets to generate C# controller base classes from an OpenAPI spec
 
     <ToolsDir>$(MSBuildThisFileDirectory)../../tools/</ToolsDir>
     <JavaRootDir>$(MSBuildThisFileDirectory)../</JavaRootDir>
-    <NpmRootDir>$(MSBuildThisFileDirectory)../</NpmRootDir>
+    <NpmRootDir>$(MSBuildThisFileDirectory)../npm/</NpmRootDir>
   </PropertyGroup>
 
   <ItemGroup>

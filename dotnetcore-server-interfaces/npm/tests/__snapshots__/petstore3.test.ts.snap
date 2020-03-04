@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`typescript-axios petstore.yaml can generate the files 1`] = `
+exports[`dotnetcore-server-interfaces petstore.yaml can generate the files 1`] = `
 "/*
  * Swagger Petstore
  *
@@ -107,7 +107,7 @@ namespace PrincipleStudios.Demo
 }"
 `;
 
-exports[`typescript-axios petstore.yaml can generate the files 2`] = `
+exports[`dotnetcore-server-interfaces petstore.yaml can generate the files 2`] = `
 "/*
  * Swagger Petstore
  *
@@ -199,7 +199,7 @@ namespace PrincipleStudios.Demo
 }"
 `;
 
-exports[`typescript-axios petstore.yaml can generate the files 3`] = `
+exports[`dotnetcore-server-interfaces petstore.yaml can generate the files 3`] = `
 "/*
  * Swagger Petstore
  *
@@ -291,7 +291,7 @@ namespace PrincipleStudios.Demo
 }"
 `;
 
-exports[`typescript-axios petstore.yaml can generate the files 4`] = `
+exports[`dotnetcore-server-interfaces petstore.yaml can generate the files 4`] = `
 "/*
  * Swagger Petstore
  *
@@ -468,7 +468,7 @@ namespace PrincipleStudios.Demo
 }"
 `;
 
-exports[`typescript-axios petstore.yaml can generate the files 5`] = `
+exports[`dotnetcore-server-interfaces petstore.yaml can generate the files 5`] = `
 "/*
  * Swagger Petstore
  *
@@ -647,7 +647,7 @@ namespace PrincipleStudios.Demo
 }"
 `;
 
-exports[`typescript-axios petstore.yaml can generate the files 6`] = `
+exports[`dotnetcore-server-interfaces petstore.yaml can generate the files 6`] = `
 "/*
  * Swagger Petstore
  *
@@ -789,7 +789,7 @@ namespace PrincipleStudios.Demo
 }"
 `;
 
-exports[`typescript-axios petstore.yaml can generate the files 7`] = `
+exports[`dotnetcore-server-interfaces petstore.yaml can generate the files 7`] = `
 "/*
  * Swagger Petstore
  *
@@ -867,7 +867,7 @@ namespace PrincipleStudios.Demo
 }"
 `;
 
-exports[`typescript-axios petstore.yaml can generate the files 8`] = `
+exports[`dotnetcore-server-interfaces petstore.yaml can generate the files 8`] = `
 "/*
  * Swagger Petstore
  *
@@ -959,7 +959,7 @@ namespace PrincipleStudios.Demo
 }"
 `;
 
-exports[`typescript-axios petstore.yaml can generate the files 9`] = `
+exports[`dotnetcore-server-interfaces petstore.yaml can generate the files 9`] = `
 "/*
  * Swagger Petstore
  *
@@ -1141,7 +1141,7 @@ namespace PrincipleStudios.Demo
 }"
 `;
 
-exports[`typescript-axios petstore.yaml can generate the files 10`] = `
+exports[`dotnetcore-server-interfaces petstore.yaml can generate the files 10`] = `
 "/*
  * Swagger Petstore
  *

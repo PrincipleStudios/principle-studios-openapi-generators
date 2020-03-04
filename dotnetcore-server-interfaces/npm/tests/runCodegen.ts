@@ -7,7 +7,7 @@ export function runCodegen(outDir: string, args: string) {
             if (err) {
                 reject(err);
             }
-            exec(`java -cp "build/libs/aspnetcore-server-interfaces-1.0.0.jar;node_modules/@openapitools/openapi-generator-cli/bin/openapi-generator.jar" org.openapitools.codegen.OpenAPIGenerator ${args}  -g com.principlestudios.codegen.DotNetCoreInterfacesGenerator -o ${outDir}`,
+            exec(`java -cp "../build/libs/aspnetcore-server-interfaces-1.0.0.jar;node_modules/@openapitools/openapi-generator-cli/bin/openapi-generator.jar" org.openapitools.codegen.OpenAPIGenerator ${args}  -g com.principlestudios.codegen.DotNetCoreInterfacesGenerator -o ${outDir}`,
                 (error, stdout, stderr) => {
                     if (error !== null) {
                         reject({ stdout, stderr, error });
