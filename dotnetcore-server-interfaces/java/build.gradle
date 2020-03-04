@@ -2,7 +2,7 @@ apply plugin: 'java'
 apply plugin: 'maven'
 
 group = 'org.openapitools'
-version = '1.0.0'
+version = null
 
 description = """default-openapi-generator"""
 
@@ -28,3 +28,16 @@ task packageTests(type: Jar) {
   classifier = 'tests'
 }
 artifacts.archives packageTests
+
+
+task copyToLib {
+  configurations.runtime.resolvedConfiguration.resolvedArtifacts.each { artifact ->
+    project.copy {
+      from artifact.file
+      into "${buildDir}/libs"
+      rename { "${artifact.name}.${artifact.extension}" }
+    }
+  }
+}
+
+jar.dependsOn(copyToLib)

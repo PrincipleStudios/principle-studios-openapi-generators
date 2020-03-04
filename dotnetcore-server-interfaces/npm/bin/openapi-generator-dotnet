@@ -4,7 +4,7 @@ const {spawn} = require('child_process');
 const {resolve} = require('path');
 
 const args = process.argv.slice(2);
-const cpPath = resolve(__dirname, '../build/libs/aspnetcore-server-interfaces-1.0.0.jar');
+const cpPath = resolve(__dirname, '../build/libs/aspnetcore-server-interfaces.jar');
 const binPath = require.resolve('@openapitools/openapi-generator-cli/bin/openapi-generator.jar');
 const JAVA_OPTS = process.env['JAVA_OPTS'] || '';
 

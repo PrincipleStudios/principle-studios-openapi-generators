@@ -25,11 +25,16 @@ Adds MSBuild targets to generate C# controller base classes from an OpenAPI spec
     <JavaSource Include="$(JavaRootDir)src/**/*" />
   </ItemGroup>
 
+  <Target Name="CleanJar" BeforeTargets="Clean">
+    <Exec Command="$(ToolsDir)gradlew clean --no-daemon"
+          WorkingDirectory="$(JavaRootDir)" />
+  </Target>
+
   <Target Name="BuildJar" BeforeTargets="GenerateNuspec" DependsOnTargets="_RunGradle;_InstallNpm;_RunJestTests">
   </Target>
 
-  <Target Name="_RunGradle" Inputs="$(JavaRootDir)build.gradle;@(JavaSource)" Outputs="$(JavaRootDir)build/libs/aspnetcore-server-interfaces-1.0.0.jar">
-    <Exec Command="$(ToolsDir)gradlew build --no-daemon"
+  <Target Name="_RunGradle" Inputs="$(JavaRootDir)build.gradle;@(JavaSource)" Outputs="$(JavaRootDir)build/libs/aspnetcore-server-interfaces.jar">
+    <Exec Command="$(ToolsDir)gradlew jar --no-daemon"
           WorkingDirectory="$(JavaRootDir)" />
   </Target>
 

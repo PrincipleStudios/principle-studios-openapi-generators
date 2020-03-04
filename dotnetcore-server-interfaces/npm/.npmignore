@@ -11,9 +11,6 @@ babel.config.js
 .project
 *gradle*
 src/
-build/classes/
-build/resources/
-build/tmp/
-build/libs/*
-!build/libs/aspnetcore-server-interfaces-1.0.0.jar
+build/**/*
+!build/libs/aspnetcore-server-interfaces.jar
 nuget/

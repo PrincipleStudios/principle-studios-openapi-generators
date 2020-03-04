@@ -13,9 +13,9 @@
   </metadata>
   <files>
     <file src="package/_._" target="lib/netcoreapp2.0/" />
-    <file src="package/PrincipleStudios.OpenApiCodegen.Server.Mvc.targets" target="build/netcoreapp2.0/PrincipleStudios.OpenApiCodegen.Server.Mvc.targets" />
+    <file src="package/PrincipleStudios.OpenApiCodegen.Server.Mvc.targets" target="build/netcoreapp2.0/" />
 
-    <file src="../java/build/libs/aspnetcore-server-interfaces-1.0.0.jar" target="build/netcoreapp2.0/" />
-    <file src="../npm/node_modules/@openapitools/openapi-generator-cli/bin/openapi-generator.jar" target="build/netcoreapp2.0/" />
+    <!-- https://github.com/NuGet/Home/issues/3584 -->
+    <file src="..\java\build\libs\*.jar" target="build/netcoreapp2.0/" />
   </files>
 </package>

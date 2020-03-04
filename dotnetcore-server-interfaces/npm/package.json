@@ -3,8 +3,8 @@
   "version": "0.0.1",
   "description": "A dotnet server code generator for principled development",
   "scripts": {
-    "build": "\"../tools/gradlew\" build && cd nuget && dotnet pack /p:Configuration=Release",
-    "prepack": "echo WARNING: jar is not copied as part of pack && exit 1",
+    "build": "\"../../tools/gradlew\" jar",
+    "prepack": "cp -r ../java/build .",
     "test": "jest"
   },
   "author": "Matt DeKrey",
