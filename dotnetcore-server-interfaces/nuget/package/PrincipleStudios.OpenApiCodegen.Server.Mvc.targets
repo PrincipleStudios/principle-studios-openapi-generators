@@ -44,10 +44,6 @@
 
     <Exec Command="java -cp &quot;$(MSBuildThisFileDirectory)/*&quot; org.openapitools.codegen.OpenAPIGenerator generate -g com.principlestudios.codegen.DotNetCoreInterfacesGenerator -o &quot;$(MSBuildProjectDirectory)/%(OpenApiSchema.OutputPath)&quot; -i &quot;%(OpenApiSchema.FullPath)&quot;  --additional-properties packageName=%(OpenApiSchema.Namespace) %(OpenApiSchema.AdditionalProperties)"/>
 
-    <!-- <CompileOpenApiSchema InputFile="%(OpenApiSchema.FullPath)"
-                              OutputFile="$(MSBuildProjectDirectory)/%(OpenApiSchema.OutputPath)"
-                              LanguageVersion="$(LangVersion)"
-                              Namespace="%(OpenApiSchema.Namespace)" /> -->
 
     <Message Text="OpenAPI: %(OpenApiSchema.Identity) -> %(OpenApiSchema.OutputPath)" />
   </Target>

@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "description": "A dotnet server code generator for principled development",
   "scripts": {
-    "build": "gradlew build && cd nuget && dotnet pack /p:Configuration=Release",
+    "build": "\"../tools/gradlew\" build && cd nuget && dotnet pack /p:Configuration=Release",
     "test": "jest"
   },
   "author": "Matt DeKrey",

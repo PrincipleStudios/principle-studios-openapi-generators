@@ -13,27 +13,34 @@ Adds MSBuild targets to generate C# controller base classes from an OpenAPI spec
     </Description>
     <PublishDir>$(IntermediatePackDir)$(TargetFramework)/</PublishDir>
     <NuspecProperties>publishDir=$([MSBuild]::NormalizeDirectory($(IntermediatePackDir)))</NuspecProperties>
+
+    <ToolsDir>$(MSBuildThisFileDirectory)../../tools/</ToolsDir>
+    <JavaRootDir>$(MSBuildThisFileDirectory)../</JavaRootDir>
+    <NpmRootDir>$(MSBuildThisFileDirectory)../</NpmRootDir>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="[10.0.3,)" />
+
+    <JavaSource Include="$(JavaRootDir)src/**/*" />
   </ItemGroup>
 
-
-  <Target Name="UpdatePackageOutput" BeforeTargets="_GetPackageFiles">
-    <ItemGroup>
-      <!-- <Content Include="$(MSBuildThisFileDirectory)../build/libs/aspnetcore-server-interfaces-1.0.0.jar">
-        <Pack>true</Pack>
-        <PackagePath>build/</PackagePath>
-      </Content>
-      <Content Include="$(MSBuildThisFileDirectory)../node_modules/@openapitools/openapi-generator-cli/bin/openapi-generator.jar">
-        <Pack>true</Pack>
-        <PackagePath>build/</PackagePath>
-      </Content>
-      <Content  Include="$(BuildRootDir)package/OpenApiCodeGen.targets">
-        <Pack>true</Pack>
-        <PackagePath>build/$(MSBuildProjectName).targets</PackagePath>
-      </Content> -->
-    </ItemGroup>
+  <Target Name="BuildJar" BeforeTargets="GenerateNuspec" DependsOnTargets="_RunGradle;_InstallNpm;_RunJestTests">
   </Target>
+
+  <Target Name="_RunGradle" Inputs="$(JavaRootDir)build.gradle;@(JavaSource)" Outputs="$(JavaRootDir)build/libs/aspnetcore-server-interfaces-1.0.0.jar">
+    <Exec Command="$(ToolsDir)gradlew build --no-daemon"
+          WorkingDirectory="$(JavaRootDir)" />
+  </Target>
+
+  <Target Name="_InstallNpm" Inputs="$(NpmRootDir)package.json;$(NpmRootDir)src/**/*" Outputs="$(NpmRootDir)node_modules/@openapitools/openapi-generator-cli/bin/openapi-generator.jar">
+    <Exec Command="npm install"
+          WorkingDirectory="$(NpmRootDir)" />
+  </Target>
+
+  <Target Name="_RunJestTests">
+    <Exec Command="npm test"
+          WorkingDirectory="$(NpmRootDir)" />
+  </Target>
+
 </Project>
