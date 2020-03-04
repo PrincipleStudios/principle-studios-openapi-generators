@@ -12,7 +12,7 @@
     </dependencies>
   </metadata>
   <files>
-    <file src="_._" target="lib/netcoreapp2.0/" />
+    <file src="package/_._" target="lib/netcoreapp2.0/" />
     <file src="package/PrincipleStudios.OpenApiCodegen.Server.Mvc.targets" target="build/netcoreapp2.0/PrincipleStudios.OpenApiCodegen.Server.Mvc.targets" />
 
     <file src="../build/libs/aspnetcore-server-interfaces-1.0.0.jar" target="build/netcoreapp2.0/" />
