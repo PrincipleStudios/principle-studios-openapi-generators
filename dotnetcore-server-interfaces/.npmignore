@@ -16,3 +16,4 @@ build/resources/
 build/tmp/
 build/libs/*
 !build/libs/aspnetcore-server-interfaces-1.0.0.jar
+nuget/

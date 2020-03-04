@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+  <metadata>
+    <id>PrincipleStudios.OpenApiCodegen.Server.Mvc</id>
+    <version>0.0.1</version>
+    <authors>Matt DeKrey</authors>
+    <description>Generates typescript from .NET Types</description>
+    <dependencies>
+      <group targetFramework=".NETCoreApp2.0">
+        <dependency id="Newtonsoft.Json" version="[10.0.3,)" exclude="Build" />
+      </group>
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="_._" target="lib/netcoreapp2.0/" />
+    <file src="package/PrincipleStudios.OpenApiCodegen.Server.Mvc.targets" target="build/netcoreapp2.0/PrincipleStudios.OpenApiCodegen.Server.Mvc.targets" />
+
+    <file src="../build/libs/aspnetcore-server-interfaces-1.0.0.jar" target="build/netcoreapp2.0/" />
+    <file src="../node_modules/@openapitools/openapi-generator-cli/bin/openapi-generator.jar" target="build/netcoreapp2.0/" />
+  </files>
+</package>

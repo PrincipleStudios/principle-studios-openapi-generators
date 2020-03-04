@@ -1,0 +1,39 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netcoreapp2.0</TargetFrameworks>
+    <OutputType>exe</OutputType>
+    <IsPackable>true</IsPackable>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <NuspecFile>PrincipleStudios.OpenApiCodegen.Server.Mvc.nuspec</NuspecFile>
+    <IntermediatePackDir>$(MSBuildProjectDirectory)/bin/$(Configuration)/publish/</IntermediatePackDir>
+    <Title>Controller Generation from OpenAPI specification for ASP.Net Core</Title>
+    <Description>
+Adds MSBuild targets to generate C# controller base classes from an OpenAPI specification file.
+    </Description>
+    <PublishDir>$(IntermediatePackDir)$(TargetFramework)/</PublishDir>
+    <NuspecProperties>publishDir=$([MSBuild]::NormalizeDirectory($(IntermediatePackDir)))</NuspecProperties>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="[10.0.3,)" />
+  </ItemGroup>
+
+
+  <Target Name="UpdatePackageOutput" BeforeTargets="_GetPackageFiles">
+    <ItemGroup>
+      <!-- <Content Include="$(MSBuildThisFileDirectory)../build/libs/aspnetcore-server-interfaces-1.0.0.jar">
+        <Pack>true</Pack>
+        <PackagePath>build/</PackagePath>
+      </Content>
+      <Content Include="$(MSBuildThisFileDirectory)../node_modules/@openapitools/openapi-generator-cli/bin/openapi-generator.jar">
+        <Pack>true</Pack>
+        <PackagePath>build/</PackagePath>
+      </Content>
+      <Content  Include="$(BuildRootDir)package/OpenApiCodeGen.targets">
+        <Pack>true</Pack>
+        <PackagePath>build/$(MSBuildProjectName).targets</PackagePath>
+      </Content> -->
+    </ItemGroup>
+  </Target>
+</Project>
