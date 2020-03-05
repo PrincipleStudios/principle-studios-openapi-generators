@@ -3,7 +3,6 @@
   "version": "0.0.1",
   "description": "A dotnet server code generator for principled development",
   "scripts": {
-    "build": "\"../../tools/gradlew\" jar",
     "prepack": "cp -r ../java/build .",
     "test": "jest"
   },
