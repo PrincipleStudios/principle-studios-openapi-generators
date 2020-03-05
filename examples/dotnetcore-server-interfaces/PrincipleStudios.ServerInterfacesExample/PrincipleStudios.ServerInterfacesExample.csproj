@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="PrincipleStudios.OpenApiCodegen.Server.Mvc" Version="0.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <OpenApiSchema Include="..\..\..\schemas\petstore.yaml" Link="Controllers\petstore.yaml" />
+  </ItemGroup>
+
+
+</Project>
