@@ -4,7 +4,7 @@ import { verifyAllFiles } from './verifyAllFiles';
 
 describe('typescript-axios petstore.yaml', () => {
     const outputDir = path.join(__dirname, "../out.local.petstore");
-    const source = path.join(__dirname, "../../samples/petstore.yaml");
+    const source = path.join(__dirname, "../../schemas/petstore.yaml");
 
     beforeAll(async () => {
         await runCodegen(outputDir, `-i "${source}"`);
