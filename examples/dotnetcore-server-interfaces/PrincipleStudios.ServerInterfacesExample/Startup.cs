@@ -25,7 +25,7 @@ namespace PrincipleStudios.ServerInterfacesExample
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            services.AddControllers().AddNewtonsoftJson();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -35,6 +35,8 @@ namespace PrincipleStudios.ServerInterfacesExample
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseCors(policy => policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 
             app.UseHttpsRedirection();
 

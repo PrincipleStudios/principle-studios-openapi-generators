@@ -63,7 +63,7 @@ namespace PrincipleStudios.ServerInterfacesExample.Controllers
             {
                 result = result.Take(limit.Value);
             }
-            return Ok(result.ToArray());
+            return Ok(result.Select(kvp => new Pet(kvp.Value.name, kvp.Value.tag, kvp.Key)).ToArray());
         }
     }
 }
