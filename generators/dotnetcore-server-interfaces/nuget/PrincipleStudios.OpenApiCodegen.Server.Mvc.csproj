@@ -7,10 +7,6 @@
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <NuspecFile>PrincipleStudios.OpenApiCodegen.Server.Mvc.nuspec</NuspecFile>
     <IntermediatePackDir>$(MSBuildProjectDirectory)/bin/$(Configuration)/publish/</IntermediatePackDir>
-    <Title>Controller Generation from OpenAPI specification for ASP.Net Core</Title>
-    <Description>
-Adds MSBuild targets to generate C# controller base classes from an OpenAPI specification file.
-    </Description>
     <PublishDir>$(IntermediatePackDir)$(TargetFramework)/</PublishDir>
     <NuspecProperties>publishDir=$([MSBuild]::NormalizeDirectory($(IntermediatePackDir)))</NuspecProperties>
 
