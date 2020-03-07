@@ -62,7 +62,7 @@ namespace {{packageName}}
 
             {{#message}}/// <summary>{{message}}</summary>{{/message}}
             {{^isDefault}}public static TypeSafe{{operationId}}Result StatusCode{{code}}({{#dataType}}{{&dataType}} result{{/dataType}}){{/isDefault}}{{!
-            }}{{#isDefault}}public static TypeSafe{{operationId}}Result OtherStatusCode(int statusCode, {{&dataType}} result){{/isDefault}} =>
+            }}{{#isDefault}}public static TypeSafe{{operationId}}Result OtherStatusCode(int statusCode{{#dataType}}, {{&dataType}} result{{/dataType}}){{/isDefault}} =>
                 new TypeSafe{{operationId}}Result({{#isDefault}}statusCode{{/isDefault}}{{^isDefault}}{{code}}{{/isDefault}}{{#dataType}}, result{{/dataType}});
             {{/responses}}
         }

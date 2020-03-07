@@ -1643,7 +1643,7 @@ namespace PrincipleStudios.Demo
             }
 
             /// <summary>successful operation</summary>
-            public static TypeSafeCreateUserResult OtherStatusCode(int statusCode,  result) =>
+            public static TypeSafeCreateUserResult OtherStatusCode(int statusCode) =>
                 new TypeSafeCreateUserResult(statusCode);
         }
 
@@ -1686,7 +1686,7 @@ namespace PrincipleStudios.Demo
             }
 
             /// <summary>successful operation</summary>
-            public static TypeSafeCreateUsersWithArrayInputResult OtherStatusCode(int statusCode,  result) =>
+            public static TypeSafeCreateUsersWithArrayInputResult OtherStatusCode(int statusCode) =>
                 new TypeSafeCreateUsersWithArrayInputResult(statusCode);
         }
 
@@ -1729,7 +1729,7 @@ namespace PrincipleStudios.Demo
             }
 
             /// <summary>successful operation</summary>
-            public static TypeSafeCreateUsersWithListInputResult OtherStatusCode(int statusCode,  result) =>
+            public static TypeSafeCreateUsersWithListInputResult OtherStatusCode(int statusCode) =>
                 new TypeSafeCreateUsersWithListInputResult(statusCode);
         }
 
@@ -1922,7 +1922,7 @@ namespace PrincipleStudios.Demo
             }
 
             /// <summary>successful operation</summary>
-            public static TypeSafeLogoutUserResult OtherStatusCode(int statusCode,  result) =>
+            public static TypeSafeLogoutUserResult OtherStatusCode(int statusCode) =>
                 new TypeSafeLogoutUserResult(statusCode);
         }
 
