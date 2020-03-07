@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations;
+#nullable enable
+#nullable disable warnings
 
 namespace {{packageName}}
 { {{#operations}}
@@ -21,14 +23,49 @@ namespace {{packageName}}
         /// <remarks>{{notes}}</remarks>{{/notes}}{{#allParams}}
         /// <param name="{{paramName}}">{{description}}</param>{{/allParams}}
         [{{httpMethod}}]
-        [Route("{{{basePathWithoutHost}}}{{{path}}}")]
-        {{!
+        [Route("{{{basePathWithoutHost}}}{{{path}}}")]{{!
         }}{{#responses}}
         [ProducesResponseType({{code}}{{#dataType}}, Type = typeof({{&dataType}}){{/dataType}})] // {{message}}{{/responses}}{{!
         }}{{#authMethods}}
         [Authorize("{{name}}")]{{/authMethods}}
-        public abstract Task<IActionResult> {{operationId}}({{#allParams}}
-            {{>pathParam}}{{>queryParam}}{{>bodyParam}}{{>formParam}}{{>headerParam}}{{#hasMore}},{{/hasMore}}{{/allParams}});
+        public async Task<IActionResult> {{operationId}}({{#allParams}}
+            {{>pathParam}}{{>queryParam}}{{>bodyParam}}{{>formParam}}{{>headerParam}}{{#hasMore}},{{/hasMore}}{{/allParams}}) =>
+            (await {{operationId}}TypeSafe({{#allParams}}{{paramName}}{{#hasMore}},{{/hasMore}}{{/allParams}})).ActionResult;
+
+        public abstract Task<TypeSafe{{operationId}}Result> {{operationId}}TypeSafe({{#allParams}}
+            {{&dataType}} {{paramName}}{{#hasMore}},{{/hasMore}}{{/allParams}});
+
+        public readonly struct TypeSafe{{operationId}}Result
+        {
+            public readonly bool hasResultObject;
+            public readonly object? resultObject;
+            public readonly int statusCode;
+            public readonly IActionResult ActionResult =>
+                hasResultObject
+                    ? (IActionResult)new ObjectResult(resultObject) { StatusCode = statusCode }
+                    : (IActionResult)new StatusCodeResult(statusCode);
+
+            private TypeSafe{{operationId}}Result(int statusCode)
+            {
+                this.hasResultObject = false;
+                this.resultObject = null;
+                this.statusCode = statusCode;
+            }
+
+            private TypeSafe{{operationId}}Result(int statusCode, object? resultObject)
+            {
+                this.hasResultObject = true;
+                this.resultObject = resultObject;
+                this.statusCode = statusCode;
+            }
+            {{#responses}}
+
+            {{#message}}/// <summary>{{message}}</summary>{{/message}}
+            {{^isDefault}}public static TypeSafe{{operationId}}Result StatusCode{{code}}({{#dataType}}{{&dataType}} result{{/dataType}}){{/isDefault}}{{!
+            }}{{#isDefault}}public static TypeSafe{{operationId}}Result OtherStatusCode(int statusCode, {{&dataType}} result){{/isDefault}} =>
+                new TypeSafe{{operationId}}Result({{#isDefault}}statusCode{{/isDefault}}{{^isDefault}}{{code}}{{/isDefault}}{{#dataType}}, result{{/dataType}});
+            {{/responses}}
+        }
         {{/operation}}
     }
 {{/operations}}

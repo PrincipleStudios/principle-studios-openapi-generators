@@ -497,8 +497,8 @@ namespace PrincipleStudios.Demo
                 [JsonProperty(PropertyName=\\"id\\")] long? Id, 
                 [JsonProperty(PropertyName=\\"category\\")] Category Category, 
                 [JsonProperty(PropertyName=\\"name\\"), Required] string Name, 
-                [JsonProperty(PropertyName=\\"photoUrls\\"), Required] List<string> PhotoUrls, 
-                [JsonProperty(PropertyName=\\"tags\\")] List<Tag> Tags, 
+                [JsonProperty(PropertyName=\\"photoUrls\\"), Required] IReadOnlyList<string> PhotoUrls, 
+                [JsonProperty(PropertyName=\\"tags\\")] IReadOnlyList<Tag> Tags, 
                 [JsonProperty(PropertyName=\\"status\\")] StatusEnum? Status
             )
         { 
@@ -535,13 +535,13 @@ namespace PrincipleStudios.Demo
         /// </summary>
         [Required]
         [JsonProperty(PropertyName=\\"photoUrls\\")]
-        public List<string> PhotoUrls { get; }
+        public IReadOnlyList<string> PhotoUrls { get; }
 
         /// <summary>
         /// Gets Tags
         /// </summary>
         [JsonProperty(PropertyName=\\"tags\\")]
-        public List<Tag> Tags { get; }
+        public IReadOnlyList<Tag> Tags { get; }
 
         /// <summary>
         /// pet status in the store
@@ -664,6 +664,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations;
+#nullable enable
+#nullable disable warnings
 
 namespace PrincipleStudios.Demo
 { 
@@ -678,11 +680,43 @@ namespace PrincipleStudios.Demo
         /// <param name=\\"pet\\">Pet object that needs to be added to the store</param>
         [HttpPost]
         [Route(\\"/v2/pet\\")]
-        
         [ProducesResponseType(405)] // Invalid input
         [Authorize(\\"petstore_auth\\")]
-        public abstract Task<IActionResult> AddPet(
-            [FromBody] Pet pet);
+        public async Task<IActionResult> AddPet(
+            [FromBody] Pet pet) =>
+            (await AddPetTypeSafe(pet)).ActionResult;
+
+        public abstract Task<TypeSafeAddPetResult> AddPetTypeSafe(
+            Pet pet);
+
+        public readonly struct TypeSafeAddPetResult
+        {
+            public readonly bool hasResultObject;
+            public readonly object? resultObject;
+            public readonly int statusCode;
+            public readonly IActionResult ActionResult =>
+                hasResultObject
+                    ? (IActionResult)new ObjectResult(resultObject) { StatusCode = statusCode }
+                    : (IActionResult)new StatusCodeResult(statusCode);
+
+            private TypeSafeAddPetResult(int statusCode)
+            {
+                this.hasResultObject = false;
+                this.resultObject = null;
+                this.statusCode = statusCode;
+            }
+
+            private TypeSafeAddPetResult(int statusCode, object? resultObject)
+            {
+                this.hasResultObject = true;
+                this.resultObject = resultObject;
+                this.statusCode = statusCode;
+            }
+
+            /// <summary>Invalid input</summary>
+            public static TypeSafeAddPetResult StatusCode405() =>
+                new TypeSafeAddPetResult(405);
+        }
 
         /// <summary>
         /// Deletes a pet
@@ -691,13 +725,50 @@ namespace PrincipleStudios.Demo
         /// <param name=\\"apiKey\\"></param>
         [HttpDelete]
         [Route(\\"/v2/pet/{petId}\\")]
-        
         [ProducesResponseType(400)] // Invalid ID supplied
         [ProducesResponseType(404)] // Pet not found
         [Authorize(\\"petstore_auth\\")]
-        public abstract Task<IActionResult> DeletePet(
+        public async Task<IActionResult> DeletePet(
             [FromRoute, Required] long? petId,
-            [FromHeader] string apiKey);
+            [FromHeader] string apiKey) =>
+            (await DeletePetTypeSafe(petId,apiKey)).ActionResult;
+
+        public abstract Task<TypeSafeDeletePetResult> DeletePetTypeSafe(
+            long? petId,
+            string apiKey);
+
+        public readonly struct TypeSafeDeletePetResult
+        {
+            public readonly bool hasResultObject;
+            public readonly object? resultObject;
+            public readonly int statusCode;
+            public readonly IActionResult ActionResult =>
+                hasResultObject
+                    ? (IActionResult)new ObjectResult(resultObject) { StatusCode = statusCode }
+                    : (IActionResult)new StatusCodeResult(statusCode);
+
+            private TypeSafeDeletePetResult(int statusCode)
+            {
+                this.hasResultObject = false;
+                this.resultObject = null;
+                this.statusCode = statusCode;
+            }
+
+            private TypeSafeDeletePetResult(int statusCode, object? resultObject)
+            {
+                this.hasResultObject = true;
+                this.resultObject = resultObject;
+                this.statusCode = statusCode;
+            }
+
+            /// <summary>Invalid ID supplied</summary>
+            public static TypeSafeDeletePetResult StatusCode400() =>
+                new TypeSafeDeletePetResult(400);
+
+            /// <summary>Pet not found</summary>
+            public static TypeSafeDeletePetResult StatusCode404() =>
+                new TypeSafeDeletePetResult(404);
+        }
 
         /// <summary>
         /// Finds Pets by status
@@ -706,12 +777,48 @@ namespace PrincipleStudios.Demo
         /// <param name=\\"status\\">Status values that need to be considered for filter</param>
         [HttpGet]
         [Route(\\"/v2/pet/findByStatus\\")]
-        
-        [ProducesResponseType(200, Type = typeof(List<Pet>))] // successful operation
+        [ProducesResponseType(200, Type = typeof(IReadOnlyList<Pet>))] // successful operation
         [ProducesResponseType(400)] // Invalid status value
         [Authorize(\\"petstore_auth\\")]
-        public abstract Task<IActionResult> FindPetsByStatus(
-            [FromQuery, Required] List<string> status);
+        public async Task<IActionResult> FindPetsByStatus(
+            [FromQuery, Required] IReadOnlyList<string> status) =>
+            (await FindPetsByStatusTypeSafe(status)).ActionResult;
+
+        public abstract Task<TypeSafeFindPetsByStatusResult> FindPetsByStatusTypeSafe(
+            IReadOnlyList<string> status);
+
+        public readonly struct TypeSafeFindPetsByStatusResult
+        {
+            public readonly bool hasResultObject;
+            public readonly object? resultObject;
+            public readonly int statusCode;
+            public readonly IActionResult ActionResult =>
+                hasResultObject
+                    ? (IActionResult)new ObjectResult(resultObject) { StatusCode = statusCode }
+                    : (IActionResult)new StatusCodeResult(statusCode);
+
+            private TypeSafeFindPetsByStatusResult(int statusCode)
+            {
+                this.hasResultObject = false;
+                this.resultObject = null;
+                this.statusCode = statusCode;
+            }
+
+            private TypeSafeFindPetsByStatusResult(int statusCode, object? resultObject)
+            {
+                this.hasResultObject = true;
+                this.resultObject = resultObject;
+                this.statusCode = statusCode;
+            }
+
+            /// <summary>successful operation</summary>
+            public static TypeSafeFindPetsByStatusResult StatusCode200(IReadOnlyList<Pet> result) =>
+                new TypeSafeFindPetsByStatusResult(200, result);
+
+            /// <summary>Invalid status value</summary>
+            public static TypeSafeFindPetsByStatusResult StatusCode400() =>
+                new TypeSafeFindPetsByStatusResult(400);
+        }
 
         /// <summary>
         /// Finds Pets by tags
@@ -720,12 +827,48 @@ namespace PrincipleStudios.Demo
         /// <param name=\\"tags\\">Tags to filter by</param>
         [HttpGet]
         [Route(\\"/v2/pet/findByTags\\")]
-        
-        [ProducesResponseType(200, Type = typeof(List<Pet>))] // successful operation
+        [ProducesResponseType(200, Type = typeof(IReadOnlyList<Pet>))] // successful operation
         [ProducesResponseType(400)] // Invalid tag value
         [Authorize(\\"petstore_auth\\")]
-        public abstract Task<IActionResult> FindPetsByTags(
-            [FromQuery, Required] List<string> tags);
+        public async Task<IActionResult> FindPetsByTags(
+            [FromQuery, Required] IReadOnlyList<string> tags) =>
+            (await FindPetsByTagsTypeSafe(tags)).ActionResult;
+
+        public abstract Task<TypeSafeFindPetsByTagsResult> FindPetsByTagsTypeSafe(
+            IReadOnlyList<string> tags);
+
+        public readonly struct TypeSafeFindPetsByTagsResult
+        {
+            public readonly bool hasResultObject;
+            public readonly object? resultObject;
+            public readonly int statusCode;
+            public readonly IActionResult ActionResult =>
+                hasResultObject
+                    ? (IActionResult)new ObjectResult(resultObject) { StatusCode = statusCode }
+                    : (IActionResult)new StatusCodeResult(statusCode);
+
+            private TypeSafeFindPetsByTagsResult(int statusCode)
+            {
+                this.hasResultObject = false;
+                this.resultObject = null;
+                this.statusCode = statusCode;
+            }
+
+            private TypeSafeFindPetsByTagsResult(int statusCode, object? resultObject)
+            {
+                this.hasResultObject = true;
+                this.resultObject = resultObject;
+                this.statusCode = statusCode;
+            }
+
+            /// <summary>successful operation</summary>
+            public static TypeSafeFindPetsByTagsResult StatusCode200(IReadOnlyList<Pet> result) =>
+                new TypeSafeFindPetsByTagsResult(200, result);
+
+            /// <summary>Invalid tag value</summary>
+            public static TypeSafeFindPetsByTagsResult StatusCode400() =>
+                new TypeSafeFindPetsByTagsResult(400);
+        }
 
         /// <summary>
         /// Find pet by ID
@@ -734,13 +877,53 @@ namespace PrincipleStudios.Demo
         /// <param name=\\"petId\\">ID of pet to return</param>
         [HttpGet]
         [Route(\\"/v2/pet/{petId}\\")]
-        
         [ProducesResponseType(200, Type = typeof(Pet))] // successful operation
         [ProducesResponseType(400)] // Invalid ID supplied
         [ProducesResponseType(404)] // Pet not found
         [Authorize(\\"api_key\\")]
-        public abstract Task<IActionResult> GetPetById(
-            [FromRoute, Required] long? petId);
+        public async Task<IActionResult> GetPetById(
+            [FromRoute, Required] long? petId) =>
+            (await GetPetByIdTypeSafe(petId)).ActionResult;
+
+        public abstract Task<TypeSafeGetPetByIdResult> GetPetByIdTypeSafe(
+            long? petId);
+
+        public readonly struct TypeSafeGetPetByIdResult
+        {
+            public readonly bool hasResultObject;
+            public readonly object? resultObject;
+            public readonly int statusCode;
+            public readonly IActionResult ActionResult =>
+                hasResultObject
+                    ? (IActionResult)new ObjectResult(resultObject) { StatusCode = statusCode }
+                    : (IActionResult)new StatusCodeResult(statusCode);
+
+            private TypeSafeGetPetByIdResult(int statusCode)
+            {
+                this.hasResultObject = false;
+                this.resultObject = null;
+                this.statusCode = statusCode;
+            }
+
+            private TypeSafeGetPetByIdResult(int statusCode, object? resultObject)
+            {
+                this.hasResultObject = true;
+                this.resultObject = resultObject;
+                this.statusCode = statusCode;
+            }
+
+            /// <summary>successful operation</summary>
+            public static TypeSafeGetPetByIdResult StatusCode200(Pet result) =>
+                new TypeSafeGetPetByIdResult(200, result);
+
+            /// <summary>Invalid ID supplied</summary>
+            public static TypeSafeGetPetByIdResult StatusCode400() =>
+                new TypeSafeGetPetByIdResult(400);
+
+            /// <summary>Pet not found</summary>
+            public static TypeSafeGetPetByIdResult StatusCode404() =>
+                new TypeSafeGetPetByIdResult(404);
+        }
 
         /// <summary>
         /// Update an existing pet
@@ -748,13 +931,53 @@ namespace PrincipleStudios.Demo
         /// <param name=\\"pet\\">Pet object that needs to be added to the store</param>
         [HttpPut]
         [Route(\\"/v2/pet\\")]
-        
         [ProducesResponseType(400)] // Invalid ID supplied
         [ProducesResponseType(404)] // Pet not found
         [ProducesResponseType(405)] // Validation exception
         [Authorize(\\"petstore_auth\\")]
-        public abstract Task<IActionResult> UpdatePet(
-            [FromBody] Pet pet);
+        public async Task<IActionResult> UpdatePet(
+            [FromBody] Pet pet) =>
+            (await UpdatePetTypeSafe(pet)).ActionResult;
+
+        public abstract Task<TypeSafeUpdatePetResult> UpdatePetTypeSafe(
+            Pet pet);
+
+        public readonly struct TypeSafeUpdatePetResult
+        {
+            public readonly bool hasResultObject;
+            public readonly object? resultObject;
+            public readonly int statusCode;
+            public readonly IActionResult ActionResult =>
+                hasResultObject
+                    ? (IActionResult)new ObjectResult(resultObject) { StatusCode = statusCode }
+                    : (IActionResult)new StatusCodeResult(statusCode);
+
+            private TypeSafeUpdatePetResult(int statusCode)
+            {
+                this.hasResultObject = false;
+                this.resultObject = null;
+                this.statusCode = statusCode;
+            }
+
+            private TypeSafeUpdatePetResult(int statusCode, object? resultObject)
+            {
+                this.hasResultObject = true;
+                this.resultObject = resultObject;
+                this.statusCode = statusCode;
+            }
+
+            /// <summary>Invalid ID supplied</summary>
+            public static TypeSafeUpdatePetResult StatusCode400() =>
+                new TypeSafeUpdatePetResult(400);
+
+            /// <summary>Pet not found</summary>
+            public static TypeSafeUpdatePetResult StatusCode404() =>
+                new TypeSafeUpdatePetResult(404);
+
+            /// <summary>Validation exception</summary>
+            public static TypeSafeUpdatePetResult StatusCode405() =>
+                new TypeSafeUpdatePetResult(405);
+        }
 
         /// <summary>
         /// Updates a pet in the store with form data
@@ -764,13 +987,47 @@ namespace PrincipleStudios.Demo
         /// <param name=\\"status\\">Updated status of the pet</param>
         [HttpPost]
         [Route(\\"/v2/pet/{petId}\\")]
-        
         [ProducesResponseType(405)] // Invalid input
         [Authorize(\\"petstore_auth\\")]
-        public abstract Task<IActionResult> UpdatePetWithForm(
+        public async Task<IActionResult> UpdatePetWithForm(
             [FromRoute, Required] long? petId,
             [FromForm] string name,
-            [FromForm] string status);
+            [FromForm] string status) =>
+            (await UpdatePetWithFormTypeSafe(petId,name,status)).ActionResult;
+
+        public abstract Task<TypeSafeUpdatePetWithFormResult> UpdatePetWithFormTypeSafe(
+            long? petId,
+            string name,
+            string status);
+
+        public readonly struct TypeSafeUpdatePetWithFormResult
+        {
+            public readonly bool hasResultObject;
+            public readonly object? resultObject;
+            public readonly int statusCode;
+            public readonly IActionResult ActionResult =>
+                hasResultObject
+                    ? (IActionResult)new ObjectResult(resultObject) { StatusCode = statusCode }
+                    : (IActionResult)new StatusCodeResult(statusCode);
+
+            private TypeSafeUpdatePetWithFormResult(int statusCode)
+            {
+                this.hasResultObject = false;
+                this.resultObject = null;
+                this.statusCode = statusCode;
+            }
+
+            private TypeSafeUpdatePetWithFormResult(int statusCode, object? resultObject)
+            {
+                this.hasResultObject = true;
+                this.resultObject = resultObject;
+                this.statusCode = statusCode;
+            }
+
+            /// <summary>Invalid input</summary>
+            public static TypeSafeUpdatePetWithFormResult StatusCode405() =>
+                new TypeSafeUpdatePetWithFormResult(405);
+        }
 
         /// <summary>
         /// uploads an image
@@ -779,12 +1036,45 @@ namespace PrincipleStudios.Demo
         /// <param name=\\"body\\"></param>
         [HttpPost]
         [Route(\\"/v2/pet/{petId}/uploadImage\\")]
-        
         [ProducesResponseType(200, Type = typeof(ApiResponse))] // successful operation
         [Authorize(\\"petstore_auth\\")]
-        public abstract Task<IActionResult> UploadFile(
+        public async Task<IActionResult> UploadFile(
             [FromRoute, Required] long? petId,
-            [FromBody] System.IO.Stream body);
+            [FromBody] System.IO.Stream body) =>
+            (await UploadFileTypeSafe(petId,body)).ActionResult;
+
+        public abstract Task<TypeSafeUploadFileResult> UploadFileTypeSafe(
+            long? petId,
+            System.IO.Stream body);
+
+        public readonly struct TypeSafeUploadFileResult
+        {
+            public readonly bool hasResultObject;
+            public readonly object? resultObject;
+            public readonly int statusCode;
+            public readonly IActionResult ActionResult =>
+                hasResultObject
+                    ? (IActionResult)new ObjectResult(resultObject) { StatusCode = statusCode }
+                    : (IActionResult)new StatusCodeResult(statusCode);
+
+            private TypeSafeUploadFileResult(int statusCode)
+            {
+                this.hasResultObject = false;
+                this.resultObject = null;
+                this.statusCode = statusCode;
+            }
+
+            private TypeSafeUploadFileResult(int statusCode, object? resultObject)
+            {
+                this.hasResultObject = true;
+                this.resultObject = resultObject;
+                this.statusCode = statusCode;
+            }
+
+            /// <summary>successful operation</summary>
+            public static TypeSafeUploadFileResult StatusCode200(ApiResponse result) =>
+                new TypeSafeUploadFileResult(200, result);
+        }
     }
 }"
 `;
@@ -806,6 +1096,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations;
+#nullable enable
+#nullable disable warnings
 
 namespace PrincipleStudios.Demo
 { 
@@ -821,11 +1113,47 @@ namespace PrincipleStudios.Demo
         /// <param name=\\"orderId\\">ID of the order that needs to be deleted</param>
         [HttpDelete]
         [Route(\\"/v2/store/order/{orderId}\\")]
-        
         [ProducesResponseType(400)] // Invalid ID supplied
         [ProducesResponseType(404)] // Order not found
-        public abstract Task<IActionResult> DeleteOrder(
-            [FromRoute, Required] long? orderId);
+        public async Task<IActionResult> DeleteOrder(
+            [FromRoute, Required] long? orderId) =>
+            (await DeleteOrderTypeSafe(orderId)).ActionResult;
+
+        public abstract Task<TypeSafeDeleteOrderResult> DeleteOrderTypeSafe(
+            long? orderId);
+
+        public readonly struct TypeSafeDeleteOrderResult
+        {
+            public readonly bool hasResultObject;
+            public readonly object? resultObject;
+            public readonly int statusCode;
+            public readonly IActionResult ActionResult =>
+                hasResultObject
+                    ? (IActionResult)new ObjectResult(resultObject) { StatusCode = statusCode }
+                    : (IActionResult)new StatusCodeResult(statusCode);
+
+            private TypeSafeDeleteOrderResult(int statusCode)
+            {
+                this.hasResultObject = false;
+                this.resultObject = null;
+                this.statusCode = statusCode;
+            }
+
+            private TypeSafeDeleteOrderResult(int statusCode, object? resultObject)
+            {
+                this.hasResultObject = true;
+                this.resultObject = resultObject;
+                this.statusCode = statusCode;
+            }
+
+            /// <summary>Invalid ID supplied</summary>
+            public static TypeSafeDeleteOrderResult StatusCode400() =>
+                new TypeSafeDeleteOrderResult(400);
+
+            /// <summary>Order not found</summary>
+            public static TypeSafeDeleteOrderResult StatusCode404() =>
+                new TypeSafeDeleteOrderResult(404);
+        }
 
         /// <summary>
         /// Returns pet inventories by status
@@ -833,10 +1161,41 @@ namespace PrincipleStudios.Demo
         /// <remarks>Returns a map of status codes to quantities</remarks>
         [HttpGet]
         [Route(\\"/v2/store/inventory\\")]
-        
         [ProducesResponseType(200, Type = typeof(Dictionary<string, int?>))] // successful operation
         [Authorize(\\"api_key\\")]
-        public abstract Task<IActionResult> GetInventory();
+        public async Task<IActionResult> GetInventory() =>
+            (await GetInventoryTypeSafe()).ActionResult;
+
+        public abstract Task<TypeSafeGetInventoryResult> GetInventoryTypeSafe();
+
+        public readonly struct TypeSafeGetInventoryResult
+        {
+            public readonly bool hasResultObject;
+            public readonly object? resultObject;
+            public readonly int statusCode;
+            public readonly IActionResult ActionResult =>
+                hasResultObject
+                    ? (IActionResult)new ObjectResult(resultObject) { StatusCode = statusCode }
+                    : (IActionResult)new StatusCodeResult(statusCode);
+
+            private TypeSafeGetInventoryResult(int statusCode)
+            {
+                this.hasResultObject = false;
+                this.resultObject = null;
+                this.statusCode = statusCode;
+            }
+
+            private TypeSafeGetInventoryResult(int statusCode, object? resultObject)
+            {
+                this.hasResultObject = true;
+                this.resultObject = resultObject;
+                this.statusCode = statusCode;
+            }
+
+            /// <summary>successful operation</summary>
+            public static TypeSafeGetInventoryResult StatusCode200(Dictionary<string, int?> result) =>
+                new TypeSafeGetInventoryResult(200, result);
+        }
 
         /// <summary>
         /// Find purchase order by ID
@@ -845,12 +1204,52 @@ namespace PrincipleStudios.Demo
         /// <param name=\\"orderId\\">ID of pet that needs to be fetched</param>
         [HttpGet]
         [Route(\\"/v2/store/order/{orderId}\\")]
-        
         [ProducesResponseType(200, Type = typeof(Order))] // successful operation
         [ProducesResponseType(400)] // Invalid ID supplied
         [ProducesResponseType(404)] // Order not found
-        public abstract Task<IActionResult> GetOrderById(
-            [FromRoute, Required, Range(1, 10)] long? orderId);
+        public async Task<IActionResult> GetOrderById(
+            [FromRoute, Required, Range(1, 10)] long? orderId) =>
+            (await GetOrderByIdTypeSafe(orderId)).ActionResult;
+
+        public abstract Task<TypeSafeGetOrderByIdResult> GetOrderByIdTypeSafe(
+            long? orderId);
+
+        public readonly struct TypeSafeGetOrderByIdResult
+        {
+            public readonly bool hasResultObject;
+            public readonly object? resultObject;
+            public readonly int statusCode;
+            public readonly IActionResult ActionResult =>
+                hasResultObject
+                    ? (IActionResult)new ObjectResult(resultObject) { StatusCode = statusCode }
+                    : (IActionResult)new StatusCodeResult(statusCode);
+
+            private TypeSafeGetOrderByIdResult(int statusCode)
+            {
+                this.hasResultObject = false;
+                this.resultObject = null;
+                this.statusCode = statusCode;
+            }
+
+            private TypeSafeGetOrderByIdResult(int statusCode, object? resultObject)
+            {
+                this.hasResultObject = true;
+                this.resultObject = resultObject;
+                this.statusCode = statusCode;
+            }
+
+            /// <summary>successful operation</summary>
+            public static TypeSafeGetOrderByIdResult StatusCode200(Order result) =>
+                new TypeSafeGetOrderByIdResult(200, result);
+
+            /// <summary>Invalid ID supplied</summary>
+            public static TypeSafeGetOrderByIdResult StatusCode400() =>
+                new TypeSafeGetOrderByIdResult(400);
+
+            /// <summary>Order not found</summary>
+            public static TypeSafeGetOrderByIdResult StatusCode404() =>
+                new TypeSafeGetOrderByIdResult(404);
+        }
 
         /// <summary>
         /// Place an order for a pet
@@ -858,11 +1257,47 @@ namespace PrincipleStudios.Demo
         /// <param name=\\"order\\">order placed for purchasing the pet</param>
         [HttpPost]
         [Route(\\"/v2/store/order\\")]
-        
         [ProducesResponseType(200, Type = typeof(Order))] // successful operation
         [ProducesResponseType(400)] // Invalid Order
-        public abstract Task<IActionResult> PlaceOrder(
-            [FromBody] Order order);
+        public async Task<IActionResult> PlaceOrder(
+            [FromBody] Order order) =>
+            (await PlaceOrderTypeSafe(order)).ActionResult;
+
+        public abstract Task<TypeSafePlaceOrderResult> PlaceOrderTypeSafe(
+            Order order);
+
+        public readonly struct TypeSafePlaceOrderResult
+        {
+            public readonly bool hasResultObject;
+            public readonly object? resultObject;
+            public readonly int statusCode;
+            public readonly IActionResult ActionResult =>
+                hasResultObject
+                    ? (IActionResult)new ObjectResult(resultObject) { StatusCode = statusCode }
+                    : (IActionResult)new StatusCodeResult(statusCode);
+
+            private TypeSafePlaceOrderResult(int statusCode)
+            {
+                this.hasResultObject = false;
+                this.resultObject = null;
+                this.statusCode = statusCode;
+            }
+
+            private TypeSafePlaceOrderResult(int statusCode, object? resultObject)
+            {
+                this.hasResultObject = true;
+                this.resultObject = resultObject;
+                this.statusCode = statusCode;
+            }
+
+            /// <summary>successful operation</summary>
+            public static TypeSafePlaceOrderResult StatusCode200(Order result) =>
+                new TypeSafePlaceOrderResult(200, result);
+
+            /// <summary>Invalid Order</summary>
+            public static TypeSafePlaceOrderResult StatusCode400() =>
+                new TypeSafePlaceOrderResult(400);
+        }
     }
 }"
 `;
@@ -1158,6 +1593,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations;
+#nullable enable
+#nullable disable warnings
 
 namespace PrincipleStudios.Demo
 { 
@@ -1173,10 +1610,42 @@ namespace PrincipleStudios.Demo
         /// <param name=\\"user\\">Created user object</param>
         [HttpPost]
         [Route(\\"/v2/user\\")]
-        
         [ProducesResponseType(0)] // successful operation
-        public abstract Task<IActionResult> CreateUser(
-            [FromBody] User user);
+        public async Task<IActionResult> CreateUser(
+            [FromBody] User user) =>
+            (await CreateUserTypeSafe(user)).ActionResult;
+
+        public abstract Task<TypeSafeCreateUserResult> CreateUserTypeSafe(
+            User user);
+
+        public readonly struct TypeSafeCreateUserResult
+        {
+            public readonly bool hasResultObject;
+            public readonly object? resultObject;
+            public readonly int statusCode;
+            public readonly IActionResult ActionResult =>
+                hasResultObject
+                    ? (IActionResult)new ObjectResult(resultObject) { StatusCode = statusCode }
+                    : (IActionResult)new StatusCodeResult(statusCode);
+
+            private TypeSafeCreateUserResult(int statusCode)
+            {
+                this.hasResultObject = false;
+                this.resultObject = null;
+                this.statusCode = statusCode;
+            }
+
+            private TypeSafeCreateUserResult(int statusCode, object? resultObject)
+            {
+                this.hasResultObject = true;
+                this.resultObject = resultObject;
+                this.statusCode = statusCode;
+            }
+
+            /// <summary>successful operation</summary>
+            public static TypeSafeCreateUserResult OtherStatusCode(int statusCode,  result) =>
+                new TypeSafeCreateUserResult(statusCode);
+        }
 
         /// <summary>
         /// Creates list of users with given input array
@@ -1184,10 +1653,42 @@ namespace PrincipleStudios.Demo
         /// <param name=\\"user\\">List of user object</param>
         [HttpPost]
         [Route(\\"/v2/user/createWithArray\\")]
-        
         [ProducesResponseType(0)] // successful operation
-        public abstract Task<IActionResult> CreateUsersWithArrayInput(
-            [FromBody] List<User> user);
+        public async Task<IActionResult> CreateUsersWithArrayInput(
+            [FromBody] IReadOnlyList<User> user) =>
+            (await CreateUsersWithArrayInputTypeSafe(user)).ActionResult;
+
+        public abstract Task<TypeSafeCreateUsersWithArrayInputResult> CreateUsersWithArrayInputTypeSafe(
+            IReadOnlyList<User> user);
+
+        public readonly struct TypeSafeCreateUsersWithArrayInputResult
+        {
+            public readonly bool hasResultObject;
+            public readonly object? resultObject;
+            public readonly int statusCode;
+            public readonly IActionResult ActionResult =>
+                hasResultObject
+                    ? (IActionResult)new ObjectResult(resultObject) { StatusCode = statusCode }
+                    : (IActionResult)new StatusCodeResult(statusCode);
+
+            private TypeSafeCreateUsersWithArrayInputResult(int statusCode)
+            {
+                this.hasResultObject = false;
+                this.resultObject = null;
+                this.statusCode = statusCode;
+            }
+
+            private TypeSafeCreateUsersWithArrayInputResult(int statusCode, object? resultObject)
+            {
+                this.hasResultObject = true;
+                this.resultObject = resultObject;
+                this.statusCode = statusCode;
+            }
+
+            /// <summary>successful operation</summary>
+            public static TypeSafeCreateUsersWithArrayInputResult OtherStatusCode(int statusCode,  result) =>
+                new TypeSafeCreateUsersWithArrayInputResult(statusCode);
+        }
 
         /// <summary>
         /// Creates list of users with given input array
@@ -1195,10 +1696,42 @@ namespace PrincipleStudios.Demo
         /// <param name=\\"user\\">List of user object</param>
         [HttpPost]
         [Route(\\"/v2/user/createWithList\\")]
-        
         [ProducesResponseType(0)] // successful operation
-        public abstract Task<IActionResult> CreateUsersWithListInput(
-            [FromBody] List<User> user);
+        public async Task<IActionResult> CreateUsersWithListInput(
+            [FromBody] IReadOnlyList<User> user) =>
+            (await CreateUsersWithListInputTypeSafe(user)).ActionResult;
+
+        public abstract Task<TypeSafeCreateUsersWithListInputResult> CreateUsersWithListInputTypeSafe(
+            IReadOnlyList<User> user);
+
+        public readonly struct TypeSafeCreateUsersWithListInputResult
+        {
+            public readonly bool hasResultObject;
+            public readonly object? resultObject;
+            public readonly int statusCode;
+            public readonly IActionResult ActionResult =>
+                hasResultObject
+                    ? (IActionResult)new ObjectResult(resultObject) { StatusCode = statusCode }
+                    : (IActionResult)new StatusCodeResult(statusCode);
+
+            private TypeSafeCreateUsersWithListInputResult(int statusCode)
+            {
+                this.hasResultObject = false;
+                this.resultObject = null;
+                this.statusCode = statusCode;
+            }
+
+            private TypeSafeCreateUsersWithListInputResult(int statusCode, object? resultObject)
+            {
+                this.hasResultObject = true;
+                this.resultObject = resultObject;
+                this.statusCode = statusCode;
+            }
+
+            /// <summary>successful operation</summary>
+            public static TypeSafeCreateUsersWithListInputResult OtherStatusCode(int statusCode,  result) =>
+                new TypeSafeCreateUsersWithListInputResult(statusCode);
+        }
 
         /// <summary>
         /// Delete user
@@ -1207,11 +1740,47 @@ namespace PrincipleStudios.Demo
         /// <param name=\\"username\\">The name that needs to be deleted</param>
         [HttpDelete]
         [Route(\\"/v2/user/{username}\\")]
-        
         [ProducesResponseType(400)] // Invalid username supplied
         [ProducesResponseType(404)] // User not found
-        public abstract Task<IActionResult> DeleteUser(
-            [FromRoute, Required] string username);
+        public async Task<IActionResult> DeleteUser(
+            [FromRoute, Required] string username) =>
+            (await DeleteUserTypeSafe(username)).ActionResult;
+
+        public abstract Task<TypeSafeDeleteUserResult> DeleteUserTypeSafe(
+            string username);
+
+        public readonly struct TypeSafeDeleteUserResult
+        {
+            public readonly bool hasResultObject;
+            public readonly object? resultObject;
+            public readonly int statusCode;
+            public readonly IActionResult ActionResult =>
+                hasResultObject
+                    ? (IActionResult)new ObjectResult(resultObject) { StatusCode = statusCode }
+                    : (IActionResult)new StatusCodeResult(statusCode);
+
+            private TypeSafeDeleteUserResult(int statusCode)
+            {
+                this.hasResultObject = false;
+                this.resultObject = null;
+                this.statusCode = statusCode;
+            }
+
+            private TypeSafeDeleteUserResult(int statusCode, object? resultObject)
+            {
+                this.hasResultObject = true;
+                this.resultObject = resultObject;
+                this.statusCode = statusCode;
+            }
+
+            /// <summary>Invalid username supplied</summary>
+            public static TypeSafeDeleteUserResult StatusCode400() =>
+                new TypeSafeDeleteUserResult(400);
+
+            /// <summary>User not found</summary>
+            public static TypeSafeDeleteUserResult StatusCode404() =>
+                new TypeSafeDeleteUserResult(404);
+        }
 
         /// <summary>
         /// Get user by user name
@@ -1219,12 +1788,52 @@ namespace PrincipleStudios.Demo
         /// <param name=\\"username\\">The name that needs to be fetched. Use user1 for testing. </param>
         [HttpGet]
         [Route(\\"/v2/user/{username}\\")]
-        
         [ProducesResponseType(200, Type = typeof(User))] // successful operation
         [ProducesResponseType(400)] // Invalid username supplied
         [ProducesResponseType(404)] // User not found
-        public abstract Task<IActionResult> GetUserByName(
-            [FromRoute, Required] string username);
+        public async Task<IActionResult> GetUserByName(
+            [FromRoute, Required] string username) =>
+            (await GetUserByNameTypeSafe(username)).ActionResult;
+
+        public abstract Task<TypeSafeGetUserByNameResult> GetUserByNameTypeSafe(
+            string username);
+
+        public readonly struct TypeSafeGetUserByNameResult
+        {
+            public readonly bool hasResultObject;
+            public readonly object? resultObject;
+            public readonly int statusCode;
+            public readonly IActionResult ActionResult =>
+                hasResultObject
+                    ? (IActionResult)new ObjectResult(resultObject) { StatusCode = statusCode }
+                    : (IActionResult)new StatusCodeResult(statusCode);
+
+            private TypeSafeGetUserByNameResult(int statusCode)
+            {
+                this.hasResultObject = false;
+                this.resultObject = null;
+                this.statusCode = statusCode;
+            }
+
+            private TypeSafeGetUserByNameResult(int statusCode, object? resultObject)
+            {
+                this.hasResultObject = true;
+                this.resultObject = resultObject;
+                this.statusCode = statusCode;
+            }
+
+            /// <summary>successful operation</summary>
+            public static TypeSafeGetUserByNameResult StatusCode200(User result) =>
+                new TypeSafeGetUserByNameResult(200, result);
+
+            /// <summary>Invalid username supplied</summary>
+            public static TypeSafeGetUserByNameResult StatusCode400() =>
+                new TypeSafeGetUserByNameResult(400);
+
+            /// <summary>User not found</summary>
+            public static TypeSafeGetUserByNameResult StatusCode404() =>
+                new TypeSafeGetUserByNameResult(404);
+        }
 
         /// <summary>
         /// Logs user into the system
@@ -1233,21 +1842,89 @@ namespace PrincipleStudios.Demo
         /// <param name=\\"password\\">The password for login in clear text</param>
         [HttpGet]
         [Route(\\"/v2/user/login\\")]
-        
         [ProducesResponseType(200, Type = typeof(string))] // successful operation
         [ProducesResponseType(400)] // Invalid username/password supplied
-        public abstract Task<IActionResult> LoginUser(
+        public async Task<IActionResult> LoginUser(
             [FromQuery, Required] string username,
-            [FromQuery, Required] string password);
+            [FromQuery, Required] string password) =>
+            (await LoginUserTypeSafe(username,password)).ActionResult;
+
+        public abstract Task<TypeSafeLoginUserResult> LoginUserTypeSafe(
+            string username,
+            string password);
+
+        public readonly struct TypeSafeLoginUserResult
+        {
+            public readonly bool hasResultObject;
+            public readonly object? resultObject;
+            public readonly int statusCode;
+            public readonly IActionResult ActionResult =>
+                hasResultObject
+                    ? (IActionResult)new ObjectResult(resultObject) { StatusCode = statusCode }
+                    : (IActionResult)new StatusCodeResult(statusCode);
+
+            private TypeSafeLoginUserResult(int statusCode)
+            {
+                this.hasResultObject = false;
+                this.resultObject = null;
+                this.statusCode = statusCode;
+            }
+
+            private TypeSafeLoginUserResult(int statusCode, object? resultObject)
+            {
+                this.hasResultObject = true;
+                this.resultObject = resultObject;
+                this.statusCode = statusCode;
+            }
+
+            /// <summary>successful operation</summary>
+            public static TypeSafeLoginUserResult StatusCode200(string result) =>
+                new TypeSafeLoginUserResult(200, result);
+
+            /// <summary>Invalid username/password supplied</summary>
+            public static TypeSafeLoginUserResult StatusCode400() =>
+                new TypeSafeLoginUserResult(400);
+        }
 
         /// <summary>
         /// Logs out current logged in user session
         /// </summary>
         [HttpGet]
         [Route(\\"/v2/user/logout\\")]
-        
         [ProducesResponseType(0)] // successful operation
-        public abstract Task<IActionResult> LogoutUser();
+        public async Task<IActionResult> LogoutUser() =>
+            (await LogoutUserTypeSafe()).ActionResult;
+
+        public abstract Task<TypeSafeLogoutUserResult> LogoutUserTypeSafe();
+
+        public readonly struct TypeSafeLogoutUserResult
+        {
+            public readonly bool hasResultObject;
+            public readonly object? resultObject;
+            public readonly int statusCode;
+            public readonly IActionResult ActionResult =>
+                hasResultObject
+                    ? (IActionResult)new ObjectResult(resultObject) { StatusCode = statusCode }
+                    : (IActionResult)new StatusCodeResult(statusCode);
+
+            private TypeSafeLogoutUserResult(int statusCode)
+            {
+                this.hasResultObject = false;
+                this.resultObject = null;
+                this.statusCode = statusCode;
+            }
+
+            private TypeSafeLogoutUserResult(int statusCode, object? resultObject)
+            {
+                this.hasResultObject = true;
+                this.resultObject = resultObject;
+                this.statusCode = statusCode;
+            }
+
+            /// <summary>successful operation</summary>
+            public static TypeSafeLogoutUserResult OtherStatusCode(int statusCode,  result) =>
+                new TypeSafeLogoutUserResult(statusCode);
+        }
 
         /// <summary>
         /// Updated user
@@ -1257,12 +1934,49 @@ namespace PrincipleStudios.Demo
         /// <param name=\\"user\\">Updated user object</param>
         [HttpPut]
         [Route(\\"/v2/user/{username}\\")]
-        
         [ProducesResponseType(400)] // Invalid user supplied
         [ProducesResponseType(404)] // User not found
-        public abstract Task<IActionResult> UpdateUser(
+        public async Task<IActionResult> UpdateUser(
             [FromRoute, Required] string username,
-            [FromBody] User user);
+            [FromBody] User user) =>
+            (await UpdateUserTypeSafe(username,user)).ActionResult;
+
+        public abstract Task<TypeSafeUpdateUserResult> UpdateUserTypeSafe(
+            string username,
+            User user);
+
+        public readonly struct TypeSafeUpdateUserResult
+        {
+            public readonly bool hasResultObject;
+            public readonly object? resultObject;
+            public readonly int statusCode;
+            public readonly IActionResult ActionResult =>
+                hasResultObject
+                    ? (IActionResult)new ObjectResult(resultObject) { StatusCode = statusCode }
+                    : (IActionResult)new StatusCodeResult(statusCode);
+
+            private TypeSafeUpdateUserResult(int statusCode)
+            {
+                this.hasResultObject = false;
+                this.resultObject = null;
+                this.statusCode = statusCode;
+            }
+
+            private TypeSafeUpdateUserResult(int statusCode, object? resultObject)
+            {
+                this.hasResultObject = true;
+                this.resultObject = resultObject;
+                this.statusCode = statusCode;
+            }
+
+            /// <summary>Invalid user supplied</summary>
+            public static TypeSafeUpdateUserResult StatusCode400() =>
+                new TypeSafeUpdateUserResult(400);
+
+            /// <summary>User not found</summary>
+            public static TypeSafeUpdateUserResult StatusCode404() =>
+                new TypeSafeUpdateUserResult(404);
+        }
     }
 }"
 `;

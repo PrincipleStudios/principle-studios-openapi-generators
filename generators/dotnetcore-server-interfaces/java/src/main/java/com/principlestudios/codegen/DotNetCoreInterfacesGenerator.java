@@ -2,9 +2,11 @@ package com.principlestudios.codegen;
 
 import com.samskivert.mustache.Mustache;
 import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.responses.ApiResponse;
+import io.swagger.v3.oas.models.responses.ApiResponses;
+
 import org.openapitools.codegen.*;
 import org.openapitools.codegen.languages.*;
-// import io.swagger.models.properties.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,6 +27,12 @@ public class DotNetCoreInterfacesGenerator extends AbstractCSharpCodegen {
 
     modelTemplateFiles.put("model.mustache", ".cs");
     apiTemplateFiles.put("controller.mustache", ".cs");
+    instantiationTypes.put("array", "IReadOnlyList");
+    instantiationTypes.put("list", "IReadOnlyList");
+    instantiationTypes.put("map", "IDictionary");
+
+    typeMapping.put("array", "IReadOnlyList");
+    typeMapping.put("list", "IReadOnlyList");
 
     embeddedTemplateDir = templateDir = "dotnetcore-interfaces";
 
@@ -105,5 +113,15 @@ public class DotNetCoreInterfacesGenerator extends AbstractCSharpCodegen {
   @Override
   public String toRegularExpression(String pattern) {
     return escapeText(pattern);
+  }
+
+  @Override
+  protected ApiResponse findMethodResponse(ApiResponses responses) {
+    for (String responseCode : responses.keySet()) {
+      if (responseCode.equals("default")) {
+        return responses.get(responseCode);
+      }
+    }
+    return null;
   }
 }

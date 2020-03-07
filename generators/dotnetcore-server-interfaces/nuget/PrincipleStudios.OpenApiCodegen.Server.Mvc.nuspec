@@ -31,13 +31,13 @@ information. Requires a JRE to run, we recommend https://openjdk.java.net/.
     <iconUrl>https://principlestudios.com/wp-content/themes/principle/frontend/dist/favicon.png</iconUrl>
     <copyright>2020 Matt DeKrey &amp; Principle Studios</copyright>
     <dependencies>
-      <group targetFramework=".NETCoreApp2.0">
+      <group targetFramework=".NETCoreApp3.0">
         <dependency id="Newtonsoft.Json" version="[10.0.3,)" exclude="Build" />
       </group>
     </dependencies>
   </metadata>
   <files>
-    <file src="package/_._" target="lib/netcoreapp2.0/" />
+    <file src="package/_._" target="lib/netcoreapp3.0/" />
     <file src="package/PrincipleStudios.OpenApiCodegen.Server.Mvc.targets" target="build/netcoreapp2.0/" />
 
     <!-- https://github.com/NuGet/Home/issues/3584 -->

@@ -17,6 +17,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations;
+#nullable enable
+#nullable disable warnings
 
 namespace PrincipleStudios.Demo
 { 
@@ -32,11 +34,47 @@ namespace PrincipleStudios.Demo
         /// <param name=\\"newPet\\">Pet to add to the store</param>
         [HttpPost]
         [Route(\\"/api/pets\\")]
-        
         [ProducesResponseType(200, Type = typeof(Pet))] // pet response
         [ProducesResponseType(0, Type = typeof(Error))] // unexpected error
-        public abstract Task<IActionResult> AddPet(
-            [FromBody] NewPet newPet);
+        public async Task<IActionResult> AddPet(
+            [FromBody] NewPet newPet) =>
+            (await AddPetTypeSafe(newPet)).ActionResult;
+
+        public abstract Task<TypeSafeAddPetResult> AddPetTypeSafe(
+            NewPet newPet);
+
+        public readonly struct TypeSafeAddPetResult
+        {
+            public readonly bool hasResultObject;
+            public readonly object? resultObject;
+            public readonly int statusCode;
+            public readonly IActionResult ActionResult =>
+                hasResultObject
+                    ? (IActionResult)new ObjectResult(resultObject) { StatusCode = statusCode }
+                    : (IActionResult)new StatusCodeResult(statusCode);
+
+            private TypeSafeAddPetResult(int statusCode)
+            {
+                this.hasResultObject = false;
+                this.resultObject = null;
+                this.statusCode = statusCode;
+            }
+
+            private TypeSafeAddPetResult(int statusCode, object? resultObject)
+            {
+                this.hasResultObject = true;
+                this.resultObject = resultObject;
+                this.statusCode = statusCode;
+            }
+
+            /// <summary>pet response</summary>
+            public static TypeSafeAddPetResult StatusCode200(Pet result) =>
+                new TypeSafeAddPetResult(200, result);
+
+            /// <summary>unexpected error</summary>
+            public static TypeSafeAddPetResult OtherStatusCode(int statusCode, Error result) =>
+                new TypeSafeAddPetResult(statusCode, result);
+        }
 
         /// <summary>
         /// 
@@ -45,11 +83,47 @@ namespace PrincipleStudios.Demo
         /// <param name=\\"id\\">ID of pet to delete</param>
         [HttpDelete]
         [Route(\\"/api/pets/{id}\\")]
-        
         [ProducesResponseType(204)] // pet deleted
         [ProducesResponseType(0, Type = typeof(Error))] // unexpected error
-        public abstract Task<IActionResult> DeletePet(
-            [FromRoute, Required] long? id);
+        public async Task<IActionResult> DeletePet(
+            [FromRoute, Required] long? id) =>
+            (await DeletePetTypeSafe(id)).ActionResult;
+
+        public abstract Task<TypeSafeDeletePetResult> DeletePetTypeSafe(
+            long? id);
+
+        public readonly struct TypeSafeDeletePetResult
+        {
+            public readonly bool hasResultObject;
+            public readonly object? resultObject;
+            public readonly int statusCode;
+            public readonly IActionResult ActionResult =>
+                hasResultObject
+                    ? (IActionResult)new ObjectResult(resultObject) { StatusCode = statusCode }
+                    : (IActionResult)new StatusCodeResult(statusCode);
+
+            private TypeSafeDeletePetResult(int statusCode)
+            {
+                this.hasResultObject = false;
+                this.resultObject = null;
+                this.statusCode = statusCode;
+            }
+
+            private TypeSafeDeletePetResult(int statusCode, object? resultObject)
+            {
+                this.hasResultObject = true;
+                this.resultObject = resultObject;
+                this.statusCode = statusCode;
+            }
+
+            /// <summary>pet deleted</summary>
+            public static TypeSafeDeletePetResult StatusCode204() =>
+                new TypeSafeDeletePetResult(204);
+
+            /// <summary>unexpected error</summary>
+            public static TypeSafeDeletePetResult OtherStatusCode(int statusCode, Error result) =>
+                new TypeSafeDeletePetResult(statusCode, result);
+        }
 
         /// <summary>
         /// 
@@ -58,11 +132,47 @@ namespace PrincipleStudios.Demo
         /// <param name=\\"id\\">ID of pet to fetch</param>
         [HttpGet]
         [Route(\\"/api/pets/{id}\\")]
-        
         [ProducesResponseType(200, Type = typeof(Pet))] // pet response
         [ProducesResponseType(0, Type = typeof(Error))] // unexpected error
-        public abstract Task<IActionResult> FindPetById(
-            [FromRoute, Required] long? id);
+        public async Task<IActionResult> FindPetById(
+            [FromRoute, Required] long? id) =>
+            (await FindPetByIdTypeSafe(id)).ActionResult;
+
+        public abstract Task<TypeSafeFindPetByIdResult> FindPetByIdTypeSafe(
+            long? id);
+
+        public readonly struct TypeSafeFindPetByIdResult
+        {
+            public readonly bool hasResultObject;
+            public readonly object? resultObject;
+            public readonly int statusCode;
+            public readonly IActionResult ActionResult =>
+                hasResultObject
+                    ? (IActionResult)new ObjectResult(resultObject) { StatusCode = statusCode }
+                    : (IActionResult)new StatusCodeResult(statusCode);
+
+            private TypeSafeFindPetByIdResult(int statusCode)
+            {
+                this.hasResultObject = false;
+                this.resultObject = null;
+                this.statusCode = statusCode;
+            }
+
+            private TypeSafeFindPetByIdResult(int statusCode, object? resultObject)
+            {
+                this.hasResultObject = true;
+                this.resultObject = resultObject;
+                this.statusCode = statusCode;
+            }
+
+            /// <summary>pet response</summary>
+            public static TypeSafeFindPetByIdResult StatusCode200(Pet result) =>
+                new TypeSafeFindPetByIdResult(200, result);
+
+            /// <summary>unexpected error</summary>
+            public static TypeSafeFindPetByIdResult OtherStatusCode(int statusCode, Error result) =>
+                new TypeSafeFindPetByIdResult(statusCode, result);
+        }
 
         /// <summary>
         /// 
@@ -72,12 +182,49 @@ namespace PrincipleStudios.Demo
         /// <param name=\\"limit\\">maximum number of results to return</param>
         [HttpGet]
         [Route(\\"/api/pets\\")]
-        
-        [ProducesResponseType(200, Type = typeof(List<Pet>))] // pet response
+        [ProducesResponseType(200, Type = typeof(IReadOnlyList<Pet>))] // pet response
         [ProducesResponseType(0, Type = typeof(Error))] // unexpected error
-        public abstract Task<IActionResult> FindPets(
-            [FromQuery] List<string> tags,
-            [FromQuery] int? limit);
+        public async Task<IActionResult> FindPets(
+            [FromQuery] IReadOnlyList<string> tags,
+            [FromQuery] int? limit) =>
+            (await FindPetsTypeSafe(tags,limit)).ActionResult;
+
+        public abstract Task<TypeSafeFindPetsResult> FindPetsTypeSafe(
+            IReadOnlyList<string> tags,
+            int? limit);
+
+        public readonly struct TypeSafeFindPetsResult
+        {
+            public readonly bool hasResultObject;
+            public readonly object? resultObject;
+            public readonly int statusCode;
+            public readonly IActionResult ActionResult =>
+                hasResultObject
+                    ? (IActionResult)new ObjectResult(resultObject) { StatusCode = statusCode }
+                    : (IActionResult)new StatusCodeResult(statusCode);
+
+            private TypeSafeFindPetsResult(int statusCode)
+            {
+                this.hasResultObject = false;
+                this.resultObject = null;
+                this.statusCode = statusCode;
+            }
+
+            private TypeSafeFindPetsResult(int statusCode, object? resultObject)
+            {
+                this.hasResultObject = true;
+                this.resultObject = resultObject;
+                this.statusCode = statusCode;
+            }
+
+            /// <summary>pet response</summary>
+            public static TypeSafeFindPetsResult StatusCode200(IReadOnlyList<Pet> result) =>
+                new TypeSafeFindPetsResult(200, result);
+
+            /// <summary>unexpected error</summary>
+            public static TypeSafeFindPetsResult OtherStatusCode(int statusCode, Error result) =>
+                new TypeSafeFindPetsResult(statusCode, result);
+        }
     }
 }"
 `;
