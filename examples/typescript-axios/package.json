@@ -19,7 +19,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "npm run generate-api && react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "generate-api": "openapi-generator generate -i ../../schemas/petstore.yaml -o src/api-generated/ -g typescript-axios -t node_modules/@principlestudios/openapi-codegen-typescript-axios/templates"

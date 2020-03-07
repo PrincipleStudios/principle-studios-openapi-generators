@@ -1,8 +1,1 @@
-*.local.*
-**/out.local*/
-**/*.tgz
-
-tests/
-tsconfig.json
-.gitignore
-babel.config.js
+*

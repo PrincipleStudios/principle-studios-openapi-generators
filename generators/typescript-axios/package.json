@@ -6,7 +6,17 @@
     "test": "jest"
   },
   "author": "Matt DeKrey",
-  "license": "MIT",
+  "license": "BSD-2-Clause",
+  "homepage": "https://github.com/mdekrey/principle-studios-openapi-generators",
+  "files": [
+    "templates/*.mustache",
+    "readme.md"
+  ],
+  "repository": {
+    "type" : "git",
+    "url" : "https://github.com/mdekrey/principle-studios-openapi-generators.git",
+    "directory": "generators/typescript-axios"
+  },
   "dependencies": {
     "@openapitools/openapi-generator-cli": "^1.0.10-4.2.3"
   },
