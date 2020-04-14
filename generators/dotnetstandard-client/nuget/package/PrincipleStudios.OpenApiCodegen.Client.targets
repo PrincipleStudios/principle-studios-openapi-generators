@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <CompileDependsOn>$(CompileDependsOn);CompileOpenApiCodeGen</CompileDependsOn>
+    <CoreCompileDependsOn>$(CoreCompileDependsOn);CompileOpenApiCodeGen</CoreCompileDependsOn>
+    <BuildDependsOn>$(BuildDependsOn);CompileOpenApiCodeGen</BuildDependsOn>
+    <CoreBuildDependsOn>$(CoreBuildDependsOn);CompileOpenApiCodeGen</CoreBuildDependsOn>
+    <CleanDependsOn>$(CleanDependsOn);CleanOpenApiCodeGen</CleanDependsOn>
+  </PropertyGroup>
+
+
+
+  <ItemGroup>
+    <AvailableItemName Include="OpenApiSchema" DisplayName="Open API Schema (OpenApiCodeGen)" />
+  </ItemGroup>
+
+  <Target Name="CompileOpenApiCodeGen" BeforeTargets="PrepareForBuild" DependsOnTargets="_CompileOpenApiCodeGen" Condition=" '@(OpenApiSchema)' != '' ">
+    <ItemGroup>
+      <Compile Include="%(OpenApiSchema.OutputPath)/**/*.cs" />
+    </ItemGroup>
+  </Target>
+
+  <Target Name="_UpdateOpenApiCodeGenMetatdata">
+    <ItemGroup>
+      <OpenApiSchema Condition=" '%(OpenApiSchema.Link)' != '' ">
+        <WorkingOutputPath>$([System.Text.RegularExpressions.Regex]::Replace(%(OpenApiSchema.Link), '(?&lt;=^|\\|/)..(?=$|\\|/)', '__'))</WorkingOutputPath>
+      </OpenApiSchema>
+      <OpenApiSchema Condition=" '%(OpenApiSchema.Link)' == '' ">
+        <WorkingOutputPath>$([System.Text.RegularExpressions.Regex]::Replace(%(OpenApiSchema.Identity), '(?&lt;=^|\\|/)..(?=$|\\|/)', '__'))</WorkingOutputPath>
+      </OpenApiSchema>
+      <OpenApiSchema>
+        <OutputPath>$(IntermediateOutputPath)%(OpenApiSchema.WorkingOutputPath)</OutputPath>
+        <Namespace Condition=" '%(OpenApiSchema.Namespace)' == '' ">$(RootNamespace)$([System.Text.RegularExpressions.Regex]::Replace($([System.Text.RegularExpressions.Regex]::Replace('/$([System.IO.Path]::GetDirectoryName('%(OpenApiSchema.WorkingOutputPath)'))', '[/\\]', '.')), '\.$', ''))</Namespace>
+      </OpenApiSchema>
+    </ItemGroup>
+  </Target>
+
+  <Target Name="CleanOpenApiCodeGen" BeforeTargets="Clean" DependsOnTargets="_UpdateOpenApiCodeGenMetatdata">
+    <Delete Files="@(OpenApiSchema -> '%(OutputPath)')" ContinueOnError="true" />
+  </Target>
+
+  <Target Name="_CompileOpenApiCodeGen" DependsOnTargets="_UpdateOpenApiCodeGenMetatdata" Inputs="$(MSBuildThisFileFullPath);$(MSBuildProjectFile);@(OpenApiSchema)" Outputs="@(OpenApiSchema -> '%(OutputPath)')">
+
+    <Exec Command="java -cp &quot;$(MSBuildThisFileDirectory)/*&quot; org.openapitools.codegen.OpenAPIGenerator generate -g com.principlestudios.codegen.DotNetStandardClientGenerator -o &quot;$(MSBuildProjectDirectory)/%(OpenApiSchema.OutputPath)&quot; -i &quot;%(OpenApiSchema.FullPath)&quot;  --additional-properties packageName=%(OpenApiSchema.Namespace) %(OpenApiSchema.AdditionalProperties)"/>
+
+
+    <Message Text="OpenAPI: %(OpenApiSchema.Identity) -> %(OpenApiSchema.OutputPath)" />
+  </Target>
+</Project>

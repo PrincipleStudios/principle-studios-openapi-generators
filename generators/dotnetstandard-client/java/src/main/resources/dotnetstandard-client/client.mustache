@@ -1,0 +1,91 @@
+{{>partial_header}}
+using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.Net.Http;
+using System.Threading.Tasks;
+#nullable enable
+#nullable disable warnings
+
+namespace {{packageName}}
+{ {{#operations}}
+    /// <summary>
+    /// {{description}}
+    /// </summary>{{#description}}
+    [Description("{{description}}")]{{/description}}
+    public interface I{{classname}}Client
+    { {{#operation}}
+        /// <summary>
+        /// {{#summary}}{{summary}}{{/summary}}
+        /// </summary>{{#notes}}
+        /// <remarks>{{notes}}</remarks>{{/notes}}{{#allParams}}
+        /// <param name="{{paramName}}">{{description}}</param>{{/allParams}}{{!
+        }}
+        Task<{{classname}}Client.TypeSafe{{operationId}}Result> {{operationId}}({{#allParams}}
+            {{&dataType}} {{paramName}}{{#hasMore}},{{/hasMore}}{{/allParams}});
+        {{/operation}}
+    }
+
+    public class {{classname}}ClientConfiguration
+    {
+        public string BaseUrl { get; set; }
+    }
+
+    /// <summary>
+    /// {{description}}
+    /// </summary>{{#description}}
+    [Description("{{description}}")]{{/description}}
+    public sealed class {{classname}}Client : I{{classname}}Client
+    {
+        private readonly HttpClient httpClient;
+        private readonly {{classname}}ClientConfiguration configuration;
+
+        public {{classname}}Client(HttpClient httpClient, {{classname}}ClientConfiguration configuration)
+        {
+            this.httpClient = httpClient;
+            this.configuration = configuration;
+        }
+
+{{#operation}}
+        /// <summary>
+        /// {{#summary}}{{summary}}{{/summary}}
+        /// </summary>{{#notes}}
+        /// <remarks>{{notes}}</remarks>{{/notes}}{{#allParams}}
+        /// <param name="{{paramName}}">{{description}}</param>{{/allParams}}{{!
+        }}
+        public Task<TypeSafe{{operationId}}Result> {{operationId}}({{#allParams}}
+            {{&dataType}} {{paramName}}{{#hasMore}},{{/hasMore}}{{/allParams}}) =>
+            throw new NotImplementedException();
+
+{{/operation}}{{#operation}}
+        public readonly struct TypeSafe{{operationId}}Result
+        {
+            public readonly object? resultObject;
+            public readonly int statusCode;
+
+            private TypeSafe{{operationId}}Result(int statusCode)
+            {
+                this.hasResultObject = false;
+                this.resultObject = null;
+                this.statusCode = statusCode;
+            }
+
+            private TypeSafe{{operationId}}Result(int statusCode, object? resultObject)
+            {
+                this.hasResultObject = true;
+                this.resultObject = resultObject;
+                this.statusCode = statusCode;
+            }
+            {{#responses}}
+
+            {{#message}}/// <summary>{{message}}</summary>{{/message}}
+            {{^isDefault}}public static TypeSafe{{operationId}}Result StatusCode{{code}}({{#dataType}}{{&dataType}} result{{/dataType}}){{/isDefault}}{{!
+            }}{{#isDefault}}public static TypeSafe{{operationId}}Result OtherStatusCode(int statusCode{{#dataType}}, {{&dataType}} result{{/dataType}}){{/isDefault}} =>
+                new TypeSafe{{operationId}}Result({{#isDefault}}statusCode{{/isDefault}}{{^isDefault}}{{code}}{{/isDefault}}{{#dataType}}, result{{/dataType}});
+            {{/responses}}
+        }
+
+{{/operation}}
+    }
+{{/operations}}
+}
