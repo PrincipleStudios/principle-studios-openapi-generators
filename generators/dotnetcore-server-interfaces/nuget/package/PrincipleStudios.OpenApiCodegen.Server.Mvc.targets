@@ -12,7 +12,6 @@
 
   <ItemGroup>
     <AvailableItemName Include="OpenApiSchema" DisplayName="Open API Schema (OpenApiCodeGen)" />
-    <OpenApiSchema Include="**/*.graphql" />
   </ItemGroup>
 
   <Target Name="CompileOpenApiCodeGen" BeforeTargets="PrepareForBuild" DependsOnTargets="_CompileOpenApiCodeGen" Condition=" '@(OpenApiSchema)' != '' ">
