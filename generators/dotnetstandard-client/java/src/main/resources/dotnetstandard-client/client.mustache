@@ -21,7 +21,7 @@ namespace {{packageName}}
         /// <remarks>{{notes}}</remarks>{{/notes}}{{#allParams}}
         /// <param name="{{paramName}}">{{description}}</param>{{/allParams}}{{!
         }}
-        Task<{{classname}}Client.TypeSafe{{operationId}}Result> {{operationId}}({{#allParams}}
+        Task<{{classname}}Client.ITypeSafe{{operationId}}Result> {{operationId}}Async({{#allParams}}
             {{&dataType}} {{paramName}}{{#hasMore}},{{/hasMore}}{{/allParams}});
         {{/operation}}
     }
@@ -29,6 +29,7 @@ namespace {{packageName}}
     public class {{classname}}ClientConfiguration
     {
         public string BaseUrl { get; set; }
+        public JsonSerializerSettings Settings { get; set; }
     }
 
     /// <summary>
@@ -53,35 +54,53 @@ namespace {{packageName}}
         /// <remarks>{{notes}}</remarks>{{/notes}}{{#allParams}}
         /// <param name="{{paramName}}">{{description}}</param>{{/allParams}}{{!
         }}
-        public Task<TypeSafe{{operationId}}Result> {{operationId}}({{#allParams}}
+        public Task<ITypeSafe{{operationId}}Result> {{operationId}}Async({{#allParams}}
             {{&dataType}} {{paramName}}{{#hasMore}},{{/hasMore}}{{/allParams}}) =>
-            throw new NotImplementedException();
+            // TODO
+            httpClient.GetAsync(configuration.BaseUrl + "/foo")
+                      .ContinueWith(t => (ITypeSafe{{operationId}}Result)new TypeSafe{{operationId}}Result(t.Result, configuration.Settings));
 
 {{/operation}}{{#operation}}
-        public readonly struct TypeSafe{{operationId}}Result
+        public interface ITypeSafe{{operationId}}Result
         {
-            public readonly object? resultObject;
-            public readonly int statusCode;
+            HttpResponseMessage Response { get; }
+            System.Net.HttpStatusCode StatusCode => Response.StatusCode;
 
-            private TypeSafe{{operationId}}Result(int statusCode)
-            {
-                this.hasResultObject = false;
-                this.resultObject = null;
-                this.statusCode = statusCode;
-            }
-
-            private TypeSafe{{operationId}}Result(int statusCode, object? resultObject)
-            {
-                this.hasResultObject = true;
-                this.resultObject = resultObject;
-                this.statusCode = statusCode;
-            }
             {{#responses}}
 
             {{#message}}/// <summary>{{message}}</summary>{{/message}}
-            {{^isDefault}}public static TypeSafe{{operationId}}Result StatusCode{{code}}({{#dataType}}{{&dataType}} result{{/dataType}}){{/isDefault}}{{!
-            }}{{#isDefault}}public static TypeSafe{{operationId}}Result OtherStatusCode(int statusCode{{#dataType}}, {{&dataType}} result{{/dataType}}){{/isDefault}} =>
-                new TypeSafe{{operationId}}Result({{#isDefault}}statusCode{{/isDefault}}{{^isDefault}}{{code}}{{/isDefault}}{{#dataType}}, result{{/dataType}});
+            Task<{{#dataType}}{{&dataType}}{{/dataType}}{{^dataType}}HttpResponseMessage{{/dataType}}> {{^isDefault}}StatusCode{{code}}{{/isDefault}}{{#isDefault}}OtherStatusCode{{/isDefault}}Async();
+            {{/responses}}
+        }
+
+        public readonly struct TypeSafe{{operationId}}Result : ITypeSafe{{operationId}}Result
+        {
+            private readonly JsonSerializerSettings settings;
+
+            public TypeSafe{{operationId}}Result(HttpResponseMessage response, JsonSerializerSettings settings)
+            {
+                this.Response = response;
+                this.settings = settings;
+            }
+
+            public HttpResponseMessage Response { get; }
+
+            {{#responses}}
+
+            {{#message}}/// <summary>{{message}}</summary>{{/message}}
+            public async Task<{{#dataType}}{{&dataType}}{{/dataType}}{{^dataType}}HttpResponseMessage{{/dataType}}> {{^isDefault}}StatusCode{{code}}{{/isDefault}}{{#isDefault}}OtherStatusCode{{/isDefault}}Async()
+            { {{^isDefault}}
+                if (this.Response.StatusCode != (System.Net.HttpStatusCode){{code}})
+                    throw new InvalidOperationException();
+{{/isDefault}}
+{{#dataType}}
+                var json = await this.Response.Content.ReadAsStringAsync();
+                return Newtonsoft.Json.JsonConvert.DeserializeObject<{{&dataType}}>(json, settings);
+{{/dataType}}{{^dataType}}
+                await Task.Yield();
+                return Response;
+{{/dataType}}
+            }
             {{/responses}}
         }
 
