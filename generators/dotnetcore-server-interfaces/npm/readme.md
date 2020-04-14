@@ -6,7 +6,7 @@ To install:
 
 To generate, add this to your npm scripts:
 
-    "generateDotNet": "openapi-generator-dotnet generate -g com.principlestudios.codegen.DotNetCoreInterfacesGenerator -o outDir -i ../schemas/petstore.yaml"
+    "generateDotNet": "openapi-generator-dotnet generate -g com.principlestudios.codegen.AspDotNetCoreServerInterfacesGenerator -o outDir -i ../schemas/petstore.yaml"
 
 Then:
 

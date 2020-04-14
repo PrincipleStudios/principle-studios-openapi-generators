@@ -13,14 +13,14 @@ import org.slf4j.LoggerFactory;
 import java.util.*;
 import java.io.File;
 
-public class DotNetCoreInterfacesGenerator extends AbstractCSharpCodegen {
-    protected Logger LOGGER = LoggerFactory.getLogger(AspNetCoreServerCodegen.class);
+public class AspDotNetCoreServerInterfacesGenerator extends AbstractCSharpCodegen {
+    protected Logger LOGGER = LoggerFactory.getLogger(AspDotNetCoreServerInterfacesGenerator.class);
 
   // source folder where to write the files
   protected String sourceFolder = "src";
   protected String apiVersion = "1.0.0";
 
-  public DotNetCoreInterfacesGenerator() {
+  public AspDotNetCoreServerInterfacesGenerator() {
     super();
 
     outputFolder = "generated-code" + File.separator + getName();

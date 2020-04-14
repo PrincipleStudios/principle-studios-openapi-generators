@@ -41,7 +41,7 @@
 
   <Target Name="_CompileOpenApiCodeGen" DependsOnTargets="_UpdateOpenApiCodeGenMetatdata" Inputs="$(MSBuildThisFileFullPath);$(MSBuildProjectFile);@(OpenApiSchema)" Outputs="@(OpenApiSchema -> '%(OutputPath)')">
 
-    <Exec Command="java -cp &quot;$(MSBuildThisFileDirectory)/*&quot; org.openapitools.codegen.OpenAPIGenerator generate -g com.principlestudios.codegen.DotNetCoreInterfacesGenerator -o &quot;$(MSBuildProjectDirectory)/%(OpenApiSchema.OutputPath)&quot; -i &quot;%(OpenApiSchema.FullPath)&quot;  --additional-properties packageName=%(OpenApiSchema.Namespace) %(OpenApiSchema.AdditionalProperties)"/>
+    <Exec Command="java -cp &quot;$(MSBuildThisFileDirectory)/*&quot; org.openapitools.codegen.OpenAPIGenerator generate -g com.principlestudios.codegen.AspDotNetCoreServerInterfacesGenerator -o &quot;$(MSBuildProjectDirectory)/%(OpenApiSchema.OutputPath)&quot; -i &quot;%(OpenApiSchema.FullPath)&quot;  --additional-properties packageName=%(OpenApiSchema.Namespace) %(OpenApiSchema.AdditionalProperties)"/>
 
 
     <Message Text="OpenAPI: %(OpenApiSchema.Identity) -> %(OpenApiSchema.OutputPath)" />

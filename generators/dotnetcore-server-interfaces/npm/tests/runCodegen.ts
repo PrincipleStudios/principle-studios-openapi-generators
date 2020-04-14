@@ -13,7 +13,7 @@ export function runCodegen(outDir: string, args: string) {
             const myJars = path.join(__dirname, "../../java/build/libs");
             if (!fs.existsSync(myJars)) throw new Error("My jar doesn't exist!");
 
-            exec(`java -cp "${myJars}/*" org.openapitools.codegen.OpenAPIGenerator ${args}  -g com.principlestudios.codegen.DotNetCoreInterfacesGenerator -o ${outDir}`,
+            exec(`java -cp "${myJars}/*" org.openapitools.codegen.OpenAPIGenerator ${args} -g com.principlestudios.codegen.AspDotNetCoreServerInterfacesGenerator -o ${outDir}`,
                 (error, stdout, stderr) => {
                     if (error !== null) {
                         reject({ stdout, stderr, error });
