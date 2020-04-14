@@ -13,8 +13,8 @@
     "readme.md"
   ],
   "repository": {
-    "type" : "git",
-    "url" : "https://github.com/mdekrey/principle-studios-openapi-generators.git",
+    "type": "git",
+    "url": "https://github.com/mdekrey/principle-studios-openapi-generators.git",
     "directory": "generators/typescript-axios"
   },
   "dependencies": {
