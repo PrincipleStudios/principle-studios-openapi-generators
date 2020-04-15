@@ -13,6 +13,7 @@ exports[`dotnetcore-server-interfaces petstore.yaml can generate the files 1`] =
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 #nullable enable
@@ -31,7 +32,8 @@ namespace PrincipleStudios.Demo
         /// <remarks>Creates a new pet in the store. Duplicates are allowed</remarks>
         /// <param name=\\"newPet\\">Pet to add to the store</param>
         Task<DefaultApiClient.ITypeSafeAddPetResult> AddPetAsync(
-            NewPet newPet);
+            NewPet newPet,
+            System.Net.Http.Headers.AuthenticationHeaderValue? authorizationHeader = null);
 
         /// <summary>
         /// 
@@ -39,7 +41,8 @@ namespace PrincipleStudios.Demo
         /// <remarks>deletes a single pet based on the ID supplied</remarks>
         /// <param name=\\"id\\">ID of pet to delete</param>
         Task<DefaultApiClient.ITypeSafeDeletePetResult> DeletePetAsync(
-            long? id);
+            long? id,
+            System.Net.Http.Headers.AuthenticationHeaderValue? authorizationHeader = null);
 
         /// <summary>
         /// 
@@ -47,7 +50,8 @@ namespace PrincipleStudios.Demo
         /// <remarks>Returns a user based on a single ID, if the user does not have access to the pet</remarks>
         /// <param name=\\"id\\">ID of pet to fetch</param>
         Task<DefaultApiClient.ITypeSafeFindPetByIdResult> FindPetByIdAsync(
-            long? id);
+            long? id,
+            System.Net.Http.Headers.AuthenticationHeaderValue? authorizationHeader = null);
 
         /// <summary>
         /// 
@@ -57,7 +61,8 @@ namespace PrincipleStudios.Demo
         /// <param name=\\"limit\\">maximum number of results to return</param>
         Task<DefaultApiClient.ITypeSafeFindPetsResult> FindPetsAsync(
             IReadOnlyList<string> tags,
-            int? limit);
+            int? limit,
+            System.Net.Http.Headers.AuthenticationHeaderValue? authorizationHeader = null);
     }
 
     public class DefaultApiClientConfiguration
@@ -86,10 +91,22 @@ namespace PrincipleStudios.Demo
         /// <remarks>Creates a new pet in the store. Duplicates are allowed</remarks>
         /// <param name=\\"newPet\\">Pet to add to the store</param>
         public Task<ITypeSafeAddPetResult> AddPetAsync(
-            NewPet newPet) =>
-            // TODO
-            httpClient.GetAsync(configuration.BaseUrl + \\"/foo\\")
-                      .ContinueWith(t => (ITypeSafeAddPetResult)new TypeSafeAddPetResult(t.Result, configuration.Settings));
+            NewPet newPet,
+            System.Net.Http.Headers.AuthenticationHeaderValue? authorization = null)
+        {
+            var __path = \\"/pets\\";
+            var __uri = new UriBuilder(this.configuration.BaseUrl + __path).Uri;
+            var __request = new HttpRequestMessage(HttpMethod.Post, __uri)
+                {
+                    Headers =
+                    {
+                        Authorization = authorization,
+                    },
+                    Content = new StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(newPet, this.configuration.Settings), System.Text.Encoding.UTF8, \\"application/json\\"),
+                };
+            return this.httpClient.SendAsync(__request)
+                             .ContinueWith(t => (ITypeSafeAddPetResult)new TypeSafeAddPetResult(t.Result, this.configuration.Settings));
+        }
 
         /// <summary>
         /// 
@@ -97,10 +114,22 @@ namespace PrincipleStudios.Demo
         /// <remarks>deletes a single pet based on the ID supplied</remarks>
         /// <param name=\\"id\\">ID of pet to delete</param>
         public Task<ITypeSafeDeletePetResult> DeletePetAsync(
-            long? id) =>
-            // TODO
-            httpClient.GetAsync(configuration.BaseUrl + \\"/foo\\")
-                      .ContinueWith(t => (ITypeSafeDeletePetResult)new TypeSafeDeletePetResult(t.Result, configuration.Settings));
+            long? id,
+            System.Net.Http.Headers.AuthenticationHeaderValue? authorization = null)
+        {
+            var __path = \\"/pets/{id}\\"
+                        .Replace($\\"{{{\\"id\\"}}}\\", System.Web.HttpUtility.UrlEncode(id.ToString()));
+            var __uri = new UriBuilder(this.configuration.BaseUrl + __path).Uri;
+            var __request = new HttpRequestMessage(HttpMethod.Delete, __uri)
+                {
+                    Headers =
+                    {
+                        Authorization = authorization,
+                    },
+                };
+            return this.httpClient.SendAsync(__request)
+                             .ContinueWith(t => (ITypeSafeDeletePetResult)new TypeSafeDeletePetResult(t.Result, this.configuration.Settings));
+        }
 
         /// <summary>
         /// 
@@ -108,10 +137,22 @@ namespace PrincipleStudios.Demo
         /// <remarks>Returns a user based on a single ID, if the user does not have access to the pet</remarks>
         /// <param name=\\"id\\">ID of pet to fetch</param>
         public Task<ITypeSafeFindPetByIdResult> FindPetByIdAsync(
-            long? id) =>
-            // TODO
-            httpClient.GetAsync(configuration.BaseUrl + \\"/foo\\")
-                      .ContinueWith(t => (ITypeSafeFindPetByIdResult)new TypeSafeFindPetByIdResult(t.Result, configuration.Settings));
+            long? id,
+            System.Net.Http.Headers.AuthenticationHeaderValue? authorization = null)
+        {
+            var __path = \\"/pets/{id}\\"
+                        .Replace($\\"{{{\\"id\\"}}}\\", System.Web.HttpUtility.UrlEncode(id.ToString()));
+            var __uri = new UriBuilder(this.configuration.BaseUrl + __path).Uri;
+            var __request = new HttpRequestMessage(HttpMethod.Get, __uri)
+                {
+                    Headers =
+                    {
+                        Authorization = authorization,
+                    },
+                };
+            return this.httpClient.SendAsync(__request)
+                             .ContinueWith(t => (ITypeSafeFindPetByIdResult)new TypeSafeFindPetByIdResult(t.Result, this.configuration.Settings));
+        }
 
         /// <summary>
         /// 
@@ -121,10 +162,29 @@ namespace PrincipleStudios.Demo
         /// <param name=\\"limit\\">maximum number of results to return</param>
         public Task<ITypeSafeFindPetsResult> FindPetsAsync(
             IReadOnlyList<string> tags,
-            int? limit) =>
-            // TODO
-            httpClient.GetAsync(configuration.BaseUrl + \\"/foo\\")
-                      .ContinueWith(t => (ITypeSafeFindPetsResult)new TypeSafeFindPetsResult(t.Result, configuration.Settings));
+            int? limit,
+            System.Net.Http.Headers.AuthenticationHeaderValue? authorization = null)
+        {
+            var __path = \\"/pets\\";
+            var __uri = new UriBuilder(this.configuration.BaseUrl + __path)
+                    {
+                        Query = new System.Collections.Specialized.NameValueCollection
+                        {
+                            { \\"tags\\", tags.Select(v => v.ToString()) },
+                            { \\"limit\\", limit.ToString() },
+                        }.ToString(),
+                    }
+                    .Uri;
+            var __request = new HttpRequestMessage(HttpMethod.Get, __uri)
+                {
+                    Headers =
+                    {
+                        Authorization = authorization,
+                    },
+                };
+            return this.httpClient.SendAsync(__request)
+                             .ContinueWith(t => (ITypeSafeFindPetsResult)new TypeSafeFindPetsResult(t.Result, this.configuration.Settings));
+        }
 
 
         public interface ITypeSafeAddPetResult
@@ -400,6 +460,38 @@ namespace PrincipleStudios.Demo
 `;
 
 exports[`dotnetcore-server-interfaces petstore.yaml can generate the files 3`] = `
+"
+/*
+ * Swagger Petstore
+ *
+ * A sample API that uses a petstore as an example to demonstrate features in the OpenAPI 3.0 specification
+ *
+ * OpenAPI spec version: 1.0.0
+ * Contact: apiteam@swagger.io
+ * Generated by: https://openapi-generator.tech
+ */
+using System;
+using System.Collections.Generic;
+#nullable enable
+#nullable disable warnings
+
+namespace PrincipleStudios.Demo
+{
+    public static class NameValueCollectionExtensions
+    {
+        public static void Add(this System.Collections.Specialized.NameValueCollection original, string key, IEnumerable<string> values)
+        {
+            foreach (var value in values)
+            {
+                original.Add(key, value);
+            }
+        }
+    }
+}
+"
+`;
+
+exports[`dotnetcore-server-interfaces petstore.yaml can generate the files 4`] = `
 "/*
  * Swagger Petstore
  *
@@ -494,7 +586,7 @@ namespace PrincipleStudios.Demo
 }"
 `;
 
-exports[`dotnetcore-server-interfaces petstore.yaml can generate the files 4`] = `
+exports[`dotnetcore-server-interfaces petstore.yaml can generate the files 5`] = `
 "/*
  * Swagger Petstore
  *
@@ -605,7 +697,7 @@ namespace PrincipleStudios.Demo
 }"
 `;
 
-exports[`dotnetcore-server-interfaces petstore.yaml can generate the files 5`] = `
+exports[`dotnetcore-server-interfaces petstore.yaml can generate the files 6`] = `
 "/*
  * Swagger Petstore
  *

@@ -3,6 +3,9 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <LangVersion>8.0</LangVersion>
+    <ApplicationIcon />
+    <OutputType>Exe</OutputType>
+    <StartupObject />
   </PropertyGroup>
 
   <ItemGroup>
@@ -10,7 +13,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <OpenApiSchema Include="..\..\..\schemas\petstore.yaml" Link="Clients\petstore.yaml" />
+    <OpenApiSchema Include="..\..\..\schemas\petstore.yaml" Link="Clients\Petstore\petstore.yaml" />
+    <OpenApiSchema Include="..\..\..\schemas\petstore3.json" Link="Clients\Petstore3\petstore3.json" />
   </ItemGroup>
 
 

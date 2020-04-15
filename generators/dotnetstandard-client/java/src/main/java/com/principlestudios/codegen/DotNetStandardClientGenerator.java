@@ -14,7 +14,8 @@ import java.util.*;
 import java.io.File;
 
 public class DotNetStandardClientGenerator extends AbstractCSharpCodegen {
-    protected Logger LOGGER = LoggerFactory.getLogger(DotNetStandardClientGenerator.class);
+  protected Logger LOGGER = LoggerFactory.getLogger(DotNetStandardClientGenerator.class);
+  private final List<String> dotnetKnownMethods = Arrays.asList(new String[] { "DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT", "TRACE" });
 
   // source folder where to write the files
   protected String sourceFolder = "src";
@@ -69,6 +70,8 @@ public class DotNetStandardClientGenerator extends AbstractCSharpCodegen {
 
     setReturnICollection(true);
     useDateTimeOffset(true);
+
+    supportingFiles.add(new SupportingFile("extensions.mustache", "", "extensions.cs"));
   }
 
   @Override
@@ -100,8 +103,11 @@ public class DotNetStandardClientGenerator extends AbstractCSharpCodegen {
       }
     }
 
-    // Converts, for example, PUT to HttpPut for controller attributes
-    operation.httpMethod = "Http" + operation.httpMethod.substring(0, 1) + operation.httpMethod.substring(1).toLowerCase(Locale.ROOT);
+    // Converts, for example, PUT to Put for client methods
+
+    operation.httpMethod = dotnetKnownMethods.contains(operation.httpMethod)
+      ? "HttpMethod." + operation.httpMethod.substring(0, 1) + operation.httpMethod.substring(1).toLowerCase(Locale.ROOT)
+      : "new HttpMethod(\"" + operation.httpMethod + "\")";
   }
 
   @Override

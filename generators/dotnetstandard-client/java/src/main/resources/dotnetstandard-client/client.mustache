@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 #nullable enable
@@ -22,7 +23,8 @@ namespace {{packageName}}
         /// <param name="{{paramName}}">{{description}}</param>{{/allParams}}{{!
         }}
         Task<{{classname}}Client.ITypeSafe{{operationId}}Result> {{operationId}}Async({{#allParams}}
-            {{&dataType}} {{paramName}}{{#hasMore}},{{/hasMore}}{{/allParams}});
+            {{&dataType}} {{paramName}},{{/allParams}}
+            System.Net.Http.Headers.AuthenticationHeaderValue? authorizationHeader = null);
         {{/operation}}
     }
 
@@ -55,10 +57,37 @@ namespace {{packageName}}
         /// <param name="{{paramName}}">{{description}}</param>{{/allParams}}{{!
         }}
         public Task<ITypeSafe{{operationId}}Result> {{operationId}}Async({{#allParams}}
-            {{&dataType}} {{paramName}}{{#hasMore}},{{/hasMore}}{{/allParams}}) =>
-            // TODO
-            httpClient.GetAsync(configuration.BaseUrl + "/foo")
-                      .ContinueWith(t => (ITypeSafe{{operationId}}Result)new TypeSafe{{operationId}}Result(t.Result, configuration.Settings));
+            {{&dataType}} {{paramName}},{{/allParams}}
+            System.Net.Http.Headers.AuthenticationHeaderValue? authorization = null)
+        {
+            var __path = "{{{path}}}"{{#pathParams}}
+                        .Replace($"{{{"{{baseName}}"}}}", System.Web.HttpUtility.UrlEncode({{paramName}}.ToString())){{/pathParams}};
+            var __uri = new UriBuilder(this.configuration.BaseUrl + __path){{#hasQueryParams}}
+                    {
+                        Query = new System.Collections.Specialized.NameValueCollection
+                        {
+{{#queryParams}}
+                            { "{{baseName}}", {{paramName}}{{#isCollectionFormatMulti}}.Select(v => v.ToString()){{/isCollectionFormatMulti}}{{^isCollectionFormatMulti}}.ToString(){{/isCollectionFormatMulti}} },
+{{/queryParams}}
+                        }.ToString(),
+                    }
+                    {{/hasQueryParams}}.Uri;
+            var __request = new HttpRequestMessage({{{httpMethod}}}, __uri)
+                {
+                    Headers =
+                    {
+                        Authorization = authorization,
+                    },
+{{#bodyParam}}
+                    Content = new StringContent(Newtonsoft.Json.JsonConvert.SerializeObject({{paramName}}, this.configuration.Settings), System.Text.Encoding.UTF8, "{{^consumes}}application/json{{/consumes}}{{#consumes.0}}{{{mediaType}}}{{/consumes.0}}"),
+{{/bodyParam}}
+                };
+{{#headerParams}}
+            __request.Headers.Add("{{baseName}}", {{paramName}}{{#isListContainer}}.Select(v => v.ToString()){{/isListContainer}}{{^isListContainer}}.ToString(){{/isListContainer}});
+{{/headerParams}}
+            return this.httpClient.SendAsync(__request)
+                             .ContinueWith(t => (ITypeSafe{{operationId}}Result)new TypeSafe{{operationId}}Result(t.Result, this.configuration.Settings));
+        }
 
 {{/operation}}{{#operation}}
         public interface ITypeSafe{{operationId}}Result
