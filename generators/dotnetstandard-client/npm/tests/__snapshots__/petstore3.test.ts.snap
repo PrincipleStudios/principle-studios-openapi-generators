@@ -721,7 +721,7 @@ namespace PrincipleStudios.Demo
         /// <param name=\\"pet\\">Pet object that needs to be added to the store</param>
         Task<PetApiClient.ITypeSafeAddPetResult> AddPetAsync(
             Pet pet,
-            System.Net.Http.Headers.AuthenticationHeaderValue? authorizationHeader = null);
+            System.Net.Http.Headers.AuthenticationHeaderValue? _authorizationHeader = null);
 
         /// <summary>
         /// Deletes a pet
@@ -731,7 +731,7 @@ namespace PrincipleStudios.Demo
         Task<PetApiClient.ITypeSafeDeletePetResult> DeletePetAsync(
             long? petId,
             string apiKey,
-            System.Net.Http.Headers.AuthenticationHeaderValue? authorizationHeader = null);
+            System.Net.Http.Headers.AuthenticationHeaderValue? _authorizationHeader = null);
 
         /// <summary>
         /// Finds Pets by status
@@ -740,7 +740,7 @@ namespace PrincipleStudios.Demo
         /// <param name=\\"status\\">Status values that need to be considered for filter</param>
         Task<PetApiClient.ITypeSafeFindPetsByStatusResult> FindPetsByStatusAsync(
             IReadOnlyList<string> status,
-            System.Net.Http.Headers.AuthenticationHeaderValue? authorizationHeader = null);
+            System.Net.Http.Headers.AuthenticationHeaderValue? _authorizationHeader = null);
 
         /// <summary>
         /// Finds Pets by tags
@@ -749,7 +749,7 @@ namespace PrincipleStudios.Demo
         /// <param name=\\"tags\\">Tags to filter by</param>
         Task<PetApiClient.ITypeSafeFindPetsByTagsResult> FindPetsByTagsAsync(
             IReadOnlyList<string> tags,
-            System.Net.Http.Headers.AuthenticationHeaderValue? authorizationHeader = null);
+            System.Net.Http.Headers.AuthenticationHeaderValue? _authorizationHeader = null);
 
         /// <summary>
         /// Find pet by ID
@@ -758,7 +758,7 @@ namespace PrincipleStudios.Demo
         /// <param name=\\"petId\\">ID of pet to return</param>
         Task<PetApiClient.ITypeSafeGetPetByIdResult> GetPetByIdAsync(
             long? petId,
-            System.Net.Http.Headers.AuthenticationHeaderValue? authorizationHeader = null);
+            System.Net.Http.Headers.AuthenticationHeaderValue? _authorizationHeader = null);
 
         /// <summary>
         /// Update an existing pet
@@ -766,7 +766,7 @@ namespace PrincipleStudios.Demo
         /// <param name=\\"pet\\">Pet object that needs to be added to the store</param>
         Task<PetApiClient.ITypeSafeUpdatePetResult> UpdatePetAsync(
             Pet pet,
-            System.Net.Http.Headers.AuthenticationHeaderValue? authorizationHeader = null);
+            System.Net.Http.Headers.AuthenticationHeaderValue? _authorizationHeader = null);
 
         /// <summary>
         /// Updates a pet in the store with form data
@@ -778,7 +778,7 @@ namespace PrincipleStudios.Demo
             long? petId,
             string name,
             string status,
-            System.Net.Http.Headers.AuthenticationHeaderValue? authorizationHeader = null);
+            System.Net.Http.Headers.AuthenticationHeaderValue? _authorizationHeader = null);
 
         /// <summary>
         /// uploads an image
@@ -788,7 +788,7 @@ namespace PrincipleStudios.Demo
         Task<PetApiClient.ITypeSafeUploadFileResult> UploadFileAsync(
             long? petId,
             System.IO.Stream body,
-            System.Net.Http.Headers.AuthenticationHeaderValue? authorizationHeader = null);
+            System.Net.Http.Headers.AuthenticationHeaderValue? _authorizationHeader = null);
     }
 
     public class PetApiClientConfiguration
@@ -814,47 +814,37 @@ namespace PrincipleStudios.Demo
         /// <summary>
         /// Add a new pet to the store
         /// </summary>
-        /// <param name=\\"pet\\">Pet object that needs to be added to the store</param>
+        /// <param name=\\"_pet\\">Pet object that needs to be added to the store</param>
         public Task<ITypeSafeAddPetResult> AddPetAsync(
-            Pet pet,
+            Pet _pet,
             System.Net.Http.Headers.AuthenticationHeaderValue? authorization = null)
         {
-            var __path = \\"/pet\\";
-            var __uri = new UriBuilder(this.configuration.BaseUrl + __path).Uri;
-            var __request = new HttpRequestMessage(HttpMethod.Post, __uri)
-                {
-                    Headers =
-                    {
-                        Authorization = authorization,
-                    },
-                    Content = new StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(pet, this.configuration.Settings), System.Text.Encoding.UTF8, \\"application/json\\"),
-                };
-            return this.httpClient.SendAsync(__request)
+            var path = \\"/pet\\";
+            var uri = new UriBuilder(this.configuration.BaseUrl + path).Uri;
+            var request = new HttpRequestMessage(HttpMethod.Post, uri);
+            request.Headers.Authorization = authorization;
+            request.Content = new StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(_pet, this.configuration.Settings), System.Text.Encoding.UTF8, \\"application/json\\");
+            return this.httpClient.SendAsync(request)
                              .ContinueWith(t => (ITypeSafeAddPetResult)new TypeSafeAddPetResult(t.Result, this.configuration.Settings));
         }
 
         /// <summary>
         /// Deletes a pet
         /// </summary>
-        /// <param name=\\"petId\\">Pet id to delete</param>
-        /// <param name=\\"apiKey\\"></param>
+        /// <param name=\\"_petId\\">Pet id to delete</param>
+        /// <param name=\\"_apiKey\\"></param>
         public Task<ITypeSafeDeletePetResult> DeletePetAsync(
-            long? petId,
-            string apiKey,
+            long? _petId,
+            string _apiKey,
             System.Net.Http.Headers.AuthenticationHeaderValue? authorization = null)
         {
-            var __path = \\"/pet/{petId}\\"
-                        .Replace($\\"{{{\\"petId\\"}}}\\", System.Web.HttpUtility.UrlEncode(petId.ToString()));
-            var __uri = new UriBuilder(this.configuration.BaseUrl + __path).Uri;
-            var __request = new HttpRequestMessage(HttpMethod.Delete, __uri)
-                {
-                    Headers =
-                    {
-                        Authorization = authorization,
-                    },
-                };
-            __request.Headers.Add(\\"api_key\\", apiKey.ToString());
-            return this.httpClient.SendAsync(__request)
+            var path = \\"/pet/{petId}\\"
+                        .Replace($\\"{{{\\"petId\\"}}}\\", System.Web.HttpUtility.UrlEncode(_petId.ToString()));
+            var uri = new UriBuilder(this.configuration.BaseUrl + path).Uri;
+            var request = new HttpRequestMessage(HttpMethod.Delete, uri);
+            request.Headers.Authorization = authorization;
+            request.Headers.Add(\\"api_key\\", apiKey.ToString());
+            return this.httpClient.SendAsync(request)
                              .ContinueWith(t => (ITypeSafeDeletePetResult)new TypeSafeDeletePetResult(t.Result, this.configuration.Settings));
         }
 
@@ -862,28 +852,29 @@ namespace PrincipleStudios.Demo
         /// Finds Pets by status
         /// </summary>
         /// <remarks>Multiple status values can be provided with comma separated strings</remarks>
-        /// <param name=\\"status\\">Status values that need to be considered for filter</param>
+        /// <param name=\\"_status\\">Status values that need to be considered for filter</param>
         public Task<ITypeSafeFindPetsByStatusResult> FindPetsByStatusAsync(
-            IReadOnlyList<string> status,
+            IReadOnlyList<string> _status,
             System.Net.Http.Headers.AuthenticationHeaderValue? authorization = null)
         {
-            var __path = \\"/pet/findByStatus\\";
-            var __uri = new UriBuilder(this.configuration.BaseUrl + __path)
+            var path = \\"/pet/findByStatus\\";
+            var query = new System.Collections.Specialized.NameValueCollection
+            {
+                { \\"status\\", _status.Select(v => v.ToString()) },
+            };
+            var uri = new UriBuilder(this.configuration.BaseUrl + path)
                     {
-                        Query = new System.Collections.Specialized.NameValueCollection
-                        {
-                            { \\"status\\", status.Select(v => v.ToString()) },
-                        }.ToString(),
+                        Query = string.Join(\\"&\\", from key in query.AllKeys
+                                                 let values = query.GetValues(key)
+                                                 where values != null && values.Length > 0
+                                                 let keySuffix = values.Length > 1 ? \\"[]\\" : \\"\\"
+                                                 from value in values
+                                                 select System.Web.HttpUtility.UrlEncode(key) + keySuffix + \\"=\\" + System.Web.HttpUtility.UrlEncode(value)),
                     }
                     .Uri;
-            var __request = new HttpRequestMessage(HttpMethod.Get, __uri)
-                {
-                    Headers =
-                    {
-                        Authorization = authorization,
-                    },
-                };
-            return this.httpClient.SendAsync(__request)
+            var request = new HttpRequestMessage(HttpMethod.Get, uri);
+            request.Headers.Authorization = authorization;
+            return this.httpClient.SendAsync(request)
                              .ContinueWith(t => (ITypeSafeFindPetsByStatusResult)new TypeSafeFindPetsByStatusResult(t.Result, this.configuration.Settings));
         }
 
@@ -891,28 +882,29 @@ namespace PrincipleStudios.Demo
         /// Finds Pets by tags
         /// </summary>
         /// <remarks>Muliple tags can be provided with comma separated strings. Use tag1, tag2, tag3 for testing.</remarks>
-        /// <param name=\\"tags\\">Tags to filter by</param>
+        /// <param name=\\"_tags\\">Tags to filter by</param>
         public Task<ITypeSafeFindPetsByTagsResult> FindPetsByTagsAsync(
-            IReadOnlyList<string> tags,
+            IReadOnlyList<string> _tags,
             System.Net.Http.Headers.AuthenticationHeaderValue? authorization = null)
         {
-            var __path = \\"/pet/findByTags\\";
-            var __uri = new UriBuilder(this.configuration.BaseUrl + __path)
+            var path = \\"/pet/findByTags\\";
+            var query = new System.Collections.Specialized.NameValueCollection
+            {
+                { \\"tags\\", _tags.Select(v => v.ToString()) },
+            };
+            var uri = new UriBuilder(this.configuration.BaseUrl + path)
                     {
-                        Query = new System.Collections.Specialized.NameValueCollection
-                        {
-                            { \\"tags\\", tags.Select(v => v.ToString()) },
-                        }.ToString(),
+                        Query = string.Join(\\"&\\", from key in query.AllKeys
+                                                 let values = query.GetValues(key)
+                                                 where values != null && values.Length > 0
+                                                 let keySuffix = values.Length > 1 ? \\"[]\\" : \\"\\"
+                                                 from value in values
+                                                 select System.Web.HttpUtility.UrlEncode(key) + keySuffix + \\"=\\" + System.Web.HttpUtility.UrlEncode(value)),
                     }
                     .Uri;
-            var __request = new HttpRequestMessage(HttpMethod.Get, __uri)
-                {
-                    Headers =
-                    {
-                        Authorization = authorization,
-                    },
-                };
-            return this.httpClient.SendAsync(__request)
+            var request = new HttpRequestMessage(HttpMethod.Get, uri);
+            request.Headers.Authorization = authorization;
+            return this.httpClient.SendAsync(request)
                              .ContinueWith(t => (ITypeSafeFindPetsByTagsResult)new TypeSafeFindPetsByTagsResult(t.Result, this.configuration.Settings));
         }
 
@@ -920,100 +912,80 @@ namespace PrincipleStudios.Demo
         /// Find pet by ID
         /// </summary>
         /// <remarks>Returns a single pet</remarks>
-        /// <param name=\\"petId\\">ID of pet to return</param>
+        /// <param name=\\"_petId\\">ID of pet to return</param>
         public Task<ITypeSafeGetPetByIdResult> GetPetByIdAsync(
-            long? petId,
+            long? _petId,
             System.Net.Http.Headers.AuthenticationHeaderValue? authorization = null)
         {
-            var __path = \\"/pet/{petId}\\"
-                        .Replace($\\"{{{\\"petId\\"}}}\\", System.Web.HttpUtility.UrlEncode(petId.ToString()));
-            var __uri = new UriBuilder(this.configuration.BaseUrl + __path).Uri;
-            var __request = new HttpRequestMessage(HttpMethod.Get, __uri)
-                {
-                    Headers =
-                    {
-                        Authorization = authorization,
-                    },
-                };
-            return this.httpClient.SendAsync(__request)
+            var path = \\"/pet/{petId}\\"
+                        .Replace($\\"{{{\\"petId\\"}}}\\", System.Web.HttpUtility.UrlEncode(_petId.ToString()));
+            var uri = new UriBuilder(this.configuration.BaseUrl + path).Uri;
+            var request = new HttpRequestMessage(HttpMethod.Get, uri);
+            request.Headers.Authorization = authorization;
+            return this.httpClient.SendAsync(request)
                              .ContinueWith(t => (ITypeSafeGetPetByIdResult)new TypeSafeGetPetByIdResult(t.Result, this.configuration.Settings));
         }
 
         /// <summary>
         /// Update an existing pet
         /// </summary>
-        /// <param name=\\"pet\\">Pet object that needs to be added to the store</param>
+        /// <param name=\\"_pet\\">Pet object that needs to be added to the store</param>
         public Task<ITypeSafeUpdatePetResult> UpdatePetAsync(
-            Pet pet,
+            Pet _pet,
             System.Net.Http.Headers.AuthenticationHeaderValue? authorization = null)
         {
-            var __path = \\"/pet\\";
-            var __uri = new UriBuilder(this.configuration.BaseUrl + __path).Uri;
-            var __request = new HttpRequestMessage(HttpMethod.Put, __uri)
-                {
-                    Headers =
-                    {
-                        Authorization = authorization,
-                    },
-                    Content = new StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(pet, this.configuration.Settings), System.Text.Encoding.UTF8, \\"application/json\\"),
-                };
-            return this.httpClient.SendAsync(__request)
+            var path = \\"/pet\\";
+            var uri = new UriBuilder(this.configuration.BaseUrl + path).Uri;
+            var request = new HttpRequestMessage(HttpMethod.Put, uri);
+            request.Headers.Authorization = authorization;
+            request.Content = new StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(_pet, this.configuration.Settings), System.Text.Encoding.UTF8, \\"application/json\\");
+            return this.httpClient.SendAsync(request)
                              .ContinueWith(t => (ITypeSafeUpdatePetResult)new TypeSafeUpdatePetResult(t.Result, this.configuration.Settings));
         }
 
         /// <summary>
         /// Updates a pet in the store with form data
         /// </summary>
-        /// <param name=\\"petId\\">ID of pet that needs to be updated</param>
-        /// <param name=\\"name\\">Updated name of the pet</param>
-        /// <param name=\\"status\\">Updated status of the pet</param>
+        /// <param name=\\"_petId\\">ID of pet that needs to be updated</param>
+        /// <param name=\\"_name\\">Updated name of the pet</param>
+        /// <param name=\\"_status\\">Updated status of the pet</param>
         public Task<ITypeSafeUpdatePetWithFormResult> UpdatePetWithFormAsync(
-            long? petId,
-            string name,
-            string status,
+            long? _petId,
+            string _name,
+            string _status,
             System.Net.Http.Headers.AuthenticationHeaderValue? authorization = null)
         {
-            var __path = \\"/pet/{petId}\\"
-                        .Replace($\\"{{{\\"petId\\"}}}\\", System.Web.HttpUtility.UrlEncode(petId.ToString()));
-            var __uri = new UriBuilder(this.configuration.BaseUrl + __path).Uri;
-            var __request = new HttpRequestMessage(HttpMethod.Post, __uri)
-                {
-                    Headers =
-                    {
-                        Authorization = authorization,
-                    },
-                };
-            return this.httpClient.SendAsync(__request)
+            var path = \\"/pet/{petId}\\"
+                        .Replace($\\"{{{\\"petId\\"}}}\\", System.Web.HttpUtility.UrlEncode(_petId.ToString()));
+            var uri = new UriBuilder(this.configuration.BaseUrl + path).Uri;
+            var request = new HttpRequestMessage(HttpMethod.Post, uri);
+            request.Headers.Authorization = authorization;
+            return this.httpClient.SendAsync(request)
                              .ContinueWith(t => (ITypeSafeUpdatePetWithFormResult)new TypeSafeUpdatePetWithFormResult(t.Result, this.configuration.Settings));
         }
 
         /// <summary>
         /// uploads an image
         /// </summary>
-        /// <param name=\\"petId\\">ID of pet to update</param>
-        /// <param name=\\"body\\"></param>
+        /// <param name=\\"_petId\\">ID of pet to update</param>
+        /// <param name=\\"_body\\"></param>
         public Task<ITypeSafeUploadFileResult> UploadFileAsync(
-            long? petId,
-            System.IO.Stream body,
+            long? _petId,
+            System.IO.Stream _body,
             System.Net.Http.Headers.AuthenticationHeaderValue? authorization = null)
         {
-            var __path = \\"/pet/{petId}/uploadImage\\"
-                        .Replace($\\"{{{\\"petId\\"}}}\\", System.Web.HttpUtility.UrlEncode(petId.ToString()));
-            var __uri = new UriBuilder(this.configuration.BaseUrl + __path).Uri;
-            var __request = new HttpRequestMessage(HttpMethod.Post, __uri)
-                {
-                    Headers =
-                    {
-                        Authorization = authorization,
-                    },
-                    Content = new StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(body, this.configuration.Settings), System.Text.Encoding.UTF8, \\"application/octet-stream\\"),
-                };
-            return this.httpClient.SendAsync(__request)
+            var path = \\"/pet/{petId}/uploadImage\\"
+                        .Replace($\\"{{{\\"petId\\"}}}\\", System.Web.HttpUtility.UrlEncode(_petId.ToString()));
+            var uri = new UriBuilder(this.configuration.BaseUrl + path).Uri;
+            var request = new HttpRequestMessage(HttpMethod.Post, uri);
+            request.Headers.Authorization = authorization;
+            request.Content = new StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(_body, this.configuration.Settings), System.Text.Encoding.UTF8, \\"application/octet-stream\\");
+            return this.httpClient.SendAsync(request)
                              .ContinueWith(t => (ITypeSafeUploadFileResult)new TypeSafeUploadFileResult(t.Result, this.configuration.Settings));
         }
 
 
-        public interface ITypeSafeAddPetResult
+        public interface ITypeSafeAddPetResult : IDisposable
         {
             HttpResponseMessage Response { get; }
             System.Net.HttpStatusCode StatusCode => Response.StatusCode;
@@ -1037,18 +1009,22 @@ namespace PrincipleStudios.Demo
 
 
             /// <summary>Invalid input</summary>
-            public async Task<HttpResponseMessage> StatusCode405Async()
-            { 
+            public Task<HttpResponseMessage> StatusCode405Async()
+            {
                 if (this.Response.StatusCode != (System.Net.HttpStatusCode)405)
                     throw new InvalidOperationException();
 
-                await Task.Yield();
-                return Response;
+                return Task.FromResult(Response);
+            }
+
+            void IDisposable.Dispose()
+            {
+                ((IDisposable)Response).Dispose();
             }
         }
 
 
-        public interface ITypeSafeDeletePetResult
+        public interface ITypeSafeDeletePetResult : IDisposable
         {
             HttpResponseMessage Response { get; }
             System.Net.HttpStatusCode StatusCode => Response.StatusCode;
@@ -1075,28 +1051,31 @@ namespace PrincipleStudios.Demo
 
 
             /// <summary>Invalid ID supplied</summary>
-            public async Task<HttpResponseMessage> StatusCode400Async()
-            { 
+            public Task<HttpResponseMessage> StatusCode400Async()
+            {
                 if (this.Response.StatusCode != (System.Net.HttpStatusCode)400)
                     throw new InvalidOperationException();
 
-                await Task.Yield();
-                return Response;
+                return Task.FromResult(Response);
             }
 
             /// <summary>Pet not found</summary>
-            public async Task<HttpResponseMessage> StatusCode404Async()
-            { 
+            public Task<HttpResponseMessage> StatusCode404Async()
+            {
                 if (this.Response.StatusCode != (System.Net.HttpStatusCode)404)
                     throw new InvalidOperationException();
 
-                await Task.Yield();
-                return Response;
+                return Task.FromResult(Response);
+            }
+
+            void IDisposable.Dispose()
+            {
+                ((IDisposable)Response).Dispose();
             }
         }
 
 
-        public interface ITypeSafeFindPetsByStatusResult
+        public interface ITypeSafeFindPetsByStatusResult : IDisposable
         {
             HttpResponseMessage Response { get; }
             System.Net.HttpStatusCode StatusCode => Response.StatusCode;
@@ -1123,27 +1102,32 @@ namespace PrincipleStudios.Demo
 
 
             /// <summary>successful operation</summary>
-            public async Task<IReadOnlyList<Pet>> StatusCode200Async()
-            { 
+            public Task<IReadOnlyList<Pet>> StatusCode200Async()
+            {
                 if (this.Response.StatusCode != (System.Net.HttpStatusCode)200)
                     throw new InvalidOperationException();
-                var json = await this.Response.Content.ReadAsStringAsync();
-                return Newtonsoft.Json.JsonConvert.DeserializeObject<IReadOnlyList<Pet>>(json, settings);
+                var settings = this.settings;
+                return this.Response.Content.ReadAsStringAsync()
+                    .ContinueWith(t => Newtonsoft.Json.JsonConvert.DeserializeObject<IReadOnlyList<Pet>>(t.Result, settings));
             }
 
             /// <summary>Invalid status value</summary>
-            public async Task<HttpResponseMessage> StatusCode400Async()
-            { 
+            public Task<HttpResponseMessage> StatusCode400Async()
+            {
                 if (this.Response.StatusCode != (System.Net.HttpStatusCode)400)
                     throw new InvalidOperationException();
 
-                await Task.Yield();
-                return Response;
+                return Task.FromResult(Response);
+            }
+
+            void IDisposable.Dispose()
+            {
+                ((IDisposable)Response).Dispose();
             }
         }
 
 
-        public interface ITypeSafeFindPetsByTagsResult
+        public interface ITypeSafeFindPetsByTagsResult : IDisposable
         {
             HttpResponseMessage Response { get; }
             System.Net.HttpStatusCode StatusCode => Response.StatusCode;
@@ -1170,27 +1154,32 @@ namespace PrincipleStudios.Demo
 
 
             /// <summary>successful operation</summary>
-            public async Task<IReadOnlyList<Pet>> StatusCode200Async()
-            { 
+            public Task<IReadOnlyList<Pet>> StatusCode200Async()
+            {
                 if (this.Response.StatusCode != (System.Net.HttpStatusCode)200)
                     throw new InvalidOperationException();
-                var json = await this.Response.Content.ReadAsStringAsync();
-                return Newtonsoft.Json.JsonConvert.DeserializeObject<IReadOnlyList<Pet>>(json, settings);
+                var settings = this.settings;
+                return this.Response.Content.ReadAsStringAsync()
+                    .ContinueWith(t => Newtonsoft.Json.JsonConvert.DeserializeObject<IReadOnlyList<Pet>>(t.Result, settings));
             }
 
             /// <summary>Invalid tag value</summary>
-            public async Task<HttpResponseMessage> StatusCode400Async()
-            { 
+            public Task<HttpResponseMessage> StatusCode400Async()
+            {
                 if (this.Response.StatusCode != (System.Net.HttpStatusCode)400)
                     throw new InvalidOperationException();
 
-                await Task.Yield();
-                return Response;
+                return Task.FromResult(Response);
+            }
+
+            void IDisposable.Dispose()
+            {
+                ((IDisposable)Response).Dispose();
             }
         }
 
 
-        public interface ITypeSafeGetPetByIdResult
+        public interface ITypeSafeGetPetByIdResult : IDisposable
         {
             HttpResponseMessage Response { get; }
             System.Net.HttpStatusCode StatusCode => Response.StatusCode;
@@ -1220,37 +1209,41 @@ namespace PrincipleStudios.Demo
 
 
             /// <summary>successful operation</summary>
-            public async Task<Pet> StatusCode200Async()
-            { 
+            public Task<Pet> StatusCode200Async()
+            {
                 if (this.Response.StatusCode != (System.Net.HttpStatusCode)200)
                     throw new InvalidOperationException();
-                var json = await this.Response.Content.ReadAsStringAsync();
-                return Newtonsoft.Json.JsonConvert.DeserializeObject<Pet>(json, settings);
+                var settings = this.settings;
+                return this.Response.Content.ReadAsStringAsync()
+                    .ContinueWith(t => Newtonsoft.Json.JsonConvert.DeserializeObject<Pet>(t.Result, settings));
             }
 
             /// <summary>Invalid ID supplied</summary>
-            public async Task<HttpResponseMessage> StatusCode400Async()
-            { 
+            public Task<HttpResponseMessage> StatusCode400Async()
+            {
                 if (this.Response.StatusCode != (System.Net.HttpStatusCode)400)
                     throw new InvalidOperationException();
 
-                await Task.Yield();
-                return Response;
+                return Task.FromResult(Response);
             }
 
             /// <summary>Pet not found</summary>
-            public async Task<HttpResponseMessage> StatusCode404Async()
-            { 
+            public Task<HttpResponseMessage> StatusCode404Async()
+            {
                 if (this.Response.StatusCode != (System.Net.HttpStatusCode)404)
                     throw new InvalidOperationException();
 
-                await Task.Yield();
-                return Response;
+                return Task.FromResult(Response);
+            }
+
+            void IDisposable.Dispose()
+            {
+                ((IDisposable)Response).Dispose();
             }
         }
 
 
-        public interface ITypeSafeUpdatePetResult
+        public interface ITypeSafeUpdatePetResult : IDisposable
         {
             HttpResponseMessage Response { get; }
             System.Net.HttpStatusCode StatusCode => Response.StatusCode;
@@ -1280,38 +1273,40 @@ namespace PrincipleStudios.Demo
 
 
             /// <summary>Invalid ID supplied</summary>
-            public async Task<HttpResponseMessage> StatusCode400Async()
-            { 
+            public Task<HttpResponseMessage> StatusCode400Async()
+            {
                 if (this.Response.StatusCode != (System.Net.HttpStatusCode)400)
                     throw new InvalidOperationException();
 
-                await Task.Yield();
-                return Response;
+                return Task.FromResult(Response);
             }
 
             /// <summary>Pet not found</summary>
-            public async Task<HttpResponseMessage> StatusCode404Async()
-            { 
+            public Task<HttpResponseMessage> StatusCode404Async()
+            {
                 if (this.Response.StatusCode != (System.Net.HttpStatusCode)404)
                     throw new InvalidOperationException();
 
-                await Task.Yield();
-                return Response;
+                return Task.FromResult(Response);
             }
 
             /// <summary>Validation exception</summary>
-            public async Task<HttpResponseMessage> StatusCode405Async()
-            { 
+            public Task<HttpResponseMessage> StatusCode405Async()
+            {
                 if (this.Response.StatusCode != (System.Net.HttpStatusCode)405)
                     throw new InvalidOperationException();
 
-                await Task.Yield();
-                return Response;
+                return Task.FromResult(Response);
+            }
+
+            void IDisposable.Dispose()
+            {
+                ((IDisposable)Response).Dispose();
             }
         }
 
 
-        public interface ITypeSafeUpdatePetWithFormResult
+        public interface ITypeSafeUpdatePetWithFormResult : IDisposable
         {
             HttpResponseMessage Response { get; }
             System.Net.HttpStatusCode StatusCode => Response.StatusCode;
@@ -1335,18 +1330,22 @@ namespace PrincipleStudios.Demo
 
 
             /// <summary>Invalid input</summary>
-            public async Task<HttpResponseMessage> StatusCode405Async()
-            { 
+            public Task<HttpResponseMessage> StatusCode405Async()
+            {
                 if (this.Response.StatusCode != (System.Net.HttpStatusCode)405)
                     throw new InvalidOperationException();
 
-                await Task.Yield();
-                return Response;
+                return Task.FromResult(Response);
+            }
+
+            void IDisposable.Dispose()
+            {
+                ((IDisposable)Response).Dispose();
             }
         }
 
 
-        public interface ITypeSafeUploadFileResult
+        public interface ITypeSafeUploadFileResult : IDisposable
         {
             HttpResponseMessage Response { get; }
             System.Net.HttpStatusCode StatusCode => Response.StatusCode;
@@ -1370,12 +1369,18 @@ namespace PrincipleStudios.Demo
 
 
             /// <summary>successful operation</summary>
-            public async Task<ApiResponse> StatusCode200Async()
-            { 
+            public Task<ApiResponse> StatusCode200Async()
+            {
                 if (this.Response.StatusCode != (System.Net.HttpStatusCode)200)
                     throw new InvalidOperationException();
-                var json = await this.Response.Content.ReadAsStringAsync();
-                return Newtonsoft.Json.JsonConvert.DeserializeObject<ApiResponse>(json, settings);
+                var settings = this.settings;
+                return this.Response.Content.ReadAsStringAsync()
+                    .ContinueWith(t => Newtonsoft.Json.JsonConvert.DeserializeObject<ApiResponse>(t.Result, settings));
+            }
+
+            void IDisposable.Dispose()
+            {
+                ((IDisposable)Response).Dispose();
             }
         }
 
@@ -1416,14 +1421,14 @@ namespace PrincipleStudios.Demo
         /// <param name=\\"orderId\\">ID of the order that needs to be deleted</param>
         Task<StoreApiClient.ITypeSafeDeleteOrderResult> DeleteOrderAsync(
             long? orderId,
-            System.Net.Http.Headers.AuthenticationHeaderValue? authorizationHeader = null);
+            System.Net.Http.Headers.AuthenticationHeaderValue? _authorizationHeader = null);
 
         /// <summary>
         /// Returns pet inventories by status
         /// </summary>
         /// <remarks>Returns a map of status codes to quantities</remarks>
         Task<StoreApiClient.ITypeSafeGetInventoryResult> GetInventoryAsync(
-            System.Net.Http.Headers.AuthenticationHeaderValue? authorizationHeader = null);
+            System.Net.Http.Headers.AuthenticationHeaderValue? _authorizationHeader = null);
 
         /// <summary>
         /// Find purchase order by ID
@@ -1432,7 +1437,7 @@ namespace PrincipleStudios.Demo
         /// <param name=\\"orderId\\">ID of pet that needs to be fetched</param>
         Task<StoreApiClient.ITypeSafeGetOrderByIdResult> GetOrderByIdAsync(
             long? orderId,
-            System.Net.Http.Headers.AuthenticationHeaderValue? authorizationHeader = null);
+            System.Net.Http.Headers.AuthenticationHeaderValue? _authorizationHeader = null);
 
         /// <summary>
         /// Place an order for a pet
@@ -1440,7 +1445,7 @@ namespace PrincipleStudios.Demo
         /// <param name=\\"order\\">order placed for purchasing the pet</param>
         Task<StoreApiClient.ITypeSafePlaceOrderResult> PlaceOrderAsync(
             Order order,
-            System.Net.Http.Headers.AuthenticationHeaderValue? authorizationHeader = null);
+            System.Net.Http.Headers.AuthenticationHeaderValue? _authorizationHeader = null);
     }
 
     public class StoreApiClientConfiguration
@@ -1467,22 +1472,17 @@ namespace PrincipleStudios.Demo
         /// Delete purchase order by ID
         /// </summary>
         /// <remarks>For valid response try integer IDs with positive integer value. Negative or non-integer values will generate API errors</remarks>
-        /// <param name=\\"orderId\\">ID of the order that needs to be deleted</param>
+        /// <param name=\\"_orderId\\">ID of the order that needs to be deleted</param>
         public Task<ITypeSafeDeleteOrderResult> DeleteOrderAsync(
-            long? orderId,
+            long? _orderId,
             System.Net.Http.Headers.AuthenticationHeaderValue? authorization = null)
         {
-            var __path = \\"/store/order/{orderId}\\"
-                        .Replace($\\"{{{\\"orderId\\"}}}\\", System.Web.HttpUtility.UrlEncode(orderId.ToString()));
-            var __uri = new UriBuilder(this.configuration.BaseUrl + __path).Uri;
-            var __request = new HttpRequestMessage(HttpMethod.Delete, __uri)
-                {
-                    Headers =
-                    {
-                        Authorization = authorization,
-                    },
-                };
-            return this.httpClient.SendAsync(__request)
+            var path = \\"/store/order/{orderId}\\"
+                        .Replace($\\"{{{\\"orderId\\"}}}\\", System.Web.HttpUtility.UrlEncode(_orderId.ToString()));
+            var uri = new UriBuilder(this.configuration.BaseUrl + path).Uri;
+            var request = new HttpRequestMessage(HttpMethod.Delete, uri);
+            request.Headers.Authorization = authorization;
+            return this.httpClient.SendAsync(request)
                              .ContinueWith(t => (ITypeSafeDeleteOrderResult)new TypeSafeDeleteOrderResult(t.Result, this.configuration.Settings));
         }
 
@@ -1493,16 +1493,11 @@ namespace PrincipleStudios.Demo
         public Task<ITypeSafeGetInventoryResult> GetInventoryAsync(
             System.Net.Http.Headers.AuthenticationHeaderValue? authorization = null)
         {
-            var __path = \\"/store/inventory\\";
-            var __uri = new UriBuilder(this.configuration.BaseUrl + __path).Uri;
-            var __request = new HttpRequestMessage(HttpMethod.Get, __uri)
-                {
-                    Headers =
-                    {
-                        Authorization = authorization,
-                    },
-                };
-            return this.httpClient.SendAsync(__request)
+            var path = \\"/store/inventory\\";
+            var uri = new UriBuilder(this.configuration.BaseUrl + path).Uri;
+            var request = new HttpRequestMessage(HttpMethod.Get, uri);
+            request.Headers.Authorization = authorization;
+            return this.httpClient.SendAsync(request)
                              .ContinueWith(t => (ITypeSafeGetInventoryResult)new TypeSafeGetInventoryResult(t.Result, this.configuration.Settings));
         }
 
@@ -1510,49 +1505,39 @@ namespace PrincipleStudios.Demo
         /// Find purchase order by ID
         /// </summary>
         /// <remarks>For valid response try integer IDs with value &gt;&#x3D; 1 and &lt;&#x3D; 10. Other values will generated exceptions</remarks>
-        /// <param name=\\"orderId\\">ID of pet that needs to be fetched</param>
+        /// <param name=\\"_orderId\\">ID of pet that needs to be fetched</param>
         public Task<ITypeSafeGetOrderByIdResult> GetOrderByIdAsync(
-            long? orderId,
+            long? _orderId,
             System.Net.Http.Headers.AuthenticationHeaderValue? authorization = null)
         {
-            var __path = \\"/store/order/{orderId}\\"
-                        .Replace($\\"{{{\\"orderId\\"}}}\\", System.Web.HttpUtility.UrlEncode(orderId.ToString()));
-            var __uri = new UriBuilder(this.configuration.BaseUrl + __path).Uri;
-            var __request = new HttpRequestMessage(HttpMethod.Get, __uri)
-                {
-                    Headers =
-                    {
-                        Authorization = authorization,
-                    },
-                };
-            return this.httpClient.SendAsync(__request)
+            var path = \\"/store/order/{orderId}\\"
+                        .Replace($\\"{{{\\"orderId\\"}}}\\", System.Web.HttpUtility.UrlEncode(_orderId.ToString()));
+            var uri = new UriBuilder(this.configuration.BaseUrl + path).Uri;
+            var request = new HttpRequestMessage(HttpMethod.Get, uri);
+            request.Headers.Authorization = authorization;
+            return this.httpClient.SendAsync(request)
                              .ContinueWith(t => (ITypeSafeGetOrderByIdResult)new TypeSafeGetOrderByIdResult(t.Result, this.configuration.Settings));
         }
 
         /// <summary>
         /// Place an order for a pet
         /// </summary>
-        /// <param name=\\"order\\">order placed for purchasing the pet</param>
+        /// <param name=\\"_order\\">order placed for purchasing the pet</param>
         public Task<ITypeSafePlaceOrderResult> PlaceOrderAsync(
-            Order order,
+            Order _order,
             System.Net.Http.Headers.AuthenticationHeaderValue? authorization = null)
         {
-            var __path = \\"/store/order\\";
-            var __uri = new UriBuilder(this.configuration.BaseUrl + __path).Uri;
-            var __request = new HttpRequestMessage(HttpMethod.Post, __uri)
-                {
-                    Headers =
-                    {
-                        Authorization = authorization,
-                    },
-                    Content = new StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(order, this.configuration.Settings), System.Text.Encoding.UTF8, \\"application/json\\"),
-                };
-            return this.httpClient.SendAsync(__request)
+            var path = \\"/store/order\\";
+            var uri = new UriBuilder(this.configuration.BaseUrl + path).Uri;
+            var request = new HttpRequestMessage(HttpMethod.Post, uri);
+            request.Headers.Authorization = authorization;
+            request.Content = new StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(_order, this.configuration.Settings), System.Text.Encoding.UTF8, \\"application/json\\");
+            return this.httpClient.SendAsync(request)
                              .ContinueWith(t => (ITypeSafePlaceOrderResult)new TypeSafePlaceOrderResult(t.Result, this.configuration.Settings));
         }
 
 
-        public interface ITypeSafeDeleteOrderResult
+        public interface ITypeSafeDeleteOrderResult : IDisposable
         {
             HttpResponseMessage Response { get; }
             System.Net.HttpStatusCode StatusCode => Response.StatusCode;
@@ -1579,28 +1564,31 @@ namespace PrincipleStudios.Demo
 
 
             /// <summary>Invalid ID supplied</summary>
-            public async Task<HttpResponseMessage> StatusCode400Async()
-            { 
+            public Task<HttpResponseMessage> StatusCode400Async()
+            {
                 if (this.Response.StatusCode != (System.Net.HttpStatusCode)400)
                     throw new InvalidOperationException();
 
-                await Task.Yield();
-                return Response;
+                return Task.FromResult(Response);
             }
 
             /// <summary>Order not found</summary>
-            public async Task<HttpResponseMessage> StatusCode404Async()
-            { 
+            public Task<HttpResponseMessage> StatusCode404Async()
+            {
                 if (this.Response.StatusCode != (System.Net.HttpStatusCode)404)
                     throw new InvalidOperationException();
 
-                await Task.Yield();
-                return Response;
+                return Task.FromResult(Response);
+            }
+
+            void IDisposable.Dispose()
+            {
+                ((IDisposable)Response).Dispose();
             }
         }
 
 
-        public interface ITypeSafeGetInventoryResult
+        public interface ITypeSafeGetInventoryResult : IDisposable
         {
             HttpResponseMessage Response { get; }
             System.Net.HttpStatusCode StatusCode => Response.StatusCode;
@@ -1624,17 +1612,23 @@ namespace PrincipleStudios.Demo
 
 
             /// <summary>successful operation</summary>
-            public async Task<Dictionary<string, int?>> StatusCode200Async()
-            { 
+            public Task<Dictionary<string, int?>> StatusCode200Async()
+            {
                 if (this.Response.StatusCode != (System.Net.HttpStatusCode)200)
                     throw new InvalidOperationException();
-                var json = await this.Response.Content.ReadAsStringAsync();
-                return Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<string, int?>>(json, settings);
+                var settings = this.settings;
+                return this.Response.Content.ReadAsStringAsync()
+                    .ContinueWith(t => Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<string, int?>>(t.Result, settings));
+            }
+
+            void IDisposable.Dispose()
+            {
+                ((IDisposable)Response).Dispose();
             }
         }
 
 
-        public interface ITypeSafeGetOrderByIdResult
+        public interface ITypeSafeGetOrderByIdResult : IDisposable
         {
             HttpResponseMessage Response { get; }
             System.Net.HttpStatusCode StatusCode => Response.StatusCode;
@@ -1664,37 +1658,41 @@ namespace PrincipleStudios.Demo
 
 
             /// <summary>successful operation</summary>
-            public async Task<Order> StatusCode200Async()
-            { 
+            public Task<Order> StatusCode200Async()
+            {
                 if (this.Response.StatusCode != (System.Net.HttpStatusCode)200)
                     throw new InvalidOperationException();
-                var json = await this.Response.Content.ReadAsStringAsync();
-                return Newtonsoft.Json.JsonConvert.DeserializeObject<Order>(json, settings);
+                var settings = this.settings;
+                return this.Response.Content.ReadAsStringAsync()
+                    .ContinueWith(t => Newtonsoft.Json.JsonConvert.DeserializeObject<Order>(t.Result, settings));
             }
 
             /// <summary>Invalid ID supplied</summary>
-            public async Task<HttpResponseMessage> StatusCode400Async()
-            { 
+            public Task<HttpResponseMessage> StatusCode400Async()
+            {
                 if (this.Response.StatusCode != (System.Net.HttpStatusCode)400)
                     throw new InvalidOperationException();
 
-                await Task.Yield();
-                return Response;
+                return Task.FromResult(Response);
             }
 
             /// <summary>Order not found</summary>
-            public async Task<HttpResponseMessage> StatusCode404Async()
-            { 
+            public Task<HttpResponseMessage> StatusCode404Async()
+            {
                 if (this.Response.StatusCode != (System.Net.HttpStatusCode)404)
                     throw new InvalidOperationException();
 
-                await Task.Yield();
-                return Response;
+                return Task.FromResult(Response);
+            }
+
+            void IDisposable.Dispose()
+            {
+                ((IDisposable)Response).Dispose();
             }
         }
 
 
-        public interface ITypeSafePlaceOrderResult
+        public interface ITypeSafePlaceOrderResult : IDisposable
         {
             HttpResponseMessage Response { get; }
             System.Net.HttpStatusCode StatusCode => Response.StatusCode;
@@ -1721,22 +1719,27 @@ namespace PrincipleStudios.Demo
 
 
             /// <summary>successful operation</summary>
-            public async Task<Order> StatusCode200Async()
-            { 
+            public Task<Order> StatusCode200Async()
+            {
                 if (this.Response.StatusCode != (System.Net.HttpStatusCode)200)
                     throw new InvalidOperationException();
-                var json = await this.Response.Content.ReadAsStringAsync();
-                return Newtonsoft.Json.JsonConvert.DeserializeObject<Order>(json, settings);
+                var settings = this.settings;
+                return this.Response.Content.ReadAsStringAsync()
+                    .ContinueWith(t => Newtonsoft.Json.JsonConvert.DeserializeObject<Order>(t.Result, settings));
             }
 
             /// <summary>Invalid Order</summary>
-            public async Task<HttpResponseMessage> StatusCode400Async()
-            { 
+            public Task<HttpResponseMessage> StatusCode400Async()
+            {
                 if (this.Response.StatusCode != (System.Net.HttpStatusCode)400)
                     throw new InvalidOperationException();
 
-                await Task.Yield();
-                return Response;
+                return Task.FromResult(Response);
+            }
+
+            void IDisposable.Dispose()
+            {
+                ((IDisposable)Response).Dispose();
             }
         }
 
@@ -2055,7 +2058,7 @@ namespace PrincipleStudios.Demo
         /// <param name=\\"user\\">Created user object</param>
         Task<UserApiClient.ITypeSafeCreateUserResult> CreateUserAsync(
             User user,
-            System.Net.Http.Headers.AuthenticationHeaderValue? authorizationHeader = null);
+            System.Net.Http.Headers.AuthenticationHeaderValue? _authorizationHeader = null);
 
         /// <summary>
         /// Creates list of users with given input array
@@ -2063,7 +2066,7 @@ namespace PrincipleStudios.Demo
         /// <param name=\\"user\\">List of user object</param>
         Task<UserApiClient.ITypeSafeCreateUsersWithArrayInputResult> CreateUsersWithArrayInputAsync(
             IReadOnlyList<User> user,
-            System.Net.Http.Headers.AuthenticationHeaderValue? authorizationHeader = null);
+            System.Net.Http.Headers.AuthenticationHeaderValue? _authorizationHeader = null);
 
         /// <summary>
         /// Creates list of users with given input array
@@ -2071,7 +2074,7 @@ namespace PrincipleStudios.Demo
         /// <param name=\\"user\\">List of user object</param>
         Task<UserApiClient.ITypeSafeCreateUsersWithListInputResult> CreateUsersWithListInputAsync(
             IReadOnlyList<User> user,
-            System.Net.Http.Headers.AuthenticationHeaderValue? authorizationHeader = null);
+            System.Net.Http.Headers.AuthenticationHeaderValue? _authorizationHeader = null);
 
         /// <summary>
         /// Delete user
@@ -2080,7 +2083,7 @@ namespace PrincipleStudios.Demo
         /// <param name=\\"username\\">The name that needs to be deleted</param>
         Task<UserApiClient.ITypeSafeDeleteUserResult> DeleteUserAsync(
             string username,
-            System.Net.Http.Headers.AuthenticationHeaderValue? authorizationHeader = null);
+            System.Net.Http.Headers.AuthenticationHeaderValue? _authorizationHeader = null);
 
         /// <summary>
         /// Get user by user name
@@ -2088,7 +2091,7 @@ namespace PrincipleStudios.Demo
         /// <param name=\\"username\\">The name that needs to be fetched. Use user1 for testing. </param>
         Task<UserApiClient.ITypeSafeGetUserByNameResult> GetUserByNameAsync(
             string username,
-            System.Net.Http.Headers.AuthenticationHeaderValue? authorizationHeader = null);
+            System.Net.Http.Headers.AuthenticationHeaderValue? _authorizationHeader = null);
 
         /// <summary>
         /// Logs user into the system
@@ -2098,13 +2101,13 @@ namespace PrincipleStudios.Demo
         Task<UserApiClient.ITypeSafeLoginUserResult> LoginUserAsync(
             string username,
             string password,
-            System.Net.Http.Headers.AuthenticationHeaderValue? authorizationHeader = null);
+            System.Net.Http.Headers.AuthenticationHeaderValue? _authorizationHeader = null);
 
         /// <summary>
         /// Logs out current logged in user session
         /// </summary>
         Task<UserApiClient.ITypeSafeLogoutUserResult> LogoutUserAsync(
-            System.Net.Http.Headers.AuthenticationHeaderValue? authorizationHeader = null);
+            System.Net.Http.Headers.AuthenticationHeaderValue? _authorizationHeader = null);
 
         /// <summary>
         /// Updated user
@@ -2115,7 +2118,7 @@ namespace PrincipleStudios.Demo
         Task<UserApiClient.ITypeSafeUpdateUserResult> UpdateUserAsync(
             string username,
             User user,
-            System.Net.Http.Headers.AuthenticationHeaderValue? authorizationHeader = null);
+            System.Net.Http.Headers.AuthenticationHeaderValue? _authorizationHeader = null);
     }
 
     public class UserApiClientConfiguration
@@ -2142,66 +2145,51 @@ namespace PrincipleStudios.Demo
         /// Create user
         /// </summary>
         /// <remarks>This can only be done by the logged in user.</remarks>
-        /// <param name=\\"user\\">Created user object</param>
+        /// <param name=\\"_user\\">Created user object</param>
         public Task<ITypeSafeCreateUserResult> CreateUserAsync(
-            User user,
+            User _user,
             System.Net.Http.Headers.AuthenticationHeaderValue? authorization = null)
         {
-            var __path = \\"/user\\";
-            var __uri = new UriBuilder(this.configuration.BaseUrl + __path).Uri;
-            var __request = new HttpRequestMessage(HttpMethod.Post, __uri)
-                {
-                    Headers =
-                    {
-                        Authorization = authorization,
-                    },
-                    Content = new StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(user, this.configuration.Settings), System.Text.Encoding.UTF8, \\"application/json\\"),
-                };
-            return this.httpClient.SendAsync(__request)
+            var path = \\"/user\\";
+            var uri = new UriBuilder(this.configuration.BaseUrl + path).Uri;
+            var request = new HttpRequestMessage(HttpMethod.Post, uri);
+            request.Headers.Authorization = authorization;
+            request.Content = new StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(_user, this.configuration.Settings), System.Text.Encoding.UTF8, \\"application/json\\");
+            return this.httpClient.SendAsync(request)
                              .ContinueWith(t => (ITypeSafeCreateUserResult)new TypeSafeCreateUserResult(t.Result, this.configuration.Settings));
         }
 
         /// <summary>
         /// Creates list of users with given input array
         /// </summary>
-        /// <param name=\\"user\\">List of user object</param>
+        /// <param name=\\"_user\\">List of user object</param>
         public Task<ITypeSafeCreateUsersWithArrayInputResult> CreateUsersWithArrayInputAsync(
-            IReadOnlyList<User> user,
+            IReadOnlyList<User> _user,
             System.Net.Http.Headers.AuthenticationHeaderValue? authorization = null)
         {
-            var __path = \\"/user/createWithArray\\";
-            var __uri = new UriBuilder(this.configuration.BaseUrl + __path).Uri;
-            var __request = new HttpRequestMessage(HttpMethod.Post, __uri)
-                {
-                    Headers =
-                    {
-                        Authorization = authorization,
-                    },
-                    Content = new StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(user, this.configuration.Settings), System.Text.Encoding.UTF8, \\"application/json\\"),
-                };
-            return this.httpClient.SendAsync(__request)
+            var path = \\"/user/createWithArray\\";
+            var uri = new UriBuilder(this.configuration.BaseUrl + path).Uri;
+            var request = new HttpRequestMessage(HttpMethod.Post, uri);
+            request.Headers.Authorization = authorization;
+            request.Content = new StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(_user, this.configuration.Settings), System.Text.Encoding.UTF8, \\"application/json\\");
+            return this.httpClient.SendAsync(request)
                              .ContinueWith(t => (ITypeSafeCreateUsersWithArrayInputResult)new TypeSafeCreateUsersWithArrayInputResult(t.Result, this.configuration.Settings));
         }
 
         /// <summary>
         /// Creates list of users with given input array
         /// </summary>
-        /// <param name=\\"user\\">List of user object</param>
+        /// <param name=\\"_user\\">List of user object</param>
         public Task<ITypeSafeCreateUsersWithListInputResult> CreateUsersWithListInputAsync(
-            IReadOnlyList<User> user,
+            IReadOnlyList<User> _user,
             System.Net.Http.Headers.AuthenticationHeaderValue? authorization = null)
         {
-            var __path = \\"/user/createWithList\\";
-            var __uri = new UriBuilder(this.configuration.BaseUrl + __path).Uri;
-            var __request = new HttpRequestMessage(HttpMethod.Post, __uri)
-                {
-                    Headers =
-                    {
-                        Authorization = authorization,
-                    },
-                    Content = new StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(user, this.configuration.Settings), System.Text.Encoding.UTF8, \\"application/json\\"),
-                };
-            return this.httpClient.SendAsync(__request)
+            var path = \\"/user/createWithList\\";
+            var uri = new UriBuilder(this.configuration.BaseUrl + path).Uri;
+            var request = new HttpRequestMessage(HttpMethod.Post, uri);
+            request.Headers.Authorization = authorization;
+            request.Content = new StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(_user, this.configuration.Settings), System.Text.Encoding.UTF8, \\"application/json\\");
+            return this.httpClient.SendAsync(request)
                              .ContinueWith(t => (ITypeSafeCreateUsersWithListInputResult)new TypeSafeCreateUsersWithListInputResult(t.Result, this.configuration.Settings));
         }
 
@@ -2209,75 +2197,66 @@ namespace PrincipleStudios.Demo
         /// Delete user
         /// </summary>
         /// <remarks>This can only be done by the logged in user.</remarks>
-        /// <param name=\\"username\\">The name that needs to be deleted</param>
+        /// <param name=\\"_username\\">The name that needs to be deleted</param>
         public Task<ITypeSafeDeleteUserResult> DeleteUserAsync(
-            string username,
+            string _username,
             System.Net.Http.Headers.AuthenticationHeaderValue? authorization = null)
         {
-            var __path = \\"/user/{username}\\"
-                        .Replace($\\"{{{\\"username\\"}}}\\", System.Web.HttpUtility.UrlEncode(username.ToString()));
-            var __uri = new UriBuilder(this.configuration.BaseUrl + __path).Uri;
-            var __request = new HttpRequestMessage(HttpMethod.Delete, __uri)
-                {
-                    Headers =
-                    {
-                        Authorization = authorization,
-                    },
-                };
-            return this.httpClient.SendAsync(__request)
+            var path = \\"/user/{username}\\"
+                        .Replace($\\"{{{\\"username\\"}}}\\", System.Web.HttpUtility.UrlEncode(_username.ToString()));
+            var uri = new UriBuilder(this.configuration.BaseUrl + path).Uri;
+            var request = new HttpRequestMessage(HttpMethod.Delete, uri);
+            request.Headers.Authorization = authorization;
+            return this.httpClient.SendAsync(request)
                              .ContinueWith(t => (ITypeSafeDeleteUserResult)new TypeSafeDeleteUserResult(t.Result, this.configuration.Settings));
         }
 
         /// <summary>
         /// Get user by user name
         /// </summary>
-        /// <param name=\\"username\\">The name that needs to be fetched. Use user1 for testing. </param>
+        /// <param name=\\"_username\\">The name that needs to be fetched. Use user1 for testing. </param>
         public Task<ITypeSafeGetUserByNameResult> GetUserByNameAsync(
-            string username,
+            string _username,
             System.Net.Http.Headers.AuthenticationHeaderValue? authorization = null)
         {
-            var __path = \\"/user/{username}\\"
-                        .Replace($\\"{{{\\"username\\"}}}\\", System.Web.HttpUtility.UrlEncode(username.ToString()));
-            var __uri = new UriBuilder(this.configuration.BaseUrl + __path).Uri;
-            var __request = new HttpRequestMessage(HttpMethod.Get, __uri)
-                {
-                    Headers =
-                    {
-                        Authorization = authorization,
-                    },
-                };
-            return this.httpClient.SendAsync(__request)
+            var path = \\"/user/{username}\\"
+                        .Replace($\\"{{{\\"username\\"}}}\\", System.Web.HttpUtility.UrlEncode(_username.ToString()));
+            var uri = new UriBuilder(this.configuration.BaseUrl + path).Uri;
+            var request = new HttpRequestMessage(HttpMethod.Get, uri);
+            request.Headers.Authorization = authorization;
+            return this.httpClient.SendAsync(request)
                              .ContinueWith(t => (ITypeSafeGetUserByNameResult)new TypeSafeGetUserByNameResult(t.Result, this.configuration.Settings));
         }
 
         /// <summary>
         /// Logs user into the system
         /// </summary>
-        /// <param name=\\"username\\">The user name for login</param>
-        /// <param name=\\"password\\">The password for login in clear text</param>
+        /// <param name=\\"_username\\">The user name for login</param>
+        /// <param name=\\"_password\\">The password for login in clear text</param>
         public Task<ITypeSafeLoginUserResult> LoginUserAsync(
-            string username,
-            string password,
+            string _username,
+            string _password,
             System.Net.Http.Headers.AuthenticationHeaderValue? authorization = null)
         {
-            var __path = \\"/user/login\\";
-            var __uri = new UriBuilder(this.configuration.BaseUrl + __path)
+            var path = \\"/user/login\\";
+            var query = new System.Collections.Specialized.NameValueCollection
+            {
+                { \\"username\\", _username.ToString() },
+                { \\"password\\", _password.ToString() },
+            };
+            var uri = new UriBuilder(this.configuration.BaseUrl + path)
                     {
-                        Query = new System.Collections.Specialized.NameValueCollection
-                        {
-                            { \\"username\\", username.ToString() },
-                            { \\"password\\", password.ToString() },
-                        }.ToString(),
+                        Query = string.Join(\\"&\\", from key in query.AllKeys
+                                                 let values = query.GetValues(key)
+                                                 where values != null && values.Length > 0
+                                                 let keySuffix = values.Length > 1 ? \\"[]\\" : \\"\\"
+                                                 from value in values
+                                                 select System.Web.HttpUtility.UrlEncode(key) + keySuffix + \\"=\\" + System.Web.HttpUtility.UrlEncode(value)),
                     }
                     .Uri;
-            var __request = new HttpRequestMessage(HttpMethod.Get, __uri)
-                {
-                    Headers =
-                    {
-                        Authorization = authorization,
-                    },
-                };
-            return this.httpClient.SendAsync(__request)
+            var request = new HttpRequestMessage(HttpMethod.Get, uri);
+            request.Headers.Authorization = authorization;
+            return this.httpClient.SendAsync(request)
                              .ContinueWith(t => (ITypeSafeLoginUserResult)new TypeSafeLoginUserResult(t.Result, this.configuration.Settings));
         }
 
@@ -2287,16 +2266,11 @@ namespace PrincipleStudios.Demo
         public Task<ITypeSafeLogoutUserResult> LogoutUserAsync(
             System.Net.Http.Headers.AuthenticationHeaderValue? authorization = null)
         {
-            var __path = \\"/user/logout\\";
-            var __uri = new UriBuilder(this.configuration.BaseUrl + __path).Uri;
-            var __request = new HttpRequestMessage(HttpMethod.Get, __uri)
-                {
-                    Headers =
-                    {
-                        Authorization = authorization,
-                    },
-                };
-            return this.httpClient.SendAsync(__request)
+            var path = \\"/user/logout\\";
+            var uri = new UriBuilder(this.configuration.BaseUrl + path).Uri;
+            var request = new HttpRequestMessage(HttpMethod.Get, uri);
+            request.Headers.Authorization = authorization;
+            return this.httpClient.SendAsync(request)
                              .ContinueWith(t => (ITypeSafeLogoutUserResult)new TypeSafeLogoutUserResult(t.Result, this.configuration.Settings));
         }
 
@@ -2304,30 +2278,25 @@ namespace PrincipleStudios.Demo
         /// Updated user
         /// </summary>
         /// <remarks>This can only be done by the logged in user.</remarks>
-        /// <param name=\\"username\\">name that need to be updated</param>
-        /// <param name=\\"user\\">Updated user object</param>
+        /// <param name=\\"_username\\">name that need to be updated</param>
+        /// <param name=\\"_user\\">Updated user object</param>
         public Task<ITypeSafeUpdateUserResult> UpdateUserAsync(
-            string username,
-            User user,
+            string _username,
+            User _user,
             System.Net.Http.Headers.AuthenticationHeaderValue? authorization = null)
         {
-            var __path = \\"/user/{username}\\"
-                        .Replace($\\"{{{\\"username\\"}}}\\", System.Web.HttpUtility.UrlEncode(username.ToString()));
-            var __uri = new UriBuilder(this.configuration.BaseUrl + __path).Uri;
-            var __request = new HttpRequestMessage(HttpMethod.Put, __uri)
-                {
-                    Headers =
-                    {
-                        Authorization = authorization,
-                    },
-                    Content = new StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(user, this.configuration.Settings), System.Text.Encoding.UTF8, \\"application/json\\"),
-                };
-            return this.httpClient.SendAsync(__request)
+            var path = \\"/user/{username}\\"
+                        .Replace($\\"{{{\\"username\\"}}}\\", System.Web.HttpUtility.UrlEncode(_username.ToString()));
+            var uri = new UriBuilder(this.configuration.BaseUrl + path).Uri;
+            var request = new HttpRequestMessage(HttpMethod.Put, uri);
+            request.Headers.Authorization = authorization;
+            request.Content = new StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(_user, this.configuration.Settings), System.Text.Encoding.UTF8, \\"application/json\\");
+            return this.httpClient.SendAsync(request)
                              .ContinueWith(t => (ITypeSafeUpdateUserResult)new TypeSafeUpdateUserResult(t.Result, this.configuration.Settings));
         }
 
 
-        public interface ITypeSafeCreateUserResult
+        public interface ITypeSafeCreateUserResult : IDisposable
         {
             HttpResponseMessage Response { get; }
             System.Net.HttpStatusCode StatusCode => Response.StatusCode;
@@ -2351,15 +2320,20 @@ namespace PrincipleStudios.Demo
 
 
             /// <summary>successful operation</summary>
-            public async Task<HttpResponseMessage> OtherStatusCodeAsync()
-            { 
-                await Task.Yield();
-                return Response;
+            public Task<HttpResponseMessage> OtherStatusCodeAsync()
+            {
+
+                return Task.FromResult(Response);
+            }
+
+            void IDisposable.Dispose()
+            {
+                ((IDisposable)Response).Dispose();
             }
         }
 
 
-        public interface ITypeSafeCreateUsersWithArrayInputResult
+        public interface ITypeSafeCreateUsersWithArrayInputResult : IDisposable
         {
             HttpResponseMessage Response { get; }
             System.Net.HttpStatusCode StatusCode => Response.StatusCode;
@@ -2383,15 +2357,20 @@ namespace PrincipleStudios.Demo
 
 
             /// <summary>successful operation</summary>
-            public async Task<HttpResponseMessage> OtherStatusCodeAsync()
-            { 
-                await Task.Yield();
-                return Response;
+            public Task<HttpResponseMessage> OtherStatusCodeAsync()
+            {
+
+                return Task.FromResult(Response);
+            }
+
+            void IDisposable.Dispose()
+            {
+                ((IDisposable)Response).Dispose();
             }
         }
 
 
-        public interface ITypeSafeCreateUsersWithListInputResult
+        public interface ITypeSafeCreateUsersWithListInputResult : IDisposable
         {
             HttpResponseMessage Response { get; }
             System.Net.HttpStatusCode StatusCode => Response.StatusCode;
@@ -2415,15 +2394,20 @@ namespace PrincipleStudios.Demo
 
 
             /// <summary>successful operation</summary>
-            public async Task<HttpResponseMessage> OtherStatusCodeAsync()
-            { 
-                await Task.Yield();
-                return Response;
+            public Task<HttpResponseMessage> OtherStatusCodeAsync()
+            {
+
+                return Task.FromResult(Response);
+            }
+
+            void IDisposable.Dispose()
+            {
+                ((IDisposable)Response).Dispose();
             }
         }
 
 
-        public interface ITypeSafeDeleteUserResult
+        public interface ITypeSafeDeleteUserResult : IDisposable
         {
             HttpResponseMessage Response { get; }
             System.Net.HttpStatusCode StatusCode => Response.StatusCode;
@@ -2450,28 +2434,31 @@ namespace PrincipleStudios.Demo
 
 
             /// <summary>Invalid username supplied</summary>
-            public async Task<HttpResponseMessage> StatusCode400Async()
-            { 
+            public Task<HttpResponseMessage> StatusCode400Async()
+            {
                 if (this.Response.StatusCode != (System.Net.HttpStatusCode)400)
                     throw new InvalidOperationException();
 
-                await Task.Yield();
-                return Response;
+                return Task.FromResult(Response);
             }
 
             /// <summary>User not found</summary>
-            public async Task<HttpResponseMessage> StatusCode404Async()
-            { 
+            public Task<HttpResponseMessage> StatusCode404Async()
+            {
                 if (this.Response.StatusCode != (System.Net.HttpStatusCode)404)
                     throw new InvalidOperationException();
 
-                await Task.Yield();
-                return Response;
+                return Task.FromResult(Response);
+            }
+
+            void IDisposable.Dispose()
+            {
+                ((IDisposable)Response).Dispose();
             }
         }
 
 
-        public interface ITypeSafeGetUserByNameResult
+        public interface ITypeSafeGetUserByNameResult : IDisposable
         {
             HttpResponseMessage Response { get; }
             System.Net.HttpStatusCode StatusCode => Response.StatusCode;
@@ -2501,37 +2488,41 @@ namespace PrincipleStudios.Demo
 
 
             /// <summary>successful operation</summary>
-            public async Task<User> StatusCode200Async()
-            { 
+            public Task<User> StatusCode200Async()
+            {
                 if (this.Response.StatusCode != (System.Net.HttpStatusCode)200)
                     throw new InvalidOperationException();
-                var json = await this.Response.Content.ReadAsStringAsync();
-                return Newtonsoft.Json.JsonConvert.DeserializeObject<User>(json, settings);
+                var settings = this.settings;
+                return this.Response.Content.ReadAsStringAsync()
+                    .ContinueWith(t => Newtonsoft.Json.JsonConvert.DeserializeObject<User>(t.Result, settings));
             }
 
             /// <summary>Invalid username supplied</summary>
-            public async Task<HttpResponseMessage> StatusCode400Async()
-            { 
+            public Task<HttpResponseMessage> StatusCode400Async()
+            {
                 if (this.Response.StatusCode != (System.Net.HttpStatusCode)400)
                     throw new InvalidOperationException();
 
-                await Task.Yield();
-                return Response;
+                return Task.FromResult(Response);
             }
 
             /// <summary>User not found</summary>
-            public async Task<HttpResponseMessage> StatusCode404Async()
-            { 
+            public Task<HttpResponseMessage> StatusCode404Async()
+            {
                 if (this.Response.StatusCode != (System.Net.HttpStatusCode)404)
                     throw new InvalidOperationException();
 
-                await Task.Yield();
-                return Response;
+                return Task.FromResult(Response);
+            }
+
+            void IDisposable.Dispose()
+            {
+                ((IDisposable)Response).Dispose();
             }
         }
 
 
-        public interface ITypeSafeLoginUserResult
+        public interface ITypeSafeLoginUserResult : IDisposable
         {
             HttpResponseMessage Response { get; }
             System.Net.HttpStatusCode StatusCode => Response.StatusCode;
@@ -2558,27 +2549,32 @@ namespace PrincipleStudios.Demo
 
 
             /// <summary>successful operation</summary>
-            public async Task<string> StatusCode200Async()
-            { 
+            public Task<string> StatusCode200Async()
+            {
                 if (this.Response.StatusCode != (System.Net.HttpStatusCode)200)
                     throw new InvalidOperationException();
-                var json = await this.Response.Content.ReadAsStringAsync();
-                return Newtonsoft.Json.JsonConvert.DeserializeObject<string>(json, settings);
+                var settings = this.settings;
+                return this.Response.Content.ReadAsStringAsync()
+                    .ContinueWith(t => Newtonsoft.Json.JsonConvert.DeserializeObject<string>(t.Result, settings));
             }
 
             /// <summary>Invalid username/password supplied</summary>
-            public async Task<HttpResponseMessage> StatusCode400Async()
-            { 
+            public Task<HttpResponseMessage> StatusCode400Async()
+            {
                 if (this.Response.StatusCode != (System.Net.HttpStatusCode)400)
                     throw new InvalidOperationException();
 
-                await Task.Yield();
-                return Response;
+                return Task.FromResult(Response);
+            }
+
+            void IDisposable.Dispose()
+            {
+                ((IDisposable)Response).Dispose();
             }
         }
 
 
-        public interface ITypeSafeLogoutUserResult
+        public interface ITypeSafeLogoutUserResult : IDisposable
         {
             HttpResponseMessage Response { get; }
             System.Net.HttpStatusCode StatusCode => Response.StatusCode;
@@ -2602,15 +2598,20 @@ namespace PrincipleStudios.Demo
 
 
             /// <summary>successful operation</summary>
-            public async Task<HttpResponseMessage> OtherStatusCodeAsync()
-            { 
-                await Task.Yield();
-                return Response;
+            public Task<HttpResponseMessage> OtherStatusCodeAsync()
+            {
+
+                return Task.FromResult(Response);
+            }
+
+            void IDisposable.Dispose()
+            {
+                ((IDisposable)Response).Dispose();
             }
         }
 
 
-        public interface ITypeSafeUpdateUserResult
+        public interface ITypeSafeUpdateUserResult : IDisposable
         {
             HttpResponseMessage Response { get; }
             System.Net.HttpStatusCode StatusCode => Response.StatusCode;
@@ -2637,23 +2638,26 @@ namespace PrincipleStudios.Demo
 
 
             /// <summary>Invalid user supplied</summary>
-            public async Task<HttpResponseMessage> StatusCode400Async()
-            { 
+            public Task<HttpResponseMessage> StatusCode400Async()
+            {
                 if (this.Response.StatusCode != (System.Net.HttpStatusCode)400)
                     throw new InvalidOperationException();
 
-                await Task.Yield();
-                return Response;
+                return Task.FromResult(Response);
             }
 
             /// <summary>User not found</summary>
-            public async Task<HttpResponseMessage> StatusCode404Async()
-            { 
+            public Task<HttpResponseMessage> StatusCode404Async()
+            {
                 if (this.Response.StatusCode != (System.Net.HttpStatusCode)404)
                     throw new InvalidOperationException();
 
-                await Task.Yield();
-                return Response;
+                return Task.FromResult(Response);
+            }
+
+            void IDisposable.Dispose()
+            {
+                ((IDisposable)Response).Dispose();
             }
         }
 

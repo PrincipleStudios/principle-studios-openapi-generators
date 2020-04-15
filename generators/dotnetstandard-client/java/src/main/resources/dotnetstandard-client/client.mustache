@@ -20,11 +20,10 @@ namespace {{packageName}}
         /// {{#summary}}{{summary}}{{/summary}}
         /// </summary>{{#notes}}
         /// <remarks>{{notes}}</remarks>{{/notes}}{{#allParams}}
-        /// <param name="{{paramName}}">{{description}}</param>{{/allParams}}{{!
-        }}
+        /// <param name="{{paramName}}">{{description}}</param>{{/allParams}}
         Task<{{classname}}Client.ITypeSafe{{operationId}}Result> {{operationId}}Async({{#allParams}}
             {{&dataType}} {{paramName}},{{/allParams}}
-            System.Net.Http.Headers.AuthenticationHeaderValue? authorizationHeader = null);
+            System.Net.Http.Headers.AuthenticationHeaderValue? _authorizationHeader = null);
         {{/operation}}
     }
 
@@ -54,43 +53,46 @@ namespace {{packageName}}
         /// {{#summary}}{{summary}}{{/summary}}
         /// </summary>{{#notes}}
         /// <remarks>{{notes}}</remarks>{{/notes}}{{#allParams}}
-        /// <param name="{{paramName}}">{{description}}</param>{{/allParams}}{{!
-        }}
+        /// <param name="_{{paramName}}">{{description}}</param>{{/allParams}}
         public Task<ITypeSafe{{operationId}}Result> {{operationId}}Async({{#allParams}}
-            {{&dataType}} {{paramName}},{{/allParams}}
+            {{&dataType}} _{{paramName}},{{/allParams}}
             System.Net.Http.Headers.AuthenticationHeaderValue? authorization = null)
         {
-            var __path = "{{{path}}}"{{#pathParams}}
-                        .Replace($"{{{"{{baseName}}"}}}", System.Web.HttpUtility.UrlEncode({{paramName}}.ToString())){{/pathParams}};
-            var __uri = new UriBuilder(this.configuration.BaseUrl + __path){{#hasQueryParams}}
-                    {
-                        Query = new System.Collections.Specialized.NameValueCollection
-                        {
+            {{! _ is a prefix for input parameters to ensure they don't collide with our vars like path/query/authorization/etc }}
+            var path = "{{{path}}}"{{#pathParams}}
+                        .Replace($"{{{"{{baseName}}"}}}", System.Web.HttpUtility.UrlEncode(_{{paramName}}.ToString())){{/pathParams}};
+{{#hasQueryParams}}
+            var query = new System.Collections.Specialized.NameValueCollection
+            {
 {{#queryParams}}
-                            { "{{baseName}}", {{paramName}}{{#isCollectionFormatMulti}}.Select(v => v.ToString()){{/isCollectionFormatMulti}}{{^isCollectionFormatMulti}}.ToString(){{/isCollectionFormatMulti}} },
+                { "{{baseName}}", _{{paramName}}{{#isCollectionFormatMulti}}.Select(v => v.ToString()){{/isCollectionFormatMulti}}{{^isCollectionFormatMulti}}.ToString(){{/isCollectionFormatMulti}} },
 {{/queryParams}}
-                        }.ToString(),
+            };
+{{/hasQueryParams}}
+            var uri = new UriBuilder(this.configuration.BaseUrl + path){{#hasQueryParams}}
+                    {
+                        Query = string.Join("&", from key in query.AllKeys
+                                                 let values = query.GetValues(key)
+                                                 where values != null && values.Length > 0
+                                                 let keySuffix = values.Length > 1 ? "[]" : ""
+                                                 from value in values
+                                                 select System.Web.HttpUtility.UrlEncode(key) + keySuffix + "=" + System.Web.HttpUtility.UrlEncode(value)),
                     }
                     {{/hasQueryParams}}.Uri;
-            var __request = new HttpRequestMessage({{{httpMethod}}}, __uri)
-                {
-                    Headers =
-                    {
-                        Authorization = authorization,
-                    },
+            var request = new HttpRequestMessage({{{httpMethod}}}, uri);
+            request.Headers.Authorization = authorization;
 {{#bodyParam}}
-                    Content = new StringContent(Newtonsoft.Json.JsonConvert.SerializeObject({{paramName}}, this.configuration.Settings), System.Text.Encoding.UTF8, "{{^consumes}}application/json{{/consumes}}{{#consumes.0}}{{{mediaType}}}{{/consumes.0}}"),
+            request.Content = new StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(_{{paramName}}, this.configuration.Settings), System.Text.Encoding.UTF8, "{{^consumes}}application/json{{/consumes}}{{#consumes.0}}{{{mediaType}}}{{/consumes.0}}");
 {{/bodyParam}}
-                };
 {{#headerParams}}
-            __request.Headers.Add("{{baseName}}", {{paramName}}{{#isListContainer}}.Select(v => v.ToString()){{/isListContainer}}{{^isListContainer}}.ToString(){{/isListContainer}});
+            request.Headers.Add("{{baseName}}", {{paramName}}{{#isListContainer}}.Select(v => v.ToString()){{/isListContainer}}{{^isListContainer}}.ToString(){{/isListContainer}});
 {{/headerParams}}
-            return this.httpClient.SendAsync(__request)
+            return this.httpClient.SendAsync(request)
                              .ContinueWith(t => (ITypeSafe{{operationId}}Result)new TypeSafe{{operationId}}Result(t.Result, this.configuration.Settings));
         }
 
 {{/operation}}{{#operation}}
-        public interface ITypeSafe{{operationId}}Result
+        public interface ITypeSafe{{operationId}}Result : IDisposable
         {
             HttpResponseMessage Response { get; }
             System.Net.HttpStatusCode StatusCode => Response.StatusCode;
@@ -117,20 +119,26 @@ namespace {{packageName}}
             {{#responses}}
 
             {{#message}}/// <summary>{{message}}</summary>{{/message}}
-            public async Task<{{#dataType}}{{&dataType}}{{/dataType}}{{^dataType}}HttpResponseMessage{{/dataType}}> {{^isDefault}}StatusCode{{code}}{{/isDefault}}{{#isDefault}}OtherStatusCode{{/isDefault}}Async()
-            { {{^isDefault}}
+            public Task<{{#dataType}}{{&dataType}}{{/dataType}}{{^dataType}}HttpResponseMessage{{/dataType}}> {{^isDefault}}StatusCode{{code}}{{/isDefault}}{{#isDefault}}OtherStatusCode{{/isDefault}}Async()
+            {
+{{^isDefault}}
                 if (this.Response.StatusCode != (System.Net.HttpStatusCode){{code}})
                     throw new InvalidOperationException();
 {{/isDefault}}
 {{#dataType}}
-                var json = await this.Response.Content.ReadAsStringAsync();
-                return Newtonsoft.Json.JsonConvert.DeserializeObject<{{&dataType}}>(json, settings);
+                var settings = this.settings;
+                return this.Response.Content.ReadAsStringAsync()
+                    .ContinueWith(t => Newtonsoft.Json.JsonConvert.DeserializeObject<{{&dataType}}>(t.Result, settings));
 {{/dataType}}{{^dataType}}
-                await Task.Yield();
-                return Response;
+                return Task.FromResult(Response);
 {{/dataType}}
             }
             {{/responses}}
+
+            void IDisposable.Dispose()
+            {
+                ((IDisposable)Response).Dispose();
+            }
         }
 
 {{/operation}}

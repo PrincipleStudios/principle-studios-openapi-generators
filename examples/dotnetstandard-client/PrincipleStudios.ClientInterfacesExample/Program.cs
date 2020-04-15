@@ -10,7 +10,7 @@ namespace PrincipleStudios.ClientInterfacesExample
     {
         public static async Task Main(string[] args)
         {
-            var header = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", "Boo").ToString();
+            var temp = System.Web.HttpUtility.UrlEncode("[]");
 
             await Petstore();
             await Petstore3();
@@ -18,16 +18,6 @@ namespace PrincipleStudios.ClientInterfacesExample
 
         private static async Task Petstore()
         {
-            var test = new HttpRequestMessage(HttpMethod.Post,
-                    new UriBuilder("http://localhost/pets")
-                    {
-                    }.Uri
-                )
-            {
-                // TODO
-                Headers = { Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", "Boo") }
-            };
-
             var client = new Clients.Petstore.DefaultApiClient(null, null);
             var response = await client.AddPetAsync(null);
             var result = await response.StatusCode200Async();
