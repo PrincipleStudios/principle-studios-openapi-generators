@@ -10,8 +10,6 @@ namespace PrincipleStudios.ClientInterfacesExample
     {
         public static async Task Main(string[] args)
         {
-            var temp = System.Web.HttpUtility.UrlEncode("[]");
-
             await Petstore();
             await Petstore3();
         }

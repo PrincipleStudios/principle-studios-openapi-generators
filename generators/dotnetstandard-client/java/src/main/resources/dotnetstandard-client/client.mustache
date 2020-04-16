@@ -60,7 +60,8 @@ namespace {{packageName}}
         {
             {{! _ is a prefix for input parameters to ensure they don't collide with our vars like path/query/authorization/etc }}
             var path = "{{{path}}}"{{#pathParams}}
-                        .Replace($"{{{"{{baseName}}"}}}", System.Web.HttpUtility.UrlEncode(_{{paramName}}.ToString())){{/pathParams}};
+{{! Changing boundaries in order to make code more efficient }}
+                        .Replace({{=<% %>=}}"{<%baseName%>}",<%={{ }}=%> System.Web.HttpUtility.UrlEncode(_{{paramName}}.ToString())){{/pathParams}};
 {{#hasQueryParams}}
             var query = new System.Collections.Specialized.NameValueCollection
             {
@@ -85,7 +86,7 @@ namespace {{packageName}}
             request.Content = new StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(_{{paramName}}, this.configuration.Settings), System.Text.Encoding.UTF8, "{{^consumes}}application/json{{/consumes}}{{#consumes.0}}{{{mediaType}}}{{/consumes.0}}");
 {{/bodyParam}}
 {{#headerParams}}
-            request.Headers.Add("{{baseName}}", {{paramName}}{{#isListContainer}}.Select(v => v.ToString()){{/isListContainer}}{{^isListContainer}}.ToString(){{/isListContainer}});
+            request.Headers.Add("{{baseName}}", _{{paramName}}{{#isListContainer}}.Select(v => v.ToString()){{/isListContainer}}{{^isListContainer}}.ToString(){{/isListContainer}});
 {{/headerParams}}
             return this.httpClient.SendAsync(request)
                              .ContinueWith(t => (ITypeSafe{{operationId}}Result)new TypeSafe{{operationId}}Result(t.Result, this.configuration.Settings));

@@ -839,11 +839,11 @@ namespace PrincipleStudios.Demo
             System.Net.Http.Headers.AuthenticationHeaderValue? authorization = null)
         {
             var path = \\"/pet/{petId}\\"
-                        .Replace($\\"{{{\\"petId\\"}}}\\", System.Web.HttpUtility.UrlEncode(_petId.ToString()));
+                        .Replace(\\"{petId}\\", System.Web.HttpUtility.UrlEncode(_petId.ToString()));
             var uri = new UriBuilder(this.configuration.BaseUrl + path).Uri;
             var request = new HttpRequestMessage(HttpMethod.Delete, uri);
             request.Headers.Authorization = authorization;
-            request.Headers.Add(\\"api_key\\", apiKey.ToString());
+            request.Headers.Add(\\"api_key\\", _apiKey.ToString());
             return this.httpClient.SendAsync(request)
                              .ContinueWith(t => (ITypeSafeDeletePetResult)new TypeSafeDeletePetResult(t.Result, this.configuration.Settings));
         }
@@ -918,7 +918,7 @@ namespace PrincipleStudios.Demo
             System.Net.Http.Headers.AuthenticationHeaderValue? authorization = null)
         {
             var path = \\"/pet/{petId}\\"
-                        .Replace($\\"{{{\\"petId\\"}}}\\", System.Web.HttpUtility.UrlEncode(_petId.ToString()));
+                        .Replace(\\"{petId}\\", System.Web.HttpUtility.UrlEncode(_petId.ToString()));
             var uri = new UriBuilder(this.configuration.BaseUrl + path).Uri;
             var request = new HttpRequestMessage(HttpMethod.Get, uri);
             request.Headers.Authorization = authorization;
@@ -956,7 +956,7 @@ namespace PrincipleStudios.Demo
             System.Net.Http.Headers.AuthenticationHeaderValue? authorization = null)
         {
             var path = \\"/pet/{petId}\\"
-                        .Replace($\\"{{{\\"petId\\"}}}\\", System.Web.HttpUtility.UrlEncode(_petId.ToString()));
+                        .Replace(\\"{petId}\\", System.Web.HttpUtility.UrlEncode(_petId.ToString()));
             var uri = new UriBuilder(this.configuration.BaseUrl + path).Uri;
             var request = new HttpRequestMessage(HttpMethod.Post, uri);
             request.Headers.Authorization = authorization;
@@ -975,7 +975,7 @@ namespace PrincipleStudios.Demo
             System.Net.Http.Headers.AuthenticationHeaderValue? authorization = null)
         {
             var path = \\"/pet/{petId}/uploadImage\\"
-                        .Replace($\\"{{{\\"petId\\"}}}\\", System.Web.HttpUtility.UrlEncode(_petId.ToString()));
+                        .Replace(\\"{petId}\\", System.Web.HttpUtility.UrlEncode(_petId.ToString()));
             var uri = new UriBuilder(this.configuration.BaseUrl + path).Uri;
             var request = new HttpRequestMessage(HttpMethod.Post, uri);
             request.Headers.Authorization = authorization;
@@ -1478,7 +1478,7 @@ namespace PrincipleStudios.Demo
             System.Net.Http.Headers.AuthenticationHeaderValue? authorization = null)
         {
             var path = \\"/store/order/{orderId}\\"
-                        .Replace($\\"{{{\\"orderId\\"}}}\\", System.Web.HttpUtility.UrlEncode(_orderId.ToString()));
+                        .Replace(\\"{orderId}\\", System.Web.HttpUtility.UrlEncode(_orderId.ToString()));
             var uri = new UriBuilder(this.configuration.BaseUrl + path).Uri;
             var request = new HttpRequestMessage(HttpMethod.Delete, uri);
             request.Headers.Authorization = authorization;
@@ -1511,7 +1511,7 @@ namespace PrincipleStudios.Demo
             System.Net.Http.Headers.AuthenticationHeaderValue? authorization = null)
         {
             var path = \\"/store/order/{orderId}\\"
-                        .Replace($\\"{{{\\"orderId\\"}}}\\", System.Web.HttpUtility.UrlEncode(_orderId.ToString()));
+                        .Replace(\\"{orderId}\\", System.Web.HttpUtility.UrlEncode(_orderId.ToString()));
             var uri = new UriBuilder(this.configuration.BaseUrl + path).Uri;
             var request = new HttpRequestMessage(HttpMethod.Get, uri);
             request.Headers.Authorization = authorization;
@@ -2203,7 +2203,7 @@ namespace PrincipleStudios.Demo
             System.Net.Http.Headers.AuthenticationHeaderValue? authorization = null)
         {
             var path = \\"/user/{username}\\"
-                        .Replace($\\"{{{\\"username\\"}}}\\", System.Web.HttpUtility.UrlEncode(_username.ToString()));
+                        .Replace(\\"{username}\\", System.Web.HttpUtility.UrlEncode(_username.ToString()));
             var uri = new UriBuilder(this.configuration.BaseUrl + path).Uri;
             var request = new HttpRequestMessage(HttpMethod.Delete, uri);
             request.Headers.Authorization = authorization;
@@ -2220,7 +2220,7 @@ namespace PrincipleStudios.Demo
             System.Net.Http.Headers.AuthenticationHeaderValue? authorization = null)
         {
             var path = \\"/user/{username}\\"
-                        .Replace($\\"{{{\\"username\\"}}}\\", System.Web.HttpUtility.UrlEncode(_username.ToString()));
+                        .Replace(\\"{username}\\", System.Web.HttpUtility.UrlEncode(_username.ToString()));
             var uri = new UriBuilder(this.configuration.BaseUrl + path).Uri;
             var request = new HttpRequestMessage(HttpMethod.Get, uri);
             request.Headers.Authorization = authorization;
@@ -2286,7 +2286,7 @@ namespace PrincipleStudios.Demo
             System.Net.Http.Headers.AuthenticationHeaderValue? authorization = null)
         {
             var path = \\"/user/{username}\\"
-                        .Replace($\\"{{{\\"username\\"}}}\\", System.Web.HttpUtility.UrlEncode(_username.ToString()));
+                        .Replace(\\"{username}\\", System.Web.HttpUtility.UrlEncode(_username.ToString()));
             var uri = new UriBuilder(this.configuration.BaseUrl + path).Uri;
             var request = new HttpRequestMessage(HttpMethod.Put, uri);
             request.Headers.Authorization = authorization;
