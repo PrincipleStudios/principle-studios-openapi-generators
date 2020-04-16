@@ -17,6 +17,8 @@ using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.ComponentModel.DataAnnotations;
 using Newtonsoft.Json;
+#nullable enable
+#nullable disable warnings
 
 namespace PrincipleStudios.Demo
 { 
@@ -124,6 +126,8 @@ using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.ComponentModel.DataAnnotations;
 using Newtonsoft.Json;
+#nullable enable
+#nullable disable warnings
 
 namespace PrincipleStudios.Demo
 { 
@@ -216,6 +220,8 @@ using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.ComponentModel.DataAnnotations;
 using Newtonsoft.Json;
+#nullable enable
+#nullable disable warnings
 
 namespace PrincipleStudios.Demo
 { 
@@ -308,6 +314,8 @@ using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.ComponentModel.DataAnnotations;
 using Newtonsoft.Json;
+#nullable enable
+#nullable disable warnings
 
 namespace PrincipleStudios.Demo
 { 
@@ -485,6 +493,8 @@ using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.ComponentModel.DataAnnotations;
 using Newtonsoft.Json;
+#nullable enable
+#nullable disable warnings
 
 namespace PrincipleStudios.Demo
 { 
@@ -1319,6 +1329,8 @@ using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.ComponentModel.DataAnnotations;
 using Newtonsoft.Json;
+#nullable enable
+#nullable disable warnings
 
 namespace PrincipleStudios.Demo
 { 
@@ -1411,6 +1423,8 @@ using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.ComponentModel.DataAnnotations;
 using Newtonsoft.Json;
+#nullable enable
+#nullable disable warnings
 
 namespace PrincipleStudios.Demo
 { 
