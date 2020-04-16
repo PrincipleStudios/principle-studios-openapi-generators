@@ -11,39 +11,39 @@
 
 
   <ItemGroup>
-    <AvailableItemName Include="OpenApiSchema" DisplayName="Open API Schema (OpenApiCodeGen)" />
+    <AvailableItemName Include="OpenApiSchemaClient" DisplayName="Open API Schema Client (OpenApiCodeGen)" />
   </ItemGroup>
 
-  <Target Name="CompileOpenApiCodeGen" BeforeTargets="PrepareForBuild" DependsOnTargets="_CompileOpenApiCodeGen" Condition=" '@(OpenApiSchema)' != '' ">
+  <Target Name="CompileOpenApiCodeGen" BeforeTargets="PrepareForBuild" DependsOnTargets="_CompileOpenApiCodeGen" Condition=" '@(OpenApiSchemaClient)' != '' ">
     <ItemGroup>
-      <Compile Include="%(OpenApiSchema.OutputPath)/**/*.cs" />
+      <Compile Include="%(OpenApiSchemaClient.OutputPath)/**/*.cs" />
     </ItemGroup>
   </Target>
 
   <Target Name="_UpdateOpenApiCodeGenMetatdata">
     <ItemGroup>
-      <OpenApiSchema Condition=" '%(OpenApiSchema.Link)' != '' ">
-        <WorkingOutputPath>$([System.Text.RegularExpressions.Regex]::Replace(%(OpenApiSchema.Link), '(?&lt;=^|\\|/)..(?=$|\\|/)', '__'))</WorkingOutputPath>
-      </OpenApiSchema>
-      <OpenApiSchema Condition=" '%(OpenApiSchema.Link)' == '' ">
-        <WorkingOutputPath>$([System.Text.RegularExpressions.Regex]::Replace(%(OpenApiSchema.Identity), '(?&lt;=^|\\|/)..(?=$|\\|/)', '__'))</WorkingOutputPath>
-      </OpenApiSchema>
-      <OpenApiSchema>
-        <OutputPath>$(IntermediateOutputPath)%(OpenApiSchema.WorkingOutputPath)</OutputPath>
-        <Namespace Condition=" '%(OpenApiSchema.Namespace)' == '' ">$(RootNamespace)$([System.Text.RegularExpressions.Regex]::Replace($([System.Text.RegularExpressions.Regex]::Replace('/$([System.IO.Path]::GetDirectoryName('%(OpenApiSchema.WorkingOutputPath)'))', '[/\\]', '.')), '\.$', ''))</Namespace>
-      </OpenApiSchema>
+      <OpenApiSchemaClient Condition=" '%(OpenApiSchemaClient.Link)' != '' ">
+        <WorkingOutputPath>$([System.Text.RegularExpressions.Regex]::Replace(%(OpenApiSchemaClient.Link), '(?&lt;=^|\\|/)..(?=$|\\|/)', '__'))</WorkingOutputPath>
+      </OpenApiSchemaClient>
+      <OpenApiSchemaClient Condition=" '%(OpenApiSchemaClient.Link)' == '' ">
+        <WorkingOutputPath>$([System.Text.RegularExpressions.Regex]::Replace(%(OpenApiSchemaClient.Identity), '(?&lt;=^|\\|/)..(?=$|\\|/)', '__'))</WorkingOutputPath>
+      </OpenApiSchemaClient>
+      <OpenApiSchemaClient>
+        <OutputPath>$(IntermediateOutputPath)%(OpenApiSchemaClient.WorkingOutputPath)</OutputPath>
+        <Namespace Condition=" '%(OpenApiSchemaClient.Namespace)' == '' ">$(RootNamespace)$([System.Text.RegularExpressions.Regex]::Replace($([System.Text.RegularExpressions.Regex]::Replace('/$([System.IO.Path]::GetDirectoryName('%(OpenApiSchemaClient.WorkingOutputPath)'))', '[/\\]', '.')), '\.$', ''))</Namespace>
+      </OpenApiSchemaClient>
     </ItemGroup>
   </Target>
 
   <Target Name="CleanOpenApiCodeGen" BeforeTargets="Clean" DependsOnTargets="_UpdateOpenApiCodeGenMetatdata">
-    <Delete Files="@(OpenApiSchema -> '%(OutputPath)')" ContinueOnError="true" />
+    <Delete Files="@(OpenApiSchemaClient -> '%(OutputPath)')" ContinueOnError="true" />
   </Target>
 
-  <Target Name="_CompileOpenApiCodeGen" DependsOnTargets="_UpdateOpenApiCodeGenMetatdata" Inputs="$(MSBuildThisFileFullPath);$(MSBuildProjectFile);@(OpenApiSchema)" Outputs="@(OpenApiSchema -> '%(OutputPath)')">
+  <Target Name="_CompileOpenApiCodeGen" DependsOnTargets="_UpdateOpenApiCodeGenMetatdata" Inputs="$(MSBuildThisFileFullPath);$(MSBuildProjectFile);@(OpenApiSchemaClient)" Outputs="@(OpenApiSchemaClient -> '%(OutputPath)')">
 
-    <Exec Command="java -cp &quot;$(MSBuildThisFileDirectory)/*&quot; org.openapitools.codegen.OpenAPIGenerator generate -g com.principlestudios.codegen.DotNetStandardClientGenerator -o &quot;$(MSBuildProjectDirectory)/%(OpenApiSchema.OutputPath)&quot; -i &quot;%(OpenApiSchema.FullPath)&quot;  --additional-properties packageName=%(OpenApiSchema.Namespace) %(OpenApiSchema.AdditionalProperties)"/>
+    <Exec Command="java -cp &quot;$(MSBuildThisFileDirectory)/*&quot; org.openapitools.codegen.OpenAPIGenerator generate -g com.principlestudios.codegen.DotNetStandardClientGenerator -o &quot;$(MSBuildProjectDirectory)/%(OpenApiSchemaClient.OutputPath)&quot; -i &quot;%(OpenApiSchemaClient.FullPath)&quot;  --additional-properties packageName=%(OpenApiSchemaClient.Namespace) %(OpenApiSchemaClient.AdditionalProperties)"/>
 
 
-    <Message Text="OpenAPI: %(OpenApiSchema.Identity) -> %(OpenApiSchema.OutputPath)" />
+    <Message Text="OpenAPI: %(OpenApiSchemaClient.Identity) -> %(OpenApiSchemaClient.OutputPath)" />
   </Target>
 </Project>

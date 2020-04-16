@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
   <metadata>
     <id>PrincipleStudios.OpenApiCodegen.Client</id>
-    <version>0.0.1</version>
+    <version>0.1.0-alpha.1</version>
     <authors>Matt DeKrey</authors>
     <license type="expression">BSD-2-Clause</license>
     <title>Client Generation from OpenAPI specification for ASP.Net Core</title>
@@ -14,7 +14,7 @@ Adds MSBuild targets to generate C# client classes from an OpenAPI
 specification file.
 
 Add this package, select the OpenAPI specification file from your project, and
-set the build action to `OpenApiSchema`. Within that folder's namespace, you'll
+set the build action to `OpenApiSchemaClient`. Within that folder's namespace, you'll
 automatically get the interfaces and classes to invoke your API.
 
 This integrates during the build phase, so you can be sure your classes are up
