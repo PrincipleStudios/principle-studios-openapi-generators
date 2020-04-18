@@ -82,8 +82,21 @@ namespace {{packageName}}
                     {{/hasQueryParams}}.Uri;
             var request = new HttpRequestMessage({{{httpMethod}}}, uri);
             request.Headers.Authorization = authorization;
+{{#hasFormParams}}
+            request.Content = new MultipartFormDataContent()
+            {
+{{#formParams}}
+                { new {{#isFile}}StreamContent(_{{paramName}}){{/isFile}}{{^isFile}}StringContent(_{{paramName}}.ToString()){{/isFile}}, "{{baseName}}" },
+{{/formParams}}
+            };
+{{/hasFormParams}}
 {{#bodyParam}}
+{{#isFile}}
+            request.Content = new StreamContent(_{{paramName}});
+{{/isFile}}
+{{^isFile}}
             request.Content = new StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(_{{paramName}}, this.configuration.Settings), System.Text.Encoding.UTF8, "{{^consumes}}application/json{{/consumes}}{{#consumes.0}}{{{mediaType}}}{{/consumes.0}}");
+{{/isFile}}
 {{/bodyParam}}
 {{#headerParams}}
             request.Headers.Add("{{baseName}}", _{{paramName}}{{#isListContainer}}.Select(v => v.ToString()){{/isListContainer}}{{^isListContainer}}.ToString(){{/isListContainer}});
