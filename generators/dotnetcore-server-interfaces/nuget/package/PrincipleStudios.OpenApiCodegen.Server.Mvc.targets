@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <CompileDependsOn>$(CompileDependsOn);CompileOpenApiCodeGen</CompileDependsOn>
-    <CoreCompileDependsOn>$(CoreCompileDependsOn);CompileOpenApiCodeGen</CoreCompileDependsOn>
-    <BuildDependsOn>$(BuildDependsOn);CompileOpenApiCodeGen</BuildDependsOn>
-    <CoreBuildDependsOn>$(CoreBuildDependsOn);CompileOpenApiCodeGen</CoreBuildDependsOn>
-    <CleanDependsOn>$(CleanDependsOn);CleanOpenApiCodeGen</CleanDependsOn>
+    <CompileDependsOn>$(CompileDependsOn);CompileServerOpenApiCodeGen</CompileDependsOn>
+    <CoreCompileDependsOn>$(CoreCompileDependsOn);CompileServerOpenApiCodeGen</CoreCompileDependsOn>
+    <BuildDependsOn>$(BuildDependsOn);CompileServerOpenApiCodeGen</BuildDependsOn>
+    <CoreBuildDependsOn>$(CoreBuildDependsOn);CompileServerOpenApiCodeGen</CoreBuildDependsOn>
+    <CleanDependsOn>$(CleanDependsOn);CleanServerOpenApiCodeGen</CleanDependsOn>
   </PropertyGroup>
 
 
@@ -14,13 +14,13 @@
     <AvailableItemName Include="OpenApiSchemaMvcServer" DisplayName="Open API Schema MVC Server (OpenApiCodeGen)" />
   </ItemGroup>
 
-  <Target Name="CompileOpenApiCodeGen" BeforeTargets="PrepareForBuild" DependsOnTargets="_CompileOpenApiCodeGen" Condition=" '@(OpenApiSchemaMvcServer)' != '' ">
+  <Target Name="CompileServerOpenApiCodeGen" BeforeTargets="PrepareForBuild" DependsOnTargets="_CompileServerOpenApiCodeGen" Condition=" '@(OpenApiSchemaMvcServer)' != '' ">
     <ItemGroup>
       <Compile Include="%(OpenApiSchemaMvcServer.OutputPath)/**/*.cs" />
     </ItemGroup>
   </Target>
 
-  <Target Name="_UpdateOpenApiCodeGenMetatdata">
+  <Target Name="_UpdateServerOpenApiCodeGenMetatdata">
     <ItemGroup>
       <OpenApiSchemaMvcServer Condition=" '%(OpenApiSchemaMvcServer.Link)' != '' ">
         <WorkingOutputPath>$([System.Text.RegularExpressions.Regex]::Replace(%(OpenApiSchemaMvcServer.Link), '(?&lt;=^|\\|/)..(?=$|\\|/)', '__'))</WorkingOutputPath>
@@ -35,11 +35,11 @@
     </ItemGroup>
   </Target>
 
-  <Target Name="CleanOpenApiCodeGen" BeforeTargets="Clean" DependsOnTargets="_UpdateOpenApiCodeGenMetatdata">
+  <Target Name="CleanServerOpenApiCodeGen" BeforeTargets="Clean" DependsOnTargets="_UpdateServerOpenApiCodeGenMetatdata">
     <Delete Files="@(OpenApiSchemaMvcServer -> '%(OutputPath)')" ContinueOnError="true" />
   </Target>
 
-  <Target Name="_CompileOpenApiCodeGen" DependsOnTargets="_UpdateOpenApiCodeGenMetatdata" Inputs="$(MSBuildThisFileFullPath);$(MSBuildProjectFile);@(OpenApiSchemaMvcServer)" Outputs="@(OpenApiSchemaMvcServer -> '%(OutputPath)')">
+  <Target Name="_CompileServerOpenApiCodeGen" DependsOnTargets="_UpdateServerOpenApiCodeGenMetatdata" Inputs="$(MSBuildThisFileFullPath);$(MSBuildProjectFile);@(OpenApiSchemaMvcServer)" Outputs="@(OpenApiSchemaMvcServer -> '%(OutputPath)')">
 
     <Exec Command="java -cp &quot;$(MSBuildThisFileDirectory)/*&quot; org.openapitools.codegen.OpenAPIGenerator generate -g com.principlestudios.codegen.AspDotNetCoreServerInterfacesGenerator -o &quot;$(MSBuildProjectDirectory)/%(OpenApiSchemaMvcServer.OutputPath)&quot; -i &quot;%(OpenApiSchemaMvcServer.FullPath)&quot;  --additional-properties packageName=%(OpenApiSchemaMvcServer.Namespace) %(OpenApiSchemaMvcServer.AdditionalProperties)"/>
 
