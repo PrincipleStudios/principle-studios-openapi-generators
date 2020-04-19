@@ -22,38 +22,38 @@ import {
     Pet,
 } from '../models';
 
-export interface AddPetRequest {
+export type AddPetRequest = {
     pet: Pet;
 }
 
-export interface DeletePetRequest {
+export type DeletePetRequest = {
     petId: number;
     apiKey?: string;
 }
 
-export interface FindPetsByStatusRequest {
+export type FindPetsByStatusRequest = {
     status: Array<FindPetsByStatusStatusEnum>;
 }
 
-export interface FindPetsByTagsRequest {
+export type FindPetsByTagsRequest = {
     tags: Array<string>;
 }
 
-export interface GetPetByIdRequest {
+export type GetPetByIdRequest = {
     petId: number;
 }
 
-export interface UpdatePetRequest {
+export type UpdatePetRequest = {
     pet: Pet;
 }
 
-export interface UpdatePetWithFormRequest {
+export type UpdatePetWithFormRequest = {
     petId: number;
     name?: string;
     status?: string;
 }
 
-export interface UploadFileRequest {
+export type UploadFileRequest = {
     petId: number;
     body?: Blob;
 }
@@ -375,15 +375,15 @@ import {
     Order,
 } from '../models';
 
-export interface DeleteOrderRequest {
+export type DeleteOrderRequest = {
     orderId: number;
 }
 
-export interface GetOrderByIdRequest {
+export type GetOrderByIdRequest = {
     orderId: number;
 }
 
-export interface PlaceOrderRequest {
+export type PlaceOrderRequest = {
     order: Order;
 }
 
@@ -519,32 +519,32 @@ import {
     User,
 } from '../models';
 
-export interface CreateUserRequest {
+export type CreateUserRequest = {
     user: User;
 }
 
-export interface CreateUsersWithArrayInputRequest {
+export type CreateUsersWithArrayInputRequest = {
     user: Array<User>;
 }
 
-export interface CreateUsersWithListInputRequest {
+export type CreateUsersWithListInputRequest = {
     user: Array<User>;
 }
 
-export interface DeleteUserRequest {
+export type DeleteUserRequest = {
     username: string;
 }
 
-export interface GetUserByNameRequest {
+export type GetUserByNameRequest = {
     username: string;
 }
 
-export interface LoginUserRequest {
+export type LoginUserRequest = {
     username: string;
     password: string;
 }
 
-export interface UpdateUserRequest {
+export type UpdateUserRequest = {
     username: string;
     user: User;
 }

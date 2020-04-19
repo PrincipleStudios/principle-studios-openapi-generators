@@ -22,19 +22,19 @@ import {
     Pet,
 } from '../models';
 
-export interface AddPetRequest {
+export type AddPetRequest = {
     newPet: NewPet;
 }
 
-export interface DeletePetRequest {
+export type DeletePetRequest = {
     id: number;
 }
 
-export interface FindPetByIdRequest {
+export type FindPetByIdRequest = {
     id: number;
 }
 
-export interface FindPetsRequest {
+export type FindPetsRequest = {
     tags?: Array<string>;
     limit?: number;
 }
