@@ -6,7 +6,7 @@ to match the Open API specification.
 
 Adding the nuget package `PrincipleStudios.OpenApiCodegen.Server.Mvc` to your
 project will enable a new "Build Action" on files in that project called
-"OpenApiSchemaMvcServer". (Versions of Visual Studio older than 2019 may need to be
+"OpenApiSchemaClient". (Versions of Visual Studio older than 2019 may need to be
 restarted after adding the package.) Setting a valid OpenAPI schema file (YAML
 or JSON), up to v3, will generate new classes within the project. (These classes
 will be in the namespace according to where the file is located.) Implementing

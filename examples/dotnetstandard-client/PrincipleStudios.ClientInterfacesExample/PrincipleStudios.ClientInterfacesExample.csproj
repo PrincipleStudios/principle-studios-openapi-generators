@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <LangVersion>8.0</LangVersion>
+    <ApplicationIcon />
+    <OutputType>Exe</OutputType>
+    <StartupObject />
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="PrincipleStudios.OpenApiCodegen.Client" Version="0.1.0-alpha.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <OpenApiSchemaClient Include="..\..\..\schemas\petstore.yaml" Link="Clients\Petstore\petstore.yaml" />
+    <OpenApiSchemaClient Include="..\..\..\schemas\petstore3.json" Link="Clients\Petstore3\petstore3.json" />
+  </ItemGroup>
+
+
+</Project>

@@ -45,26 +45,21 @@ namespace PrincipleStudios.Demo
 
         public readonly struct TypeSafeAddPetResult
         {
-            public readonly bool hasResultObject;
-            public readonly object? resultObject;
-            public readonly int statusCode;
-            public readonly IActionResult ActionResult =>
-                hasResultObject
-                    ? (IActionResult)new ObjectResult(resultObject) { StatusCode = statusCode }
-                    : (IActionResult)new StatusCodeResult(statusCode);
+            public readonly IActionResult ActionResult;
+
+            private TypeSafeAddPetResult(IActionResult ActionResult)
+            {
+                this.ActionResult = ActionResult;
+            }
 
             private TypeSafeAddPetResult(int statusCode)
+                : this(new StatusCodeResult(statusCode))
             {
-                this.hasResultObject = false;
-                this.resultObject = null;
-                this.statusCode = statusCode;
             }
 
             private TypeSafeAddPetResult(int statusCode, object? resultObject)
+                : this(new ObjectResult(resultObject) { StatusCode = statusCode })
             {
-                this.hasResultObject = true;
-                this.resultObject = resultObject;
-                this.statusCode = statusCode;
             }
 
             /// <summary>pet response</summary>
@@ -74,6 +69,10 @@ namespace PrincipleStudios.Demo
             /// <summary>unexpected error</summary>
             public static TypeSafeAddPetResult OtherStatusCode(int statusCode, Error result) =>
                 new TypeSafeAddPetResult(statusCode, result);
+
+            /// <summary>Allows for action results not specified in the API</summary>
+            public static TypeSafeAddPetResult Unsafe(IActionResult actionResult) =>
+                new TypeSafeAddPetResult(actionResult);
         }
 
         /// <summary>
@@ -94,26 +93,21 @@ namespace PrincipleStudios.Demo
 
         public readonly struct TypeSafeDeletePetResult
         {
-            public readonly bool hasResultObject;
-            public readonly object? resultObject;
-            public readonly int statusCode;
-            public readonly IActionResult ActionResult =>
-                hasResultObject
-                    ? (IActionResult)new ObjectResult(resultObject) { StatusCode = statusCode }
-                    : (IActionResult)new StatusCodeResult(statusCode);
+            public readonly IActionResult ActionResult;
+
+            private TypeSafeDeletePetResult(IActionResult ActionResult)
+            {
+                this.ActionResult = ActionResult;
+            }
 
             private TypeSafeDeletePetResult(int statusCode)
+                : this(new StatusCodeResult(statusCode))
             {
-                this.hasResultObject = false;
-                this.resultObject = null;
-                this.statusCode = statusCode;
             }
 
             private TypeSafeDeletePetResult(int statusCode, object? resultObject)
+                : this(new ObjectResult(resultObject) { StatusCode = statusCode })
             {
-                this.hasResultObject = true;
-                this.resultObject = resultObject;
-                this.statusCode = statusCode;
             }
 
             /// <summary>pet deleted</summary>
@@ -123,6 +117,10 @@ namespace PrincipleStudios.Demo
             /// <summary>unexpected error</summary>
             public static TypeSafeDeletePetResult OtherStatusCode(int statusCode, Error result) =>
                 new TypeSafeDeletePetResult(statusCode, result);
+
+            /// <summary>Allows for action results not specified in the API</summary>
+            public static TypeSafeDeletePetResult Unsafe(IActionResult actionResult) =>
+                new TypeSafeDeletePetResult(actionResult);
         }
 
         /// <summary>
@@ -143,26 +141,21 @@ namespace PrincipleStudios.Demo
 
         public readonly struct TypeSafeFindPetByIdResult
         {
-            public readonly bool hasResultObject;
-            public readonly object? resultObject;
-            public readonly int statusCode;
-            public readonly IActionResult ActionResult =>
-                hasResultObject
-                    ? (IActionResult)new ObjectResult(resultObject) { StatusCode = statusCode }
-                    : (IActionResult)new StatusCodeResult(statusCode);
+            public readonly IActionResult ActionResult;
+
+            private TypeSafeFindPetByIdResult(IActionResult ActionResult)
+            {
+                this.ActionResult = ActionResult;
+            }
 
             private TypeSafeFindPetByIdResult(int statusCode)
+                : this(new StatusCodeResult(statusCode))
             {
-                this.hasResultObject = false;
-                this.resultObject = null;
-                this.statusCode = statusCode;
             }
 
             private TypeSafeFindPetByIdResult(int statusCode, object? resultObject)
+                : this(new ObjectResult(resultObject) { StatusCode = statusCode })
             {
-                this.hasResultObject = true;
-                this.resultObject = resultObject;
-                this.statusCode = statusCode;
             }
 
             /// <summary>pet response</summary>
@@ -172,6 +165,10 @@ namespace PrincipleStudios.Demo
             /// <summary>unexpected error</summary>
             public static TypeSafeFindPetByIdResult OtherStatusCode(int statusCode, Error result) =>
                 new TypeSafeFindPetByIdResult(statusCode, result);
+
+            /// <summary>Allows for action results not specified in the API</summary>
+            public static TypeSafeFindPetByIdResult Unsafe(IActionResult actionResult) =>
+                new TypeSafeFindPetByIdResult(actionResult);
         }
 
         /// <summary>
@@ -195,26 +192,21 @@ namespace PrincipleStudios.Demo
 
         public readonly struct TypeSafeFindPetsResult
         {
-            public readonly bool hasResultObject;
-            public readonly object? resultObject;
-            public readonly int statusCode;
-            public readonly IActionResult ActionResult =>
-                hasResultObject
-                    ? (IActionResult)new ObjectResult(resultObject) { StatusCode = statusCode }
-                    : (IActionResult)new StatusCodeResult(statusCode);
+            public readonly IActionResult ActionResult;
+
+            private TypeSafeFindPetsResult(IActionResult ActionResult)
+            {
+                this.ActionResult = ActionResult;
+            }
 
             private TypeSafeFindPetsResult(int statusCode)
+                : this(new StatusCodeResult(statusCode))
             {
-                this.hasResultObject = false;
-                this.resultObject = null;
-                this.statusCode = statusCode;
             }
 
             private TypeSafeFindPetsResult(int statusCode, object? resultObject)
+                : this(new ObjectResult(resultObject) { StatusCode = statusCode })
             {
-                this.hasResultObject = true;
-                this.resultObject = resultObject;
-                this.statusCode = statusCode;
             }
 
             /// <summary>pet response</summary>
@@ -224,6 +216,10 @@ namespace PrincipleStudios.Demo
             /// <summary>unexpected error</summary>
             public static TypeSafeFindPetsResult OtherStatusCode(int statusCode, Error result) =>
                 new TypeSafeFindPetsResult(statusCode, result);
+
+            /// <summary>Allows for action results not specified in the API</summary>
+            public static TypeSafeFindPetsResult Unsafe(IActionResult actionResult) =>
+                new TypeSafeFindPetsResult(actionResult);
         }
     }
 }"
@@ -246,6 +242,8 @@ using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.ComponentModel.DataAnnotations;
 using Newtonsoft.Json;
+#nullable enable
+#nullable disable warnings
 
 namespace PrincipleStudios.Demo
 { 
@@ -340,6 +338,8 @@ using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.ComponentModel.DataAnnotations;
 using Newtonsoft.Json;
+#nullable enable
+#nullable disable warnings
 
 namespace PrincipleStudios.Demo
 { 
@@ -433,6 +433,8 @@ using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.ComponentModel.DataAnnotations;
 using Newtonsoft.Json;
+#nullable enable
+#nullable disable warnings
 
 namespace PrincipleStudios.Demo
 { 
@@ -542,6 +544,8 @@ using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.ComponentModel.DataAnnotations;
 using Newtonsoft.Json;
+#nullable enable
+#nullable disable warnings
 
 namespace PrincipleStudios.Demo
 { 

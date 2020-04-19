@@ -7,11 +7,11 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.2" />
-    <PackageReference Include="PrincipleStudios.OpenApiCodegen.Server.Mvc" Version="0.0.2" />
+    <PackageReference Include="PrincipleStudios.OpenApiCodegen.Server.Mvc" Version="0.1.0-alpha.2" />
   </ItemGroup>
 
   <ItemGroup>
-    <OpenApiSchema Include="..\..\..\schemas\petstore.yaml" Link="Controllers\petstore.yaml" />
+    <OpenApiSchemaMvcServer Include="..\..\..\schemas\petstore.yaml" Link="Controllers\petstore.yaml" />
   </ItemGroup>
 
 

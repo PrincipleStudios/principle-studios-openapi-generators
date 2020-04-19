@@ -1,0 +1,16 @@
+*.local.*
+**/out.local*/
+**/*.tgz
+
+tests/
+tsconfig.json
+.gitignore
+babel.config.js
+.settings/
+.classpath
+.project
+*gradle*
+src/
+build/**/*
+!build/libs/aspnetcore-server-interfaces.jar
+nuget/

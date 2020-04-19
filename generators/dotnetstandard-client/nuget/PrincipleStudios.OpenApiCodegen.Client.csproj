@@ -1,0 +1,47 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netstandard1.3</TargetFrameworks>
+    <OutputType>exe</OutputType>
+    <IsPackable>true</IsPackable>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <NuspecFile>PrincipleStudios.OpenApiCodegen.Client.nuspec</NuspecFile>
+    <IntermediatePackDir>$(MSBuildProjectDirectory)/bin/$(Configuration)/publish/</IntermediatePackDir>
+    <PublishDir>$(IntermediatePackDir)$(TargetFramework)/</PublishDir>
+    <NuspecProperties>publishDir=$([MSBuild]::NormalizeDirectory($(IntermediatePackDir)))</NuspecProperties>
+
+    <ToolsDir>$(MSBuildThisFileDirectory)../../../tools/</ToolsDir>
+    <JavaRootDir>$(MSBuildThisFileDirectory)../java/</JavaRootDir>
+    <NpmRootDir>$(MSBuildThisFileDirectory)../npm/</NpmRootDir>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="[10.0.3,)" />
+
+    <JavaSource Include="$(JavaRootDir)src/**/*" />
+  </ItemGroup>
+
+  <Target Name="CleanJar" BeforeTargets="Clean">
+    <Exec Command="$(ToolsDir)gradlew clean --no-daemon"
+          WorkingDirectory="$(JavaRootDir)" />
+  </Target>
+
+  <Target Name="BuildJar" BeforeTargets="GenerateNuspec" DependsOnTargets="_RunGradle;_InstallNpm;_RunJestTests">
+  </Target>
+
+  <Target Name="_RunGradle" Inputs="$(JavaRootDir)build.gradle;@(JavaSource)" Outputs="$(JavaRootDir)build/libs/dotnetstandard-client-interfaces.jar">
+    <Exec Command="$(ToolsDir)gradlew jar --no-daemon"
+          WorkingDirectory="$(JavaRootDir)" />
+  </Target>
+
+  <Target Name="_InstallNpm" Inputs="$(NpmRootDir)package.json;$(NpmRootDir)src/**/*" Outputs="$(NpmRootDir)node_modules/@openapitools/openapi-generator-cli/bin/openapi-generator.jar">
+    <Exec Command="npm install"
+          WorkingDirectory="$(NpmRootDir)" />
+  </Target>
+
+  <Target Name="_RunJestTests">
+    <Exec Command="npm test"
+          WorkingDirectory="$(NpmRootDir)" />
+  </Target>
+
+</Project>

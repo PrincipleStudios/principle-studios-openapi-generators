@@ -17,6 +17,8 @@ using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.ComponentModel.DataAnnotations;
 using Newtonsoft.Json;
+#nullable enable
+#nullable disable warnings
 
 namespace PrincipleStudios.Demo
 { 
@@ -124,6 +126,8 @@ using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.ComponentModel.DataAnnotations;
 using Newtonsoft.Json;
+#nullable enable
+#nullable disable warnings
 
 namespace PrincipleStudios.Demo
 { 
@@ -216,6 +220,8 @@ using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.ComponentModel.DataAnnotations;
 using Newtonsoft.Json;
+#nullable enable
+#nullable disable warnings
 
 namespace PrincipleStudios.Demo
 { 
@@ -308,6 +314,8 @@ using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.ComponentModel.DataAnnotations;
 using Newtonsoft.Json;
+#nullable enable
+#nullable disable warnings
 
 namespace PrincipleStudios.Demo
 { 
@@ -485,6 +493,8 @@ using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.ComponentModel.DataAnnotations;
 using Newtonsoft.Json;
+#nullable enable
+#nullable disable warnings
 
 namespace PrincipleStudios.Demo
 { 
@@ -691,31 +701,30 @@ namespace PrincipleStudios.Demo
 
         public readonly struct TypeSafeAddPetResult
         {
-            public readonly bool hasResultObject;
-            public readonly object? resultObject;
-            public readonly int statusCode;
-            public readonly IActionResult ActionResult =>
-                hasResultObject
-                    ? (IActionResult)new ObjectResult(resultObject) { StatusCode = statusCode }
-                    : (IActionResult)new StatusCodeResult(statusCode);
+            public readonly IActionResult ActionResult;
+
+            private TypeSafeAddPetResult(IActionResult ActionResult)
+            {
+                this.ActionResult = ActionResult;
+            }
 
             private TypeSafeAddPetResult(int statusCode)
+                : this(new StatusCodeResult(statusCode))
             {
-                this.hasResultObject = false;
-                this.resultObject = null;
-                this.statusCode = statusCode;
             }
 
             private TypeSafeAddPetResult(int statusCode, object? resultObject)
+                : this(new ObjectResult(resultObject) { StatusCode = statusCode })
             {
-                this.hasResultObject = true;
-                this.resultObject = resultObject;
-                this.statusCode = statusCode;
             }
 
             /// <summary>Invalid input</summary>
             public static TypeSafeAddPetResult StatusCode405() =>
                 new TypeSafeAddPetResult(405);
+
+            /// <summary>Allows for action results not specified in the API</summary>
+            public static TypeSafeAddPetResult Unsafe(IActionResult actionResult) =>
+                new TypeSafeAddPetResult(actionResult);
         }
 
         /// <summary>
@@ -739,26 +748,21 @@ namespace PrincipleStudios.Demo
 
         public readonly struct TypeSafeDeletePetResult
         {
-            public readonly bool hasResultObject;
-            public readonly object? resultObject;
-            public readonly int statusCode;
-            public readonly IActionResult ActionResult =>
-                hasResultObject
-                    ? (IActionResult)new ObjectResult(resultObject) { StatusCode = statusCode }
-                    : (IActionResult)new StatusCodeResult(statusCode);
+            public readonly IActionResult ActionResult;
+
+            private TypeSafeDeletePetResult(IActionResult ActionResult)
+            {
+                this.ActionResult = ActionResult;
+            }
 
             private TypeSafeDeletePetResult(int statusCode)
+                : this(new StatusCodeResult(statusCode))
             {
-                this.hasResultObject = false;
-                this.resultObject = null;
-                this.statusCode = statusCode;
             }
 
             private TypeSafeDeletePetResult(int statusCode, object? resultObject)
+                : this(new ObjectResult(resultObject) { StatusCode = statusCode })
             {
-                this.hasResultObject = true;
-                this.resultObject = resultObject;
-                this.statusCode = statusCode;
             }
 
             /// <summary>Invalid ID supplied</summary>
@@ -768,6 +772,10 @@ namespace PrincipleStudios.Demo
             /// <summary>Pet not found</summary>
             public static TypeSafeDeletePetResult StatusCode404() =>
                 new TypeSafeDeletePetResult(404);
+
+            /// <summary>Allows for action results not specified in the API</summary>
+            public static TypeSafeDeletePetResult Unsafe(IActionResult actionResult) =>
+                new TypeSafeDeletePetResult(actionResult);
         }
 
         /// <summary>
@@ -789,26 +797,21 @@ namespace PrincipleStudios.Demo
 
         public readonly struct TypeSafeFindPetsByStatusResult
         {
-            public readonly bool hasResultObject;
-            public readonly object? resultObject;
-            public readonly int statusCode;
-            public readonly IActionResult ActionResult =>
-                hasResultObject
-                    ? (IActionResult)new ObjectResult(resultObject) { StatusCode = statusCode }
-                    : (IActionResult)new StatusCodeResult(statusCode);
+            public readonly IActionResult ActionResult;
+
+            private TypeSafeFindPetsByStatusResult(IActionResult ActionResult)
+            {
+                this.ActionResult = ActionResult;
+            }
 
             private TypeSafeFindPetsByStatusResult(int statusCode)
+                : this(new StatusCodeResult(statusCode))
             {
-                this.hasResultObject = false;
-                this.resultObject = null;
-                this.statusCode = statusCode;
             }
 
             private TypeSafeFindPetsByStatusResult(int statusCode, object? resultObject)
+                : this(new ObjectResult(resultObject) { StatusCode = statusCode })
             {
-                this.hasResultObject = true;
-                this.resultObject = resultObject;
-                this.statusCode = statusCode;
             }
 
             /// <summary>successful operation</summary>
@@ -818,6 +821,10 @@ namespace PrincipleStudios.Demo
             /// <summary>Invalid status value</summary>
             public static TypeSafeFindPetsByStatusResult StatusCode400() =>
                 new TypeSafeFindPetsByStatusResult(400);
+
+            /// <summary>Allows for action results not specified in the API</summary>
+            public static TypeSafeFindPetsByStatusResult Unsafe(IActionResult actionResult) =>
+                new TypeSafeFindPetsByStatusResult(actionResult);
         }
 
         /// <summary>
@@ -839,26 +846,21 @@ namespace PrincipleStudios.Demo
 
         public readonly struct TypeSafeFindPetsByTagsResult
         {
-            public readonly bool hasResultObject;
-            public readonly object? resultObject;
-            public readonly int statusCode;
-            public readonly IActionResult ActionResult =>
-                hasResultObject
-                    ? (IActionResult)new ObjectResult(resultObject) { StatusCode = statusCode }
-                    : (IActionResult)new StatusCodeResult(statusCode);
+            public readonly IActionResult ActionResult;
+
+            private TypeSafeFindPetsByTagsResult(IActionResult ActionResult)
+            {
+                this.ActionResult = ActionResult;
+            }
 
             private TypeSafeFindPetsByTagsResult(int statusCode)
+                : this(new StatusCodeResult(statusCode))
             {
-                this.hasResultObject = false;
-                this.resultObject = null;
-                this.statusCode = statusCode;
             }
 
             private TypeSafeFindPetsByTagsResult(int statusCode, object? resultObject)
+                : this(new ObjectResult(resultObject) { StatusCode = statusCode })
             {
-                this.hasResultObject = true;
-                this.resultObject = resultObject;
-                this.statusCode = statusCode;
             }
 
             /// <summary>successful operation</summary>
@@ -868,6 +870,10 @@ namespace PrincipleStudios.Demo
             /// <summary>Invalid tag value</summary>
             public static TypeSafeFindPetsByTagsResult StatusCode400() =>
                 new TypeSafeFindPetsByTagsResult(400);
+
+            /// <summary>Allows for action results not specified in the API</summary>
+            public static TypeSafeFindPetsByTagsResult Unsafe(IActionResult actionResult) =>
+                new TypeSafeFindPetsByTagsResult(actionResult);
         }
 
         /// <summary>
@@ -890,26 +896,21 @@ namespace PrincipleStudios.Demo
 
         public readonly struct TypeSafeGetPetByIdResult
         {
-            public readonly bool hasResultObject;
-            public readonly object? resultObject;
-            public readonly int statusCode;
-            public readonly IActionResult ActionResult =>
-                hasResultObject
-                    ? (IActionResult)new ObjectResult(resultObject) { StatusCode = statusCode }
-                    : (IActionResult)new StatusCodeResult(statusCode);
+            public readonly IActionResult ActionResult;
+
+            private TypeSafeGetPetByIdResult(IActionResult ActionResult)
+            {
+                this.ActionResult = ActionResult;
+            }
 
             private TypeSafeGetPetByIdResult(int statusCode)
+                : this(new StatusCodeResult(statusCode))
             {
-                this.hasResultObject = false;
-                this.resultObject = null;
-                this.statusCode = statusCode;
             }
 
             private TypeSafeGetPetByIdResult(int statusCode, object? resultObject)
+                : this(new ObjectResult(resultObject) { StatusCode = statusCode })
             {
-                this.hasResultObject = true;
-                this.resultObject = resultObject;
-                this.statusCode = statusCode;
             }
 
             /// <summary>successful operation</summary>
@@ -923,6 +924,10 @@ namespace PrincipleStudios.Demo
             /// <summary>Pet not found</summary>
             public static TypeSafeGetPetByIdResult StatusCode404() =>
                 new TypeSafeGetPetByIdResult(404);
+
+            /// <summary>Allows for action results not specified in the API</summary>
+            public static TypeSafeGetPetByIdResult Unsafe(IActionResult actionResult) =>
+                new TypeSafeGetPetByIdResult(actionResult);
         }
 
         /// <summary>
@@ -944,26 +949,21 @@ namespace PrincipleStudios.Demo
 
         public readonly struct TypeSafeUpdatePetResult
         {
-            public readonly bool hasResultObject;
-            public readonly object? resultObject;
-            public readonly int statusCode;
-            public readonly IActionResult ActionResult =>
-                hasResultObject
-                    ? (IActionResult)new ObjectResult(resultObject) { StatusCode = statusCode }
-                    : (IActionResult)new StatusCodeResult(statusCode);
+            public readonly IActionResult ActionResult;
+
+            private TypeSafeUpdatePetResult(IActionResult ActionResult)
+            {
+                this.ActionResult = ActionResult;
+            }
 
             private TypeSafeUpdatePetResult(int statusCode)
+                : this(new StatusCodeResult(statusCode))
             {
-                this.hasResultObject = false;
-                this.resultObject = null;
-                this.statusCode = statusCode;
             }
 
             private TypeSafeUpdatePetResult(int statusCode, object? resultObject)
+                : this(new ObjectResult(resultObject) { StatusCode = statusCode })
             {
-                this.hasResultObject = true;
-                this.resultObject = resultObject;
-                this.statusCode = statusCode;
             }
 
             /// <summary>Invalid ID supplied</summary>
@@ -977,6 +977,10 @@ namespace PrincipleStudios.Demo
             /// <summary>Validation exception</summary>
             public static TypeSafeUpdatePetResult StatusCode405() =>
                 new TypeSafeUpdatePetResult(405);
+
+            /// <summary>Allows for action results not specified in the API</summary>
+            public static TypeSafeUpdatePetResult Unsafe(IActionResult actionResult) =>
+                new TypeSafeUpdatePetResult(actionResult);
         }
 
         /// <summary>
@@ -1002,31 +1006,30 @@ namespace PrincipleStudios.Demo
 
         public readonly struct TypeSafeUpdatePetWithFormResult
         {
-            public readonly bool hasResultObject;
-            public readonly object? resultObject;
-            public readonly int statusCode;
-            public readonly IActionResult ActionResult =>
-                hasResultObject
-                    ? (IActionResult)new ObjectResult(resultObject) { StatusCode = statusCode }
-                    : (IActionResult)new StatusCodeResult(statusCode);
+            public readonly IActionResult ActionResult;
+
+            private TypeSafeUpdatePetWithFormResult(IActionResult ActionResult)
+            {
+                this.ActionResult = ActionResult;
+            }
 
             private TypeSafeUpdatePetWithFormResult(int statusCode)
+                : this(new StatusCodeResult(statusCode))
             {
-                this.hasResultObject = false;
-                this.resultObject = null;
-                this.statusCode = statusCode;
             }
 
             private TypeSafeUpdatePetWithFormResult(int statusCode, object? resultObject)
+                : this(new ObjectResult(resultObject) { StatusCode = statusCode })
             {
-                this.hasResultObject = true;
-                this.resultObject = resultObject;
-                this.statusCode = statusCode;
             }
 
             /// <summary>Invalid input</summary>
             public static TypeSafeUpdatePetWithFormResult StatusCode405() =>
                 new TypeSafeUpdatePetWithFormResult(405);
+
+            /// <summary>Allows for action results not specified in the API</summary>
+            public static TypeSafeUpdatePetWithFormResult Unsafe(IActionResult actionResult) =>
+                new TypeSafeUpdatePetWithFormResult(actionResult);
         }
 
         /// <summary>
@@ -1049,31 +1052,30 @@ namespace PrincipleStudios.Demo
 
         public readonly struct TypeSafeUploadFileResult
         {
-            public readonly bool hasResultObject;
-            public readonly object? resultObject;
-            public readonly int statusCode;
-            public readonly IActionResult ActionResult =>
-                hasResultObject
-                    ? (IActionResult)new ObjectResult(resultObject) { StatusCode = statusCode }
-                    : (IActionResult)new StatusCodeResult(statusCode);
+            public readonly IActionResult ActionResult;
+
+            private TypeSafeUploadFileResult(IActionResult ActionResult)
+            {
+                this.ActionResult = ActionResult;
+            }
 
             private TypeSafeUploadFileResult(int statusCode)
+                : this(new StatusCodeResult(statusCode))
             {
-                this.hasResultObject = false;
-                this.resultObject = null;
-                this.statusCode = statusCode;
             }
 
             private TypeSafeUploadFileResult(int statusCode, object? resultObject)
+                : this(new ObjectResult(resultObject) { StatusCode = statusCode })
             {
-                this.hasResultObject = true;
-                this.resultObject = resultObject;
-                this.statusCode = statusCode;
             }
 
             /// <summary>successful operation</summary>
             public static TypeSafeUploadFileResult StatusCode200(ApiResponse result) =>
                 new TypeSafeUploadFileResult(200, result);
+
+            /// <summary>Allows for action results not specified in the API</summary>
+            public static TypeSafeUploadFileResult Unsafe(IActionResult actionResult) =>
+                new TypeSafeUploadFileResult(actionResult);
         }
     }
 }"
@@ -1124,26 +1126,21 @@ namespace PrincipleStudios.Demo
 
         public readonly struct TypeSafeDeleteOrderResult
         {
-            public readonly bool hasResultObject;
-            public readonly object? resultObject;
-            public readonly int statusCode;
-            public readonly IActionResult ActionResult =>
-                hasResultObject
-                    ? (IActionResult)new ObjectResult(resultObject) { StatusCode = statusCode }
-                    : (IActionResult)new StatusCodeResult(statusCode);
+            public readonly IActionResult ActionResult;
+
+            private TypeSafeDeleteOrderResult(IActionResult ActionResult)
+            {
+                this.ActionResult = ActionResult;
+            }
 
             private TypeSafeDeleteOrderResult(int statusCode)
+                : this(new StatusCodeResult(statusCode))
             {
-                this.hasResultObject = false;
-                this.resultObject = null;
-                this.statusCode = statusCode;
             }
 
             private TypeSafeDeleteOrderResult(int statusCode, object? resultObject)
+                : this(new ObjectResult(resultObject) { StatusCode = statusCode })
             {
-                this.hasResultObject = true;
-                this.resultObject = resultObject;
-                this.statusCode = statusCode;
             }
 
             /// <summary>Invalid ID supplied</summary>
@@ -1153,6 +1150,10 @@ namespace PrincipleStudios.Demo
             /// <summary>Order not found</summary>
             public static TypeSafeDeleteOrderResult StatusCode404() =>
                 new TypeSafeDeleteOrderResult(404);
+
+            /// <summary>Allows for action results not specified in the API</summary>
+            public static TypeSafeDeleteOrderResult Unsafe(IActionResult actionResult) =>
+                new TypeSafeDeleteOrderResult(actionResult);
         }
 
         /// <summary>
@@ -1170,31 +1171,30 @@ namespace PrincipleStudios.Demo
 
         public readonly struct TypeSafeGetInventoryResult
         {
-            public readonly bool hasResultObject;
-            public readonly object? resultObject;
-            public readonly int statusCode;
-            public readonly IActionResult ActionResult =>
-                hasResultObject
-                    ? (IActionResult)new ObjectResult(resultObject) { StatusCode = statusCode }
-                    : (IActionResult)new StatusCodeResult(statusCode);
+            public readonly IActionResult ActionResult;
+
+            private TypeSafeGetInventoryResult(IActionResult ActionResult)
+            {
+                this.ActionResult = ActionResult;
+            }
 
             private TypeSafeGetInventoryResult(int statusCode)
+                : this(new StatusCodeResult(statusCode))
             {
-                this.hasResultObject = false;
-                this.resultObject = null;
-                this.statusCode = statusCode;
             }
 
             private TypeSafeGetInventoryResult(int statusCode, object? resultObject)
+                : this(new ObjectResult(resultObject) { StatusCode = statusCode })
             {
-                this.hasResultObject = true;
-                this.resultObject = resultObject;
-                this.statusCode = statusCode;
             }
 
             /// <summary>successful operation</summary>
             public static TypeSafeGetInventoryResult StatusCode200(Dictionary<string, int?> result) =>
                 new TypeSafeGetInventoryResult(200, result);
+
+            /// <summary>Allows for action results not specified in the API</summary>
+            public static TypeSafeGetInventoryResult Unsafe(IActionResult actionResult) =>
+                new TypeSafeGetInventoryResult(actionResult);
         }
 
         /// <summary>
@@ -1216,26 +1216,21 @@ namespace PrincipleStudios.Demo
 
         public readonly struct TypeSafeGetOrderByIdResult
         {
-            public readonly bool hasResultObject;
-            public readonly object? resultObject;
-            public readonly int statusCode;
-            public readonly IActionResult ActionResult =>
-                hasResultObject
-                    ? (IActionResult)new ObjectResult(resultObject) { StatusCode = statusCode }
-                    : (IActionResult)new StatusCodeResult(statusCode);
+            public readonly IActionResult ActionResult;
+
+            private TypeSafeGetOrderByIdResult(IActionResult ActionResult)
+            {
+                this.ActionResult = ActionResult;
+            }
 
             private TypeSafeGetOrderByIdResult(int statusCode)
+                : this(new StatusCodeResult(statusCode))
             {
-                this.hasResultObject = false;
-                this.resultObject = null;
-                this.statusCode = statusCode;
             }
 
             private TypeSafeGetOrderByIdResult(int statusCode, object? resultObject)
+                : this(new ObjectResult(resultObject) { StatusCode = statusCode })
             {
-                this.hasResultObject = true;
-                this.resultObject = resultObject;
-                this.statusCode = statusCode;
             }
 
             /// <summary>successful operation</summary>
@@ -1249,6 +1244,10 @@ namespace PrincipleStudios.Demo
             /// <summary>Order not found</summary>
             public static TypeSafeGetOrderByIdResult StatusCode404() =>
                 new TypeSafeGetOrderByIdResult(404);
+
+            /// <summary>Allows for action results not specified in the API</summary>
+            public static TypeSafeGetOrderByIdResult Unsafe(IActionResult actionResult) =>
+                new TypeSafeGetOrderByIdResult(actionResult);
         }
 
         /// <summary>
@@ -1268,26 +1267,21 @@ namespace PrincipleStudios.Demo
 
         public readonly struct TypeSafePlaceOrderResult
         {
-            public readonly bool hasResultObject;
-            public readonly object? resultObject;
-            public readonly int statusCode;
-            public readonly IActionResult ActionResult =>
-                hasResultObject
-                    ? (IActionResult)new ObjectResult(resultObject) { StatusCode = statusCode }
-                    : (IActionResult)new StatusCodeResult(statusCode);
+            public readonly IActionResult ActionResult;
+
+            private TypeSafePlaceOrderResult(IActionResult ActionResult)
+            {
+                this.ActionResult = ActionResult;
+            }
 
             private TypeSafePlaceOrderResult(int statusCode)
+                : this(new StatusCodeResult(statusCode))
             {
-                this.hasResultObject = false;
-                this.resultObject = null;
-                this.statusCode = statusCode;
             }
 
             private TypeSafePlaceOrderResult(int statusCode, object? resultObject)
+                : this(new ObjectResult(resultObject) { StatusCode = statusCode })
             {
-                this.hasResultObject = true;
-                this.resultObject = resultObject;
-                this.statusCode = statusCode;
             }
 
             /// <summary>successful operation</summary>
@@ -1297,6 +1291,10 @@ namespace PrincipleStudios.Demo
             /// <summary>Invalid Order</summary>
             public static TypeSafePlaceOrderResult StatusCode400() =>
                 new TypeSafePlaceOrderResult(400);
+
+            /// <summary>Allows for action results not specified in the API</summary>
+            public static TypeSafePlaceOrderResult Unsafe(IActionResult actionResult) =>
+                new TypeSafePlaceOrderResult(actionResult);
         }
     }
 }"
@@ -1319,6 +1317,8 @@ using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.ComponentModel.DataAnnotations;
 using Newtonsoft.Json;
+#nullable enable
+#nullable disable warnings
 
 namespace PrincipleStudios.Demo
 { 
@@ -1411,6 +1411,8 @@ using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.ComponentModel.DataAnnotations;
 using Newtonsoft.Json;
+#nullable enable
+#nullable disable warnings
 
 namespace PrincipleStudios.Demo
 { 
@@ -1620,31 +1622,30 @@ namespace PrincipleStudios.Demo
 
         public readonly struct TypeSafeCreateUserResult
         {
-            public readonly bool hasResultObject;
-            public readonly object? resultObject;
-            public readonly int statusCode;
-            public readonly IActionResult ActionResult =>
-                hasResultObject
-                    ? (IActionResult)new ObjectResult(resultObject) { StatusCode = statusCode }
-                    : (IActionResult)new StatusCodeResult(statusCode);
+            public readonly IActionResult ActionResult;
+
+            private TypeSafeCreateUserResult(IActionResult ActionResult)
+            {
+                this.ActionResult = ActionResult;
+            }
 
             private TypeSafeCreateUserResult(int statusCode)
+                : this(new StatusCodeResult(statusCode))
             {
-                this.hasResultObject = false;
-                this.resultObject = null;
-                this.statusCode = statusCode;
             }
 
             private TypeSafeCreateUserResult(int statusCode, object? resultObject)
+                : this(new ObjectResult(resultObject) { StatusCode = statusCode })
             {
-                this.hasResultObject = true;
-                this.resultObject = resultObject;
-                this.statusCode = statusCode;
             }
 
             /// <summary>successful operation</summary>
             public static TypeSafeCreateUserResult OtherStatusCode(int statusCode) =>
                 new TypeSafeCreateUserResult(statusCode);
+
+            /// <summary>Allows for action results not specified in the API</summary>
+            public static TypeSafeCreateUserResult Unsafe(IActionResult actionResult) =>
+                new TypeSafeCreateUserResult(actionResult);
         }
 
         /// <summary>
@@ -1663,31 +1664,30 @@ namespace PrincipleStudios.Demo
 
         public readonly struct TypeSafeCreateUsersWithArrayInputResult
         {
-            public readonly bool hasResultObject;
-            public readonly object? resultObject;
-            public readonly int statusCode;
-            public readonly IActionResult ActionResult =>
-                hasResultObject
-                    ? (IActionResult)new ObjectResult(resultObject) { StatusCode = statusCode }
-                    : (IActionResult)new StatusCodeResult(statusCode);
+            public readonly IActionResult ActionResult;
+
+            private TypeSafeCreateUsersWithArrayInputResult(IActionResult ActionResult)
+            {
+                this.ActionResult = ActionResult;
+            }
 
             private TypeSafeCreateUsersWithArrayInputResult(int statusCode)
+                : this(new StatusCodeResult(statusCode))
             {
-                this.hasResultObject = false;
-                this.resultObject = null;
-                this.statusCode = statusCode;
             }
 
             private TypeSafeCreateUsersWithArrayInputResult(int statusCode, object? resultObject)
+                : this(new ObjectResult(resultObject) { StatusCode = statusCode })
             {
-                this.hasResultObject = true;
-                this.resultObject = resultObject;
-                this.statusCode = statusCode;
             }
 
             /// <summary>successful operation</summary>
             public static TypeSafeCreateUsersWithArrayInputResult OtherStatusCode(int statusCode) =>
                 new TypeSafeCreateUsersWithArrayInputResult(statusCode);
+
+            /// <summary>Allows for action results not specified in the API</summary>
+            public static TypeSafeCreateUsersWithArrayInputResult Unsafe(IActionResult actionResult) =>
+                new TypeSafeCreateUsersWithArrayInputResult(actionResult);
         }
 
         /// <summary>
@@ -1706,31 +1706,30 @@ namespace PrincipleStudios.Demo
 
         public readonly struct TypeSafeCreateUsersWithListInputResult
         {
-            public readonly bool hasResultObject;
-            public readonly object? resultObject;
-            public readonly int statusCode;
-            public readonly IActionResult ActionResult =>
-                hasResultObject
-                    ? (IActionResult)new ObjectResult(resultObject) { StatusCode = statusCode }
-                    : (IActionResult)new StatusCodeResult(statusCode);
+            public readonly IActionResult ActionResult;
+
+            private TypeSafeCreateUsersWithListInputResult(IActionResult ActionResult)
+            {
+                this.ActionResult = ActionResult;
+            }
 
             private TypeSafeCreateUsersWithListInputResult(int statusCode)
+                : this(new StatusCodeResult(statusCode))
             {
-                this.hasResultObject = false;
-                this.resultObject = null;
-                this.statusCode = statusCode;
             }
 
             private TypeSafeCreateUsersWithListInputResult(int statusCode, object? resultObject)
+                : this(new ObjectResult(resultObject) { StatusCode = statusCode })
             {
-                this.hasResultObject = true;
-                this.resultObject = resultObject;
-                this.statusCode = statusCode;
             }
 
             /// <summary>successful operation</summary>
             public static TypeSafeCreateUsersWithListInputResult OtherStatusCode(int statusCode) =>
                 new TypeSafeCreateUsersWithListInputResult(statusCode);
+
+            /// <summary>Allows for action results not specified in the API</summary>
+            public static TypeSafeCreateUsersWithListInputResult Unsafe(IActionResult actionResult) =>
+                new TypeSafeCreateUsersWithListInputResult(actionResult);
         }
 
         /// <summary>
@@ -1751,26 +1750,21 @@ namespace PrincipleStudios.Demo
 
         public readonly struct TypeSafeDeleteUserResult
         {
-            public readonly bool hasResultObject;
-            public readonly object? resultObject;
-            public readonly int statusCode;
-            public readonly IActionResult ActionResult =>
-                hasResultObject
-                    ? (IActionResult)new ObjectResult(resultObject) { StatusCode = statusCode }
-                    : (IActionResult)new StatusCodeResult(statusCode);
+            public readonly IActionResult ActionResult;
+
+            private TypeSafeDeleteUserResult(IActionResult ActionResult)
+            {
+                this.ActionResult = ActionResult;
+            }
 
             private TypeSafeDeleteUserResult(int statusCode)
+                : this(new StatusCodeResult(statusCode))
             {
-                this.hasResultObject = false;
-                this.resultObject = null;
-                this.statusCode = statusCode;
             }
 
             private TypeSafeDeleteUserResult(int statusCode, object? resultObject)
+                : this(new ObjectResult(resultObject) { StatusCode = statusCode })
             {
-                this.hasResultObject = true;
-                this.resultObject = resultObject;
-                this.statusCode = statusCode;
             }
 
             /// <summary>Invalid username supplied</summary>
@@ -1780,6 +1774,10 @@ namespace PrincipleStudios.Demo
             /// <summary>User not found</summary>
             public static TypeSafeDeleteUserResult StatusCode404() =>
                 new TypeSafeDeleteUserResult(404);
+
+            /// <summary>Allows for action results not specified in the API</summary>
+            public static TypeSafeDeleteUserResult Unsafe(IActionResult actionResult) =>
+                new TypeSafeDeleteUserResult(actionResult);
         }
 
         /// <summary>
@@ -1800,26 +1798,21 @@ namespace PrincipleStudios.Demo
 
         public readonly struct TypeSafeGetUserByNameResult
         {
-            public readonly bool hasResultObject;
-            public readonly object? resultObject;
-            public readonly int statusCode;
-            public readonly IActionResult ActionResult =>
-                hasResultObject
-                    ? (IActionResult)new ObjectResult(resultObject) { StatusCode = statusCode }
-                    : (IActionResult)new StatusCodeResult(statusCode);
+            public readonly IActionResult ActionResult;
+
+            private TypeSafeGetUserByNameResult(IActionResult ActionResult)
+            {
+                this.ActionResult = ActionResult;
+            }
 
             private TypeSafeGetUserByNameResult(int statusCode)
+                : this(new StatusCodeResult(statusCode))
             {
-                this.hasResultObject = false;
-                this.resultObject = null;
-                this.statusCode = statusCode;
             }
 
             private TypeSafeGetUserByNameResult(int statusCode, object? resultObject)
+                : this(new ObjectResult(resultObject) { StatusCode = statusCode })
             {
-                this.hasResultObject = true;
-                this.resultObject = resultObject;
-                this.statusCode = statusCode;
             }
 
             /// <summary>successful operation</summary>
@@ -1833,6 +1826,10 @@ namespace PrincipleStudios.Demo
             /// <summary>User not found</summary>
             public static TypeSafeGetUserByNameResult StatusCode404() =>
                 new TypeSafeGetUserByNameResult(404);
+
+            /// <summary>Allows for action results not specified in the API</summary>
+            public static TypeSafeGetUserByNameResult Unsafe(IActionResult actionResult) =>
+                new TypeSafeGetUserByNameResult(actionResult);
         }
 
         /// <summary>
@@ -1855,26 +1852,21 @@ namespace PrincipleStudios.Demo
 
         public readonly struct TypeSafeLoginUserResult
         {
-            public readonly bool hasResultObject;
-            public readonly object? resultObject;
-            public readonly int statusCode;
-            public readonly IActionResult ActionResult =>
-                hasResultObject
-                    ? (IActionResult)new ObjectResult(resultObject) { StatusCode = statusCode }
-                    : (IActionResult)new StatusCodeResult(statusCode);
+            public readonly IActionResult ActionResult;
+
+            private TypeSafeLoginUserResult(IActionResult ActionResult)
+            {
+                this.ActionResult = ActionResult;
+            }
 
             private TypeSafeLoginUserResult(int statusCode)
+                : this(new StatusCodeResult(statusCode))
             {
-                this.hasResultObject = false;
-                this.resultObject = null;
-                this.statusCode = statusCode;
             }
 
             private TypeSafeLoginUserResult(int statusCode, object? resultObject)
+                : this(new ObjectResult(resultObject) { StatusCode = statusCode })
             {
-                this.hasResultObject = true;
-                this.resultObject = resultObject;
-                this.statusCode = statusCode;
             }
 
             /// <summary>successful operation</summary>
@@ -1884,6 +1876,10 @@ namespace PrincipleStudios.Demo
             /// <summary>Invalid username/password supplied</summary>
             public static TypeSafeLoginUserResult StatusCode400() =>
                 new TypeSafeLoginUserResult(400);
+
+            /// <summary>Allows for action results not specified in the API</summary>
+            public static TypeSafeLoginUserResult Unsafe(IActionResult actionResult) =>
+                new TypeSafeLoginUserResult(actionResult);
         }
 
         /// <summary>
@@ -1899,31 +1895,30 @@ namespace PrincipleStudios.Demo
 
         public readonly struct TypeSafeLogoutUserResult
         {
-            public readonly bool hasResultObject;
-            public readonly object? resultObject;
-            public readonly int statusCode;
-            public readonly IActionResult ActionResult =>
-                hasResultObject
-                    ? (IActionResult)new ObjectResult(resultObject) { StatusCode = statusCode }
-                    : (IActionResult)new StatusCodeResult(statusCode);
+            public readonly IActionResult ActionResult;
+
+            private TypeSafeLogoutUserResult(IActionResult ActionResult)
+            {
+                this.ActionResult = ActionResult;
+            }
 
             private TypeSafeLogoutUserResult(int statusCode)
+                : this(new StatusCodeResult(statusCode))
             {
-                this.hasResultObject = false;
-                this.resultObject = null;
-                this.statusCode = statusCode;
             }
 
             private TypeSafeLogoutUserResult(int statusCode, object? resultObject)
+                : this(new ObjectResult(resultObject) { StatusCode = statusCode })
             {
-                this.hasResultObject = true;
-                this.resultObject = resultObject;
-                this.statusCode = statusCode;
             }
 
             /// <summary>successful operation</summary>
             public static TypeSafeLogoutUserResult OtherStatusCode(int statusCode) =>
                 new TypeSafeLogoutUserResult(statusCode);
+
+            /// <summary>Allows for action results not specified in the API</summary>
+            public static TypeSafeLogoutUserResult Unsafe(IActionResult actionResult) =>
+                new TypeSafeLogoutUserResult(actionResult);
         }
 
         /// <summary>
@@ -1947,26 +1942,21 @@ namespace PrincipleStudios.Demo
 
         public readonly struct TypeSafeUpdateUserResult
         {
-            public readonly bool hasResultObject;
-            public readonly object? resultObject;
-            public readonly int statusCode;
-            public readonly IActionResult ActionResult =>
-                hasResultObject
-                    ? (IActionResult)new ObjectResult(resultObject) { StatusCode = statusCode }
-                    : (IActionResult)new StatusCodeResult(statusCode);
+            public readonly IActionResult ActionResult;
+
+            private TypeSafeUpdateUserResult(IActionResult ActionResult)
+            {
+                this.ActionResult = ActionResult;
+            }
 
             private TypeSafeUpdateUserResult(int statusCode)
+                : this(new StatusCodeResult(statusCode))
             {
-                this.hasResultObject = false;
-                this.resultObject = null;
-                this.statusCode = statusCode;
             }
 
             private TypeSafeUpdateUserResult(int statusCode, object? resultObject)
+                : this(new ObjectResult(resultObject) { StatusCode = statusCode })
             {
-                this.hasResultObject = true;
-                this.resultObject = resultObject;
-                this.statusCode = statusCode;
             }
 
             /// <summary>Invalid user supplied</summary>
@@ -1976,6 +1966,10 @@ namespace PrincipleStudios.Demo
             /// <summary>User not found</summary>
             public static TypeSafeUpdateUserResult StatusCode404() =>
                 new TypeSafeUpdateUserResult(404);
+
+            /// <summary>Allows for action results not specified in the API</summary>
+            public static TypeSafeUpdateUserResult Unsafe(IActionResult actionResult) =>
+                new TypeSafeUpdateUserResult(actionResult);
         }
     }
 }"

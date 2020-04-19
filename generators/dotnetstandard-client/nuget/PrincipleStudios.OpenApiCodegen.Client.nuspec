@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
   <metadata>
-    <id>PrincipleStudios.OpenApiCodegen.Server.Mvc</id>
+    <id>PrincipleStudios.OpenApiCodegen.Client</id>
     <version>0.1.0-alpha.2</version>
     <authors>Matt DeKrey</authors>
     <license type="expression">BSD-2-Clause</license>
-    <title>Controller Generation from OpenAPI specification for ASP.Net Core</title>
-    <summary>Adds MSBuild targets to generate C# controller base classes from an OpenAPI specification file.</summary>
+    <title>Client Generation from OpenAPI specification for ASP.Net Core</title>
+    <summary>Adds MSBuild targets to generate C# client classes from an OpenAPI specification file.</summary>
     <projectUrl>https://github.com/mdekrey/principle-studios-openapi-generators</projectUrl>
     <repository type="git" url="https://github.com/mdekrey/principle-studios-openapi-generators.git" branch="master" />
     <description>
-Adds MSBuild targets to generate C# controller base classes from an OpenAPI
+Adds MSBuild targets to generate C# client classes from an OpenAPI
 specification file.
 
 Add this package, select the OpenAPI specification file from your project, and
-set the build action to `OpenApiSchemaMvcServer`. Within that folder's namespace, you'll
-automatically get the model and controller classes to implement your interface.
+set the build action to `OpenApiSchemaClient`. Within that folder's namespace, you'll
+automatically get the interfaces and classes to invoke your API.
 
 This integrates during the build phase, so you can be sure your classes are up
 to date with your schema documentation.
@@ -31,16 +31,16 @@ information. Requires a JRE to run, we recommend https://openjdk.java.net/.
     <iconUrl>https://principlestudios.com/wp-content/themes/principle/frontend/dist/favicon.png</iconUrl>
     <copyright>2020 Matt DeKrey &amp; Principle Studios</copyright>
     <dependencies>
-      <group targetFramework=".NETCoreApp3.0">
+      <group targetFramework=".NetStandard1.3">
         <dependency id="Newtonsoft.Json" version="[10.0.3,)" exclude="Build" />
       </group>
     </dependencies>
   </metadata>
   <files>
-    <file src="package/_._" target="lib/netcoreapp3.0/" />
-    <file src="package/PrincipleStudios.OpenApiCodegen.Server.Mvc.targets" target="build/netcoreapp2.0/" />
+    <file src="package/_._" target="lib/netstandard1.3/" />
+    <file src="package/PrincipleStudios.OpenApiCodegen.Client.targets" target="build/netstandard1.3/" />
 
     <!-- https://github.com/NuGet/Home/issues/3584 -->
-    <file src="..\java\build\libs\*.jar" target="build/netcoreapp2.0/" />
+    <file src="..\java\build\libs\*.jar" target="build/netstandard1.3/" />
   </files>
 </package>

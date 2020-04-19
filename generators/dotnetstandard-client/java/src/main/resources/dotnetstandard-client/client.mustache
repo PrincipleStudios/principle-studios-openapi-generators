@@ -1,0 +1,161 @@
+{{>partial_header}}
+using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net.Http;
+using System.Threading.Tasks;
+#nullable enable
+#nullable disable warnings
+
+namespace {{packageName}}
+{ {{#operations}}
+    /// <summary>
+    /// {{description}}
+    /// </summary>{{#description}}
+    [Description("{{description}}")]{{/description}}
+    public interface I{{classname}}Client
+    { {{#operation}}
+        /// <summary>
+        /// {{#summary}}{{summary}}{{/summary}}
+        /// </summary>{{#notes}}
+        /// <remarks>{{notes}}</remarks>{{/notes}}{{#allParams}}
+        /// <param name="{{paramName}}">{{description}}</param>{{/allParams}}
+        Task<{{classname}}Client.ITypeSafe{{operationId}}Result> {{operationId}}Async({{#allParams}}
+            {{&dataType}} {{paramName}},{{/allParams}}
+            System.Net.Http.Headers.AuthenticationHeaderValue? _authorizationHeader = null);
+        {{/operation}}
+    }
+
+    public class {{classname}}ClientConfiguration
+    {
+        public string BaseUrl { get; set; }
+        public JsonSerializerSettings Settings { get; set; }
+    }
+
+    /// <summary>
+    /// {{description}}
+    /// </summary>{{#description}}
+    [Description("{{description}}")]{{/description}}
+    public sealed class {{classname}}Client : I{{classname}}Client
+    {
+        private readonly HttpClient httpClient;
+        private readonly {{classname}}ClientConfiguration configuration;
+
+        public {{classname}}Client(HttpClient httpClient, {{classname}}ClientConfiguration configuration)
+        {
+            this.httpClient = httpClient;
+            this.configuration = configuration;
+        }
+
+{{#operation}}
+        /// <summary>
+        /// {{#summary}}{{summary}}{{/summary}}
+        /// </summary>{{#notes}}
+        /// <remarks>{{notes}}</remarks>{{/notes}}{{#allParams}}
+        /// <param name="_{{paramName}}">{{description}}</param>{{/allParams}}
+        public Task<ITypeSafe{{operationId}}Result> {{operationId}}Async({{#allParams}}
+            {{&dataType}} _{{paramName}},{{/allParams}}
+            System.Net.Http.Headers.AuthenticationHeaderValue? authorization = null)
+        {
+            {{! _ is a prefix for input parameters to ensure they don't collide with our vars like path/query/authorization/etc }}
+            var path = "{{{path}}}"{{#pathParams}}
+{{! Changing boundaries in order to make code more efficient }}
+                        .Replace({{=<% %>=}}"{<%baseName%>}",<%={{ }}=%> System.Web.HttpUtility.UrlEncode(_{{paramName}}.ToString())){{/pathParams}};
+{{#hasQueryParams}}
+            var query = new System.Collections.Specialized.NameValueCollection
+            {
+{{#queryParams}}
+                { "{{baseName}}", _{{paramName}}{{#isCollectionFormatMulti}}.Select(v => v.ToString()){{/isCollectionFormatMulti}}{{^isCollectionFormatMulti}}.ToString(){{/isCollectionFormatMulti}} },
+{{/queryParams}}
+            };
+{{/hasQueryParams}}
+            var uri = new UriBuilder(this.configuration.BaseUrl + path){{#hasQueryParams}}
+                    {
+                        Query = string.Join("&", from key in query.AllKeys
+                                                 let values = query.GetValues(key)
+                                                 where values != null && values.Length > 0
+                                                 let keySuffix = values.Length > 1 ? "[]" : ""
+                                                 from value in values
+                                                 select System.Web.HttpUtility.UrlEncode(key) + keySuffix + "=" + System.Web.HttpUtility.UrlEncode(value)),
+                    }
+                    {{/hasQueryParams}}.Uri;
+            var request = new HttpRequestMessage({{{httpMethod}}}, uri);
+            request.Headers.Authorization = authorization;
+{{#hasFormParams}}
+            request.Content = new MultipartFormDataContent()
+            {
+{{#formParams}}
+                { new {{#isFile}}StreamContent(_{{paramName}}){{/isFile}}{{^isFile}}StringContent(_{{paramName}}.ToString()){{/isFile}}, "{{baseName}}" },
+{{/formParams}}
+            };
+{{/hasFormParams}}
+{{#bodyParam}}
+{{#isFile}}
+            request.Content = new StreamContent(_{{paramName}});
+{{/isFile}}
+{{^isFile}}
+            request.Content = new StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(_{{paramName}}, this.configuration.Settings), System.Text.Encoding.UTF8, "{{^consumes}}application/json{{/consumes}}{{#consumes.0}}{{{mediaType}}}{{/consumes.0}}");
+{{/isFile}}
+{{/bodyParam}}
+{{#headerParams}}
+            request.Headers.Add("{{baseName}}", _{{paramName}}{{#isListContainer}}.Select(v => v.ToString()){{/isListContainer}}{{^isListContainer}}.ToString(){{/isListContainer}});
+{{/headerParams}}
+            return this.httpClient.SendAsync(request)
+                             .ContinueWith(t => (ITypeSafe{{operationId}}Result)new TypeSafe{{operationId}}Result(t.Result, this.configuration.Settings));
+        }
+
+{{/operation}}{{#operation}}
+        public interface ITypeSafe{{operationId}}Result : IDisposable
+        {
+            HttpResponseMessage Response { get; }
+            System.Net.HttpStatusCode StatusCode => Response.StatusCode;
+
+            {{#responses}}
+
+            {{#message}}/// <summary>{{message}}</summary>{{/message}}
+            Task<{{#dataType}}{{&dataType}}{{/dataType}}{{^dataType}}HttpResponseMessage{{/dataType}}> {{^isDefault}}StatusCode{{code}}{{/isDefault}}{{#isDefault}}OtherStatusCode{{/isDefault}}Async();
+            {{/responses}}
+        }
+
+        public readonly struct TypeSafe{{operationId}}Result : ITypeSafe{{operationId}}Result
+        {
+            private readonly JsonSerializerSettings settings;
+
+            public TypeSafe{{operationId}}Result(HttpResponseMessage response, JsonSerializerSettings settings)
+            {
+                this.Response = response;
+                this.settings = settings;
+            }
+
+            public HttpResponseMessage Response { get; }
+
+            {{#responses}}
+
+            {{#message}}/// <summary>{{message}}</summary>{{/message}}
+            public Task<{{#dataType}}{{&dataType}}{{/dataType}}{{^dataType}}HttpResponseMessage{{/dataType}}> {{^isDefault}}StatusCode{{code}}{{/isDefault}}{{#isDefault}}OtherStatusCode{{/isDefault}}Async()
+            {
+{{^isDefault}}
+                if (this.Response.StatusCode != (System.Net.HttpStatusCode){{code}})
+                    throw new InvalidOperationException();
+{{/isDefault}}
+{{#dataType}}
+                var settings = this.settings;
+                return this.Response.Content.ReadAsStringAsync()
+                    .ContinueWith(t => Newtonsoft.Json.JsonConvert.DeserializeObject<{{&dataType}}>(t.Result, settings));
+{{/dataType}}{{^dataType}}
+                return Task.FromResult(Response);
+{{/dataType}}
+            }
+            {{/responses}}
+
+            void IDisposable.Dispose()
+            {
+                ((IDisposable)Response).Dispose();
+            }
+        }
+
+{{/operation}}
+    }
+{{/operations}}
+}
