@@ -9,7 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="PrincipleStudios.OpenApiCodegen.Client" Version="0.1.0-alpha.1" />
+    <PackageReference Include="PrincipleStudios.OpenApiCodegen.Client" Version="0.1.0-alpha.2" />
   </ItemGroup>
 
   <ItemGroup>
