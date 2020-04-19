@@ -1,6 +1,6 @@
 {
   "name": "@principlestudios/openapi-codegen-typescript-axios",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A typescript client code generator for principled development using Axios",
   "scripts": {
     "test": "jest"
@@ -9,7 +9,7 @@
   "license": "BSD-2-Clause",
   "homepage": "https://github.com/mdekrey/principle-studios-openapi-generators",
   "files": [
-    "templates/*.mustache",
+    "templates/*",
     "readme.md"
   ],
   "repository": {
