@@ -1,0 +1,236 @@
+/* eslint-disable */
+{{>licenseInfo}}
+import { Observable } from 'rxjs';
+import { BaseAPI{{#hasHttpHeaders}}, HttpHeaders{{/hasHttpHeaders}}{{#hasQueryParams}}, HttpQuery{{/hasQueryParams}}{{#hasRequiredParams}}, throwIfNullOrUndefined{{/hasRequiredParams}}{{#hasPathParams}}, encodeURI{{/hasPathParams}}{{#hasListContainers}}, COLLECTION_FORMATS{{/hasListContainers}} } from '../runtime';
+{{#imports.0}}
+import {
+    {{#imports}}
+    {{className}},
+    {{/imports}}
+} from '../models';
+{{/imports.0}}
+
+{{#operations}}
+{{#operation}}
+{{#allParams.0}}
+export interface {{operationIdCamelCase}}Request {
+    {{#allParams}}
+    {{paramName}}{{^required}}?{{/required}}: {{#isEnum}}{{{datatypeWithEnum}}}{{/isEnum}}{{^isEnum}}{{{dataType}}}{{#isNullable}} | null{{/isNullable}}{{/isEnum}};
+    {{/allParams}}
+}
+
+{{/allParams.0}}
+{{/operation}}
+{{/operations}}
+{{#operations}}
+/**
+ * {{#description}}{{{description}}}{{/description}}{{^description}}no description{{/description}}
+ */
+export class {{classname}} extends BaseAPI {
+
+    {{#operation}}
+    /**
+     {{#notes}}
+     * {{&notes}}
+     {{/notes}}
+     {{#summary}}
+     * {{&summary}}
+     {{/summary}}
+     */
+    {{nickname}} = ({{#allParams.0}}{ {{#allParams}}{{paramName}}{{#vendorExtensions.x-param-name-alternative}}: {{vendorExtensions.x-param-name-alternative}}{{/vendorExtensions.x-param-name-alternative}}{{^-last}}, {{/-last}}{{/allParams}} }: {{operationIdCamelCase}}Request{{/allParams.0}}): Observable<{{#returnType}}{{{returnType}}}{{/returnType}}{{^returnType}}void{{/returnType}}> => {
+        {{#hasParams}}
+        {{#allParams}}
+        {{#required}}
+        throwIfNullOrUndefined({{> paramNamePartial}}, '{{nickname}}');
+        {{/required}}
+        {{/allParams}}
+
+        {{/hasParams}}
+        {{#hasHttpHeaders}}
+        const headers: HttpHeaders = {
+            {{#bodyParam}}
+            {{^consumes}}
+            'Content-Type': 'application/json',
+            {{/consumes}}
+            {{#consumes.0}}
+            'Content-Type': '{{{mediaType}}}',
+            {{/consumes.0}}
+            {{/bodyParam}}
+            {{#headerParams}}
+            {{#isListContainer}}
+            ...({{> paramNamePartial}} != null ? { '{{baseName}}': {{> paramNamePartial}}.join(COLLECTION_FORMATS['{{collectionFormat}}'])) } : undefined),
+            {{/isListContainer}}
+            {{^isListContainer}}
+            ...({{> paramNamePartial}} != null ? { '{{baseName}}': String({{> paramNamePartial}}) } : undefined),
+            {{/isListContainer}}
+            {{/headerParams}}
+            {{#authMethods}}
+            {{#isBasic}}
+            ...(this.configuration.username != null && this.configuration.password != null ? { Authorization: `Basic ${btoa(this.configuration.username + ':' + this.configuration.password)}` } : undefined),
+            {{/isBasic}}
+            {{#isApiKey}}
+            {{#isKeyInHeader}}
+            ...(this.configuration.apiKey && { '{{keyParamName}}': this.configuration.apiKey('{{keyParamName}}') }), // {{name}} authentication
+            {{/isKeyInHeader}}
+            {{/isApiKey}}
+            {{#isOAuth}}
+            // oauth required
+            ...(this.configuration.accessToken != null
+                ? { Authorization: typeof this.configuration.accessToken === 'function'
+                    ? this.configuration.accessToken('{{name}}', [{{#scopes}}'{{{scope}}}'{{^-last}}, {{/-last}}{{/scopes}}])
+                    : this.configuration.accessToken }
+                : undefined
+            ),
+            {{/isOAuth}}
+            {{/authMethods}}
+        };
+
+        {{/hasHttpHeaders}}
+        {{#hasQueryParams}}
+        {{^hasRequiredQueryParams}}
+        const query: HttpQuery = {};
+        {{/hasRequiredQueryParams}}
+        {{#hasRequiredQueryParams}}
+        const query: HttpQuery = { // required parameters are used directly since they are already checked by throwIfNullOrUndefined
+            {{#queryParams}}
+            {{#required}}
+            {{#isListContainer}}
+            {{#isCollectionFormatMulti}}
+            '{{baseName}}': {{> paramNamePartial}},
+            {{/isCollectionFormatMulti}}
+            {{^isCollectionFormatMulti}}
+            '{{baseName}}': {{> paramNamePartial}}.join(COLLECTION_FORMATS['{{collectionFormat}}']),
+            {{/isCollectionFormatMulti}}
+            {{/isListContainer}}
+            {{^isListContainer}}
+            {{#isDateTime}}
+            '{{baseName}}': ({{> paramNamePartial}} as any).toISOString(),
+            {{/isDateTime}}
+            {{^isDateTime}}
+            {{#isDate}}
+            '{{baseName}}': ({{> paramNamePartial}} as any).toISOString().split('T')[0],
+            {{/isDate}}
+            {{^isDate}}
+            '{{baseName}}': {{> paramNamePartial}},
+            {{/isDate}}
+            {{/isDateTime}}
+            {{/isListContainer}}
+            {{/required}}
+            {{/queryParams}}
+        };
+        {{/hasRequiredQueryParams}}
+        {{#hasOptionalQueryParams}}
+
+        {{#queryParams}}
+        {{^required}}
+        {{#isListContainer}}
+        {{#isCollectionFormatMulti}}
+        if ({{> paramNamePartial}} != null) { query['{{baseName}}'] = {{> paramNamePartial}}; }
+        {{/isCollectionFormatMulti}}
+        {{^isCollectionFormatMulti}}
+        if ({{> paramNamePartial}} != null) { query['{{baseName}}'] = {{> paramNamePartial}}.join(COLLECTION_FORMATS['{{collectionFormat}}']); }
+        {{/isCollectionFormatMulti}}
+        {{/isListContainer}}
+        {{^isListContainer}}
+        {{#isDateTime}}
+        if ({{> paramNamePartial}} != null) { query['{{baseName}}'] = ({{> paramNamePartial}} as any).toISOString(); }
+        {{/isDateTime}}
+        {{^isDateTime}}
+        {{#isDate}}
+        if ({{> paramNamePartial}} != null) { query['{{baseName}}'] = ({{> paramNamePartial}} as any).toISOString().split('T')[0]; }
+        {{/isDate}}
+        {{^isDate}}
+        if ({{> paramNamePartial}} != null) { query['{{baseName}}'] = {{> paramNamePartial}}; }
+        {{/isDate}}
+        {{/isDateTime}}
+        {{/isListContainer}}
+        {{/required}}
+        {{/queryParams}}
+        {{/hasOptionalQueryParams}}
+        {{#authMethods}}
+        {{#isApiKey}}
+        {{#isKeyInQuery}}
+        if (this.configuration.apiKey != null) { query['{{keyParamName}}'] = this.configuration.apiKey('{{keyParamName}}'); } // {{name}} authentication
+        {{/isKeyInQuery}}
+        {{/isApiKey}}
+        {{/authMethods}}
+
+        {{/hasQueryParams}}
+        {{#hasFormParams}}
+        const formData = new FormData();
+        {{#formParams}}
+        {{#isListContainer}}
+        if ({{> paramNamePartial}} !== undefined) {
+            {{#isCollectionFormatMulti}}
+            {{> paramNamePartial}}.forEach((element) => formData.append('{{baseName}}', element as any))
+            {{/isCollectionFormatMulti}}
+            {{^isCollectionFormatMulti}}
+            formData.append('{{baseName}}', {{> paramNamePartial}}.join(COLLECTION_FORMATS['{{collectionFormat}}']));
+            {{/isCollectionFormatMulti}}
+        }
+
+        {{/isListContainer}}
+        {{^isListContainer}}
+        if ({{> paramNamePartial}} !== undefined) { formData.append('{{baseName}}', {{> paramNamePartial}} as any); }
+        {{/isListContainer}}
+        {{/formParams}}
+
+        {{/hasFormParams}}
+        return this.request<{{#returnType}}{{{returnType}}}{{/returnType}}{{^returnType}}void{{/returnType}}>({
+            path: '{{{path}}}'{{#pathParams}}.replace({{=<% %>=}}'{<%baseName%>}'<%={{ }}=%>, encodeURI({{> paramNamePartial}})){{/pathParams}},
+            method: '{{httpMethod}}',
+            {{#hasHttpHeaders}}
+            headers,
+            {{/hasHttpHeaders}}
+            {{#hasQueryParams}}
+            query,
+            {{/hasQueryParams}}
+            {{#hasBodyParam}}
+            {{#bodyParam}}
+            {{#isContainer}}
+            body: {{paramName}},
+            {{/isContainer}}
+            {{^isContainer}}
+            {{^isPrimitiveType}}
+            body: {{paramName}},
+            {{/isPrimitiveType}}
+            {{#isPrimitiveType}}
+            body: {{paramName}} as any,
+            {{/isPrimitiveType}}
+            {{/isContainer}}
+            {{/bodyParam}}
+            {{/hasBodyParam}}
+            {{#hasFormParams}}
+            body: formData,
+            {{/hasFormParams}}
+{{#isResponseFile}}
+            responseType: 'blob'
+{{/isResponseFile}}
+        });
+    };
+
+    {{/operation}}
+}
+{{/operations}}
+{{#hasEnums}}
+
+{{#operations}}
+{{#operation}}
+{{#allParams}}
+{{#isEnum}}
+/**
+ * @export
+ * @enum {string}
+ */
+export enum {{operationIdCamelCase}}{{enumName}} {
+{{#allowableValues}}
+    {{#enumVars}}
+    {{{name}}} = {{{value}}}{{^-last}},{{/-last}}
+    {{/enumVars}}
+{{/allowableValues}}
+}
+{{/isEnum}}
+{{/allParams}}
+{{/operation}}
+{{/operations}}
+{{/hasEnums}}
