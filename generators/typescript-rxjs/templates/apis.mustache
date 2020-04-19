@@ -1,7 +1,7 @@
 /* eslint-disable */
 {{>licenseInfo}}
 import { Observable } from 'rxjs';
-import { BaseAPI{{#hasHttpHeaders}}, HttpHeaders{{/hasHttpHeaders}}{{#hasQueryParams}}, HttpQuery{{/hasQueryParams}}{{#hasRequiredParams}}, throwIfNullOrUndefined{{/hasRequiredParams}}{{#hasPathParams}}, encodeURI{{/hasPathParams}}{{#hasListContainers}}, COLLECTION_FORMATS{{/hasListContainers}} } from '../runtime';
+import { BaseAPI{{#hasHttpHeaders}}, HttpHeaders{{/hasHttpHeaders}}{{#hasQueryParams}}, HttpQuery{{/hasQueryParams}}{{#hasRequiredParams}}, throwIfNullOrUndefined{{/hasRequiredParams}}{{#hasPathParams}}, encodeURI{{/hasPathParams}}{{#hasListContainers}}, COLLECTION_FORMATS{{/hasListContainers}}, RequestOpts } from '../runtime';
 {{#imports.0}}
 import {
     {{#imports}}
@@ -26,7 +26,7 @@ export interface {{operationIdCamelCase}}Request {
 /**
  * {{#description}}{{{description}}}{{/description}}{{^description}}no description{{/description}}
  */
-export class {{classname}} extends BaseAPI {
+export class {{classname}}Requests {
 
     {{#operation}}
     /**
@@ -37,7 +37,7 @@ export class {{classname}} extends BaseAPI {
      * {{&summary}}
      {{/summary}}
      */
-    {{nickname}} = ({{#allParams.0}}{ {{#allParams}}{{paramName}}{{#vendorExtensions.x-param-name-alternative}}: {{vendorExtensions.x-param-name-alternative}}{{/vendorExtensions.x-param-name-alternative}}{{^-last}}, {{/-last}}{{/allParams}} }: {{operationIdCamelCase}}Request{{/allParams.0}}): Observable<{{#returnType}}{{{returnType}}}{{/returnType}}{{^returnType}}void{{/returnType}}> => {
+    static readonly {{nickname}} = ({{#allParams.0}}{ {{#allParams}}{{paramName}}{{#vendorExtensions.x-param-name-alternative}}: {{vendorExtensions.x-param-name-alternative}}{{/vendorExtensions.x-param-name-alternative}}{{^-last}}, {{/-last}}{{/allParams}} }: {{operationIdCamelCase}}Request{{/allParams.0}}): RequestOpts => {
         {{#hasParams}}
         {{#allParams}}
         {{#required}}
@@ -176,7 +176,7 @@ export class {{classname}} extends BaseAPI {
         {{/formParams}}
 
         {{/hasFormParams}}
-        return this.request<{{#returnType}}{{{returnType}}}{{/returnType}}{{^returnType}}void{{/returnType}}>({
+        return {
             path: '{{{path}}}'{{#pathParams}}.replace({{=<% %>=}}'{<%baseName%>}'<%={{ }}=%>, encodeURI({{> paramNamePartial}})){{/pathParams}},
             method: '{{httpMethod}}',
             {{#hasHttpHeaders}}
@@ -206,8 +206,30 @@ export class {{classname}} extends BaseAPI {
 {{#isResponseFile}}
             responseType: 'blob'
 {{/isResponseFile}}
-        });
+        };
     };
+
+    {{/operation}}
+}
+
+/**
+ * {{#description}}{{{description}}}{{/description}}{{^description}}no description{{/description}}
+ */
+export class {{classname}} extends BaseAPI {
+
+    {{#operation}}
+    /**
+     {{#notes}}
+     * {{&notes}}
+     {{/notes}}
+     {{#summary}}
+     * {{&summary}}
+     {{/summary}}
+     */
+    readonly {{nickname}} = ({{#allParams.0}}params: {{operationIdCamelCase}}Request{{/allParams.0}}): Observable<{{#returnType}}{{{returnType}}}{{/returnType}}{{^returnType}}void{{/returnType}}> =>
+        this.request<{{#returnType}}{{{returnType}}}{{/returnType}}{{^returnType}}void{{/returnType}}>(
+            {{classname}}Requests.{{nickname}}({{#allParams.0}}params{{/allParams.0}})
+        );
 
     {{/operation}}
 }

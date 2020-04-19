@@ -7,7 +7,7 @@ export function verifyAllFiles(outputDir: string) {
         const files = readdirSync(outputDir);
 
         files.forEach((file) => {
-            if (file.endsWith('.cs')) {
+            if (file.endsWith('.ts')) {
                 const contents = readFileSync(path.join(outputDir, file)).toString();
                 expect(contents).toMatchSnapshot(file);
             }
