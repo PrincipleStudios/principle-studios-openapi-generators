@@ -37,26 +37,21 @@ namespace {{packageName}}
 
         public readonly struct TypeSafe{{operationId}}Result
         {
-            public readonly bool hasResultObject;
-            public readonly object? resultObject;
-            public readonly int statusCode;
-            public readonly IActionResult ActionResult =>
-                hasResultObject
-                    ? (IActionResult)new ObjectResult(resultObject) { StatusCode = statusCode }
-                    : (IActionResult)new StatusCodeResult(statusCode);
+            public readonly IActionResult ActionResult;
+
+            private TypeSafe{{operationId}}Result(IActionResult ActionResult)
+            {
+                this.ActionResult = ActionResult;
+            }
 
             private TypeSafe{{operationId}}Result(int statusCode)
+                : this(new StatusCodeResult(statusCode))
             {
-                this.hasResultObject = false;
-                this.resultObject = null;
-                this.statusCode = statusCode;
             }
 
             private TypeSafe{{operationId}}Result(int statusCode, object? resultObject)
+                : this(new ObjectResult(resultObject) { StatusCode = statusCode })
             {
-                this.hasResultObject = true;
-                this.resultObject = resultObject;
-                this.statusCode = statusCode;
             }
             {{#responses}}
 
@@ -65,6 +60,10 @@ namespace {{packageName}}
             }}{{#isDefault}}public static TypeSafe{{operationId}}Result OtherStatusCode(int statusCode{{#dataType}}, {{&dataType}} result{{/dataType}}){{/isDefault}} =>
                 new TypeSafe{{operationId}}Result({{#isDefault}}statusCode{{/isDefault}}{{^isDefault}}{{code}}{{/isDefault}}{{#dataType}}, result{{/dataType}});
             {{/responses}}
+
+            /// <summary>Allows for action results not specified in the API</summary>
+            public static TypeSafe{{operationId}}Result Unsafe(IActionResult actionResult) =>
+                new TypeSafe{{operationId}}Result(actionResult);
         }
         {{/operation}}
     }
