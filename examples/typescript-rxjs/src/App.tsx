@@ -45,13 +45,18 @@ function App() {
 
   async function addPet(pet: NewPet) {
     const result = await api.addPet({ newPet: pet }).toPromise();
-    setMessage(`Added a ${result.tag}`);
-    updateResultsCallback();
+    if (result.statusCode === 200) {
+      setMessage(`Added a ${result.data.tag}`);
+      updateResultsCallback();
+    }
   }
 
   async function updateResults() {
     const results = await api.findPets({ tags: ['dog', 'cat'] }).toPromise();
-    setResults(results);
+    if (results.statusCode === 200)
+    {
+      setResults(results.data);
+    }
   }
 }
 

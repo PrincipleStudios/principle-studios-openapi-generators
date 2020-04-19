@@ -16,7 +16,8 @@ exports[`typescript-rxjs petstore.yaml can generate the files: C:\\Users\\mattd\
  */
 
 import { Observable } from 'rxjs';
-import { BaseAPI, HttpHeaders, HttpQuery, throwIfNullOrUndefined, encodeURI, RequestOpts } from '../runtime';
+import { map } from 'rxjs/operators';
+import { BaseAPI, HttpHeaders, HttpQuery, throwIfNullOrUndefined, encodeURI, RequestOpts, ResponseArgs } from '../runtime';
 import {
     ApiResponse,
     Pet,
@@ -26,26 +27,109 @@ export type AddPetRequest = {
     pet: Pet;
 }
 
+export type AddPetResponse =
+  | {
+        statusCode: 405;
+        data: void;
+        response: ResponseArgs;
+    }
+  | { statusCode?: never; response: ResponseArgs };
+
 export type DeletePetRequest = {
     petId: number;
     apiKey?: string;
 }
 
+export type DeletePetResponse =
+  | {
+        statusCode: 400;
+        data: void;
+        response: ResponseArgs;
+    }
+  | {
+        statusCode: 404;
+        data: void;
+        response: ResponseArgs;
+    }
+  | { statusCode?: never; response: ResponseArgs };
+
 export type FindPetsByStatusRequest = {
     status: Array<FindPetsByStatusStatusEnum>;
 }
+
+export type FindPetsByStatusResponse =
+  | {
+        statusCode: 200;
+        data: Array<Pet>;
+        response: ResponseArgs;
+    }
+  | {
+        statusCode: 400;
+        data: void;
+        response: ResponseArgs;
+    }
+  | { statusCode?: never; response: ResponseArgs };
 
 export type FindPetsByTagsRequest = {
     tags: Array<string>;
 }
 
+export type FindPetsByTagsResponse =
+  | {
+        statusCode: 200;
+        data: Array<Pet>;
+        response: ResponseArgs;
+    }
+  | {
+        statusCode: 400;
+        data: void;
+        response: ResponseArgs;
+    }
+  | { statusCode?: never; response: ResponseArgs };
+
 export type GetPetByIdRequest = {
     petId: number;
 }
 
+export type GetPetByIdResponse =
+  | {
+        statusCode: 200;
+        data: Pet;
+        response: ResponseArgs;
+    }
+  | {
+        statusCode: 400;
+        data: void;
+        response: ResponseArgs;
+    }
+  | {
+        statusCode: 404;
+        data: void;
+        response: ResponseArgs;
+    }
+  | { statusCode?: never; response: ResponseArgs };
+
 export type UpdatePetRequest = {
     pet: Pet;
 }
+
+export type UpdatePetResponse =
+  | {
+        statusCode: 400;
+        data: void;
+        response: ResponseArgs;
+    }
+  | {
+        statusCode: 404;
+        data: void;
+        response: ResponseArgs;
+    }
+  | {
+        statusCode: 405;
+        data: void;
+        response: ResponseArgs;
+    }
+  | { statusCode?: never; response: ResponseArgs };
 
 export type UpdatePetWithFormRequest = {
     petId: number;
@@ -53,10 +137,26 @@ export type UpdatePetWithFormRequest = {
     status?: string;
 }
 
+export type UpdatePetWithFormResponse =
+  | {
+        statusCode: 405;
+        data: void;
+        response: ResponseArgs;
+    }
+  | { statusCode?: never; response: ResponseArgs };
+
 export type UploadFileRequest = {
     petId: number;
     body?: Blob;
 }
+
+export type UploadFileResponse =
+  | {
+        statusCode: 200;
+        data: ApiResponse;
+        response: ResponseArgs;
+    }
+  | { statusCode?: never; response: ResponseArgs };
 
 /**
  * no description
@@ -276,69 +376,132 @@ export class PetApi extends BaseAPI {
     /**
      * Add a new pet to the store
      */
-    readonly addPet = (params: AddPetRequest): Observable<void> =>
-        this.request<void>(
-            PetApiRequests.addPet(params)
-        );
+    readonly addPet = (params: AddPetRequest): Observable<AddPetResponse> =>
+        this.executeRequest(PetApiRequests.addPet(params))
+            .pipe(
+                map((res) => ({
+                    statusCode: [
+                        405,
+                    ].indexOf(res.status) === -1 ? 'other' : res.status,
+                    data: res.response,
+                    response: res,
+                }) as AddPetResponse)
+            );
 
     /**
      * Deletes a pet
      */
-    readonly deletePet = (params: DeletePetRequest): Observable<void> =>
-        this.request<void>(
-            PetApiRequests.deletePet(params)
-        );
+    readonly deletePet = (params: DeletePetRequest): Observable<DeletePetResponse> =>
+        this.executeRequest(PetApiRequests.deletePet(params))
+            .pipe(
+                map((res) => ({
+                    statusCode: [
+                        400,
+                        404,
+                    ].indexOf(res.status) === -1 ? 'other' : res.status,
+                    data: res.response,
+                    response: res,
+                }) as DeletePetResponse)
+            );
 
     /**
      * Multiple status values can be provided with comma separated strings
      * Finds Pets by status
      */
-    readonly findPetsByStatus = (params: FindPetsByStatusRequest): Observable<Array<Pet>> =>
-        this.request<Array<Pet>>(
-            PetApiRequests.findPetsByStatus(params)
-        );
+    readonly findPetsByStatus = (params: FindPetsByStatusRequest): Observable<FindPetsByStatusResponse> =>
+        this.executeRequest(PetApiRequests.findPetsByStatus(params))
+            .pipe(
+                map((res) => ({
+                    statusCode: [
+                        200,
+                        400,
+                    ].indexOf(res.status) === -1 ? 'other' : res.status,
+                    data: res.response,
+                    response: res,
+                }) as FindPetsByStatusResponse)
+            );
 
     /**
      * Muliple tags can be provided with comma separated strings. Use tag1, tag2, tag3 for testing.
      * Finds Pets by tags
      */
-    readonly findPetsByTags = (params: FindPetsByTagsRequest): Observable<Array<Pet>> =>
-        this.request<Array<Pet>>(
-            PetApiRequests.findPetsByTags(params)
-        );
+    readonly findPetsByTags = (params: FindPetsByTagsRequest): Observable<FindPetsByTagsResponse> =>
+        this.executeRequest(PetApiRequests.findPetsByTags(params))
+            .pipe(
+                map((res) => ({
+                    statusCode: [
+                        200,
+                        400,
+                    ].indexOf(res.status) === -1 ? 'other' : res.status,
+                    data: res.response,
+                    response: res,
+                }) as FindPetsByTagsResponse)
+            );
 
     /**
      * Returns a single pet
      * Find pet by ID
      */
-    readonly getPetById = (params: GetPetByIdRequest): Observable<Pet> =>
-        this.request<Pet>(
-            PetApiRequests.getPetById(params)
-        );
+    readonly getPetById = (params: GetPetByIdRequest): Observable<GetPetByIdResponse> =>
+        this.executeRequest(PetApiRequests.getPetById(params))
+            .pipe(
+                map((res) => ({
+                    statusCode: [
+                        200,
+                        400,
+                        404,
+                    ].indexOf(res.status) === -1 ? 'other' : res.status,
+                    data: res.response,
+                    response: res,
+                }) as GetPetByIdResponse)
+            );
 
     /**
      * Update an existing pet
      */
-    readonly updatePet = (params: UpdatePetRequest): Observable<void> =>
-        this.request<void>(
-            PetApiRequests.updatePet(params)
-        );
+    readonly updatePet = (params: UpdatePetRequest): Observable<UpdatePetResponse> =>
+        this.executeRequest(PetApiRequests.updatePet(params))
+            .pipe(
+                map((res) => ({
+                    statusCode: [
+                        400,
+                        404,
+                        405,
+                    ].indexOf(res.status) === -1 ? 'other' : res.status,
+                    data: res.response,
+                    response: res,
+                }) as UpdatePetResponse)
+            );
 
     /**
      * Updates a pet in the store with form data
      */
-    readonly updatePetWithForm = (params: UpdatePetWithFormRequest): Observable<void> =>
-        this.request<void>(
-            PetApiRequests.updatePetWithForm(params)
-        );
+    readonly updatePetWithForm = (params: UpdatePetWithFormRequest): Observable<UpdatePetWithFormResponse> =>
+        this.executeRequest(PetApiRequests.updatePetWithForm(params))
+            .pipe(
+                map((res) => ({
+                    statusCode: [
+                        405,
+                    ].indexOf(res.status) === -1 ? 'other' : res.status,
+                    data: res.response,
+                    response: res,
+                }) as UpdatePetWithFormResponse)
+            );
 
     /**
      * uploads an image
      */
-    readonly uploadFile = (params: UploadFileRequest): Observable<ApiResponse> =>
-        this.request<ApiResponse>(
-            PetApiRequests.uploadFile(params)
-        );
+    readonly uploadFile = (params: UploadFileRequest): Observable<UploadFileResponse> =>
+        this.executeRequest(PetApiRequests.uploadFile(params))
+            .pipe(
+                map((res) => ({
+                    statusCode: [
+                        200,
+                    ].indexOf(res.status) === -1 ? 'other' : res.status,
+                    data: res.response,
+                    response: res,
+                }) as UploadFileResponse)
+            );
 
 }
 
@@ -370,7 +533,8 @@ exports[`typescript-rxjs petstore.yaml can generate the files: C:\\Users\\mattd\
  */
 
 import { Observable } from 'rxjs';
-import { BaseAPI, HttpHeaders, throwIfNullOrUndefined, encodeURI, RequestOpts } from '../runtime';
+import { map } from 'rxjs/operators';
+import { BaseAPI, HttpHeaders, throwIfNullOrUndefined, encodeURI, RequestOpts, ResponseArgs } from '../runtime';
 import {
     Order,
 } from '../models';
@@ -379,13 +543,65 @@ export type DeleteOrderRequest = {
     orderId: number;
 }
 
+export type DeleteOrderResponse =
+  | {
+        statusCode: 400;
+        data: void;
+        response: ResponseArgs;
+    }
+  | {
+        statusCode: 404;
+        data: void;
+        response: ResponseArgs;
+    }
+  | { statusCode?: never; response: ResponseArgs };
+
+export type GetInventoryResponse =
+  | {
+        statusCode: 200;
+        data: { [key: string]: number; };
+        response: ResponseArgs;
+    }
+  | { statusCode?: never; response: ResponseArgs };
+
 export type GetOrderByIdRequest = {
     orderId: number;
 }
 
+export type GetOrderByIdResponse =
+  | {
+        statusCode: 200;
+        data: Order;
+        response: ResponseArgs;
+    }
+  | {
+        statusCode: 400;
+        data: void;
+        response: ResponseArgs;
+    }
+  | {
+        statusCode: 404;
+        data: void;
+        response: ResponseArgs;
+    }
+  | { statusCode?: never; response: ResponseArgs };
+
 export type PlaceOrderRequest = {
     order: Order;
 }
+
+export type PlaceOrderResponse =
+  | {
+        statusCode: 200;
+        data: Order;
+        response: ResponseArgs;
+    }
+  | {
+        statusCode: 400;
+        data: void;
+        response: ResponseArgs;
+    }
+  | { statusCode?: never; response: ResponseArgs };
 
 /**
  * no description
@@ -463,36 +679,68 @@ export class StoreApi extends BaseAPI {
      * For valid response try integer IDs with positive integer value. Negative or non-integer values will generate API errors
      * Delete purchase order by ID
      */
-    readonly deleteOrder = (params: DeleteOrderRequest): Observable<void> =>
-        this.request<void>(
-            StoreApiRequests.deleteOrder(params)
-        );
+    readonly deleteOrder = (params: DeleteOrderRequest): Observable<DeleteOrderResponse> =>
+        this.executeRequest(StoreApiRequests.deleteOrder(params))
+            .pipe(
+                map((res) => ({
+                    statusCode: [
+                        400,
+                        404,
+                    ].indexOf(res.status) === -1 ? 'other' : res.status,
+                    data: res.response,
+                    response: res,
+                }) as DeleteOrderResponse)
+            );
 
     /**
      * Returns a map of status codes to quantities
      * Returns pet inventories by status
      */
-    readonly getInventory = (): Observable<{ [key: string]: number; }> =>
-        this.request<{ [key: string]: number; }>(
-            StoreApiRequests.getInventory()
-        );
+    readonly getInventory = (): Observable<GetInventoryResponse> =>
+        this.executeRequest(StoreApiRequests.getInventory())
+            .pipe(
+                map((res) => ({
+                    statusCode: [
+                        200,
+                    ].indexOf(res.status) === -1 ? 'other' : res.status,
+                    data: res.response,
+                    response: res,
+                }) as GetInventoryResponse)
+            );
 
     /**
      * For valid response try integer IDs with value >= 1 and <= 10. Other values will generated exceptions
      * Find purchase order by ID
      */
-    readonly getOrderById = (params: GetOrderByIdRequest): Observable<Order> =>
-        this.request<Order>(
-            StoreApiRequests.getOrderById(params)
-        );
+    readonly getOrderById = (params: GetOrderByIdRequest): Observable<GetOrderByIdResponse> =>
+        this.executeRequest(StoreApiRequests.getOrderById(params))
+            .pipe(
+                map((res) => ({
+                    statusCode: [
+                        200,
+                        400,
+                        404,
+                    ].indexOf(res.status) === -1 ? 'other' : res.status,
+                    data: res.response,
+                    response: res,
+                }) as GetOrderByIdResponse)
+            );
 
     /**
      * Place an order for a pet
      */
-    readonly placeOrder = (params: PlaceOrderRequest): Observable<Order> =>
-        this.request<Order>(
-            StoreApiRequests.placeOrder(params)
-        );
+    readonly placeOrder = (params: PlaceOrderRequest): Observable<PlaceOrderResponse> =>
+        this.executeRequest(StoreApiRequests.placeOrder(params))
+            .pipe(
+                map((res) => ({
+                    statusCode: [
+                        200,
+                        400,
+                    ].indexOf(res.status) === -1 ? 'other' : res.status,
+                    data: res.response,
+                    response: res,
+                }) as PlaceOrderResponse)
+            );
 
 }
 "
@@ -514,7 +762,8 @@ exports[`typescript-rxjs petstore.yaml can generate the files: C:\\Users\\mattd\
  */
 
 import { Observable } from 'rxjs';
-import { BaseAPI, HttpHeaders, HttpQuery, throwIfNullOrUndefined, encodeURI, RequestOpts } from '../runtime';
+import { map } from 'rxjs/operators';
+import { BaseAPI, HttpHeaders, HttpQuery, throwIfNullOrUndefined, encodeURI, RequestOpts, ResponseArgs } from '../runtime';
 import {
     User,
 } from '../models';
@@ -523,31 +772,120 @@ export type CreateUserRequest = {
     user: User;
 }
 
+export type CreateUserResponse =
+  | {
+        statusCode: \\"other\\";
+        data: void;
+        response: ResponseArgs;
+    }
+  | { statusCode?: never; response: ResponseArgs };
+
 export type CreateUsersWithArrayInputRequest = {
     user: Array<User>;
 }
+
+export type CreateUsersWithArrayInputResponse =
+  | {
+        statusCode: \\"other\\";
+        data: void;
+        response: ResponseArgs;
+    }
+  | { statusCode?: never; response: ResponseArgs };
 
 export type CreateUsersWithListInputRequest = {
     user: Array<User>;
 }
 
+export type CreateUsersWithListInputResponse =
+  | {
+        statusCode: \\"other\\";
+        data: void;
+        response: ResponseArgs;
+    }
+  | { statusCode?: never; response: ResponseArgs };
+
 export type DeleteUserRequest = {
     username: string;
 }
 
+export type DeleteUserResponse =
+  | {
+        statusCode: 400;
+        data: void;
+        response: ResponseArgs;
+    }
+  | {
+        statusCode: 404;
+        data: void;
+        response: ResponseArgs;
+    }
+  | { statusCode?: never; response: ResponseArgs };
+
 export type GetUserByNameRequest = {
     username: string;
 }
+
+export type GetUserByNameResponse =
+  | {
+        statusCode: 200;
+        data: User;
+        response: ResponseArgs;
+    }
+  | {
+        statusCode: 400;
+        data: void;
+        response: ResponseArgs;
+    }
+  | {
+        statusCode: 404;
+        data: void;
+        response: ResponseArgs;
+    }
+  | { statusCode?: never; response: ResponseArgs };
 
 export type LoginUserRequest = {
     username: string;
     password: string;
 }
 
+export type LoginUserResponse =
+  | {
+        statusCode: 200;
+        data: string;
+        response: ResponseArgs;
+    }
+  | {
+        statusCode: 400;
+        data: void;
+        response: ResponseArgs;
+    }
+  | { statusCode?: never; response: ResponseArgs };
+
+export type LogoutUserResponse =
+  | {
+        statusCode: \\"other\\";
+        data: void;
+        response: ResponseArgs;
+    }
+  | { statusCode?: never; response: ResponseArgs };
+
 export type UpdateUserRequest = {
     username: string;
     user: User;
 }
+
+export type UpdateUserResponse =
+  | {
+        statusCode: 400;
+        data: void;
+        response: ResponseArgs;
+    }
+  | {
+        statusCode: 404;
+        data: void;
+        response: ResponseArgs;
+    }
+  | { statusCode?: never; response: ResponseArgs };
 
 /**
  * no description
@@ -694,68 +1032,125 @@ export class UserApi extends BaseAPI {
      * This can only be done by the logged in user.
      * Create user
      */
-    readonly createUser = (params: CreateUserRequest): Observable<void> =>
-        this.request<void>(
-            UserApiRequests.createUser(params)
-        );
+    readonly createUser = (params: CreateUserRequest): Observable<CreateUserResponse> =>
+        this.executeRequest(UserApiRequests.createUser(params))
+            .pipe(
+                map((res) => ({
+                    statusCode: [
+                    ].indexOf(res.status) === -1 ? 'other' : res.status,
+                    data: res.response,
+                    response: res,
+                }) as CreateUserResponse)
+            );
 
     /**
      * Creates list of users with given input array
      */
-    readonly createUsersWithArrayInput = (params: CreateUsersWithArrayInputRequest): Observable<void> =>
-        this.request<void>(
-            UserApiRequests.createUsersWithArrayInput(params)
-        );
+    readonly createUsersWithArrayInput = (params: CreateUsersWithArrayInputRequest): Observable<CreateUsersWithArrayInputResponse> =>
+        this.executeRequest(UserApiRequests.createUsersWithArrayInput(params))
+            .pipe(
+                map((res) => ({
+                    statusCode: [
+                    ].indexOf(res.status) === -1 ? 'other' : res.status,
+                    data: res.response,
+                    response: res,
+                }) as CreateUsersWithArrayInputResponse)
+            );
 
     /**
      * Creates list of users with given input array
      */
-    readonly createUsersWithListInput = (params: CreateUsersWithListInputRequest): Observable<void> =>
-        this.request<void>(
-            UserApiRequests.createUsersWithListInput(params)
-        );
+    readonly createUsersWithListInput = (params: CreateUsersWithListInputRequest): Observable<CreateUsersWithListInputResponse> =>
+        this.executeRequest(UserApiRequests.createUsersWithListInput(params))
+            .pipe(
+                map((res) => ({
+                    statusCode: [
+                    ].indexOf(res.status) === -1 ? 'other' : res.status,
+                    data: res.response,
+                    response: res,
+                }) as CreateUsersWithListInputResponse)
+            );
 
     /**
      * This can only be done by the logged in user.
      * Delete user
      */
-    readonly deleteUser = (params: DeleteUserRequest): Observable<void> =>
-        this.request<void>(
-            UserApiRequests.deleteUser(params)
-        );
+    readonly deleteUser = (params: DeleteUserRequest): Observable<DeleteUserResponse> =>
+        this.executeRequest(UserApiRequests.deleteUser(params))
+            .pipe(
+                map((res) => ({
+                    statusCode: [
+                        400,
+                        404,
+                    ].indexOf(res.status) === -1 ? 'other' : res.status,
+                    data: res.response,
+                    response: res,
+                }) as DeleteUserResponse)
+            );
 
     /**
      * Get user by user name
      */
-    readonly getUserByName = (params: GetUserByNameRequest): Observable<User> =>
-        this.request<User>(
-            UserApiRequests.getUserByName(params)
-        );
+    readonly getUserByName = (params: GetUserByNameRequest): Observable<GetUserByNameResponse> =>
+        this.executeRequest(UserApiRequests.getUserByName(params))
+            .pipe(
+                map((res) => ({
+                    statusCode: [
+                        200,
+                        400,
+                        404,
+                    ].indexOf(res.status) === -1 ? 'other' : res.status,
+                    data: res.response,
+                    response: res,
+                }) as GetUserByNameResponse)
+            );
 
     /**
      * Logs user into the system
      */
-    readonly loginUser = (params: LoginUserRequest): Observable<string> =>
-        this.request<string>(
-            UserApiRequests.loginUser(params)
-        );
+    readonly loginUser = (params: LoginUserRequest): Observable<LoginUserResponse> =>
+        this.executeRequest(UserApiRequests.loginUser(params))
+            .pipe(
+                map((res) => ({
+                    statusCode: [
+                        200,
+                        400,
+                    ].indexOf(res.status) === -1 ? 'other' : res.status,
+                    data: res.response,
+                    response: res,
+                }) as LoginUserResponse)
+            );
 
     /**
      * Logs out current logged in user session
      */
-    readonly logoutUser = (): Observable<void> =>
-        this.request<void>(
-            UserApiRequests.logoutUser()
-        );
+    readonly logoutUser = (): Observable<LogoutUserResponse> =>
+        this.executeRequest(UserApiRequests.logoutUser())
+            .pipe(
+                map((res) => ({
+                    statusCode: [
+                    ].indexOf(res.status) === -1 ? 'other' : res.status,
+                    data: res.response,
+                    response: res,
+                }) as LogoutUserResponse)
+            );
 
     /**
      * This can only be done by the logged in user.
      * Updated user
      */
-    readonly updateUser = (params: UpdateUserRequest): Observable<void> =>
-        this.request<void>(
-            UserApiRequests.updateUser(params)
-        );
+    readonly updateUser = (params: UpdateUserRequest): Observable<UpdateUserResponse> =>
+        this.executeRequest(UserApiRequests.updateUser(params))
+            .pipe(
+                map((res) => ({
+                    statusCode: [
+                        400,
+                        404,
+                    ].indexOf(res.status) === -1 ? 'other' : res.status,
+                    data: res.response,
+                    response: res,
+                }) as UpdateUserResponse)
+            );
 
 }
 "
@@ -1197,16 +1592,6 @@ export class BaseAPI {
 
     constructor(protected configuration = new Configuration()) {
     }
-
-    protected readonly request = <T>(requestOpts: RequestOpts): Observable<T> =>
-        this.executeRequest(requestOpts).pipe(
-            map((res) => {
-                if (res.status >= 200 && res.status < 300) {
-                    return res.response as T;
-                }
-                throw res;
-            })
-        );
 
     protected readonly executeRequest = (requestOpts: RequestOpts) =>
         this.configuration.rxjsRequest(this.createRequestArgs(requestOpts));

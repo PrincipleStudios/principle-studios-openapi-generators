@@ -16,7 +16,8 @@ exports[`typescript-rxjs petstore.yaml can generate the files: C:\\Users\\mattd\
  */
 
 import { Observable } from 'rxjs';
-import { BaseAPI, HttpHeaders, HttpQuery, throwIfNullOrUndefined, encodeURI, RequestOpts } from '../runtime';
+import { map } from 'rxjs/operators';
+import { BaseAPI, HttpHeaders, HttpQuery, throwIfNullOrUndefined, encodeURI, RequestOpts, ResponseArgs } from '../runtime';
 import {
     NewPet,
     Pet,
@@ -26,18 +27,70 @@ export type AddPetRequest = {
     newPet: NewPet;
 }
 
+export type AddPetResponse =
+  | {
+        statusCode: 200;
+        data: Pet;
+        response: ResponseArgs;
+    }
+  | {
+        statusCode: \\"other\\";
+        data: Error;
+        response: ResponseArgs;
+    }
+  | { statusCode?: never; response: ResponseArgs };
+
 export type DeletePetRequest = {
     id: number;
 }
+
+export type DeletePetResponse =
+  | {
+        statusCode: 204;
+        data: void;
+        response: ResponseArgs;
+    }
+  | {
+        statusCode: \\"other\\";
+        data: Error;
+        response: ResponseArgs;
+    }
+  | { statusCode?: never; response: ResponseArgs };
 
 export type FindPetByIdRequest = {
     id: number;
 }
 
+export type FindPetByIdResponse =
+  | {
+        statusCode: 200;
+        data: Pet;
+        response: ResponseArgs;
+    }
+  | {
+        statusCode: \\"other\\";
+        data: Error;
+        response: ResponseArgs;
+    }
+  | { statusCode?: never; response: ResponseArgs };
+
 export type FindPetsRequest = {
     tags?: Array<string>;
     limit?: number;
 }
+
+export type FindPetsResponse =
+  | {
+        statusCode: 200;
+        data: Array<Pet>;
+        response: ResponseArgs;
+    }
+  | {
+        statusCode: \\"other\\";
+        data: Error;
+        response: ResponseArgs;
+    }
+  | { statusCode?: never; response: ResponseArgs };
 
 /**
  * no description
@@ -113,34 +166,62 @@ export class DefaultApi extends BaseAPI {
     /**
      * Creates a new pet in the store. Duplicates are allowed
      */
-    readonly addPet = (params: AddPetRequest): Observable<Pet> =>
-        this.request<Pet>(
-            DefaultApiRequests.addPet(params)
-        );
+    readonly addPet = (params: AddPetRequest): Observable<AddPetResponse> =>
+        this.executeRequest(DefaultApiRequests.addPet(params))
+            .pipe(
+                map((res) => ({
+                    statusCode: [
+                        200,
+                    ].indexOf(res.status) === -1 ? 'other' : res.status,
+                    data: res.response,
+                    response: res,
+                }) as AddPetResponse)
+            );
 
     /**
      * deletes a single pet based on the ID supplied
      */
-    readonly deletePet = (params: DeletePetRequest): Observable<void> =>
-        this.request<void>(
-            DefaultApiRequests.deletePet(params)
-        );
+    readonly deletePet = (params: DeletePetRequest): Observable<DeletePetResponse> =>
+        this.executeRequest(DefaultApiRequests.deletePet(params))
+            .pipe(
+                map((res) => ({
+                    statusCode: [
+                        204,
+                    ].indexOf(res.status) === -1 ? 'other' : res.status,
+                    data: res.response,
+                    response: res,
+                }) as DeletePetResponse)
+            );
 
     /**
      * Returns a user based on a single ID, if the user does not have access to the pet
      */
-    readonly findPetById = (params: FindPetByIdRequest): Observable<Pet> =>
-        this.request<Pet>(
-            DefaultApiRequests.findPetById(params)
-        );
+    readonly findPetById = (params: FindPetByIdRequest): Observable<FindPetByIdResponse> =>
+        this.executeRequest(DefaultApiRequests.findPetById(params))
+            .pipe(
+                map((res) => ({
+                    statusCode: [
+                        200,
+                    ].indexOf(res.status) === -1 ? 'other' : res.status,
+                    data: res.response,
+                    response: res,
+                }) as FindPetByIdResponse)
+            );
 
     /**
      * Returns all pets from the system that the user has access to Nam sed condimentum est. Maecenas tempor sagittis sapien, nec rhoncus sem sagittis sit amet. Aenean at gravida augue, ac iaculis sem. Curabitur odio lorem, ornare eget elementum nec, cursus id lectus. Duis mi turpis, pulvinar ac eros ac, tincidunt varius justo. In hac habitasse platea dictumst. Integer at adipiscing ante, a sagittis ligula. Aenean pharetra tempor ante molestie imperdiet. Vivamus id aliquam diam. Cras quis velit non tortor eleifend sagittis. Praesent at enim pharetra urna volutpat venenatis eget eget mauris. In eleifend fermentum facilisis. Praesent enim enim, gravida ac sodales sed, placerat id erat. Suspendisse lacus dolor, consectetur non augue vel, vehicula interdum libero. Morbi euismod sagittis libero sed lacinia.  Sed tempus felis lobortis leo pulvinar rutrum. Nam mattis velit nisl, eu condimentum ligula luctus nec. Phasellus semper velit eget aliquet faucibus. In a mattis elit. Phasellus vel urna viverra, condimentum lorem id, rhoncus nibh. Ut pellentesque posuere elementum. Sed a varius odio. Morbi rhoncus ligula libero, vel eleifend nunc tristique vitae. Fusce et sem dui. Aenean nec scelerisque tortor. Fusce malesuada accumsan magna vel tempus. Quisque mollis felis eu dolor tristique, sit amet auctor felis gravida. Sed libero lorem, molestie sed nisl in, accumsan tempor nisi. Fusce sollicitudin massa ut lacinia mattis. Sed vel eleifend lorem. Pellentesque vitae felis pretium, pulvinar elit eu, euismod sapien. 
      */
-    readonly findPets = (params: FindPetsRequest): Observable<Array<Pet>> =>
-        this.request<Array<Pet>>(
-            DefaultApiRequests.findPets(params)
-        );
+    readonly findPets = (params: FindPetsRequest): Observable<FindPetsResponse> =>
+        this.executeRequest(DefaultApiRequests.findPets(params))
+            .pipe(
+                map((res) => ({
+                    statusCode: [
+                        200,
+                    ].indexOf(res.status) === -1 ? 'other' : res.status,
+                    data: res.response,
+                    response: res,
+                }) as FindPetsResponse)
+            );
 
 }
 "
@@ -354,16 +435,6 @@ export class BaseAPI {
 
     constructor(protected configuration = new Configuration()) {
     }
-
-    protected readonly request = <T>(requestOpts: RequestOpts): Observable<T> =>
-        this.executeRequest(requestOpts).pipe(
-            map((res) => {
-                if (res.status >= 200 && res.status < 300) {
-                    return res.response as T;
-                }
-                throw res;
-            })
-        );
 
     protected readonly executeRequest = (requestOpts: RequestOpts) =>
         this.configuration.rxjsRequest(this.createRequestArgs(requestOpts));

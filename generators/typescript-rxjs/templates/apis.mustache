@@ -1,7 +1,8 @@
 /* eslint-disable */
 {{>licenseInfo}}
 import { Observable } from 'rxjs';
-import { BaseAPI{{#hasHttpHeaders}}, HttpHeaders{{/hasHttpHeaders}}{{#hasQueryParams}}, HttpQuery{{/hasQueryParams}}{{#hasRequiredParams}}, throwIfNullOrUndefined{{/hasRequiredParams}}{{#hasPathParams}}, encodeURI{{/hasPathParams}}{{#hasListContainers}}, COLLECTION_FORMATS{{/hasListContainers}}, RequestOpts } from '../runtime';
+import { map } from 'rxjs/operators';
+import { BaseAPI{{#hasHttpHeaders}}, HttpHeaders{{/hasHttpHeaders}}{{#hasQueryParams}}, HttpQuery{{/hasQueryParams}}{{#hasRequiredParams}}, throwIfNullOrUndefined{{/hasRequiredParams}}{{#hasPathParams}}, encodeURI{{/hasPathParams}}{{#hasListContainers}}, COLLECTION_FORMATS{{/hasListContainers}}, RequestOpts, ResponseArgs } from '../runtime';
 {{#imports.0}}
 import {
     {{#imports}}
@@ -20,6 +21,16 @@ export type {{operationIdCamelCase}}Request = {
 }
 
 {{/allParams.0}}
+export type {{operationIdCamelCase}}Response =
+{{#responses}}
+  | {
+        statusCode: {{^isWildcard}}{{code}}{{/isWildcard}}{{#isWildcard}}"other"{{/isWildcard}};
+        data: {{#dataType}}{{&dataType}}{{/dataType}}{{^dataType}}void{{/dataType}};
+        response: ResponseArgs;
+    }
+{{/responses}}
+  | { statusCode?: never; response: ResponseArgs };
+
 {{/operation}}
 {{/operations}}
 {{#operations}}
@@ -226,10 +237,17 @@ export class {{classname}} extends BaseAPI {
      * {{&summary}}
      {{/summary}}
      */
-    readonly {{nickname}} = ({{#allParams.0}}params: {{operationIdCamelCase}}Request{{/allParams.0}}): Observable<{{#returnType}}{{{returnType}}}{{/returnType}}{{^returnType}}void{{/returnType}}> =>
-        this.request<{{#returnType}}{{{returnType}}}{{/returnType}}{{^returnType}}void{{/returnType}}>(
-            {{classname}}Requests.{{nickname}}({{#allParams.0}}params{{/allParams.0}})
-        );
+    readonly {{nickname}} = ({{#allParams.0}}params: {{operationIdCamelCase}}Request{{/allParams.0}}): Observable<{{operationIdCamelCase}}Response> =>
+        this.executeRequest({{classname}}Requests.{{nickname}}({{#allParams.0}}params{{/allParams.0}}))
+            .pipe(
+                map((res) => ({
+                    statusCode: [{{#responses}}{{^isWildcard}}
+                        {{code}},{{/isWildcard}}{{/responses}}
+                    ].indexOf(res.status) === -1 ? 'other' : res.status,
+                    data: res.response,
+                    response: res,
+                }) as {{operationIdCamelCase}}Response)
+            );
 
     {{/operation}}
 }
