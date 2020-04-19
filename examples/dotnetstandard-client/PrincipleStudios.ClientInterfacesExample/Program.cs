@@ -21,7 +21,7 @@ namespace PrincipleStudios.ClientInterfacesExample
                 BaseUrl = "https://localhost:5001/api",
                 Settings = new Newtonsoft.Json.JsonSerializerSettings()
             });
-            var createdPetResponse = await client.AddPetAsync(new Clients.Petstore.NewPet(Name: "Fido", Tag: "Dog"));
+            using var createdPetResponse = await client.AddPetAsync(new Clients.Petstore.NewPet(Name: "Fido", Tag: "Dog"));
             var pet = await createdPetResponse.StatusCode200Async();
             using var foundPetResponse = await client.FindPetByIdAsync(pet.Id);
             var foundPet = await foundPetResponse.StatusCode200Async();
