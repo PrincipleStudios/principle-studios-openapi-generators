@@ -37,8 +37,7 @@ export type AddPetResponse =
         statusCode: \\"other\\";
         data: Error;
         response: ResponseArgs;
-    }
-  | { statusCode?: never; response: ResponseArgs };
+    };
 
 export type DeletePetRequest = {
     id: number;
@@ -54,8 +53,7 @@ export type DeletePetResponse =
         statusCode: \\"other\\";
         data: Error;
         response: ResponseArgs;
-    }
-  | { statusCode?: never; response: ResponseArgs };
+    };
 
 export type FindPetByIdRequest = {
     id: number;
@@ -71,8 +69,7 @@ export type FindPetByIdResponse =
         statusCode: \\"other\\";
         data: Error;
         response: ResponseArgs;
-    }
-  | { statusCode?: never; response: ResponseArgs };
+    };
 
 export type FindPetsRequest = {
     tags?: Array<string>;
@@ -89,8 +86,7 @@ export type FindPetsResponse =
         statusCode: \\"other\\";
         data: Error;
         response: ResponseArgs;
-    }
-  | { statusCode?: never; response: ResponseArgs };
+    };
 
 /**
  * no description

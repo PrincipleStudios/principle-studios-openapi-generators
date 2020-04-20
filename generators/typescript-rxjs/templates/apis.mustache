@@ -23,13 +23,23 @@ export type {{operationIdCamelCase}}Request = {
 {{/allParams.0}}
 export type {{operationIdCamelCase}}Response =
 {{#responses}}
+{{^isWildcard}}
   | {
-        statusCode: {{^isWildcard}}{{code}}{{/isWildcard}}{{#isWildcard}}"other"{{/isWildcard}};
+        statusCode: {{code}};
         data: {{#dataType}}{{&dataType}}{{/dataType}}{{^dataType}}void{{/dataType}};
         response: ResponseArgs;
     }
+{{/isWildcard}}
 {{/responses}}
-  | { statusCode?: never; response: ResponseArgs };
+  | {
+        statusCode: "other";
+{{#responses}}
+{{#isWildcard}}
+        data: {{#dataType}}{{&dataType}}{{/dataType}}{{^dataType}}void{{/dataType}};
+{{/isWildcard}}
+{{/responses}}
+        response: ResponseArgs;
+    };
 
 {{/operation}}
 {{/operations}}

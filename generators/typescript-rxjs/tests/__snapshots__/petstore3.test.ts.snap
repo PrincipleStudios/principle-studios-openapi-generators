@@ -33,7 +33,10 @@ export type AddPetResponse =
         data: void;
         response: ResponseArgs;
     }
-  | { statusCode?: never; response: ResponseArgs };
+  | {
+        statusCode: \\"other\\";
+        response: ResponseArgs;
+    };
 
 export type DeletePetRequest = {
     petId: number;
@@ -51,7 +54,10 @@ export type DeletePetResponse =
         data: void;
         response: ResponseArgs;
     }
-  | { statusCode?: never; response: ResponseArgs };
+  | {
+        statusCode: \\"other\\";
+        response: ResponseArgs;
+    };
 
 export type FindPetsByStatusRequest = {
     status: Array<FindPetsByStatusStatusEnum>;
@@ -68,7 +74,10 @@ export type FindPetsByStatusResponse =
         data: void;
         response: ResponseArgs;
     }
-  | { statusCode?: never; response: ResponseArgs };
+  | {
+        statusCode: \\"other\\";
+        response: ResponseArgs;
+    };
 
 export type FindPetsByTagsRequest = {
     tags: Array<string>;
@@ -85,7 +94,10 @@ export type FindPetsByTagsResponse =
         data: void;
         response: ResponseArgs;
     }
-  | { statusCode?: never; response: ResponseArgs };
+  | {
+        statusCode: \\"other\\";
+        response: ResponseArgs;
+    };
 
 export type GetPetByIdRequest = {
     petId: number;
@@ -107,7 +119,10 @@ export type GetPetByIdResponse =
         data: void;
         response: ResponseArgs;
     }
-  | { statusCode?: never; response: ResponseArgs };
+  | {
+        statusCode: \\"other\\";
+        response: ResponseArgs;
+    };
 
 export type UpdatePetRequest = {
     pet: Pet;
@@ -129,7 +144,10 @@ export type UpdatePetResponse =
         data: void;
         response: ResponseArgs;
     }
-  | { statusCode?: never; response: ResponseArgs };
+  | {
+        statusCode: \\"other\\";
+        response: ResponseArgs;
+    };
 
 export type UpdatePetWithFormRequest = {
     petId: number;
@@ -143,7 +161,10 @@ export type UpdatePetWithFormResponse =
         data: void;
         response: ResponseArgs;
     }
-  | { statusCode?: never; response: ResponseArgs };
+  | {
+        statusCode: \\"other\\";
+        response: ResponseArgs;
+    };
 
 export type UploadFileRequest = {
     petId: number;
@@ -156,7 +177,10 @@ export type UploadFileResponse =
         data: ApiResponse;
         response: ResponseArgs;
     }
-  | { statusCode?: never; response: ResponseArgs };
+  | {
+        statusCode: \\"other\\";
+        response: ResponseArgs;
+    };
 
 /**
  * no description
@@ -554,7 +578,10 @@ export type DeleteOrderResponse =
         data: void;
         response: ResponseArgs;
     }
-  | { statusCode?: never; response: ResponseArgs };
+  | {
+        statusCode: \\"other\\";
+        response: ResponseArgs;
+    };
 
 export type GetInventoryResponse =
   | {
@@ -562,7 +589,10 @@ export type GetInventoryResponse =
         data: { [key: string]: number; };
         response: ResponseArgs;
     }
-  | { statusCode?: never; response: ResponseArgs };
+  | {
+        statusCode: \\"other\\";
+        response: ResponseArgs;
+    };
 
 export type GetOrderByIdRequest = {
     orderId: number;
@@ -584,7 +614,10 @@ export type GetOrderByIdResponse =
         data: void;
         response: ResponseArgs;
     }
-  | { statusCode?: never; response: ResponseArgs };
+  | {
+        statusCode: \\"other\\";
+        response: ResponseArgs;
+    };
 
 export type PlaceOrderRequest = {
     order: Order;
@@ -601,7 +634,10 @@ export type PlaceOrderResponse =
         data: void;
         response: ResponseArgs;
     }
-  | { statusCode?: never; response: ResponseArgs };
+  | {
+        statusCode: \\"other\\";
+        response: ResponseArgs;
+    };
 
 /**
  * no description
@@ -777,8 +813,7 @@ export type CreateUserResponse =
         statusCode: \\"other\\";
         data: void;
         response: ResponseArgs;
-    }
-  | { statusCode?: never; response: ResponseArgs };
+    };
 
 export type CreateUsersWithArrayInputRequest = {
     user: Array<User>;
@@ -789,8 +824,7 @@ export type CreateUsersWithArrayInputResponse =
         statusCode: \\"other\\";
         data: void;
         response: ResponseArgs;
-    }
-  | { statusCode?: never; response: ResponseArgs };
+    };
 
 export type CreateUsersWithListInputRequest = {
     user: Array<User>;
@@ -801,8 +835,7 @@ export type CreateUsersWithListInputResponse =
         statusCode: \\"other\\";
         data: void;
         response: ResponseArgs;
-    }
-  | { statusCode?: never; response: ResponseArgs };
+    };
 
 export type DeleteUserRequest = {
     username: string;
@@ -819,7 +852,10 @@ export type DeleteUserResponse =
         data: void;
         response: ResponseArgs;
     }
-  | { statusCode?: never; response: ResponseArgs };
+  | {
+        statusCode: \\"other\\";
+        response: ResponseArgs;
+    };
 
 export type GetUserByNameRequest = {
     username: string;
@@ -841,7 +877,10 @@ export type GetUserByNameResponse =
         data: void;
         response: ResponseArgs;
     }
-  | { statusCode?: never; response: ResponseArgs };
+  | {
+        statusCode: \\"other\\";
+        response: ResponseArgs;
+    };
 
 export type LoginUserRequest = {
     username: string;
@@ -859,15 +898,17 @@ export type LoginUserResponse =
         data: void;
         response: ResponseArgs;
     }
-  | { statusCode?: never; response: ResponseArgs };
+  | {
+        statusCode: \\"other\\";
+        response: ResponseArgs;
+    };
 
 export type LogoutUserResponse =
   | {
         statusCode: \\"other\\";
         data: void;
         response: ResponseArgs;
-    }
-  | { statusCode?: never; response: ResponseArgs };
+    };
 
 export type UpdateUserRequest = {
     username: string;
@@ -885,7 +926,10 @@ export type UpdateUserResponse =
         data: void;
         response: ResponseArgs;
     }
-  | { statusCode?: never; response: ResponseArgs };
+  | {
+        statusCode: \\"other\\";
+        response: ResponseArgs;
+    };
 
 /**
  * no description
