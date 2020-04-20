@@ -1,20 +1,27 @@
 /* eslint-disable */
 {{>licenseInfo}}
-import { Observable } from 'rxjs';
+import { Observable, Subject, Subscriber, merge } from 'rxjs';
 import { ajax, AjaxRequest, AjaxResponse } from 'rxjs/ajax';
-import { map } from 'rxjs/operators';
+import { map, shareReplay, takeUntil } from 'rxjs/operators';
 
 export const BASE_PATH = 'http://petstore.swagger.io/api'.replace(/\/+$/, '');
 
-export interface ConfigurationParameters {
+export type StandardResponse<TStatusCode extends (number | 'other'), TResponseType = unknown> =
+    {
+        statusCode: TStatusCode;
+        data: TResponseType;
+        response: ResponseArgs;
+    };
+export type ProgressResponse = { statusCode: 'progress'; data: ProgressEvent; };
+
+export type ConfigurationParameters = {
     basePath: string; // override base path
     username: string | undefined; // parameter for basic security
     password: string | undefined; // parameter for basic security
     apiKey: undefined | string | ((name: string) => string); // parameter for apiKey security
     accessToken: undefined | string | ((name?: string, scopes?: string[]) => string); // parameter for oauth2 security
     rxjsRequest: (params: RequestArgs) => Observable<AjaxResponse>;
-
-}
+};
 
 export class Configuration {
     readonly basePath: string;
@@ -42,8 +49,20 @@ export class BaseAPI {
     constructor(protected configuration = new Configuration()) {
     }
 
-    protected readonly executeRequest = (requestOpts: RequestOpts) =>
-        this.configuration.rxjsRequest(this.createRequestArgs(requestOpts));
+    protected executeRequest<T extends StandardResponse<any, any>>(requestOpts: RequestOpts, transform: (res: AjaxResponse) => T): Observable<T>;
+    protected executeRequest<T extends StandardResponse<any, any>>(requestOpts: RequestOpts, transform: (res: AjaxResponse) => T, includeProgress: boolean): Observable<T | ProgressResponse>;
+    protected executeRequest<T extends StandardResponse<any, any>>(requestOpts: RequestOpts, transform: (res: AjaxResponse) => T, includeProgress = false) {
+        if (!includeProgress)
+            return this.configuration.rxjsRequest(this.createRequestArgs(requestOpts)).pipe(map(transform));
+        const progressSubject = new Subject<ProgressEvent>();
+        const progress = new Subscriber<ProgressEvent>(
+            progressEvent => progressSubject.next(progressEvent),
+            error => progressSubject.error(error),
+            () => progressSubject.complete()
+        );
+        const result = this.configuration.rxjsRequest({ ...this.createRequestArgs(requestOpts), progressSubscriber: progress }).pipe(map(transform), shareReplay(1));
+        return merge(progressSubject.pipe(takeUntil(result), map((ev): ProgressResponse => ({ statusCode: 'progress', data: ev }))), result);
+    }
 
     private readonly createRequestArgs = (requestOpts: RequestOpts): RequestArgs => {
         let url = this.configuration.basePath + requestOpts.path;

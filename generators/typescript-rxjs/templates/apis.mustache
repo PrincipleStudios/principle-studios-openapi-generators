@@ -2,7 +2,7 @@
 {{>licenseInfo}}
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { BaseAPI{{#hasHttpHeaders}}, HttpHeaders{{/hasHttpHeaders}}{{#hasQueryParams}}, HttpQuery{{/hasQueryParams}}{{#hasRequiredParams}}, throwIfNullOrUndefined{{/hasRequiredParams}}{{#hasPathParams}}, encodeURI{{/hasPathParams}}{{#hasListContainers}}, COLLECTION_FORMATS{{/hasListContainers}}, RequestOpts, ResponseArgs } from '../runtime';
+import { BaseAPI{{#hasHttpHeaders}}, HttpHeaders{{/hasHttpHeaders}}{{#hasQueryParams}}, HttpQuery{{/hasQueryParams}}{{#hasRequiredParams}}, throwIfNullOrUndefined{{/hasRequiredParams}}{{#hasPathParams}}, encodeURI{{/hasPathParams}}{{#hasListContainers}}, COLLECTION_FORMATS{{/hasListContainers}}, RequestOpts, ResponseArgs, ProgressResponse, StandardResponse } from '../runtime';
 {{#imports.0}}
 import {
     {{#imports}}
@@ -24,22 +24,10 @@ export type {{operationIdCamelCase}}Request = {
 export type {{operationIdCamelCase}}Response =
 {{#responses}}
 {{^isWildcard}}
-  | {
-        statusCode: {{code}};
-        data: {{#dataType}}{{&dataType}}{{/dataType}}{{^dataType}}void{{/dataType}};
-        response: ResponseArgs;
-    }
+  | StandardResponse<{{code}}, {{#dataType}}{{&dataType}}{{/dataType}}{{^dataType}}void{{/dataType}}>
 {{/isWildcard}}
 {{/responses}}
-  | {
-        statusCode: "other";
-{{#responses}}
-{{#isWildcard}}
-        data: {{#dataType}}{{&dataType}}{{/dataType}}{{^dataType}}void{{/dataType}};
-{{/isWildcard}}
-{{/responses}}
-        response: ResponseArgs;
-    };
+  | StandardResponse<"other"{{#responses}}{{#isWildcard}}, {{#dataType}}{{&dataType}}{{/dataType}}{{^dataType}}void{{/dataType}}{{/isWildcard}}{{/responses}}>;
 
 {{/operation}}
 {{/operations}}
@@ -247,17 +235,19 @@ export class {{classname}} extends BaseAPI {
      * {{&summary}}
      {{/summary}}
      */
-    readonly {{nickname}} = ({{#allParams.0}}params: {{operationIdCamelCase}}Request{{/allParams.0}}): Observable<{{operationIdCamelCase}}Response> =>
-        this.executeRequest({{classname}}Requests.{{nickname}}({{#allParams.0}}params{{/allParams.0}}))
-            .pipe(
-                map((res) => ({
+    {{nickname}}({{#allParams.0}}params: {{operationIdCamelCase}}Request{{/allParams.0}}): Observable<{{operationIdCamelCase}}Response>;
+    {{nickname}}({{#allParams.0}}params: {{operationIdCamelCase}}Request, {{/allParams.0}}includeProgress: boolean): Observable<{{operationIdCamelCase}}Response | ProgressResponse>;
+    {{nickname}}({{#allParams.0}}params: {{operationIdCamelCase}}Request, {{/allParams.0}}includeProgress = false) {
+        return this.executeRequest({{classname}}Requests.{{nickname}}({{#allParams.0}}params{{/allParams.0}}), this.{{nickname}}ResponseConversion, includeProgress);
+    }
+
+    private readonly {{nickname}}ResponseConversion = (res: ResponseArgs) => ({
                     statusCode: [{{#responses}}{{^isWildcard}}
                         {{code}},{{/isWildcard}}{{/responses}}
                     ].indexOf(res.status) === -1 ? 'other' : res.status,
                     data: res.response,
                     response: res,
-                }) as {{operationIdCamelCase}}Response)
-            );
+                }) as {{operationIdCamelCase}}Response;
 
     {{/operation}}
 }
