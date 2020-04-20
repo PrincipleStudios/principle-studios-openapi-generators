@@ -18,11 +18,11 @@
     "typescript": "~3.7.2"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "npm run generate-api && react-scripts start",
     "build": "npm run generate-api && react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "generate-api": "openapi-generator generate -i ../../schemas/petstore.yaml -o src/api-generated/ -g typescript-axios -t node_modules/@principlestudios/openapi-codegen-typescript-axios/templates"
+    "generate-api": "rimraf src/api-generated/ && openapi-generator generate -i ../../schemas/petstore.yaml -o src/api-generated/ -g typescript-axios -t node_modules/@principlestudios/openapi-codegen-typescript-axios/templates"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -40,6 +40,7 @@
     ]
   },
   "devDependencies": {
-    "@principlestudios/openapi-codegen-typescript-axios": "file:../../generators/out/principlestudios-openapi-codegen-typescript-axios-0.0.1.tgz"
+    "@principlestudios/openapi-codegen-typescript-axios": "file:../../generators/out/principlestudios-openapi-codegen-typescript-axios-0.0.2.tgz",
+    "rimraf": "^3.0.2"
   }
 }
