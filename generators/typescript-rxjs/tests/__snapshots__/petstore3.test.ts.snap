@@ -27,8 +27,9 @@ export type AddPetRequest = {
     pet: Pet;
 }
 
+export type AddPetResponse405 = void;
 export type AddPetResponse =
-  | StandardResponse<405, void>
+  | StandardResponse<405, AddPetResponse405>
   | StandardResponse<\\"other\\">;
 
 export type DeletePetRequest = {
@@ -36,47 +37,59 @@ export type DeletePetRequest = {
     apiKey?: string;
 }
 
+export type DeletePetResponse400 = void;
+export type DeletePetResponse404 = void;
 export type DeletePetResponse =
-  | StandardResponse<400, void>
-  | StandardResponse<404, void>
+  | StandardResponse<400, DeletePetResponse400>
+  | StandardResponse<404, DeletePetResponse404>
   | StandardResponse<\\"other\\">;
 
 export type FindPetsByStatusRequest = {
     status: Array<FindPetsByStatusStatusEnum>;
 }
 
+export type FindPetsByStatusResponse200 = Array<Pet>;
+export type FindPetsByStatusResponse400 = void;
 export type FindPetsByStatusResponse =
-  | StandardResponse<200, Array<Pet>>
-  | StandardResponse<400, void>
+  | StandardResponse<200, FindPetsByStatusResponse200>
+  | StandardResponse<400, FindPetsByStatusResponse400>
   | StandardResponse<\\"other\\">;
 
 export type FindPetsByTagsRequest = {
     tags: Array<string>;
 }
 
+export type FindPetsByTagsResponse200 = Array<Pet>;
+export type FindPetsByTagsResponse400 = void;
 export type FindPetsByTagsResponse =
-  | StandardResponse<200, Array<Pet>>
-  | StandardResponse<400, void>
+  | StandardResponse<200, FindPetsByTagsResponse200>
+  | StandardResponse<400, FindPetsByTagsResponse400>
   | StandardResponse<\\"other\\">;
 
 export type GetPetByIdRequest = {
     petId: number;
 }
 
+export type GetPetByIdResponse200 = Pet;
+export type GetPetByIdResponse400 = void;
+export type GetPetByIdResponse404 = void;
 export type GetPetByIdResponse =
-  | StandardResponse<200, Pet>
-  | StandardResponse<400, void>
-  | StandardResponse<404, void>
+  | StandardResponse<200, GetPetByIdResponse200>
+  | StandardResponse<400, GetPetByIdResponse400>
+  | StandardResponse<404, GetPetByIdResponse404>
   | StandardResponse<\\"other\\">;
 
 export type UpdatePetRequest = {
     pet: Pet;
 }
 
+export type UpdatePetResponse400 = void;
+export type UpdatePetResponse404 = void;
+export type UpdatePetResponse405 = void;
 export type UpdatePetResponse =
-  | StandardResponse<400, void>
-  | StandardResponse<404, void>
-  | StandardResponse<405, void>
+  | StandardResponse<400, UpdatePetResponse400>
+  | StandardResponse<404, UpdatePetResponse404>
+  | StandardResponse<405, UpdatePetResponse405>
   | StandardResponse<\\"other\\">;
 
 export type UpdatePetWithFormRequest = {
@@ -85,8 +98,9 @@ export type UpdatePetWithFormRequest = {
     status?: string;
 }
 
+export type UpdatePetWithFormResponse405 = void;
 export type UpdatePetWithFormResponse =
-  | StandardResponse<405, void>
+  | StandardResponse<405, UpdatePetWithFormResponse405>
   | StandardResponse<\\"other\\">;
 
 export type UploadFileRequest = {
@@ -94,8 +108,9 @@ export type UploadFileRequest = {
     body?: Blob;
 }
 
+export type UploadFileResponse200 = ApiResponse;
 export type UploadFileResponse =
-  | StandardResponse<200, ApiResponse>
+  | StandardResponse<200, UploadFileResponse200>
   | StandardResponse<\\"other\\">;
 
 /**
@@ -499,32 +514,40 @@ export type DeleteOrderRequest = {
     orderId: number;
 }
 
+export type DeleteOrderResponse400 = void;
+export type DeleteOrderResponse404 = void;
 export type DeleteOrderResponse =
-  | StandardResponse<400, void>
-  | StandardResponse<404, void>
+  | StandardResponse<400, DeleteOrderResponse400>
+  | StandardResponse<404, DeleteOrderResponse404>
   | StandardResponse<\\"other\\">;
 
+export type GetInventoryResponse200 = { [key: string]: number; };
 export type GetInventoryResponse =
-  | StandardResponse<200, { [key: string]: number; }>
+  | StandardResponse<200, GetInventoryResponse200>
   | StandardResponse<\\"other\\">;
 
 export type GetOrderByIdRequest = {
     orderId: number;
 }
 
+export type GetOrderByIdResponse200 = Order;
+export type GetOrderByIdResponse400 = void;
+export type GetOrderByIdResponse404 = void;
 export type GetOrderByIdResponse =
-  | StandardResponse<200, Order>
-  | StandardResponse<400, void>
-  | StandardResponse<404, void>
+  | StandardResponse<200, GetOrderByIdResponse200>
+  | StandardResponse<400, GetOrderByIdResponse400>
+  | StandardResponse<404, GetOrderByIdResponse404>
   | StandardResponse<\\"other\\">;
 
 export type PlaceOrderRequest = {
     order: Order;
 }
 
+export type PlaceOrderResponse200 = Order;
+export type PlaceOrderResponse400 = void;
 export type PlaceOrderResponse =
-  | StandardResponse<200, Order>
-  | StandardResponse<400, void>
+  | StandardResponse<200, PlaceOrderResponse200>
+  | StandardResponse<400, PlaceOrderResponse400>
   | StandardResponse<\\"other\\">;
 
 /**
@@ -704,40 +727,48 @@ export type CreateUserRequest = {
     user: User;
 }
 
+export type CreateUserResponseOther = void;
 export type CreateUserResponse =
-  | StandardResponse<\\"other\\", void>;
+  | StandardResponse<\\"other\\", CreateUserResponseOther>;
 
 export type CreateUsersWithArrayInputRequest = {
     user: Array<User>;
 }
 
+export type CreateUsersWithArrayInputResponseOther = void;
 export type CreateUsersWithArrayInputResponse =
-  | StandardResponse<\\"other\\", void>;
+  | StandardResponse<\\"other\\", CreateUsersWithArrayInputResponseOther>;
 
 export type CreateUsersWithListInputRequest = {
     user: Array<User>;
 }
 
+export type CreateUsersWithListInputResponseOther = void;
 export type CreateUsersWithListInputResponse =
-  | StandardResponse<\\"other\\", void>;
+  | StandardResponse<\\"other\\", CreateUsersWithListInputResponseOther>;
 
 export type DeleteUserRequest = {
     username: string;
 }
 
+export type DeleteUserResponse400 = void;
+export type DeleteUserResponse404 = void;
 export type DeleteUserResponse =
-  | StandardResponse<400, void>
-  | StandardResponse<404, void>
+  | StandardResponse<400, DeleteUserResponse400>
+  | StandardResponse<404, DeleteUserResponse404>
   | StandardResponse<\\"other\\">;
 
 export type GetUserByNameRequest = {
     username: string;
 }
 
+export type GetUserByNameResponse200 = User;
+export type GetUserByNameResponse400 = void;
+export type GetUserByNameResponse404 = void;
 export type GetUserByNameResponse =
-  | StandardResponse<200, User>
-  | StandardResponse<400, void>
-  | StandardResponse<404, void>
+  | StandardResponse<200, GetUserByNameResponse200>
+  | StandardResponse<400, GetUserByNameResponse400>
+  | StandardResponse<404, GetUserByNameResponse404>
   | StandardResponse<\\"other\\">;
 
 export type LoginUserRequest = {
@@ -745,22 +776,27 @@ export type LoginUserRequest = {
     password: string;
 }
 
+export type LoginUserResponse200 = string;
+export type LoginUserResponse400 = void;
 export type LoginUserResponse =
-  | StandardResponse<200, string>
-  | StandardResponse<400, void>
+  | StandardResponse<200, LoginUserResponse200>
+  | StandardResponse<400, LoginUserResponse400>
   | StandardResponse<\\"other\\">;
 
+export type LogoutUserResponseOther = void;
 export type LogoutUserResponse =
-  | StandardResponse<\\"other\\", void>;
+  | StandardResponse<\\"other\\", LogoutUserResponseOther>;
 
 export type UpdateUserRequest = {
     username: string;
     user: User;
 }
 
+export type UpdateUserResponse400 = void;
+export type UpdateUserResponse404 = void;
 export type UpdateUserResponse =
-  | StandardResponse<400, void>
-  | StandardResponse<404, void>
+  | StandardResponse<400, UpdateUserResponse400>
+  | StandardResponse<404, UpdateUserResponse404>
   | StandardResponse<\\"other\\">;
 
 /**

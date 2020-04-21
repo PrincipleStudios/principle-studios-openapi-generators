@@ -21,13 +21,21 @@ export type {{operationIdCamelCase}}Request = {
 }
 
 {{/allParams.0}}
+{{#responses}}
+{{^isWildcard}}
+export type {{operationIdCamelCase}}Response{{code}} = {{#dataType}}{{&dataType}}{{/dataType}}{{^dataType}}void{{/dataType}};
+{{/isWildcard}}
+{{#isWildcard}}
+export type {{operationIdCamelCase}}ResponseOther = {{#dataType}}{{&dataType}}{{/dataType}}{{^dataType}}void{{/dataType}};
+{{/isWildcard}}
+{{/responses}}
 export type {{operationIdCamelCase}}Response =
 {{#responses}}
 {{^isWildcard}}
-  | StandardResponse<{{code}}, {{#dataType}}{{&dataType}}{{/dataType}}{{^dataType}}void{{/dataType}}>
+  | StandardResponse<{{code}}, {{operationIdCamelCase}}Response{{code}}>
 {{/isWildcard}}
 {{/responses}}
-  | StandardResponse<"other"{{#responses}}{{#isWildcard}}, {{#dataType}}{{&dataType}}{{/dataType}}{{^dataType}}void{{/dataType}}{{/isWildcard}}{{/responses}}>;
+  | StandardResponse<"other"{{#responses}}{{#isWildcard}}, {{operationIdCamelCase}}ResponseOther{{/isWildcard}}{{/responses}}>;
 
 {{/operation}}
 {{/operations}}

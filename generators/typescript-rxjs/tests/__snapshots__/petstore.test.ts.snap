@@ -27,34 +27,42 @@ export type AddPetRequest = {
     newPet: NewPet;
 }
 
+export type AddPetResponse200 = Pet;
+export type AddPetResponseOther = Error;
 export type AddPetResponse =
-  | StandardResponse<200, Pet>
-  | StandardResponse<\\"other\\", Error>;
+  | StandardResponse<200, AddPetResponse200>
+  | StandardResponse<\\"other\\", AddPetResponseOther>;
 
 export type DeletePetRequest = {
     id: number;
 }
 
+export type DeletePetResponse204 = void;
+export type DeletePetResponseOther = Error;
 export type DeletePetResponse =
-  | StandardResponse<204, void>
-  | StandardResponse<\\"other\\", Error>;
+  | StandardResponse<204, DeletePetResponse204>
+  | StandardResponse<\\"other\\", DeletePetResponseOther>;
 
 export type FindPetByIdRequest = {
     id: number;
 }
 
+export type FindPetByIdResponse200 = Pet;
+export type FindPetByIdResponseOther = Error;
 export type FindPetByIdResponse =
-  | StandardResponse<200, Pet>
-  | StandardResponse<\\"other\\", Error>;
+  | StandardResponse<200, FindPetByIdResponse200>
+  | StandardResponse<\\"other\\", FindPetByIdResponseOther>;
 
 export type FindPetsRequest = {
     tags?: Array<string>;
     limit?: number;
 }
 
+export type FindPetsResponse200 = Array<Pet>;
+export type FindPetsResponseOther = Error;
 export type FindPetsResponse =
-  | StandardResponse<200, Array<Pet>>
-  | StandardResponse<\\"other\\", Error>;
+  | StandardResponse<200, FindPetsResponse200>
+  | StandardResponse<\\"other\\", FindPetsResponseOther>;
 
 /**
  * no description
