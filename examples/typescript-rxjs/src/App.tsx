@@ -7,7 +7,7 @@ function App() {
   const [results, setResults] = useState([] as Pet[]);
   const updateResultsCallback = useCallback(updateResults, []);
   useEffect(() => { updateResultsCallback(); }, [updateResultsCallback]);
-  const api = useMemo(() => new DefaultApi(), []);
+  const api = useMemo(() => new DefaultApi({ basePath: 'https://localhost:5001/api' }), []);
 
   return (
     <div className="App">

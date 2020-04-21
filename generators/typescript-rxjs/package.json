@@ -1,6 +1,6 @@
 {
   "name": "@principlestudios/openapi-codegen-typescript-rxjs",
-  "version": "0.0.1-alpha.15",
+  "version": "0.0.1-alpha.17",
   "description": "A typescript client code generator for principled development using RxJS",
   "scripts": {
     "test": "jest"

@@ -39,7 +39,7 @@
     ]
   },
   "devDependencies": {
-    "@principlestudios/openapi-codegen-typescript-rxjs": "file:../../generators/out/principlestudios-openapi-codegen-typescript-rxjs-0.0.1-alpha.15.tgz",
+    "@principlestudios/openapi-codegen-typescript-rxjs": "file:../../generators/out/principlestudios-openapi-codegen-typescript-rxjs-0.0.1-alpha.17.tgz",
     "rimraf": "^3.0.2"
   }
 }

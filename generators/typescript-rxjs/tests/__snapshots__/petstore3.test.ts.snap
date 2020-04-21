@@ -1502,30 +1502,21 @@ export type ConfigurationParameters = {
     rxjsRequest: (params: RequestArgs) => Observable<AjaxResponse>;
 };
 
-export class Configuration {
-    readonly basePath: string;
-    readonly username: string | undefined;
-    readonly password: string | undefined;
-    readonly apiKey: string | ((name: string) => string) | undefined;
-    readonly accessToken: string | ((name?: string | undefined, scopes?: string[] | undefined) => string) | undefined;
-    readonly rxjsRequest: (params: RequestArgs) => Observable<AjaxResponse>;
-
-    constructor(configuration: Partial<ConfigurationParameters> = {}) {
-        this.basePath = configuration.basePath || BASE_PATH;
-        this.username = configuration.username || undefined;
-        this.password = configuration.password || undefined;
-        this.apiKey = configuration.apiKey || undefined;
-        this.accessToken = configuration.accessToken || undefined;
-        this.rxjsRequest = configuration.rxjsRequest || ajax;
-    }
-}
-
 /**
  * This is the base class for all generated API classes.
  */
 export class BaseAPI {
+    protected configuration: ConfigurationParameters;
 
-    constructor(protected configuration = new Configuration()) {
+    constructor(configuration: Partial<ConfigurationParameters> = {}) {
+        this.configuration = {
+            basePath: configuration.basePath || BASE_PATH,
+            username: configuration.username || undefined,
+            password: configuration.password || undefined,
+            apiKey: configuration.apiKey || undefined,
+            accessToken: configuration.accessToken || undefined,
+            rxjsRequest: configuration.rxjsRequest || ajax,
+        };
     }
 
     protected executeRequest<T extends StandardResponse<any, any>>(requestOpts: RequestOpts, transform: (res: AjaxResponse) => T): Observable<T>;
@@ -1533,14 +1524,22 @@ export class BaseAPI {
     protected executeRequest<T extends StandardResponse<any, any>>(requestOpts: RequestOpts, transform: (res: AjaxResponse) => T, includeProgress = false) {
         if (!includeProgress)
             return this.configuration.rxjsRequest(this.createRequestArgs(requestOpts)).pipe(map(transform));
-        const progressSubject = new Subject<ProgressEvent>();
-        const progress = new Subscriber<ProgressEvent>(
-            progressEvent => progressSubject.next(progressEvent),
-            error => progressSubject.error(error),
-            () => progressSubject.complete()
-        );
-        const result = this.configuration.rxjsRequest({ ...this.createRequestArgs(requestOpts), progressSubscriber: progress }).pipe(map(transform), shareReplay(1));
-        return merge(progressSubject.pipe(takeUntil(result), map((ev): ProgressResponse => ({ statusCode: 'progress', data: ev }))), result);
+        return new Observable<T | ProgressResponse>(observer => {
+            const progressSubscriber = new Subscriber<ProgressEvent>(
+                progressEvent => observer.next(({ statusCode: 'progress', data: progressEvent })),
+                error => observer.error(error),
+                // Forward next and error but not complete
+                // When progress is complete, we send the response *then* complete.
+                () => {},
+            );
+            const subscription = this.configuration.rxjsRequest({
+                    ...this.createRequestArgs(requestOpts),
+                    progressSubscriber,
+                })
+                .pipe(map(transform))
+                .subscribe(observer);
+            return () => subscription.unsubscribe();
+        });
     }
 
     private readonly createRequestArgs = (requestOpts: RequestOpts): RequestArgs => {
