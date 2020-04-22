@@ -31,7 +31,7 @@ export class BaseAPI {
 
     constructor(configuration: Partial<ConfigurationParameters> = {}) {
         this.configuration = {
-            basePath: configuration.basePath || BASE_PATH,
+            basePath: configuration.basePath === undefined ? BASE_PATH : configuration.basePath,
             username: configuration.username || undefined,
             password: configuration.password || undefined,
             apiKey: configuration.apiKey || undefined,

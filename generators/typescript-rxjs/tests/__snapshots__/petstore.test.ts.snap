@@ -16,7 +16,6 @@ exports[`typescript-rxjs petstore.yaml can generate the files: C:\\Users\\mattd\
  */
 
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 import { BaseAPI, HttpHeaders, HttpQuery, throwIfNullOrUndefined, encodeURI, RequestOpts, ResponseArgs, ProgressResponse, StandardResponse } from '../runtime';
 import {
     NewPet,
@@ -405,7 +404,7 @@ export class BaseAPI {
 
     constructor(configuration: Partial<ConfigurationParameters> = {}) {
         this.configuration = {
-            basePath: configuration.basePath || BASE_PATH,
+            basePath: configuration.basePath === undefined ? BASE_PATH : configuration.basePath,
             username: configuration.username || undefined,
             password: configuration.password || undefined,
             apiKey: configuration.apiKey || undefined,

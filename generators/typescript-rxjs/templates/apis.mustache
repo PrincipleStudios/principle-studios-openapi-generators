@@ -1,7 +1,6 @@
 /* eslint-disable */
 {{>licenseInfo}}
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 import { BaseAPI{{#hasHttpHeaders}}, HttpHeaders{{/hasHttpHeaders}}{{#hasQueryParams}}, HttpQuery{{/hasQueryParams}}{{#hasRequiredParams}}, throwIfNullOrUndefined{{/hasRequiredParams}}{{#hasPathParams}}, encodeURI{{/hasPathParams}}{{#hasListContainers}}, COLLECTION_FORMATS{{/hasListContainers}}, RequestOpts, ResponseArgs, ProgressResponse, StandardResponse } from '../runtime';
 {{#imports.0}}
 import {
