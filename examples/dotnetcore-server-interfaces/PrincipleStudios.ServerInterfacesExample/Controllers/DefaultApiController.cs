@@ -15,7 +15,7 @@ namespace PrincipleStudios.ServerInterfacesExample.Controllers
         private readonly static System.Collections.Concurrent.ConcurrentDictionary<long, (string name, string tag)> pets = new System.Collections.Concurrent.ConcurrentDictionary<long, (string name, string tag)>();
         private static long lastId = 0;
 
-        public override async Task<TypeSafeAddPetResult> AddPetTypeSafe(NewPet newPet)
+        protected override async Task<TypeSafeAddPetResult> AddPetTypeSafe(NewPet newPet)
         {
             await Task.Yield();
             var newId = Interlocked.Increment(ref lastId);
@@ -30,7 +30,7 @@ namespace PrincipleStudios.ServerInterfacesExample.Controllers
             }
         }
 
-        public override async Task<TypeSafeDeletePetResult> DeletePetTypeSafe(long? id)
+        protected override async Task<TypeSafeDeletePetResult> DeletePetTypeSafe(long? id)
         {
             await Task.Yield();
             if (id != null && pets.Remove(id.Value, out var _))
@@ -43,7 +43,7 @@ namespace PrincipleStudios.ServerInterfacesExample.Controllers
             }
         }
 
-        public override async Task<TypeSafeFindPetByIdResult> FindPetByIdTypeSafe(long? id)
+        protected override async Task<TypeSafeFindPetByIdResult> FindPetByIdTypeSafe(long? id)
         {
             await Task.Yield();
             if (id != null && pets.TryGetValue(id.Value, out var tuple))
@@ -56,7 +56,7 @@ namespace PrincipleStudios.ServerInterfacesExample.Controllers
             }
         }
 
-        public override async Task<TypeSafeFindPetsResult> FindPetsTypeSafe(IReadOnlyList<string> tags, int? limit)
+        protected override async Task<TypeSafeFindPetsResult> FindPetsTypeSafe(IReadOnlyList<string> tags, int? limit)
         {
             await Task.Yield();
             var result = pets.Where(p => tags.Contains(p.Value.tag));

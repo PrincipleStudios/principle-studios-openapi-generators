@@ -26,7 +26,7 @@ namespace PrincipleStudios.Demo
     /// 
     /// </summary>
     public abstract class DefaultApiControllerBase : ControllerBase
-    { 
+    {
         /// <summary>
         /// 
         /// </summary>
@@ -40,7 +40,7 @@ namespace PrincipleStudios.Demo
             [FromBody] NewPet newPet) =>
             (await AddPetTypeSafe(newPet)).ActionResult;
 
-        public abstract Task<TypeSafeAddPetResult> AddPetTypeSafe(
+        protected abstract Task<TypeSafeAddPetResult> AddPetTypeSafe(
             NewPet newPet);
 
         public readonly struct TypeSafeAddPetResult
@@ -74,7 +74,6 @@ namespace PrincipleStudios.Demo
             public static TypeSafeAddPetResult Unsafe(IActionResult actionResult) =>
                 new TypeSafeAddPetResult(actionResult);
         }
-
         /// <summary>
         /// 
         /// </summary>
@@ -88,7 +87,7 @@ namespace PrincipleStudios.Demo
             [FromRoute, Required] long? id) =>
             (await DeletePetTypeSafe(id)).ActionResult;
 
-        public abstract Task<TypeSafeDeletePetResult> DeletePetTypeSafe(
+        protected abstract Task<TypeSafeDeletePetResult> DeletePetTypeSafe(
             long? id);
 
         public readonly struct TypeSafeDeletePetResult
@@ -122,7 +121,6 @@ namespace PrincipleStudios.Demo
             public static TypeSafeDeletePetResult Unsafe(IActionResult actionResult) =>
                 new TypeSafeDeletePetResult(actionResult);
         }
-
         /// <summary>
         /// 
         /// </summary>
@@ -136,7 +134,7 @@ namespace PrincipleStudios.Demo
             [FromRoute, Required] long? id) =>
             (await FindPetByIdTypeSafe(id)).ActionResult;
 
-        public abstract Task<TypeSafeFindPetByIdResult> FindPetByIdTypeSafe(
+        protected abstract Task<TypeSafeFindPetByIdResult> FindPetByIdTypeSafe(
             long? id);
 
         public readonly struct TypeSafeFindPetByIdResult
@@ -170,7 +168,6 @@ namespace PrincipleStudios.Demo
             public static TypeSafeFindPetByIdResult Unsafe(IActionResult actionResult) =>
                 new TypeSafeFindPetByIdResult(actionResult);
         }
-
         /// <summary>
         /// 
         /// </summary>
@@ -186,7 +183,7 @@ namespace PrincipleStudios.Demo
             [FromQuery] int? limit) =>
             (await FindPetsTypeSafe(tags,limit)).ActionResult;
 
-        public abstract Task<TypeSafeFindPetsResult> FindPetsTypeSafe(
+        protected abstract Task<TypeSafeFindPetsResult> FindPetsTypeSafe(
             IReadOnlyList<string> tags,
             int? limit);
 

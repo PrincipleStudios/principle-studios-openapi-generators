@@ -683,7 +683,7 @@ namespace PrincipleStudios.Demo
     /// 
     /// </summary>
     public abstract class PetApiControllerBase : ControllerBase
-    { 
+    {
         /// <summary>
         /// Add a new pet to the store
         /// </summary>
@@ -696,7 +696,7 @@ namespace PrincipleStudios.Demo
             [FromBody] Pet pet) =>
             (await AddPetTypeSafe(pet)).ActionResult;
 
-        public abstract Task<TypeSafeAddPetResult> AddPetTypeSafe(
+        protected abstract Task<TypeSafeAddPetResult> AddPetTypeSafe(
             Pet pet);
 
         public readonly struct TypeSafeAddPetResult
@@ -726,7 +726,6 @@ namespace PrincipleStudios.Demo
             public static TypeSafeAddPetResult Unsafe(IActionResult actionResult) =>
                 new TypeSafeAddPetResult(actionResult);
         }
-
         /// <summary>
         /// Deletes a pet
         /// </summary>
@@ -742,7 +741,7 @@ namespace PrincipleStudios.Demo
             [FromHeader] string apiKey) =>
             (await DeletePetTypeSafe(petId,apiKey)).ActionResult;
 
-        public abstract Task<TypeSafeDeletePetResult> DeletePetTypeSafe(
+        protected abstract Task<TypeSafeDeletePetResult> DeletePetTypeSafe(
             long? petId,
             string apiKey);
 
@@ -777,7 +776,6 @@ namespace PrincipleStudios.Demo
             public static TypeSafeDeletePetResult Unsafe(IActionResult actionResult) =>
                 new TypeSafeDeletePetResult(actionResult);
         }
-
         /// <summary>
         /// Finds Pets by status
         /// </summary>
@@ -792,7 +790,7 @@ namespace PrincipleStudios.Demo
             [FromQuery, Required] IReadOnlyList<string> status) =>
             (await FindPetsByStatusTypeSafe(status)).ActionResult;
 
-        public abstract Task<TypeSafeFindPetsByStatusResult> FindPetsByStatusTypeSafe(
+        protected abstract Task<TypeSafeFindPetsByStatusResult> FindPetsByStatusTypeSafe(
             IReadOnlyList<string> status);
 
         public readonly struct TypeSafeFindPetsByStatusResult
@@ -826,7 +824,6 @@ namespace PrincipleStudios.Demo
             public static TypeSafeFindPetsByStatusResult Unsafe(IActionResult actionResult) =>
                 new TypeSafeFindPetsByStatusResult(actionResult);
         }
-
         /// <summary>
         /// Finds Pets by tags
         /// </summary>
@@ -841,7 +838,7 @@ namespace PrincipleStudios.Demo
             [FromQuery, Required] IReadOnlyList<string> tags) =>
             (await FindPetsByTagsTypeSafe(tags)).ActionResult;
 
-        public abstract Task<TypeSafeFindPetsByTagsResult> FindPetsByTagsTypeSafe(
+        protected abstract Task<TypeSafeFindPetsByTagsResult> FindPetsByTagsTypeSafe(
             IReadOnlyList<string> tags);
 
         public readonly struct TypeSafeFindPetsByTagsResult
@@ -875,7 +872,6 @@ namespace PrincipleStudios.Demo
             public static TypeSafeFindPetsByTagsResult Unsafe(IActionResult actionResult) =>
                 new TypeSafeFindPetsByTagsResult(actionResult);
         }
-
         /// <summary>
         /// Find pet by ID
         /// </summary>
@@ -891,7 +887,7 @@ namespace PrincipleStudios.Demo
             [FromRoute, Required] long? petId) =>
             (await GetPetByIdTypeSafe(petId)).ActionResult;
 
-        public abstract Task<TypeSafeGetPetByIdResult> GetPetByIdTypeSafe(
+        protected abstract Task<TypeSafeGetPetByIdResult> GetPetByIdTypeSafe(
             long? petId);
 
         public readonly struct TypeSafeGetPetByIdResult
@@ -929,7 +925,6 @@ namespace PrincipleStudios.Demo
             public static TypeSafeGetPetByIdResult Unsafe(IActionResult actionResult) =>
                 new TypeSafeGetPetByIdResult(actionResult);
         }
-
         /// <summary>
         /// Update an existing pet
         /// </summary>
@@ -944,7 +939,7 @@ namespace PrincipleStudios.Demo
             [FromBody] Pet pet) =>
             (await UpdatePetTypeSafe(pet)).ActionResult;
 
-        public abstract Task<TypeSafeUpdatePetResult> UpdatePetTypeSafe(
+        protected abstract Task<TypeSafeUpdatePetResult> UpdatePetTypeSafe(
             Pet pet);
 
         public readonly struct TypeSafeUpdatePetResult
@@ -982,7 +977,6 @@ namespace PrincipleStudios.Demo
             public static TypeSafeUpdatePetResult Unsafe(IActionResult actionResult) =>
                 new TypeSafeUpdatePetResult(actionResult);
         }
-
         /// <summary>
         /// Updates a pet in the store with form data
         /// </summary>
@@ -999,7 +993,7 @@ namespace PrincipleStudios.Demo
             [FromForm] string status) =>
             (await UpdatePetWithFormTypeSafe(petId,name,status)).ActionResult;
 
-        public abstract Task<TypeSafeUpdatePetWithFormResult> UpdatePetWithFormTypeSafe(
+        protected abstract Task<TypeSafeUpdatePetWithFormResult> UpdatePetWithFormTypeSafe(
             long? petId,
             string name,
             string status);
@@ -1031,7 +1025,6 @@ namespace PrincipleStudios.Demo
             public static TypeSafeUpdatePetWithFormResult Unsafe(IActionResult actionResult) =>
                 new TypeSafeUpdatePetWithFormResult(actionResult);
         }
-
         /// <summary>
         /// uploads an image
         /// </summary>
@@ -1046,7 +1039,7 @@ namespace PrincipleStudios.Demo
             [FromBody] System.IO.Stream body) =>
             (await UploadFileTypeSafe(petId,body)).ActionResult;
 
-        public abstract Task<TypeSafeUploadFileResult> UploadFileTypeSafe(
+        protected abstract Task<TypeSafeUploadFileResult> UploadFileTypeSafe(
             long? petId,
             System.IO.Stream body);
 
@@ -1107,7 +1100,7 @@ namespace PrincipleStudios.Demo
     /// 
     /// </summary>
     public abstract class StoreApiControllerBase : ControllerBase
-    { 
+    {
         /// <summary>
         /// Delete purchase order by ID
         /// </summary>
@@ -1121,7 +1114,7 @@ namespace PrincipleStudios.Demo
             [FromRoute, Required] long? orderId) =>
             (await DeleteOrderTypeSafe(orderId)).ActionResult;
 
-        public abstract Task<TypeSafeDeleteOrderResult> DeleteOrderTypeSafe(
+        protected abstract Task<TypeSafeDeleteOrderResult> DeleteOrderTypeSafe(
             long? orderId);
 
         public readonly struct TypeSafeDeleteOrderResult
@@ -1155,7 +1148,6 @@ namespace PrincipleStudios.Demo
             public static TypeSafeDeleteOrderResult Unsafe(IActionResult actionResult) =>
                 new TypeSafeDeleteOrderResult(actionResult);
         }
-
         /// <summary>
         /// Returns pet inventories by status
         /// </summary>
@@ -1167,7 +1159,7 @@ namespace PrincipleStudios.Demo
         public async Task<IActionResult> GetInventory() =>
             (await GetInventoryTypeSafe()).ActionResult;
 
-        public abstract Task<TypeSafeGetInventoryResult> GetInventoryTypeSafe();
+        protected abstract Task<TypeSafeGetInventoryResult> GetInventoryTypeSafe();
 
         public readonly struct TypeSafeGetInventoryResult
         {
@@ -1196,7 +1188,6 @@ namespace PrincipleStudios.Demo
             public static TypeSafeGetInventoryResult Unsafe(IActionResult actionResult) =>
                 new TypeSafeGetInventoryResult(actionResult);
         }
-
         /// <summary>
         /// Find purchase order by ID
         /// </summary>
@@ -1211,7 +1202,7 @@ namespace PrincipleStudios.Demo
             [FromRoute, Required, Range(1, 10)] long? orderId) =>
             (await GetOrderByIdTypeSafe(orderId)).ActionResult;
 
-        public abstract Task<TypeSafeGetOrderByIdResult> GetOrderByIdTypeSafe(
+        protected abstract Task<TypeSafeGetOrderByIdResult> GetOrderByIdTypeSafe(
             long? orderId);
 
         public readonly struct TypeSafeGetOrderByIdResult
@@ -1249,7 +1240,6 @@ namespace PrincipleStudios.Demo
             public static TypeSafeGetOrderByIdResult Unsafe(IActionResult actionResult) =>
                 new TypeSafeGetOrderByIdResult(actionResult);
         }
-
         /// <summary>
         /// Place an order for a pet
         /// </summary>
@@ -1262,7 +1252,7 @@ namespace PrincipleStudios.Demo
             [FromBody] Order order) =>
             (await PlaceOrderTypeSafe(order)).ActionResult;
 
-        public abstract Task<TypeSafePlaceOrderResult> PlaceOrderTypeSafe(
+        protected abstract Task<TypeSafePlaceOrderResult> PlaceOrderTypeSafe(
             Order order);
 
         public readonly struct TypeSafePlaceOrderResult
@@ -1604,7 +1594,7 @@ namespace PrincipleStudios.Demo
     /// 
     /// </summary>
     public abstract class UserApiControllerBase : ControllerBase
-    { 
+    {
         /// <summary>
         /// Create user
         /// </summary>
@@ -1617,7 +1607,7 @@ namespace PrincipleStudios.Demo
             [FromBody] User user) =>
             (await CreateUserTypeSafe(user)).ActionResult;
 
-        public abstract Task<TypeSafeCreateUserResult> CreateUserTypeSafe(
+        protected abstract Task<TypeSafeCreateUserResult> CreateUserTypeSafe(
             User user);
 
         public readonly struct TypeSafeCreateUserResult
@@ -1647,7 +1637,6 @@ namespace PrincipleStudios.Demo
             public static TypeSafeCreateUserResult Unsafe(IActionResult actionResult) =>
                 new TypeSafeCreateUserResult(actionResult);
         }
-
         /// <summary>
         /// Creates list of users with given input array
         /// </summary>
@@ -1659,7 +1648,7 @@ namespace PrincipleStudios.Demo
             [FromBody] IReadOnlyList<User> user) =>
             (await CreateUsersWithArrayInputTypeSafe(user)).ActionResult;
 
-        public abstract Task<TypeSafeCreateUsersWithArrayInputResult> CreateUsersWithArrayInputTypeSafe(
+        protected abstract Task<TypeSafeCreateUsersWithArrayInputResult> CreateUsersWithArrayInputTypeSafe(
             IReadOnlyList<User> user);
 
         public readonly struct TypeSafeCreateUsersWithArrayInputResult
@@ -1689,7 +1678,6 @@ namespace PrincipleStudios.Demo
             public static TypeSafeCreateUsersWithArrayInputResult Unsafe(IActionResult actionResult) =>
                 new TypeSafeCreateUsersWithArrayInputResult(actionResult);
         }
-
         /// <summary>
         /// Creates list of users with given input array
         /// </summary>
@@ -1701,7 +1689,7 @@ namespace PrincipleStudios.Demo
             [FromBody] IReadOnlyList<User> user) =>
             (await CreateUsersWithListInputTypeSafe(user)).ActionResult;
 
-        public abstract Task<TypeSafeCreateUsersWithListInputResult> CreateUsersWithListInputTypeSafe(
+        protected abstract Task<TypeSafeCreateUsersWithListInputResult> CreateUsersWithListInputTypeSafe(
             IReadOnlyList<User> user);
 
         public readonly struct TypeSafeCreateUsersWithListInputResult
@@ -1731,7 +1719,6 @@ namespace PrincipleStudios.Demo
             public static TypeSafeCreateUsersWithListInputResult Unsafe(IActionResult actionResult) =>
                 new TypeSafeCreateUsersWithListInputResult(actionResult);
         }
-
         /// <summary>
         /// Delete user
         /// </summary>
@@ -1745,7 +1732,7 @@ namespace PrincipleStudios.Demo
             [FromRoute, Required] string username) =>
             (await DeleteUserTypeSafe(username)).ActionResult;
 
-        public abstract Task<TypeSafeDeleteUserResult> DeleteUserTypeSafe(
+        protected abstract Task<TypeSafeDeleteUserResult> DeleteUserTypeSafe(
             string username);
 
         public readonly struct TypeSafeDeleteUserResult
@@ -1779,7 +1766,6 @@ namespace PrincipleStudios.Demo
             public static TypeSafeDeleteUserResult Unsafe(IActionResult actionResult) =>
                 new TypeSafeDeleteUserResult(actionResult);
         }
-
         /// <summary>
         /// Get user by user name
         /// </summary>
@@ -1793,7 +1779,7 @@ namespace PrincipleStudios.Demo
             [FromRoute, Required] string username) =>
             (await GetUserByNameTypeSafe(username)).ActionResult;
 
-        public abstract Task<TypeSafeGetUserByNameResult> GetUserByNameTypeSafe(
+        protected abstract Task<TypeSafeGetUserByNameResult> GetUserByNameTypeSafe(
             string username);
 
         public readonly struct TypeSafeGetUserByNameResult
@@ -1831,7 +1817,6 @@ namespace PrincipleStudios.Demo
             public static TypeSafeGetUserByNameResult Unsafe(IActionResult actionResult) =>
                 new TypeSafeGetUserByNameResult(actionResult);
         }
-
         /// <summary>
         /// Logs user into the system
         /// </summary>
@@ -1846,7 +1831,7 @@ namespace PrincipleStudios.Demo
             [FromQuery, Required] string password) =>
             (await LoginUserTypeSafe(username,password)).ActionResult;
 
-        public abstract Task<TypeSafeLoginUserResult> LoginUserTypeSafe(
+        protected abstract Task<TypeSafeLoginUserResult> LoginUserTypeSafe(
             string username,
             string password);
 
@@ -1881,7 +1866,6 @@ namespace PrincipleStudios.Demo
             public static TypeSafeLoginUserResult Unsafe(IActionResult actionResult) =>
                 new TypeSafeLoginUserResult(actionResult);
         }
-
         /// <summary>
         /// Logs out current logged in user session
         /// </summary>
@@ -1891,7 +1875,7 @@ namespace PrincipleStudios.Demo
         public async Task<IActionResult> LogoutUser() =>
             (await LogoutUserTypeSafe()).ActionResult;
 
-        public abstract Task<TypeSafeLogoutUserResult> LogoutUserTypeSafe();
+        protected abstract Task<TypeSafeLogoutUserResult> LogoutUserTypeSafe();
 
         public readonly struct TypeSafeLogoutUserResult
         {
@@ -1920,7 +1904,6 @@ namespace PrincipleStudios.Demo
             public static TypeSafeLogoutUserResult Unsafe(IActionResult actionResult) =>
                 new TypeSafeLogoutUserResult(actionResult);
         }
-
         /// <summary>
         /// Updated user
         /// </summary>
@@ -1936,7 +1919,7 @@ namespace PrincipleStudios.Demo
             [FromBody] User user) =>
             (await UpdateUserTypeSafe(username,user)).ActionResult;
 
-        public abstract Task<TypeSafeUpdateUserResult> UpdateUserTypeSafe(
+        protected abstract Task<TypeSafeUpdateUserResult> UpdateUserTypeSafe(
             string username,
             User user);
 

@@ -16,7 +16,8 @@ namespace {{packageName}}
     /// </summary>{{#description}}
     [Description("{{description}}")]{{/description}}
     public abstract class {{classname}}ControllerBase : ControllerBase
-    { {{#operation}}
+    {
+        {{#operation}}
         /// <summary>
         /// {{#summary}}{{summary}}{{/summary}}
         /// </summary>{{#notes}}
@@ -32,7 +33,7 @@ namespace {{packageName}}
             {{>pathParam}}{{>queryParam}}{{>bodyParam}}{{>formParam}}{{>headerParam}}{{#hasMore}},{{/hasMore}}{{/allParams}}) =>
             (await {{operationId}}TypeSafe({{#allParams}}{{paramName}}{{#hasMore}},{{/hasMore}}{{/allParams}})).ActionResult;
 
-        public abstract Task<TypeSafe{{operationId}}Result> {{operationId}}TypeSafe({{#allParams}}
+        protected abstract Task<TypeSafe{{operationId}}Result> {{operationId}}TypeSafe({{#allParams}}
             {{&dataType}} {{paramName}}{{#hasMore}},{{/hasMore}}{{/allParams}});
 
         public readonly struct TypeSafe{{operationId}}Result
