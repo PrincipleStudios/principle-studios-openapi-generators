@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <AvailableItemName Include="OpenApiSchemaMvcServer" DisplayName="Open API Schema MVC Server (OpenApiCodeGen)" />
+    <Watch Include="@(OpenApiSchemaMvcServer)" Condition=" '@(OpenApiSchemaMvcServer)' != '' " />
   </ItemGroup>
 
   <Target Name="CompileServerOpenApiCodeGen" BeforeTargets="PrepareForBuild" DependsOnTargets="_CompileServerOpenApiCodeGen" Condition=" '@(OpenApiSchemaMvcServer)' != '' ">

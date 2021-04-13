@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <AvailableItemName Include="OpenApiSchemaClient" DisplayName="Open API Schema Client (OpenApiCodeGen)" />
+    <Watch Include="@(OpenApiSchemaClient)" Condition=" '@(OpenApiSchemaClient)' != '' " />
   </ItemGroup>
 
   <Target Name="CompileClientOpenApiCodeGen" BeforeTargets="PrepareForBuild" DependsOnTargets="_CompileClientOpenApiCodeGen" Condition=" '@(OpenApiSchemaClient)' != '' ">
