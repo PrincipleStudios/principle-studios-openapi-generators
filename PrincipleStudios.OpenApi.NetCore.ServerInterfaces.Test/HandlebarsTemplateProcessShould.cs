@@ -10,7 +10,7 @@ namespace PrincipleStudios.OpenApi.NetCore.ServerInterfaces.Test
         {
             var handlebars = HandlebarsTemplateProcess.CreateHandlebars();
 
-            Assert.True(handlebars.Configuration.RegisteredTemplates.Count >= 10);
+            Assert.True(handlebars.Configuration.RegisteredTemplates.Count >= 5);
         }
     }
 }
