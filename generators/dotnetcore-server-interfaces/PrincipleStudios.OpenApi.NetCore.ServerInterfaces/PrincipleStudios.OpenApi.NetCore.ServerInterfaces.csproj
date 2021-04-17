@@ -11,7 +11,7 @@
     <None Remove="templates\enumClass.handlebars" />
     <None Remove="templates\formParam.handlebars" />
     <None Remove="templates\headerParam.handlebars" />
-    <None Remove="templates\model.handlebars" />
+    <None Remove="templates\objectmodel.handlebars" />
     <None Remove="templates\objectReturn.handlebars" />
     <None Remove="templates\partial_header.handlebars" />
     <None Remove="templates\pathParam.handlebars" />
@@ -24,7 +24,7 @@
     <EmbeddedResource Include="templates\enumClass.handlebars" />
     <EmbeddedResource Include="templates\formParam.handlebars" />
     <EmbeddedResource Include="templates\headerParam.handlebars" />
-    <EmbeddedResource Include="templates\model.handlebars" />
+    <EmbeddedResource Include="templates\objectmodel.handlebars" />
     <EmbeddedResource Include="templates\objectReturn.handlebars" />
     <EmbeddedResource Include="templates\partial_header.handlebars" />
     <EmbeddedResource Include="templates\pathParam.handlebars" />

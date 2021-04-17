@@ -6,25 +6,26 @@ using System.Threading.Tasks;
 
 namespace PrincipleStudios.OpenApi.NetCore.ServerInterfaces.templates
 {
-    public record ModelTemplate(
-        string? appName,
-        string? appDescription,
-        string? version,
-        string? infoEmail,
+    public record ModelTemplate<TModel>(
+        PartialHeader header,
 
         string packageName, 
-        string className,
 
-        Model model
-    ) : PartialHeader(appName, appDescription, version, infoEmail);
+        TModel model
+    ) where TModel : Model;
 
     public record Model(
+        string description,
+        string className
+    );
+
+    public record ObjectModel(
         bool isEnum,
         string description,
-        string classname,
+        string className,
         string? parent,
         ModelVar[] vars
-    );
+    ) : Model(description, className);
 
     public record ModelVar(
         string baseName,

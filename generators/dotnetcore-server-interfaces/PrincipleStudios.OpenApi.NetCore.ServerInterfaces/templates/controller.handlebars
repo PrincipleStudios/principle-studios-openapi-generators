@@ -1,5 +1,4 @@
-{{>partial_header this}}
-
+{{>partial_header header}}
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -11,14 +10,14 @@ using System.ComponentModel.DataAnnotations;
 #nullable disable warnings
 
 namespace {{packageName}}
-{ {{#operations}}
-    /// <summary>
-    /// {{description}}
-    /// </summary>{{#description}}
-    [Description("{{description}}")]{{/description}}
-    public abstract class {{classname}}ControllerBase : ControllerBase
+{ {{#if operations}}
+    {{#if header.description}}/// <summary>
+    /// {{header.description}}
+    /// </summary>
+    [Description("{{header.description}}")]{{/if}}
+    public abstract class {{className}}ControllerBase : ControllerBase
     {
-        {{#operation}}
+        {{#each operations}}
         /// <summary>
         /// {{#summary}}{{summary}}{{/summary}}
         /// </summary>{{#notes}}
@@ -67,7 +66,7 @@ namespace {{packageName}}
             public static TypeSafe{{operationId}}Result Unsafe(IActionResult actionResult) =>
                 new TypeSafe{{operationId}}Result(actionResult);
         }
-        {{/operation}}
+        {{/each}}
     }
-{{/operations}}
+{{/if}}
 }

@@ -30,18 +30,43 @@ namespace PrincipleStudios.OpenApi.NetCore.ServerInterfaces
             result.RegisterTemplate(templateName: templateName, template: reader.ReadToEnd());
         }
 
-        public static string ProcessModel(templates.ModelTemplate model, IHandlebars? handlebars = null)
+        public static string ProcessController(ControllerTemplate controllerTemplate, IHandlebars? handlebars = null)
         {
             handlebars ??= CreateHandlebars();
-            var template = handlebars.Configuration.RegisteredTemplates["model"];
+            var template = handlebars.Configuration.RegisteredTemplates["controller"];
 
             using var sr = new StringWriter();
-            var dict = ToDictionary<templates.ModelTemplate>(model);
+            var dict = ToDictionary<templates.ControllerTemplate>(controllerTemplate);
             template(sr, dict);
             return sr.ToString();
         }
 
-        private static IDictionary<string, object?> ToDictionary<T>(object model)
+        public static string ProcessModel(
+            PartialHeader header,
+            string packageName,
+            Model model, 
+            IHandlebars? handlebars = null
+        ) {
+            handlebars ??= CreateHandlebars();
+            var (templateName, dict) = model switch
+            {
+                ObjectModel m => ("objectmodel", ToTemplate(m)),
+                _ => throw new NotImplementedException()
+            };
+            var template = handlebars.Configuration.RegisteredTemplates[templateName];
+
+            using var sr = new StringWriter();
+            template(sr, dict);
+            return sr.ToString();
+
+            IDictionary<string, object?> ToTemplate<TModel>(TModel m)
+                where TModel : Model
+            {
+                return ToDictionary<ModelTemplate<TModel>>(new (header: header, packageName: packageName, model: m));
+            }
+        }
+
+        private static IDictionary<string, object?> ToDictionary<T>(T model)
         {
             var serialized = JsonSerializer.Serialize(model, typeof(T));
             var result = JsonSerializer.Deserialize<JsonElement>(serialized)!;

@@ -1,4 +1,4 @@
-{{>partial_header this}}
+{{>partial_header header}}
 using System;
 using System.Linq;
 using System.Text;
@@ -10,13 +10,13 @@ using Newtonsoft.Json;
 #nullable disable warnings
 
 namespace {{this.packageName}}
-{ {{#with model}}{{#if isEnum}}{{>enumClass}}{{else}}
+{ {{#with model}}
     {{#if description}}/// <summary>
     /// {{description}}
     /// </summary>
-    {{/if}}public partial class {{classname}} : {{#if parent}}{{{parent}}}, {{/if}}IEquatable<{{classname}}>
+    {{/if}}public partial class {{className}} : {{#if parent}}{{{parent}}}, {{/if}}IEquatable<{{className}}>
     {
-        public {{classname}}(
+        public {{className}}(
         {{#each vars}}    [JsonProperty(PropertyName="{{baseName}}"){{#required}}, Required{{/required}}]{{!
         data type: }} {{#isEnum}}{{{datatypeWithEnum}}}{{^isContainer}}?{{/isContainer}}{{/isEnum}}{{^isEnum}}{{{dataType}}}{{/isEnum}}{{!
         name: }} {{name}}{{#hasMore}}, {{/hasMore}}
@@ -76,6 +76,5 @@ namespace {{this.packageName}}
             }
         }
     }
-{{/if}}
 {{/with}}
 }

@@ -10,9 +10,9 @@ namespace PrincipleStudios.OpenApi.NetCore.ServerInterfaces
 {
     public class CSharpSchemaTransformer : IOpenApiSchemaTransformer
     {
-        private readonly string baseNamespace;
-        private readonly OpenApiDocument document;
-        private readonly Lazy<IHandlebars> handlebars = new Lazy<IHandlebars>(() => HandlebarsTemplateProcess.CreateHandlebars());
+        protected readonly string baseNamespace;
+        protected readonly OpenApiDocument document;
+        protected readonly Lazy<IHandlebars> handlebars = new Lazy<IHandlebars>(() => HandlebarsTemplateProcess.CreateHandlebars());
 
         public CSharpSchemaTransformer(OpenApiDocument document, string baseNamespace)
         {
@@ -42,7 +42,7 @@ namespace PrincipleStudios.OpenApi.NetCore.ServerInterfaces
             };
         }
         
-        private string ToInlineDataType(OpenApiSchema schema)
+        protected string ToInlineDataType(OpenApiSchema schema)
         {
             // TODO: Allow configuration of this
             // from https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.3.md#data-types
@@ -65,7 +65,7 @@ namespace PrincipleStudios.OpenApi.NetCore.ServerInterfaces
             };
         }
 
-        private string UseReferenceName(OpenApiSchema schema)
+        protected string UseReferenceName(OpenApiSchema schema)
         {
             return CSharpNaming.ToClassName(schema.Reference.Id);
         }
@@ -86,27 +86,28 @@ namespace PrincipleStudios.OpenApi.NetCore.ServerInterfaces
         }
 
 
-        private SourceEntry TransformSchema(string targetNamespace, string className, OpenApiSchema schema)
+        protected SourceEntry TransformSchema(string targetNamespace, string className, OpenApiSchema schema)
         {
-            var entry = HandlebarsTemplateProcess.ProcessModel(new templates.ModelTemplate(
+            var header = new templates.PartialHeader(
                 appName: document.Info.Title,
                 appDescription: document.Info.Description,
                 version: document.Info.Version,
-                infoEmail: document.Info.Contact?.Email,
-
+                infoEmail: document.Info.Contact?.Email
+            );
+            var entry = HandlebarsTemplateProcess.ProcessModel(
+                header: header,
                 packageName: targetNamespace,
-                className: className,
-
                 model: schema switch
                 {
-                    { Enum: { Count: > 0 }, Type: "string" } => ToEnumModel(className, schema),
+                    { Enum: { Count: > 0 }, Type: "string" } => throw new NotSupportedException(),
                     _ => BuildObjectModel(schema) switch
                     {
                         ObjectModel model => ToObjectModel(className, schema, model),
-                        null => throw new NotSupportedException()
-                    },
-                }
-            ), handlebars.Value);
+                        _ => throw new NotSupportedException()
+                    }
+                }, 
+                handlebars.Value
+            );
             return new SourceEntry
             {
                 Key = $"{targetNamespace}.{className}.cs",
@@ -114,17 +115,17 @@ namespace PrincipleStudios.OpenApi.NetCore.ServerInterfaces
             };
         }
 
-        private templates.Model ToObjectModel(string className, OpenApiSchema schema, ObjectModel objectModel)
+        private templates.ObjectModel ToObjectModel(string className, OpenApiSchema schema, ObjectModel objectModel)
         {
             if (objectModel == null)
                 throw new ArgumentNullException(nameof(objectModel));
             var properties = objectModel.properties();
             var required = objectModel.required().ToHashSet();
 
-            return new templates.Model(
+            return new templates.ObjectModel(
                 isEnum: false,
                 description: schema.Description,
-                classname: className,
+                className: className,
                 parent: null, // TODO
                 vars: (from entry in properties
                        select new templates.ModelVar(
