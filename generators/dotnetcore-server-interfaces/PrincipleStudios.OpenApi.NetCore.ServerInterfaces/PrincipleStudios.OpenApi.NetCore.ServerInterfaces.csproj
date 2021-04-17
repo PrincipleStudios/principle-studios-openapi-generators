@@ -1,0 +1,44 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="templates\bodyParam.handlebars" />
+    <None Remove="templates\controller.handlebars" />
+    <None Remove="templates\enumClass.handlebars" />
+    <None Remove="templates\formParam.handlebars" />
+    <None Remove="templates\headerParam.handlebars" />
+    <None Remove="templates\model.handlebars" />
+    <None Remove="templates\objectReturn.handlebars" />
+    <None Remove="templates\partial_header.handlebars" />
+    <None Remove="templates\pathParam.handlebars" />
+    <None Remove="templates\queryParam.handlebars" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="templates\bodyParam.handlebars" />
+    <EmbeddedResource Include="templates\controller.handlebars" />
+    <EmbeddedResource Include="templates\enumClass.handlebars" />
+    <EmbeddedResource Include="templates\formParam.handlebars" />
+    <EmbeddedResource Include="templates\headerParam.handlebars" />
+    <EmbeddedResource Include="templates\model.handlebars" />
+    <EmbeddedResource Include="templates\objectReturn.handlebars" />
+    <EmbeddedResource Include="templates\partial_header.handlebars" />
+    <EmbeddedResource Include="templates\pathParam.handlebars" />
+    <EmbeddedResource Include="templates\queryParam.handlebars" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="3.9.0" />
+    <PackageReference Include="Handlebars.Net" Version="2.0.7" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\lib\PrincipleStudios.OpenApi.Transformations\PrincipleStudios.OpenApi.Transformations.csproj" />
+  </ItemGroup>
+
+</Project>
