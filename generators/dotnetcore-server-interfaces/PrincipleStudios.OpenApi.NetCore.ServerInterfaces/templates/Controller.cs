@@ -22,5 +22,21 @@ namespace PrincipleStudios.OpenApi.NetCore.ServerInterfaces.templates
 
     public record ControllerOperation(string httpMethod, string summary, string description, string name, string path, IEnumerable<OperationParameter> allParams);
 
-    public record OperationParameter(string paramName, string description, string dataType);
+    public record OperationParameter(
+        string rawName,
+        string paramName,
+        string description,
+        string dataType,
+        bool isPathParam,
+        bool isQueryParam,
+        bool isHeaderParam,
+        bool isCookieParam,
+        bool isBodyParam,
+        bool isFormParam,
+        bool required,
+        string pattern,
+        int? minLength,
+        int? maxLength,
+        decimal? minimum,
+        decimal? maximum);
 }

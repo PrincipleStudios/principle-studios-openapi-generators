@@ -33,18 +33,34 @@ namespace PrincipleStudios.OpenApi.NetCore.ServerInterfaces
                 description: pathItem.Description,
 
                 operations: (from operation in pathItem.Operations
+                             let sharedParams = (
+                                     from param in operation.Value.Parameters
+                                     select new templates.OperationParameter(
+                                         rawName: param.Name,
+                                         paramName: CSharpNaming.ToParameterName(param.Name),
+                                         description: param.Description,
+                                         dataType: ToInlineDataType(param.Schema),
+                                         isPathParam: param.In == ParameterLocation.Path,
+                                         isQueryParam: param.In == ParameterLocation.Query,
+                                         isHeaderParam: param.In == ParameterLocation.Header,
+                                         isCookieParam: param.In == ParameterLocation.Cookie,
+                                         isBodyParam: false,
+                                         isFormParam: false,
+                                         required: param.Required,
+                                         pattern: param.Schema.Pattern,
+                                         minLength: param.Schema.MinLength,
+                                         maxLength: param.Schema.MaxLength,
+                                         minimum: param.Schema.Minimum,
+                                         maximum: param.Schema.Maximum
+                                     )
+                                 )
                              select new templates.ControllerOperation(
                                  httpMethod: operation.Key.ToString("g"),
                                  summary: operation.Value.Summary,
                                  description: operation.Value.Description,
                                  name: CSharpNaming.ToMethodName(operation.Value.OperationId),
                                  path: path,
-                                 allParams: from param in operation.Value.Parameters
-                                            select new templates.OperationParameter(
-                                                paramName: CSharpNaming.ToParameterName(param.Name),
-                                                description: param.Description,
-                                                dataType: ToInlineDataType(param.Schema)
-                                            )
+                                 allParams: sharedParams
                              )).ToArray()
             ), handlebars.Value);
             yield return new SourceEntry

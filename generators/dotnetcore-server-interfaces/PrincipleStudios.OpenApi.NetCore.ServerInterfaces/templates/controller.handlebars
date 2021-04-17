@@ -34,9 +34,21 @@ namespace {{packageName}}
         [ProducesResponseType({{code}}{{#dataType}}, Type = typeof({{{dataType}}}){{/dataType}})] // {{message}}{{/responses}}{{!
         }}{{#authMethods}}
         [Authorize("{{name}}")]{{/authMethods}}
-        public async Task<IActionResult> {{name}}({{#each allParams}}
-            {{>pathParam this}}{{>queryParam this}}{{>bodyParam this}}{{>formParam this}}{{>headerParam this}}{{#unless @last}},{{/unless}}{{/each}}) =>
-            (await {{name}}TypeSafe({{#each allParams}}{{paramName}}{{#unless @last}},{{/unless}}{{/each}})).ActionResult;
+        public async Task<IActionResult> {{name}}(
+            {{#each allParams}}{{#unless isCookieParam}}[{{!
+            }}{{#if isPathParam}}FromRoute(Name = "{{rawName}}"){{/if}}{{!
+            }}{{#if isQueryParam}}FromQuery(Name = "{{rawName}}"){{/if}}{{!
+            }}{{#if isBodyParam}}FromBody{{/if}}{{!
+            }}{{#if isFormParam}}FromForm(Name = "{{rawName}}"){{/if}}{{!
+            }}{{#if isHeaderParam}}FromHeader(Name = "{{rawName}}"){{/if}}{{!
+            }}{{#if required}}, Required{{/if}}{{!
+            }}{{#if pattern}}, RegularExpression("{{{pattern}}}"){{/if}}{{!
+            }}{{#if minLength.HasValue}}, MinLength({{minLength}}){{/if}}{{!
+            }}{{#if maxLength.HasValue}}, MaxLength({{maxLength}}){{/if}}{{!
+            }}{{#if minmax}}, Range({{minimum}}, {{maximum}}){{/if}}{{!
+            }}] {{{dataType}}} {{paramName}}{{#unless @last}},
+            {{/unless}}{{/unless}}{{/each}}
+        ) => (await {{name}}TypeSafe({{#each allParams}}{{paramName}}{{#unless @last}},{{/unless}}{{/each}})).ActionResult;
 
         protected abstract Task<TypeSafe{{name}}Result> {{name}}TypeSafe({{#allParams}}
             {{{dataType}}} {{paramName}}{{#unless @last}},{{/unless}}{{/allParams}});
