@@ -15,7 +15,7 @@ namespace PrincipleStudios.OpenApi.NetCore.ServerInterfaces
     {
         [Theory]
         [InlineData("/pets")]
-        //[InlineData("/pets/{id}")]
+        [InlineData("/pets/{id}")]
         public void TransformController(string path)
         {
             var document = GetPetStoreOpenApiDocument();
@@ -24,7 +24,7 @@ namespace PrincipleStudios.OpenApi.NetCore.ServerInterfaces
 
             var result = target.TransformController(path, document.Paths[path]).ToArray();
 
-            Assert.Collection(result, t => Snapshot.Match(t.SourceText));
+            Assert.Collection(result, t => Snapshot.Match(t.SourceText, $"{nameof(CSharpPathControllerTransformerShould)}.{nameof(TransformController)}.{CSharpNaming.ToTitleCaseIdentifier(path)}.{t.Key}"));
         }
 
         private static IOpenApiPathControllerTransformer ConstructTarget(OpenApiDocument document, string baseNamespace = "PrincipleStudios.Test")

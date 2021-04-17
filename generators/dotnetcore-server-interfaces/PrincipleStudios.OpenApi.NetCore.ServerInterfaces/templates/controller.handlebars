@@ -29,11 +29,12 @@ namespace {{packageName}}
         /// </remarks>{{/if}}{{#each allParams}}
         /// <param name="{{paramName}}">{{description}}</param>{{/each}}
         [Http{{httpMethod}}]
-        [Route("{{{basePathWithoutHost}}}{{{path}}}")]{{!
-        }}{{#responses}}
-        [ProducesResponseType({{code}}{{#dataType}}, Type = typeof({{{dataType}}}){{/dataType}})] // {{message}}{{/responses}}{{!
-        }}{{#authMethods}}
-        [Authorize("{{name}}")]{{/authMethods}}
+        [Route("{{{basePathWithoutHost}}}{{{path}}}")]{{#if requestBodyType}}
+        [Consumes("{{{requestBodyType}}}")]{{/if}}{{!
+        }}{{#each responses}}
+        [ProducesResponseType({{code}}{{#if dataType}}, Type = typeof({{{dataType}}}){{/if}})] // {{message}}{{/each}}{{!
+        }}{{#if authMethods}}
+        [Authorize("{{name}}")]{{/if}}
         public async Task<IActionResult> {{name}}(
             {{#each allParams}}{{#unless isCookieParam}}[{{!
             }}{{#if isPathParam}}FromRoute(Name = "{{rawName}}"){{/if}}{{!
@@ -45,7 +46,7 @@ namespace {{packageName}}
             }}{{#if pattern}}, RegularExpression("{{{pattern}}}"){{/if}}{{!
             }}{{#if minLength.HasValue}}, MinLength({{minLength}}){{/if}}{{!
             }}{{#if maxLength.HasValue}}, MaxLength({{maxLength}}){{/if}}{{!
-            }}{{#if minmax}}, Range({{minimum}}, {{maximum}}){{/if}}{{!
+            }}{{#if minimum.HasValue}}{{#if maximum.HasValue}}, Range({{minimum}}, {{maximum}}){{/if}}{{/if}}{{!
             }}] {{{dataType}}} {{paramName}}{{#unless @last}},
             {{/unless}}{{/unless}}{{/each}}
         ) => (await {{name}}TypeSafe({{#each allParams}}{{paramName}}{{#unless @last}},{{/unless}}{{/each}})).ActionResult;

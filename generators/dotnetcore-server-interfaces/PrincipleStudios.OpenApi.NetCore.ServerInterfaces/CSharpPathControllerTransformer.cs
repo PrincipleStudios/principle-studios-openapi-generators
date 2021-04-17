@@ -54,13 +54,42 @@ namespace PrincipleStudios.OpenApi.NetCore.ServerInterfaces
                                          maximum: param.Schema.Maximum
                                      )
                                  )
+                             let singleContentType = operation.Value.RequestBody switch
+                             {
+                                 null => true,
+                                 { Content: { Count: <= 1 } } => true,
+                                 _ => false,
+                             }
+                             from contentType in (operation.Value.RequestBody?.Content ?? Enumerable.Empty<KeyValuePair<string, OpenApiMediaType?>>()).DefaultIfEmpty(new(null, null))
+                             let operationId = operation.Value.OperationId + (singleContentType ? "" : contentType.Key)
                              select new templates.ControllerOperation(
                                  httpMethod: operation.Key.ToString("g"),
                                  summary: operation.Value.Summary,
                                  description: operation.Value.Description,
-                                 name: CSharpNaming.ToMethodName(operation.Value.OperationId),
+                                 name: CSharpNaming.ToMethodName(operationId),
                                  path: path,
-                                 allParams: sharedParams
+                                 requestBodyType: contentType.Key,
+                                 allParams: sharedParams.Concat(contentType.Value == null ? Enumerable.Empty<templates.OperationParameter>() : new[]
+                                 {
+                                     new templates.OperationParameter(
+                                         rawName: null, 
+                                         paramName: CSharpNaming.ToParameterName(operation.Value.OperationId + " body"),
+                                         description: null,
+                                         dataType: ToInlineDataType(contentType.Value.Schema),
+                                         isPathParam: false,
+                                         isQueryParam: false,
+                                         isHeaderParam: false,
+                                         isCookieParam: false,
+                                         isBodyParam: true,
+                                         isFormParam: false,
+                                         required: true,
+                                         pattern: contentType.Value.Schema.Pattern,
+                                         minLength: contentType.Value.Schema.MinLength,
+                                         maxLength: contentType.Value.Schema.MaxLength,
+                                         minimum: contentType.Value.Schema.Minimum,
+                                         maximum: contentType.Value.Schema.Maximum
+                                     )
+                                 })
                              )).ToArray()
             ), handlebars.Value);
             yield return new SourceEntry

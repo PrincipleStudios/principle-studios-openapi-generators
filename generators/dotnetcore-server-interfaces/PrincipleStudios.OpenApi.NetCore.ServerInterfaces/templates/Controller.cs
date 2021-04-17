@@ -20,12 +20,12 @@ namespace PrincipleStudios.OpenApi.NetCore.ServerInterfaces.templates
         ControllerOperation[] operations
     );
 
-    public record ControllerOperation(string httpMethod, string summary, string description, string name, string path, IEnumerable<OperationParameter> allParams);
+    public record ControllerOperation(string httpMethod, string summary, string description, string name, string path, string? requestBodyType, IEnumerable<OperationParameter> allParams);
 
     public record OperationParameter(
-        string rawName,
+        string? rawName,
         string paramName,
-        string description,
+        string? description,
         string dataType,
         bool isPathParam,
         bool isQueryParam,
