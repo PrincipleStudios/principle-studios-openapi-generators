@@ -54,14 +54,14 @@ namespace PrincipleStudios.OpenApi.NetCore.ServerInterfaces
                                          maximum: param.Schema.Maximum
                                      )
                                  )
-                             let singleContentType = operation.Value.RequestBody switch
-                             {
-                                 null => true,
-                                 { Content: { Count: <= 1 } } => true,
-                                 _ => false,
-                             }
-                             from contentType in (operation.Value.RequestBody?.Content ?? Enumerable.Empty<KeyValuePair<string, OpenApiMediaType?>>()).DefaultIfEmpty(new(null, null))
+                             let requestTypes = (operation.Value.RequestBody?.Content ?? Enumerable.Empty<KeyValuePair<string, OpenApiMediaType?>>())
+                                .DefaultIfEmpty(new(null, null))
+                                .Take(1 /* TODO - remove this */)
+                                .ToArray()
+                             let singleContentType = requestTypes.Length == 1
+                             from contentType in requestTypes
                              let operationId = operation.Value.OperationId + (singleContentType ? "" : contentType.Key)
+                             // TODO - support form request parameters
                              select new templates.ControllerOperation(
                                  httpMethod: operation.Key.ToString("g"),
                                  summary: operation.Value.Summary,

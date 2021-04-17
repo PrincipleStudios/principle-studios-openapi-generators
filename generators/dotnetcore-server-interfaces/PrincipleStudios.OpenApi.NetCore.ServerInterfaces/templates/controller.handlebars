@@ -51,7 +51,7 @@ namespace {{packageName}}
             {{/unless}}{{/unless}}{{/each}}
         ) => (await {{name}}TypeSafe({{#each allParams}}{{paramName}}{{#unless @last}},{{/unless}}{{/each}})).ActionResult;
 
-        protected abstract Task<TypeSafe{{name}}Result> {{name}}TypeSafe({{#allParams}}
+        {{! TODO - share TypeSafeResult with multiple request content types }}protected abstract Task<TypeSafe{{name}}Result> {{name}}TypeSafe({{#allParams}}
             {{{dataType}}} {{paramName}}{{#unless @last}},{{/unless}}{{/allParams}});
 
         public readonly struct TypeSafe{{name}}Result

@@ -31,4 +31,8 @@
     <ProjectReference Include="..\generators\dotnetcore-server-interfaces\PrincipleStudios.OpenApi.NetCore.ServerInterfaces\PrincipleStudios.OpenApi.NetCore.ServerInterfaces.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="__snapshots__\__mismatch__\" />
+  </ItemGroup>
+
 </Project>
