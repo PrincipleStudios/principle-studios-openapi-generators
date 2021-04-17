@@ -20,7 +20,7 @@ namespace PrincipleStudios.OpenApi.NetCore.ServerInterfaces.templates
         ControllerOperation[] operations
     );
 
-    public record ControllerOperation(string httpMethod, string summary, string description, string name, string path, string? requestBodyType, IEnumerable<OperationParameter> allParams);
+    public record ControllerOperation(string httpMethod, string summary, string description, string name, string path, OperationRequestBody[] requestBodies, OperationResponses responses);
 
     public record OperationParameter(
         string? rawName,
@@ -39,4 +39,24 @@ namespace PrincipleStudios.OpenApi.NetCore.ServerInterfaces.templates
         int? maxLength,
         decimal? minimum,
         decimal? maximum);
+
+    public record OperationResponses(
+        OperationResponse? defaultResponse,
+        Dictionary<int, OperationResponse> statusResponse);
+
+    public record OperationResponse(
+        string description,
+        OperationResponseContentOption[] content
+        // TODO - headers
+        // TODO - links
+    );
+
+    public record OperationResponseContentOption(
+        string mediaType,
+        string mediaTypeId,
+        string? dataType
+    );
+    
+    public record OperationRequestBody(string name, string requestBodyType, IEnumerable<OperationParameter> allParams);
+
 }

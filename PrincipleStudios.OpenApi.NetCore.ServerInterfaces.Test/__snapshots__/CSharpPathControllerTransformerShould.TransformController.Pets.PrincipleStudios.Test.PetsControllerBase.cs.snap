@@ -34,13 +34,17 @@ Sed tempus felis lobortis leo pulvinar rutrum. Nam mattis velit nisl, eu condime
         /// <param name="limit">maximum number of results to return</param>
         [HttpGet]
         [Route("/pets")]
+        // unexpected error
+        [ProducesDefaultResponseType(typeof(Error))] // application/json
+        // pet response
+        [ProducesResponseType(200, Type = typeof(global::System.Collections.Generic.IEnumerable<Pet>))] // application/json
         public async Task<IActionResult> FindPets(
-            [FromQuery(Name = "tags")] global::System.IEnumerable<string> tags,
+            [FromQuery(Name = "tags")] global::System.Collections.Generic.IEnumerable<string> tags,
             [FromQuery(Name = "limit")] int limit
         ) => (await FindPetsTypeSafe(tags,limit)).ActionResult;
 
         protected abstract Task<TypeSafeFindPetsResult> FindPetsTypeSafe(
-            global::System.IEnumerable<string> tags,
+            global::System.Collections.Generic.IEnumerable<string> tags, 
             int limit);
 
         public readonly struct TypeSafeFindPetsResult
@@ -57,10 +61,26 @@ Sed tempus felis lobortis leo pulvinar rutrum. Nam mattis velit nisl, eu condime
             {
             }
 
-            private TypeSafeFindPetsResult(int statusCode, object? resultObject)
-                : this(new ObjectResult(resultObject) { StatusCode = statusCode })
+            private TypeSafeFindPetsResult(int statusCode, string mediaType, Type declaredType, object? resultObject)
+                : this(new ObjectResult(resultObject)
+                {
+                    ContentTypes = new global::Microsoft.AspNetCore.Mvc.Formatters.MediaTypeCollection { { new global::Microsoft.Net.Http.Headers.MediaTypeHeaderValue(mediaType) } },
+                    DeclaredType = declaredType,
+                    StatusCode = statusCode
+                })
             {
             }
+            
+            /// <summary>
+            /// pet response
+            /// </summary>
+            public static TypeSafeFindPetsResult ApplicationJsonStatusCode200(global::System.Collections.Generic.IEnumerable<Pet> result) =>
+                new TypeSafeFindPetsResult(200, "application/json", typeof(global::System.Collections.Generic.IEnumerable<Pet>), result);
+            
+            
+            public static TypeSafeFindPetsResult ApplicationJsonOtherStatusCode(int statusCode, Error result) =>
+                new TypeSafeFindPetsResult(statusCode, "application/json", typeof(Error), result);
+            
 
             /// <summary>Allows for action results not specified in the API</summary>
             public static TypeSafeFindPetsResult Unsafe(IActionResult actionResult) =>
@@ -74,6 +94,10 @@ Sed tempus felis lobortis leo pulvinar rutrum. Nam mattis velit nisl, eu condime
         [HttpPost]
         [Route("/pets")]
         [Consumes("application/json")]
+        // unexpected error
+        [ProducesDefaultResponseType(typeof(Error))] // application/json
+        // pet response
+        [ProducesResponseType(200, Type = typeof(Pet))] // application/json
         public async Task<IActionResult> AddPet(
             [FromBody, Required] NewPet addPetBody
         ) => (await AddPetTypeSafe(addPetBody)).ActionResult;
@@ -95,10 +119,26 @@ Sed tempus felis lobortis leo pulvinar rutrum. Nam mattis velit nisl, eu condime
             {
             }
 
-            private TypeSafeAddPetResult(int statusCode, object? resultObject)
-                : this(new ObjectResult(resultObject) { StatusCode = statusCode })
+            private TypeSafeAddPetResult(int statusCode, string mediaType, Type declaredType, object? resultObject)
+                : this(new ObjectResult(resultObject)
+                {
+                    ContentTypes = new global::Microsoft.AspNetCore.Mvc.Formatters.MediaTypeCollection { { new global::Microsoft.Net.Http.Headers.MediaTypeHeaderValue(mediaType) } },
+                    DeclaredType = declaredType,
+                    StatusCode = statusCode
+                })
             {
             }
+            
+            /// <summary>
+            /// pet response
+            /// </summary>
+            public static TypeSafeAddPetResult ApplicationJsonStatusCode200(Pet result) =>
+                new TypeSafeAddPetResult(200, "application/json", typeof(Pet), result);
+            
+            
+            public static TypeSafeAddPetResult ApplicationJsonOtherStatusCode(int statusCode, Error result) =>
+                new TypeSafeAddPetResult(statusCode, "application/json", typeof(Error), result);
+            
 
             /// <summary>Allows for action results not specified in the API</summary>
             public static TypeSafeAddPetResult Unsafe(IActionResult actionResult) =>

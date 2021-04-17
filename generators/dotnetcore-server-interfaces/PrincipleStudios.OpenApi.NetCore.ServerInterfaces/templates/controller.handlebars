@@ -20,23 +20,29 @@ namespace {{packageName}}
     [Description("{{description}}")]{{/if}}
     public abstract class {{className}}ControllerBase : ControllerBase
     {
-        {{#each operations}}{{#if summary}}
+        {{#each operations as |operation|}}{{#each requestBodies as |requestBody|}}{{#if operation.summary}}
         /// <summary>
-        /// {{summary}}
-        /// </summary>{{/if}}{{#if description}}
+        /// {{operation.summary}}
+        /// </summary>{{/if}}{{#if operation.description}}
         /// <remarks>
-        /// {{description}}
-        /// </remarks>{{/if}}{{#each allParams}}
+        /// {{operation.description}}
+        /// </remarks>{{/if}}{{#each requestBody.allParams}}
         /// <param name="{{paramName}}">{{description}}</param>{{/each}}
-        [Http{{httpMethod}}]
-        [Route("{{{basePathWithoutHost}}}{{{path}}}")]{{#if requestBodyType}}
-        [Consumes("{{{requestBodyType}}}")]{{/if}}{{!
-        }}{{#each responses}}
-        [ProducesResponseType({{code}}{{#if dataType}}, Type = typeof({{{dataType}}}){{/if}})] // {{message}}{{/each}}{{!
-        }}{{#if authMethods}}
+        [Http{{operation.httpMethod}}]
+        [Route("{{{operation.basePathWithoutHost}}}{{{operation.path}}}")]{{#if requestBody.requestBodyType}}
+        [Consumes("{{{requestBody.requestBodyType}}}")]{{/if}}{{!
+        }}{{#if operation.responses.defaultResponse}}
+        // {{operation.responses.defaultResponse.description}}
+        {{#each operation.responses.defaultResponse.content}}
+        [ProducesDefaultResponseType({{#if dataType}}typeof({{{dataType}}}){{/if}})] // {{mediaType}}{{/each}}{{/if}}{{!
+        }}{{#each operation.responses.statusResponse as |response statusCode|}}
+        // {{response.description}}
+        {{#each response.content}}
+        [ProducesResponseType({{statusCode}}{{#if dataType}}, Type = typeof({{{dataType}}}){{/if}})] // {{mediaType}}{{/each}}{{/each}}{{!
+        }}{{#if operation.authMethods}}
         [Authorize("{{name}}")]{{/if}}
-        public async Task<IActionResult> {{name}}(
-            {{#each allParams}}{{#unless isCookieParam}}[{{!
+        public async Task<IActionResult> {{operation.name}}(
+            {{#each requestBody.allParams}}{{#unless isCookieParam}}[{{!
             }}{{#if isPathParam}}FromRoute(Name = "{{rawName}}"){{/if}}{{!
             }}{{#if isQueryParam}}FromQuery(Name = "{{rawName}}"){{/if}}{{!
             }}{{#if isBodyParam}}FromBody{{/if}}{{!
@@ -49,10 +55,11 @@ namespace {{packageName}}
             }}{{#if minimum.HasValue}}{{#if maximum.HasValue}}, Range({{minimum}}, {{maximum}}){{/if}}{{/if}}{{!
             }}] {{{dataType}}} {{paramName}}{{#unless @last}},
             {{/unless}}{{/unless}}{{/each}}
-        ) => (await {{name}}TypeSafe({{#each allParams}}{{paramName}}{{#unless @last}},{{/unless}}{{/each}})).ActionResult;
+        ) => (await {{requestBody.name}}TypeSafe({{#each requestBody.allParams}}{{paramName}}{{#unless @last}},{{/unless}}{{/each}})).ActionResult;
 
-        {{! TODO - share TypeSafeResult with multiple request content types }}protected abstract Task<TypeSafe{{name}}Result> {{name}}TypeSafe({{#allParams}}
-            {{{dataType}}} {{paramName}}{{#unless @last}},{{/unless}}{{/allParams}});
+        {{! TODO - share TypeSafeResult with multiple request content types }}protected abstract Task<TypeSafe{{operation.name}}Result> {{requestBody.name}}TypeSafe({{#each requestBody.allParams}}
+            {{{dataType}}} {{paramName}}{{#unless @last}}, {{/unless}}{{/each}});
+        {{/each}}
 
         public readonly struct TypeSafe{{name}}Result
         {
@@ -68,17 +75,28 @@ namespace {{packageName}}
             {
             }
 
-            private TypeSafe{{name}}Result(int statusCode, object? resultObject)
-                : this(new ObjectResult(resultObject) { StatusCode = statusCode })
+            private TypeSafe{{name}}Result(int statusCode, string mediaType, Type declaredType, object? resultObject)
+                : this(new ObjectResult(resultObject)
+                {
+                    ContentTypes = new global::Microsoft.AspNetCore.Mvc.Formatters.MediaTypeCollection { { new global::Microsoft.Net.Http.Headers.MediaTypeHeaderValue(mediaType) } },
+                    DeclaredType = declaredType,
+                    StatusCode = statusCode
+                })
             {
             }
-            {{#responses}}
-
-            {{#message}}/// <summary>{{message}}</summary>{{/message}}
-            {{^isDefault}}public static TypeSafe{{name}}Result StatusCode{{code}}({{#dataType}}{{{dataType}}} result{{/dataType}}){{/isDefault}}{{!
-            }}{{#isDefault}}public static TypeSafe{{name}}Result OtherStatusCode(int statusCode{{#dataType}}, {{{dataType}}} result{{/dataType}}){{/isDefault}} =>
-                new TypeSafe{{name}}Result({{#isDefault}}statusCode{{/isDefault}}{{^isDefault}}{{code}}{{/isDefault}}{{#dataType}}, result{{/dataType}});
-            {{/responses}}
+            {{#each responses.statusResponse as |response code|}}{{#each content}}
+            {{#if response.description}}/// <summary>
+            /// {{response.description}}
+            /// </summary>{{/if}}
+            public static TypeSafe{{../../name}}Result {{mediaTypeId}}StatusCode{{code}}({{#if dataType}}{{{dataType}}} result{{/if}}) =>
+                new TypeSafe{{../../name}}Result({{code}}, "{{mediaType}}", {{#if dataType}}typeof({{{dataType}}}), result{{else}}typeof(void){{/if}});
+            {{/each}}{{/each}}{{#if responses.defaultResponse}}{{#each responses.defaultResponse.content}}
+            {{#if responses.defaultResponse.description}}/// <summary>
+            /// {{responses.defaultResponse.description}}
+            /// </summary>{{/if}}
+            public static TypeSafe{{../name}}Result {{mediaTypeId}}OtherStatusCode(int statusCode{{#if dataType}}, {{{dataType}}} result{{/if}}) =>
+                new TypeSafe{{../name}}Result(statusCode, "{{mediaType}}", {{#if dataType}}typeof({{{dataType}}}), result{{else}}typeof(void){{/if}});
+            {{/each}}{{/if}}
 
             /// <summary>Allows for action results not specified in the API</summary>
             public static TypeSafe{{name}}Result Unsafe(IActionResult actionResult) =>

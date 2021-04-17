@@ -61,7 +61,7 @@ namespace PrincipleStudios.OpenApi.NetCore.ServerInterfaces
                 { Type: "string", Format: "date-time" } => "global::System.DateTimeOffset",
                 { Type: "string", Format: "uuid" or "guid" } => "global::System.Guid",
                 { Type: "string" } => "string",
-                { Type: "array", Items: OpenApiSchema items } => $"global::System.IEnumerable<{ToInlineDataType(items)}>",
+                { Type: "array", Items: OpenApiSchema items } => $"global::System.Collections.Generic.IEnumerable<{ToInlineDataType(items)}>",
                 _ => UseReferenceName(schema),
             };
         }

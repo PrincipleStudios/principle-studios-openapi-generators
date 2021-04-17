@@ -29,6 +29,10 @@ namespace PrincipleStudios.Test
         /// <param name="id">ID of pet to fetch</param>
         [HttpGet]
         [Route("/pets/{id}")]
+        // unexpected error
+        [ProducesDefaultResponseType(typeof(Error))] // application/json
+        // pet response
+        [ProducesResponseType(200, Type = typeof(Pet))] // application/json
         public async Task<IActionResult> FindPetById(
             [FromRoute(Name = "id"), Required] long id
         ) => (await FindPetByIdTypeSafe(id)).ActionResult;
@@ -50,10 +54,26 @@ namespace PrincipleStudios.Test
             {
             }
 
-            private TypeSafeFindPetByIdResult(int statusCode, object? resultObject)
-                : this(new ObjectResult(resultObject) { StatusCode = statusCode })
+            private TypeSafeFindPetByIdResult(int statusCode, string mediaType, Type declaredType, object? resultObject)
+                : this(new ObjectResult(resultObject)
+                {
+                    ContentTypes = new global::Microsoft.AspNetCore.Mvc.Formatters.MediaTypeCollection { { new global::Microsoft.Net.Http.Headers.MediaTypeHeaderValue(mediaType) } },
+                    DeclaredType = declaredType,
+                    StatusCode = statusCode
+                })
             {
             }
+            
+            /// <summary>
+            /// pet response
+            /// </summary>
+            public static TypeSafeFindPetByIdResult ApplicationJsonStatusCode200(Pet result) =>
+                new TypeSafeFindPetByIdResult(200, "application/json", typeof(Pet), result);
+            
+            
+            public static TypeSafeFindPetByIdResult ApplicationJsonOtherStatusCode(int statusCode, Error result) =>
+                new TypeSafeFindPetByIdResult(statusCode, "application/json", typeof(Error), result);
+            
 
             /// <summary>Allows for action results not specified in the API</summary>
             public static TypeSafeFindPetByIdResult Unsafe(IActionResult actionResult) =>
@@ -66,6 +86,10 @@ namespace PrincipleStudios.Test
         /// <param name="id">ID of pet to delete</param>
         [HttpDelete]
         [Route("/pets/{id}")]
+        // unexpected error
+        [ProducesDefaultResponseType(typeof(Error))] // application/json
+        // pet deleted
+
         public async Task<IActionResult> DeletePet(
             [FromRoute(Name = "id"), Required] long id
         ) => (await DeletePetTypeSafe(id)).ActionResult;
@@ -87,10 +111,20 @@ namespace PrincipleStudios.Test
             {
             }
 
-            private TypeSafeDeletePetResult(int statusCode, object? resultObject)
-                : this(new ObjectResult(resultObject) { StatusCode = statusCode })
+            private TypeSafeDeletePetResult(int statusCode, string mediaType, Type declaredType, object? resultObject)
+                : this(new ObjectResult(resultObject)
+                {
+                    ContentTypes = new global::Microsoft.AspNetCore.Mvc.Formatters.MediaTypeCollection { { new global::Microsoft.Net.Http.Headers.MediaTypeHeaderValue(mediaType) } },
+                    DeclaredType = declaredType,
+                    StatusCode = statusCode
+                })
             {
             }
+            
+            
+            public static TypeSafeDeletePetResult ApplicationJsonOtherStatusCode(int statusCode, Error result) =>
+                new TypeSafeDeletePetResult(statusCode, "application/json", typeof(Error), result);
+            
 
             /// <summary>Allows for action results not specified in the API</summary>
             public static TypeSafeDeletePetResult Unsafe(IActionResult actionResult) =>

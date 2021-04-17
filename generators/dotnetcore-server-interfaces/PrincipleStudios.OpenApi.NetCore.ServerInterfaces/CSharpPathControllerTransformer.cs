@@ -1,4 +1,5 @@
 ﻿using Microsoft.OpenApi.Models;
+using PrincipleStudios.OpenApi.NetCore.ServerInterfaces.templates;
 using PrincipleStudios.OpenApi.Transformations;
 using System;
 using System.Collections.Generic;
@@ -18,7 +19,7 @@ namespace PrincipleStudios.OpenApi.NetCore.ServerInterfaces
         {
             var className = CSharpNaming.ToClassName(path);
 
-            var entry = HandlebarsTemplateProcess.ProcessController(new templates.ControllerTemplate(
+            var template = new templates.ControllerTemplate(
                 header: new templates.PartialHeader(
                     appName: document.Info.Title,
                     appDescription: document.Info.Description,
@@ -56,47 +57,72 @@ namespace PrincipleStudios.OpenApi.NetCore.ServerInterfaces
                                  )
                              let requestTypes = (operation.Value.RequestBody?.Content ?? Enumerable.Empty<KeyValuePair<string, OpenApiMediaType?>>())
                                 .DefaultIfEmpty(new(null, null))
-                                .Take(1 /* TODO - remove this */)
                                 .ToArray()
                              let singleContentType = requestTypes.Length == 1
-                             from contentType in requestTypes
-                             let operationId = operation.Value.OperationId + (singleContentType ? "" : contentType.Key)
                              // TODO - support form request parameters
                              select new templates.ControllerOperation(
                                  httpMethod: operation.Key.ToString("g"),
                                  summary: operation.Value.Summary,
                                  description: operation.Value.Description,
-                                 name: CSharpNaming.ToMethodName(operationId),
+                                 name: CSharpNaming.ToTitleCaseIdentifier(operation.Value.OperationId),
                                  path: path,
-                                 requestBodyType: contentType.Key,
-                                 allParams: sharedParams.Concat(contentType.Value == null ? Enumerable.Empty<templates.OperationParameter>() : new[]
-                                 {
-                                     new templates.OperationParameter(
-                                         rawName: null, 
-                                         paramName: CSharpNaming.ToParameterName(operation.Value.OperationId + " body"),
-                                         description: null,
-                                         dataType: ToInlineDataType(contentType.Value.Schema),
-                                         isPathParam: false,
-                                         isQueryParam: false,
-                                         isHeaderParam: false,
-                                         isCookieParam: false,
-                                         isBodyParam: true,
-                                         isFormParam: false,
-                                         required: true,
-                                         pattern: contentType.Value.Schema.Pattern,
-                                         minLength: contentType.Value.Schema.MinLength,
-                                         maxLength: contentType.Value.Schema.MaxLength,
-                                         minimum: contentType.Value.Schema.Minimum,
-                                         maximum: contentType.Value.Schema.Maximum
-                                     )
-                                 })
+                                 requestBodies: (from contentType in requestTypes
+                                                 select new templates.OperationRequestBody(
+                                                     name: CSharpNaming.ToTitleCaseIdentifier(operation.Value.OperationId + (singleContentType ? "" : contentType.Key)),
+                                                     requestBodyType: contentType.Key,
+                                                     allParams: sharedParams.Concat(contentType.Value == null ? Enumerable.Empty<templates.OperationParameter>() : new[]
+                                                     {
+                                                         new templates.OperationParameter(
+                                                             rawName: null,
+                                                             paramName: CSharpNaming.ToParameterName(operation.Value.OperationId + " body"),
+                                                             description: null,
+                                                             dataType: ToInlineDataType(contentType.Value.Schema),
+                                                             isPathParam: false,
+                                                             isQueryParam: false,
+                                                             isHeaderParam: false,
+                                                             isCookieParam: false,
+                                                             isBodyParam: true,
+                                                             isFormParam: false,
+                                                             required: true,
+                                                             pattern: contentType.Value.Schema.Pattern,
+                                                             minLength: contentType.Value.Schema.MinLength,
+                                                             maxLength: contentType.Value.Schema.MaxLength,
+                                                             minimum: contentType.Value.Schema.Minimum,
+                                                             maximum: contentType.Value.Schema.Maximum
+                                                         )
+                                                     })
+                                                 )).ToArray(),
+                                 responses: new templates.OperationResponses(
+                                     defaultResponse: operation.Value.Responses.ContainsKey("default") ? ToOperationResponse(operation.Value.Responses["default"]) : null,
+                                     statusResponse: (from response in operation.Value.Responses
+                                                      let parsed = TryParse(response.Key)
+                                                      where parsed.parsed
+                                                      select (Key: parsed.value, Value: response.Value)).ToDictionary(p => p.Key, p => ToOperationResponse(p.Value))
+                                )
                              )).ToArray()
-            ), handlebars.Value);
+            );
+
+            var entry = HandlebarsTemplateProcess.ProcessController(template, handlebars.Value);
             yield return new SourceEntry
             {
                 Key = $"{baseNamespace}.{className}ControllerBase.cs",
                 SourceText = entry,
             };
+
+            (bool parsed, int value) TryParse(string value)
+            {
+                var parsed = int.TryParse(value, out var temp);
+                return (parsed, temp);
+            }
+        }
+
+        private OperationResponse ToOperationResponse(OpenApiResponse openApiResponse)
+        {
+            return new OperationResponse(
+                description: openApiResponse.Description,
+                content: (from entry in openApiResponse.Content
+                          select new OperationResponseContentOption(mediaType: entry.Key, mediaTypeId: CSharpNaming.ToTitleCaseIdentifier(entry.Key), dataType: entry.Value.Schema != null ? ToInlineDataType(entry.Value.Schema) : null)).ToArray()
+            );
         }
     }
 }
