@@ -19,49 +19,50 @@ using Newtonsoft.Json;
 
 namespace PrincipleStudios.Test
 { 
-    public partial class NewPet : IEquatable<NewPet>
+    public partial class Error : IEquatable<Error>
     {
-        public NewPet(
-            [JsonProperty(PropertyName="name"), Required] string Name
-            [JsonProperty(PropertyName="tag")] string Tag
+        public Error(
+            [JsonProperty(PropertyName="code"), Required] int Code
+            [JsonProperty(PropertyName="message"), Required] string Message
         ) { 
-            this.Name = Name;
-            this.Tag = Tag;
+            this.Code = Code;
+            this.Message = Message;
         }
 
         /// <summary>
-        /// Gets Name
+        /// Gets Code
         /// </summary>
         [Required]
-        [JsonProperty(PropertyName="name")]
-        public string Name { get; }
+        [JsonProperty(PropertyName="code")]
+        public int Code { get; }
 
         /// <summary>
-        /// Gets Tag
+        /// Gets Message
         /// </summary>
-        [JsonProperty(PropertyName="tag")]
-        public string Tag { get; }
+        [Required]
+        [JsonProperty(PropertyName="message")]
+        public string Message { get; }
 
         public override bool Equals(object obj)
         {
             if (obj is null) return false;
             if (ReferenceEquals(this, obj)) return true;
-            return obj.GetType() == GetType() && Equals((NewPet)obj);
+            return obj.GetType() == GetType() && Equals((Error)obj);
         }
 
-        public bool Equals(NewPet other)
+        public bool Equals(Error other)
         {
             if (other is null) return false;
             if (ReferenceEquals(this, other)) return true;
 
             return (
-                Name == other.Name ||
-                Name != null &&
-                Name.Equals(other.Name)
+                Code == other.Code ||
+                Code != null &&
+                Code.Equals(other.Code)
             ) && (
-                Tag == other.Tag ||
-                Tag != null &&
-                Tag.Equals(other.Tag)
+                Message == other.Message ||
+                Message != null &&
+                Message.Equals(other.Message)
             );
         }
 
@@ -74,10 +75,10 @@ namespace PrincipleStudios.Test
             unchecked // Overflow is fine, just wrap
             {
                 var hashCode = 41;
-                if (Name != null)
-                    hashCode = hashCode * 59 + Name.GetHashCode();
-                if (Tag != null)
-                    hashCode = hashCode * 59 + Tag.GetHashCode();
+                if (Code != null)
+                    hashCode = hashCode * 59 + Code.GetHashCode();
+                if (Message != null)
+                    hashCode = hashCode * 59 + Message.GetHashCode();
                 return hashCode;
             }
         }

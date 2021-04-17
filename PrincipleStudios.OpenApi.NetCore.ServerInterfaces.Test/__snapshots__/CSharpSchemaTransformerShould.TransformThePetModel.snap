@@ -19,14 +19,16 @@ using Newtonsoft.Json;
 
 namespace PrincipleStudios.Test
 { 
-    public partial class NewPet : IEquatable<NewPet>
+    public partial class Pet : IEquatable<Pet>
     {
-        public NewPet(
+        public Pet(
             [JsonProperty(PropertyName="name"), Required] string Name
             [JsonProperty(PropertyName="tag")] string Tag
+            [JsonProperty(PropertyName="id"), Required] long Id
         ) { 
             this.Name = Name;
             this.Tag = Tag;
+            this.Id = Id;
         }
 
         /// <summary>
@@ -42,14 +44,21 @@ namespace PrincipleStudios.Test
         [JsonProperty(PropertyName="tag")]
         public string Tag { get; }
 
+        /// <summary>
+        /// Gets Id
+        /// </summary>
+        [Required]
+        [JsonProperty(PropertyName="id")]
+        public long Id { get; }
+
         public override bool Equals(object obj)
         {
             if (obj is null) return false;
             if (ReferenceEquals(this, obj)) return true;
-            return obj.GetType() == GetType() && Equals((NewPet)obj);
+            return obj.GetType() == GetType() && Equals((Pet)obj);
         }
 
-        public bool Equals(NewPet other)
+        public bool Equals(Pet other)
         {
             if (other is null) return false;
             if (ReferenceEquals(this, other)) return true;
@@ -62,6 +71,10 @@ namespace PrincipleStudios.Test
                 Tag == other.Tag ||
                 Tag != null &&
                 Tag.Equals(other.Tag)
+            ) && (
+                Id == other.Id ||
+                Id != null &&
+                Id.Equals(other.Id)
             );
         }
 
@@ -78,6 +91,8 @@ namespace PrincipleStudios.Test
                     hashCode = hashCode * 59 + Name.GetHashCode();
                 if (Tag != null)
                     hashCode = hashCode * 59 + Tag.GetHashCode();
+                if (Id != null)
+                    hashCode = hashCode * 59 + Id.GetHashCode();
                 return hashCode;
             }
         }

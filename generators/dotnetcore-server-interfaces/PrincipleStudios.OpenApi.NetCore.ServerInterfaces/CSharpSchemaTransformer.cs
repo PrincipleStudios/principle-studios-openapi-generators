@@ -23,6 +23,7 @@ namespace PrincipleStudios.OpenApi.NetCore.ServerInterfaces
         public bool UseInline(OpenApiSchema schema, OpenApiComponents components)
         {
             // C# can't inline things that must be referenced, and vice versa. 
+            // (Except with tuples, but those don't serialize/deserialize reliably yet.)
             return !UseReference(schema, components);
         }
 
@@ -30,8 +31,7 @@ namespace PrincipleStudios.OpenApi.NetCore.ServerInterfaces
         {
             return schema switch
             {
-                { Reference: { IsLocal: false } } => throw new ArgumentException("Cannot handle external reference"),
-                { Reference: { Id: string refName, IsLocal: true } } when components.Schemas.ContainsKey(refName) && components.Schemas[refName] != schema => UseReference(components.Schemas[refName], components),
+                { UnresolvedReference: true } => throw new ArgumentException("Unable to resolve reference"),
                 { AllOf: { Count: > 1 } } => true,
                 { AnyOf: { Count: > 1 } } => true,
                 { Enum: { Count: > 1 } } => true,
@@ -40,6 +40,34 @@ namespace PrincipleStudios.OpenApi.NetCore.ServerInterfaces
                 { Type: "array", Items: OpenApiSchema inner } => UseReference(inner, components),
                 _ => throw new NotSupportedException(),
             };
+        }
+        
+        private string ToInlineDataType(OpenApiSchema schema)
+        {
+            // TODO: Allow configuration of this
+            // from https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.3.md#data-types
+            return schema switch
+            {
+                { Enum: { Count: > 1 } } => UseReferenceName(schema),
+                { Type: "integer", Format: "int32" } => "int",
+                { Type: "integer", Format: "int64" } => "long",
+                { Type: "integer" } => "int",
+                { Type: "number", Format: "float" } => "float",
+                { Type: "number", Format: "double" } => "double",
+                { Type: "number" } => "double",
+                { Type: "string", Format: "byte" } => "string", // TODO - is there a way to automate base64 decoding without custom code?
+                { Type: "string", Format: "binary" } => "string", // TODO - is there a way to automate octet decoding without custom code?
+                { Type: "string", Format: "date" } => "string", // TODO - make DateOnly available if target is .NET 6
+                { Type: "string", Format: "date-time" } => "global::System.DateTimeOffset",
+                { Type: "string", Format: "uuid" or "guid" } => "global::System.Guid",
+                { Type: "string" } => "string",
+                _ => UseReferenceName(schema),
+            };
+        }
+
+        private string UseReferenceName(OpenApiSchema schema)
+        {
+            return CSharpNaming.ToClassName(schema.Reference.Id);
         }
 
         public SourceEntry TransformComponentSchema(string key, OpenApiSchema schema)
@@ -72,8 +100,11 @@ namespace PrincipleStudios.OpenApi.NetCore.ServerInterfaces
                 model: schema switch
                 {
                     { Enum: { Count: > 0 }, Type: "string" } => ToEnumModel(className, schema),
-                    { Type: "object" } => ToObjectModel(className, schema),
-                    _ => throw new NotSupportedException()
+                    _ => BuildObjectModel(schema) switch
+                    {
+                        ObjectModel model => ToObjectModel(className, schema, model),
+                        null => throw new NotSupportedException()
+                    },
                 }
             ), handlebars.Value);
             return new SourceEntry
@@ -83,21 +114,44 @@ namespace PrincipleStudios.OpenApi.NetCore.ServerInterfaces
             };
         }
 
-        private templates.Model ToObjectModel(string className, OpenApiSchema schema)
+        private templates.Model ToObjectModel(string className, OpenApiSchema schema, ObjectModel objectModel)
         {
+            if (objectModel == null)
+                throw new ArgumentNullException(nameof(objectModel));
+            var properties = objectModel.properties();
+            var required = objectModel.required().ToHashSet();
+
             return new templates.Model(
                 isEnum: false,
                 description: schema.Description,
                 classname: className,
                 parent: null, // TODO
-                vars: (from entry in schema.Properties
+                vars: (from entry in properties
                        select new templates.ModelVar(
-                           baseName: entry.Key, 
+                           baseName: entry.Key,
+                           dataType: ToInlineDataType(entry.Value),
                            name: CSharpNaming.ToPropertyName(entry.Key), 
-                           required: schema.Required.Contains(entry.Key)
+                           required: required.Contains(entry.Key)
                         )).ToArray()
             );
         }
+
+        record ObjectModel(Func<IDictionary<string, OpenApiSchema>> properties, Func<IEnumerable<string>> required);
+
+        private ObjectModel? BuildObjectModel(OpenApiSchema schema) =>
+            schema switch
+            {
+                { AllOf: { Count: > 0 } } => schema.AllOf.Select(BuildObjectModel).ToArray() switch {
+                    ObjectModel[] models when models.All(v => v != null) => 
+                        new ObjectModel(
+                            properties: () => models.SelectMany(m => m!.properties()).ToDictionary(p => p.Key, p => p.Value),
+                            required: () => models.SelectMany(m => m!.required()).Distinct()
+                        ),
+                    _ => null
+                },
+                { Type: "object" } => new ObjectModel(properties: () => schema.Properties, required: () => schema.Required),
+                _ => null,
+            };
 
         private templates.Model ToEnumModel(string className, OpenApiSchema schema)
         {

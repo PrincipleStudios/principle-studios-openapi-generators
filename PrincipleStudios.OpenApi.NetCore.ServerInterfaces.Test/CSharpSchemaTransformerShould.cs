@@ -35,17 +35,17 @@ namespace PrincipleStudios.OpenApi.NetCore.ServerInterfaces
             Assert.False(target.UseInline(document.Components.Schemas["Error"], document.Components));
         }
 
-        //[Fact]
-        //public void TransformThePetModel()
-        //{
-        //    var document = GetPetStoreOpenApiDocument();
+        [Fact]
+        public void TransformThePetModel()
+        {
+            var document = GetPetStoreOpenApiDocument();
 
-        //    var target = ConstructTarget(document);
+            var target = ConstructTarget(document);
 
-        //    var result = target.TransformComponentSchema("Pet", document.Components.Schemas["Pet"]);
-         
-        //    Snapshot.Match(result.SourceText);
-        //}
+            var result = target.TransformComponentSchema("Pet", document.Components.Schemas["Pet"]);
+
+            Snapshot.Match(result.SourceText);
+        }
 
         [Fact]
         public void TransformTheNewPetModel()
@@ -55,6 +55,18 @@ namespace PrincipleStudios.OpenApi.NetCore.ServerInterfaces
             var target = ConstructTarget(document);
 
             var result = target.TransformComponentSchema("NewPet", document.Components.Schemas["NewPet"]);
+
+            Snapshot.Match(result.SourceText);
+        }
+
+        [Fact]
+        public void TransformTheErrorModel()
+        {
+            var document = GetPetStoreOpenApiDocument();
+
+            var target = ConstructTarget(document);
+
+            var result = target.TransformComponentSchema("Error", document.Components.Schemas["Error"]);
 
             Snapshot.Match(result.SourceText);
         }

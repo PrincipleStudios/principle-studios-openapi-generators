@@ -28,6 +28,7 @@ namespace PrincipleStudios.OpenApi.NetCore.ServerInterfaces.templates
 
     public record ModelVar(
         string baseName,
+        string dataType,
         string name,
         bool required
     );

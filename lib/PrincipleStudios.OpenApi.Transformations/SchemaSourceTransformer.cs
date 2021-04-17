@@ -17,6 +17,7 @@ namespace PrincipleStudios.OpenApi.Transformations
 
         public IEnumerable<SourceEntry> ToSourceEntries(OpenApiDocument document)
         {
+            // TODO - deep complex objects
             foreach (var operation in document.Paths.SelectMany(path => path.Value.Operations.Values))
             {
                 foreach (var parameter in operation.Parameters)
