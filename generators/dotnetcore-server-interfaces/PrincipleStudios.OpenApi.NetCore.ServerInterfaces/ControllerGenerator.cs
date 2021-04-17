@@ -24,10 +24,10 @@ namespace PrincipleStudios.OpenApi.NetCore.ServerInterfaces
 
         protected override IEnumerable<SourceEntry> SourceFilesFromAdditionalFile(Options options)
         {
-            var schemaTransformer = new CSharpTagControllerTransformer(options.Document, options.DocumentNamespace);
+            var schemaTransformer = new CSharpPathControllerTransformer(options.Document, options.DocumentNamespace);
             var transformer = new CombineOpenApiSourceTransformer(
                 new SchemaSourceTransformer(schemaTransformer),
-                new TagControllerSourceTransformer(schemaTransformer)
+                new PathControllerSourceTransformer(schemaTransformer)
             );
 
             return transformer.ToSourceEntries(options.Document);

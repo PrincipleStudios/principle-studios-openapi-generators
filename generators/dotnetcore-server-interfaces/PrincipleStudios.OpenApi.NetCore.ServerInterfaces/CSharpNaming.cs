@@ -13,8 +13,12 @@ namespace PrincipleStudios.OpenApi.NetCore.ServerInterfaces
         public static string ToPropertyName(string key) => ToTitleCaseIdentifier(key);
 
         public static string ToTitleCaseIdentifier(string key) => ToIdentifier(ToTitleCase(key));
+        public static string ToCamelCaseIdentifier(string key) => ToIdentifier(ToCamelCase(key));
 
-        // TODO - check for reserved words? Probably not necessary when doing title case
+        internal static string ToMethodName(string key) => ToTitleCaseIdentifier(key);
+        internal static string ToParameterName(string key) => ToCamelCaseIdentifier(key);
+
+        // TODO - check for reserved words... Probably not necessary when doing title case
         private static string ToIdentifier(string key) =>
             Regex.IsMatch(key, "^[a-zA-Z]") ? key : ("_" + key);
 
@@ -26,5 +30,10 @@ namespace PrincipleStudios.OpenApi.NetCore.ServerInterfaces
                     : char.ToUpper(s[0]) + s[1..])
             );
 
+        private static string ToCamelCase(string key) =>
+            ToTitleCase(key) switch
+            {
+                string s => char.ToLower(s[0]) + s[1..]
+            };
     }
 }

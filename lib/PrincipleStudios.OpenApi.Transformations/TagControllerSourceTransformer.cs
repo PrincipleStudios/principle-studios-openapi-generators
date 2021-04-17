@@ -19,14 +19,14 @@ namespace PrincipleStudios.OpenApi.Transformations
 
         public IEnumerable<SourceEntry> ToSourceEntries(OpenApiDocument document)
         {
-            var controllers = from path in document.Paths.Values
-                              from operation in path.Operations
+            var controllers = from path in document.Paths
+                              from operation in path.Value.Operations
                               let firstTag = operation.Value.Tags.Select(t => t.Name).FirstOrDefault() ?? defaultTagName
-                              group (path, operation) by firstTag;
+                              group new OpenApiFullOperation(path, operation) by firstTag;
 
             foreach (var controller in controllers)
             {
-                foreach (var entry in tagControllerTransformer.TransformController(controller.Key, controller, document))
+                foreach (var entry in tagControllerTransformer.TransformController(controller.Key, controller))
                 {
                     yield return entry;
                 }

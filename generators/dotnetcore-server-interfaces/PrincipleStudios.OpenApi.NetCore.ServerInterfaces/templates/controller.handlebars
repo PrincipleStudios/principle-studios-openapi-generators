@@ -11,60 +11,65 @@ using System.ComponentModel.DataAnnotations;
 
 namespace {{packageName}}
 { {{#if operations}}
-    {{#if header.description}}/// <summary>
-    /// {{header.description}}
-    /// </summary>
-    [Description("{{header.description}}")]{{/if}}
+    /// <summary>{{#if summary}}
+    /// {{summary}}
+    /// </summary>{{/if}}{{#if description}}
+    /// <remarks>
+    /// {{description}}
+    /// </remarks>{{/if}}{{#if description}}
+    [Description("{{description}}")]{{/if}}
     public abstract class {{className}}ControllerBase : ControllerBase
     {
-        {{#each operations}}
+        {{#each operations}}{{#if summary}}
         /// <summary>
-        /// {{#summary}}{{summary}}{{/summary}}
-        /// </summary>{{#notes}}
-        /// <remarks>{{notes}}</remarks>{{/notes}}{{#allParams}}
-        /// <param name="{{paramName}}">{{description}}</param>{{/allParams}}
-        [{{httpMethod}}]
+        /// {{summary}}
+        /// </summary>{{/if}}{{#if description}}
+        /// <remarks>
+        /// {{description}}
+        /// </remarks>{{/if}}{{#each allParams}}
+        /// <param name="{{paramName}}">{{description}}</param>{{/each}}
+        [Http{{httpMethod}}]
         [Route("{{{basePathWithoutHost}}}{{{path}}}")]{{!
         }}{{#responses}}
         [ProducesResponseType({{code}}{{#dataType}}, Type = typeof({{{dataType}}}){{/dataType}})] // {{message}}{{/responses}}{{!
         }}{{#authMethods}}
         [Authorize("{{name}}")]{{/authMethods}}
-        public async Task<IActionResult> {{operationId}}({{#allParams}}
-            {{>pathParam}}{{>queryParam}}{{>bodyParam}}{{>formParam}}{{>headerParam}}{{#hasMore}},{{/hasMore}}{{/allParams}}) =>
-            (await {{operationId}}TypeSafe({{#allParams}}{{paramName}}{{#hasMore}},{{/hasMore}}{{/allParams}})).ActionResult;
+        public async Task<IActionResult> {{name}}({{#each allParams}}
+            {{>pathParam this}}{{>queryParam this}}{{>bodyParam this}}{{>formParam this}}{{>headerParam this}}{{#unless @last}},{{/unless}}{{/each}}) =>
+            (await {{name}}TypeSafe({{#each allParams}}{{paramName}}{{#unless @last}},{{/unless}}{{/each}})).ActionResult;
 
-        protected abstract Task<TypeSafe{{operationId}}Result> {{operationId}}TypeSafe({{#allParams}}
-            {{{dataType}}} {{paramName}}{{#hasMore}},{{/hasMore}}{{/allParams}});
+        protected abstract Task<TypeSafe{{name}}Result> {{name}}TypeSafe({{#allParams}}
+            {{{dataType}}} {{paramName}}{{#unless @last}},{{/unless}}{{/allParams}});
 
-        public readonly struct TypeSafe{{operationId}}Result
+        public readonly struct TypeSafe{{name}}Result
         {
             public readonly IActionResult ActionResult;
 
-            private TypeSafe{{operationId}}Result(IActionResult ActionResult)
+            private TypeSafe{{name}}Result(IActionResult ActionResult)
             {
                 this.ActionResult = ActionResult;
             }
 
-            private TypeSafe{{operationId}}Result(int statusCode)
+            private TypeSafe{{name}}Result(int statusCode)
                 : this(new StatusCodeResult(statusCode))
             {
             }
 
-            private TypeSafe{{operationId}}Result(int statusCode, object? resultObject)
+            private TypeSafe{{name}}Result(int statusCode, object? resultObject)
                 : this(new ObjectResult(resultObject) { StatusCode = statusCode })
             {
             }
             {{#responses}}
 
             {{#message}}/// <summary>{{message}}</summary>{{/message}}
-            {{^isDefault}}public static TypeSafe{{operationId}}Result StatusCode{{code}}({{#dataType}}{{{dataType}}} result{{/dataType}}){{/isDefault}}{{!
-            }}{{#isDefault}}public static TypeSafe{{operationId}}Result OtherStatusCode(int statusCode{{#dataType}}, {{{dataType}}} result{{/dataType}}){{/isDefault}} =>
-                new TypeSafe{{operationId}}Result({{#isDefault}}statusCode{{/isDefault}}{{^isDefault}}{{code}}{{/isDefault}}{{#dataType}}, result{{/dataType}});
+            {{^isDefault}}public static TypeSafe{{name}}Result StatusCode{{code}}({{#dataType}}{{{dataType}}} result{{/dataType}}){{/isDefault}}{{!
+            }}{{#isDefault}}public static TypeSafe{{name}}Result OtherStatusCode(int statusCode{{#dataType}}, {{{dataType}}} result{{/dataType}}){{/isDefault}} =>
+                new TypeSafe{{name}}Result({{#isDefault}}statusCode{{/isDefault}}{{^isDefault}}{{code}}{{/isDefault}}{{#dataType}}, result{{/dataType}});
             {{/responses}}
 
             /// <summary>Allows for action results not specified in the API</summary>
-            public static TypeSafe{{operationId}}Result Unsafe(IActionResult actionResult) =>
-                new TypeSafe{{operationId}}Result(actionResult);
+            public static TypeSafe{{name}}Result Unsafe(IActionResult actionResult) =>
+                new TypeSafe{{name}}Result(actionResult);
         }
         {{/each}}
     }

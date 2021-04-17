@@ -8,9 +8,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Xunit;
+using static PrincipleStudios.OpenApi.NetCore.ServerInterfaces.DocumentHelpers;
 
 namespace PrincipleStudios.OpenApi.NetCore.ServerInterfaces
 {
+
     public class CSharpSchemaTransformerShould
     {
         [Fact]
@@ -76,11 +78,5 @@ namespace PrincipleStudios.OpenApi.NetCore.ServerInterfaces
             return new CSharpSchemaTransformer(document, baseNamespace);
         }
 
-        private static OpenApiDocument GetPetStoreOpenApiDocument()
-        {
-            var documentStream = typeof(CSharpSchemaTransformerShould).Assembly.GetManifestResourceStream("PrincipleStudios.OpenApi.NetCore.ServerInterfaces.petstore.yaml");
-            var reader = new OpenApiStreamReader();
-            return reader.Read(documentStream, out var openApiDiagnostic);
-        }
     }
 }
