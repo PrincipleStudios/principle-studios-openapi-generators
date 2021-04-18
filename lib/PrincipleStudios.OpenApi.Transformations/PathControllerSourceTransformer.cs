@@ -19,10 +19,7 @@ namespace PrincipleStudios.OpenApi.Transformations
         {
             foreach (var controller in document.Paths)
             {
-                foreach (var entry in pathControllerTransformer.TransformController(controller.Key, controller.Value))
-                {
-                    yield return entry;
-                }
+                yield return pathControllerTransformer.TransformController(controller.Key, controller.Value);
             }
         }
     }

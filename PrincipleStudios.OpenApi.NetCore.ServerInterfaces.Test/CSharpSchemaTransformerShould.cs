@@ -18,7 +18,7 @@ namespace PrincipleStudios.OpenApi.NetCore.ServerInterfaces
         [Fact]
         public void RecognizeInlinedValues()
         {
-            var document = GetPetStoreOpenApiDocument();
+            var document = GetDocument(0);
 
             var target = ConstructTarget(document);
 
@@ -37,40 +37,20 @@ namespace PrincipleStudios.OpenApi.NetCore.ServerInterfaces
             Assert.False(target.UseInline(document.Components.Schemas["Error"], document.Components));
         }
 
-        [Fact]
-        public void TransformThePetModel()
+        [Theory]
+        [InlineData(0, "Pet")]
+        [InlineData(0, "NewPet")]
+        [InlineData(0, "Error")]
+        public void TransformModel(int documentId, string model)
         {
-            var document = GetPetStoreOpenApiDocument();
+            var documentName = GetDocumentName(documentId);
+            var document = GetDocument(documentId);
 
             var target = ConstructTarget(document);
 
-            var result = target.TransformComponentSchema("Pet", document.Components.Schemas["Pet"]);
+            var result = target.TransformComponentSchema(model, document.Components.Schemas[model]);
 
-            Snapshot.Match(result.SourceText);
-        }
-
-        [Fact]
-        public void TransformTheNewPetModel()
-        {
-            var document = GetPetStoreOpenApiDocument();
-
-            var target = ConstructTarget(document);
-
-            var result = target.TransformComponentSchema("NewPet", document.Components.Schemas["NewPet"]);
-
-            Snapshot.Match(result.SourceText);
-        }
-
-        [Fact]
-        public void TransformTheErrorModel()
-        {
-            var document = GetPetStoreOpenApiDocument();
-
-            var target = ConstructTarget(document);
-
-            var result = target.TransformComponentSchema("Error", document.Components.Schemas["Error"]);
-
-            Snapshot.Match(result.SourceText);
+            Snapshot.Match(result.SourceText, $"{nameof(CSharpSchemaTransformerShould)}.{nameof(TransformModel)}.{CSharpNaming.ToTitleCaseIdentifier(documentName)}.{CSharpNaming.ToTitleCaseIdentifier(model)}");
         }
 
         private static CSharpSchemaTransformer ConstructTarget(OpenApiDocument document, string baseNamespace = "PrincipleStudios.Test")

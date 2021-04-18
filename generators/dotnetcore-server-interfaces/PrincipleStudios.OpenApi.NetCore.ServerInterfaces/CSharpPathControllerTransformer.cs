@@ -15,7 +15,7 @@ namespace PrincipleStudios.OpenApi.NetCore.ServerInterfaces
         {
         }
 
-        public IEnumerable<SourceEntry> TransformController(string path, OpenApiPathItem pathItem)
+        public SourceEntry TransformController(string path, OpenApiPathItem pathItem)
         {
             var className = CSharpNaming.ToClassName(path);
 
@@ -103,7 +103,7 @@ namespace PrincipleStudios.OpenApi.NetCore.ServerInterfaces
             );
 
             var entry = HandlebarsTemplateProcess.ProcessController(template, handlebars.Value);
-            yield return new SourceEntry
+            return new SourceEntry
             {
                 Key = $"{baseNamespace}.{className}ControllerBase.cs",
                 SourceText = entry,

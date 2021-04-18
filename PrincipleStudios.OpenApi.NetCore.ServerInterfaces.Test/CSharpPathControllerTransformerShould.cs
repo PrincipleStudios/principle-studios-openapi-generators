@@ -14,17 +14,18 @@ namespace PrincipleStudios.OpenApi.NetCore.ServerInterfaces
     public class CSharpPathControllerTransformerShould
     {
         [Theory]
-        [InlineData("/pets")]
-        [InlineData("/pets/{id}")]
-        public void TransformController(string path)
+        [InlineData(0, "/pets")]
+        [InlineData(0, "/pets/{id}")]
+        public void TransformController(int documentId, string path)
         {
-            var document = GetPetStoreOpenApiDocument();
+            var documentName = GetDocumentName(documentId);
+            var document = GetDocument(documentId);
 
             var target = ConstructTarget(document);
 
-            var result = target.TransformController(path, document.Paths[path]).ToArray();
+            var result = target.TransformController(path, document.Paths[path]);
 
-            Assert.Collection(result, t => Snapshot.Match(t.SourceText, $"{nameof(CSharpPathControllerTransformerShould)}.{nameof(TransformController)}.{CSharpNaming.ToTitleCaseIdentifier(path)}.{t.Key}"));
+            Snapshot.Match(result.SourceText, $"{nameof(CSharpPathControllerTransformerShould)}.{nameof(TransformController)}.{CSharpNaming.ToTitleCaseIdentifier(documentName)}.{CSharpNaming.ToTitleCaseIdentifier(path)}");
         }
 
         private static IOpenApiPathControllerTransformer ConstructTarget(OpenApiDocument document, string baseNamespace = "PrincipleStudios.Test")
