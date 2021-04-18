@@ -1,5 +1,5 @@
 ﻿using HandlebarsDotNet;
-using PrincipleStudios.OpenApi.NetCore.ServerInterfaces.templates;
+using PrincipleStudios.OpenApiCodegen.Server.Mvc.templates;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -8,7 +8,7 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace PrincipleStudios.OpenApi.NetCore.ServerInterfaces
+namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
 {
     public static class HandlebarsTemplateProcess
     {
@@ -44,7 +44,7 @@ namespace PrincipleStudios.OpenApi.NetCore.ServerInterfaces
         public static string ProcessModel(
             PartialHeader header,
             string packageName,
-            Model model, 
+            Model model,
             IHandlebars? handlebars = null
         ) {
             handlebars ??= CreateHandlebars();

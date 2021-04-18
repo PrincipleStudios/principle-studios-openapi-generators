@@ -4,12 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PrincipleStudios.OpenApi.NetCore.ServerInterfaces.templates
+namespace PrincipleStudios.OpenApiCodegen.Server.Mvc.templates
 {
     public record ModelTemplate<TModel>(
         PartialHeader header,
 
-        string packageName, 
+        string packageName,
 
         TModel model
     ) where TModel : Model;

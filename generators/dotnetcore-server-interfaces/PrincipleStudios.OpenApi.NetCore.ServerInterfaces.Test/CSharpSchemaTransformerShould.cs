@@ -8,9 +8,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Xunit;
-using static PrincipleStudios.OpenApi.NetCore.ServerInterfaces.DocumentHelpers;
+using static PrincipleStudios.OpenApiCodegen.Server.Mvc.DocumentHelpers;
 
-namespace PrincipleStudios.OpenApi.NetCore.ServerInterfaces
+namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
 {
 
     public class CSharpSchemaTransformerShould

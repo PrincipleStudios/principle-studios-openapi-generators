@@ -5,7 +5,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace PrincipleStudios.OpenApi.NetCore.ServerInterfaces
+namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
 {
     public static class CSharpNaming
     {

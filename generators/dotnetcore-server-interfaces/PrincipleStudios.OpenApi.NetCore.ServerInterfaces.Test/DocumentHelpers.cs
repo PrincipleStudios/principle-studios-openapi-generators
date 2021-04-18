@@ -6,13 +6,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PrincipleStudios.OpenApi.NetCore.ServerInterfaces
+namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
 {
     public static class DocumentHelpers
     {
         public static OpenApiDocument GetDocument(int index)
         {
-            var documentStream = typeof(CSharpSchemaTransformerShould).Assembly.GetManifestResourceStream($"PrincipleStudios.OpenApi.NetCore.ServerInterfaces.{GetDocumentName(index)}");
+            var documentStream = typeof(CSharpSchemaTransformerShould).Assembly.GetManifestResourceStream($"PrincipleStudios.OpenApiCodegen.Server.Mvc.{GetDocumentName(index)}");
             var reader = new OpenApiStreamReader();
             return reader.Read(documentStream, out var openApiDiagnostic);
         }

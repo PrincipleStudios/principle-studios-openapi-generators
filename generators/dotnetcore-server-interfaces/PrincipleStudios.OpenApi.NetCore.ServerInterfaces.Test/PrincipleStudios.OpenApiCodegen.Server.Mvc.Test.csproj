@@ -5,12 +5,12 @@
 
     <IsPackable>false</IsPackable>
 
-    <RootNamespace>PrincipleStudios.OpenApi.NetCore.ServerInterfaces</RootNamespace>
+    <RootNamespace>PrincipleStudios.OpenApiCodegen.Server.Mvc</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="..\schemas\petstore.yaml" Link="petstore.yaml" />
-    <EmbeddedResource Include="..\schemas\petstore3.json" Link="petstore3.json" />
+    <EmbeddedResource Include="..\..\..\schemas\petstore.yaml" Link="petstore.yaml" />
+    <EmbeddedResource Include="..\..\..\schemas\petstore3.json" Link="petstore3.json" />
   </ItemGroup>
 
   <ItemGroup>
@@ -28,7 +28,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\generators\dotnetcore-server-interfaces\PrincipleStudios.OpenApi.NetCore.ServerInterfaces\PrincipleStudios.OpenApi.NetCore.ServerInterfaces.csproj" />
+    <ProjectReference Include="..\PrincipleStudios.OpenApiCodegen.Server.Mvc\PrincipleStudios.OpenApiCodegen.Server.Mvc.csproj" />
   </ItemGroup>
 
   <ItemGroup>

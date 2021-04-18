@@ -1,5 +1,5 @@
 ﻿using Microsoft.OpenApi.Models;
-using PrincipleStudios.OpenApi.NetCore.ServerInterfaces.templates;
+using PrincipleStudios.OpenApiCodegen.Server.Mvc.templates;
 using PrincipleStudios.OpenApi.Transformations;
 using System;
 using System.Collections.Generic;
@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PrincipleStudios.OpenApi.NetCore.ServerInterfaces
+namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
 {
     public class CSharpPathControllerTransformer : CSharpSchemaTransformer, IOpenApiPathControllerTransformer
     {

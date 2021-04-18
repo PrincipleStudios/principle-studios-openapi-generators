@@ -2,7 +2,7 @@
 
 using Microsoft.OpenApi.Models;
 
-namespace PrincipleStudios.OpenApi.NetCore.ServerInterfaces
+namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
 {
     public record OpenApiGeneratorOptions(OpenApiDocument Document);
 }

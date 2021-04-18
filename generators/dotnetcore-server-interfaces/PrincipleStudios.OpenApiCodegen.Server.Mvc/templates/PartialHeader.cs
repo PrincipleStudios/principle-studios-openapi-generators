@@ -1,4 +1,4 @@
-﻿namespace PrincipleStudios.OpenApi.NetCore.ServerInterfaces.templates
+﻿namespace PrincipleStudios.OpenApiCodegen.Server.Mvc.templates
 {
     public record PartialHeader(
         string? appName,

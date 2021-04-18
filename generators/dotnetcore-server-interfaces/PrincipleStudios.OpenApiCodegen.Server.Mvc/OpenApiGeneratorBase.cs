@@ -13,7 +13,7 @@ using System.Text;
 
 #nullable enable
 
-namespace PrincipleStudios.OpenApi.NetCore.ServerInterfaces
+namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
 {
     public abstract class OpenApiGeneratorBase<TOptions> : ISourceGenerator
         where TOptions : OpenApiGeneratorOptions

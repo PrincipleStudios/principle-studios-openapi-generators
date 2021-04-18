@@ -7,7 +7,7 @@ using PrincipleStudios.OpenApi.Transformations;
 
 #nullable enable
 
-namespace PrincipleStudios.OpenApi.NetCore.ServerInterfaces
+namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
 {
     [Generator]
     public class ControllerGenerator : OpenApiGeneratorBase<ControllerGenerator.Options>

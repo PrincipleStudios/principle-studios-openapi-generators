@@ -1,7 +1,7 @@
 using System;
 using Xunit;
 
-namespace PrincipleStudios.OpenApi.NetCore.ServerInterfaces.Test
+namespace PrincipleStudios.OpenApiCodegen.Server.Mvc.Test
 {
     public class HandlebarsTemplateProcessShould
     {

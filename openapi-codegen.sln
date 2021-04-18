@@ -5,9 +5,9 @@ VisualStudioVersion = 16.0.30717.126
 MinimumVisualStudioVersion = 15.0.26124.0
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PrincipleStudios.OpenApi.Transformations", "lib\PrincipleStudios.OpenApi.Transformations\PrincipleStudios.OpenApi.Transformations.csproj", "{CF19410B-6A84-487D-960B-1535E1A4E915}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PrincipleStudios.OpenApi.NetCore.ServerInterfaces", "generators\dotnetcore-server-interfaces\PrincipleStudios.OpenApi.NetCore.ServerInterfaces\PrincipleStudios.OpenApi.NetCore.ServerInterfaces.csproj", "{62DE31B8-C290-4005-91A5-EC91F276DCC5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PrincipleStudios.OpenApiCodegen.Server.Mvc", "generators\dotnetcore-server-interfaces\PrincipleStudios.OpenApiCodegen.Server.Mvc\PrincipleStudios.OpenApiCodegen.Server.Mvc.csproj", "{62DE31B8-C290-4005-91A5-EC91F276DCC5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PrincipleStudios.OpenApi.NetCore.ServerInterfaces.Test", "PrincipleStudios.OpenApi.NetCore.ServerInterfaces.Test\PrincipleStudios.OpenApi.NetCore.ServerInterfaces.Test.csproj", "{670269BD-4BB6-4897-8960-C1E8C393FC14}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PrincipleStudios.OpenApiCodegen.Server.Mvc.Test", "generators\dotnetcore-server-interfaces\PrincipleStudios.OpenApi.NetCore.ServerInterfaces.Test\PrincipleStudios.OpenApiCodegen.Server.Mvc.Test.csproj", "{670269BD-4BB6-4897-8960-C1E8C393FC14}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

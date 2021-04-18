@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PrincipleStudios.OpenApi.NetCore.ServerInterfaces.templates
+namespace PrincipleStudios.OpenApiCodegen.Server.Mvc.templates
 {
     public record ControllerTemplate(
         PartialHeader header,
@@ -56,7 +56,7 @@ namespace PrincipleStudios.OpenApi.NetCore.ServerInterfaces.templates
         string mediaTypeId,
         string? dataType
     );
-    
+
     public record OperationRequestBody(string name, string requestBodyType, IEnumerable<OperationParameter> allParams);
 
 }

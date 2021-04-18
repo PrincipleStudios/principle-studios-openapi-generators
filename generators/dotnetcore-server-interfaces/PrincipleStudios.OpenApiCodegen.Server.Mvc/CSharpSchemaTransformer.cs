@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace PrincipleStudios.OpenApi.NetCore.ServerInterfaces
+namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
 {
     public class CSharpSchemaTransformer : IOpenApiSchemaTransformer
     {
@@ -22,7 +22,7 @@ namespace PrincipleStudios.OpenApi.NetCore.ServerInterfaces
 
         public bool UseInline(OpenApiSchema schema, OpenApiComponents components)
         {
-            // C# can't inline things that must be referenced, and vice versa. 
+            // C# can't inline things that must be referenced, and vice versa.
             // (Except with tuples, but those don't serialize/deserialize reliably yet.)
             return !UseReference(schema, components);
         }
@@ -42,7 +42,7 @@ namespace PrincipleStudios.OpenApi.NetCore.ServerInterfaces
                 _ => throw new NotSupportedException(),
             };
         }
-        
+
         protected string ToInlineDataType(OpenApiSchema schema)
         {
             // TODO: Allow configuration of this
@@ -110,7 +110,7 @@ namespace PrincipleStudios.OpenApi.NetCore.ServerInterfaces
                         ObjectModel model => ToObjectModel(className, schema, model),
                         _ => throw new NotSupportedException()
                     }
-                }, 
+                },
                 handlebars.Value
             );
             return new SourceEntry
@@ -136,7 +136,7 @@ namespace PrincipleStudios.OpenApi.NetCore.ServerInterfaces
                        select new templates.ModelVar(
                            baseName: entry.Key,
                            dataType: ToInlineDataType(entry.Value),
-                           name: CSharpNaming.ToPropertyName(entry.Key), 
+                           name: CSharpNaming.ToPropertyName(entry.Key),
                            required: required.Contains(entry.Key)
                         )).ToArray()
             );
@@ -148,7 +148,7 @@ namespace PrincipleStudios.OpenApi.NetCore.ServerInterfaces
             schema switch
             {
                 { AllOf: { Count: > 0 } } => schema.AllOf.Select(BuildObjectModel).ToArray() switch {
-                    ObjectModel[] models when models.All(v => v != null) => 
+                    ObjectModel[] models when models.All(v => v != null) =>
                         new ObjectModel(
                             properties: () => models.SelectMany(m => m!.properties()).ToDictionary(p => p.Key, p => p.Value),
                             required: () => models.SelectMany(m => m!.required()).Distinct()
