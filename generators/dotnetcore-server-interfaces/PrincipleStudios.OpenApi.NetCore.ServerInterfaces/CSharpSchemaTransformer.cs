@@ -31,12 +31,13 @@ namespace PrincipleStudios.OpenApi.NetCore.ServerInterfaces
         {
             return schema switch
             {
+                { Type: "object", Properties: { Count: 0 }, AdditionalProperties: OpenApiSchema _ } => false,
                 { UnresolvedReference: true } => throw new ArgumentException("Unable to resolve reference"),
                 { AllOf: { Count: > 1 } } => true,
                 { AnyOf: { Count: > 1 } } => true,
                 { Enum: { Count: > 1 } } => true,
                 { Properties: { Count: > 1 } } => true,
-                { Type: "string" or "number" or "integer" } => false,
+                { Type: "string" or "number" or "integer" or "boolean" } => false,
                 { Type: "array", Items: OpenApiSchema inner } => UseReference(inner, components),
                 _ => throw new NotSupportedException(),
             };
@@ -48,7 +49,9 @@ namespace PrincipleStudios.OpenApi.NetCore.ServerInterfaces
             // from https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.3.md#data-types
             return schema switch
             {
-                { Enum: { Count: > 1 } } => UseReferenceName(schema),
+                { Reference: not null, UnresolvedReference: false } => UseReferenceName(schema),
+                //{ Enum: { Count: > 1 } } => UseReferenceName(schema),
+                { Type: "object", Properties: { Count: 0 }, AdditionalProperties: OpenApiSchema dictionaryValueSchema } => $"global::System.Collections.Generic.Dictionary<string, {ToInlineDataType(dictionaryValueSchema)}>",
                 { Type: "integer", Format: "int32" } => "int",
                 { Type: "integer", Format: "int64" } => "long",
                 { Type: "integer" } => "int",
@@ -61,6 +64,7 @@ namespace PrincipleStudios.OpenApi.NetCore.ServerInterfaces
                 { Type: "string", Format: "date-time" } => "global::System.DateTimeOffset",
                 { Type: "string", Format: "uuid" or "guid" } => "global::System.Guid",
                 { Type: "string" } => "string",
+                { Type: "boolean" } => "bool",
                 { Type: "array", Items: OpenApiSchema items } => $"global::System.Collections.Generic.IEnumerable<{ToInlineDataType(items)}>",
                 _ => UseReferenceName(schema),
             };

@@ -41,6 +41,12 @@ namespace PrincipleStudios.OpenApi.NetCore.ServerInterfaces
         [InlineData(0, "Pet")]
         [InlineData(0, "NewPet")]
         [InlineData(0, "Error")]
+        [InlineData(1, "Order")]
+        [InlineData(1, "Category")]
+        [InlineData(1, "User")]
+        [InlineData(1, "Tag")]
+        [InlineData(1, "Pet")]
+        [InlineData(1, "ApiResponse")]
         public void TransformModel(int documentId, string model)
         {
             var documentName = GetDocumentName(documentId);
