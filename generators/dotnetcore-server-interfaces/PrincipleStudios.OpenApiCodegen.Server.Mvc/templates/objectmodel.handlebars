@@ -12,7 +12,8 @@ using Newtonsoft.Json;
 namespace {{this.packageName}}
 { {{#with model}}
     {{#if description}}/// <summary>
-    /// {{description}}
+    /// {{linewrap description "
+    /// "}}
     /// </summary>
     {{/if}}public partial class {{className}} : {{#if parent}}{{{parent}}}, {{/if}}IEquatable<{{className}}>
     {

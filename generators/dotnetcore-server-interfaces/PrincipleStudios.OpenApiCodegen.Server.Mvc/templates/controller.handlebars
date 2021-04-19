@@ -12,20 +12,24 @@ using System.ComponentModel.DataAnnotations;
 namespace {{packageName}}
 { {{#if operations}}
     /// <summary>{{#if summary}}
-    /// {{summary}}
+    /// {{linewrap summary "
+    /// "}}
     /// </summary>{{/if}}{{#if description}}
     /// <remarks>
-    /// {{description}}
+    /// {{linewrap description "
+    /// "}}
     /// </remarks>{{/if}}{{#if description}}
     [Description("{{description}}")]{{/if}}
     public abstract class {{className}}ControllerBase : ControllerBase
     {
         {{#each operations as |operation|}}{{#each requestBodies as |requestBody|}}{{#if operation.summary}}
         /// <summary>
-        /// {{operation.summary}}
+        /// {{linewrap operation.summary "
+        /// "}}
         /// </summary>{{/if}}{{#if operation.description}}
         /// <remarks>
-        /// {{operation.description}}
+        /// {{linewrap operation.description "
+        /// "}}
         /// </remarks>{{/if}}{{#each requestBody.allParams}}
         /// <param name="{{paramName}}">{{description}}</param>{{/each}}
         [Http{{operation.httpMethod}}]
@@ -86,13 +90,15 @@ namespace {{packageName}}
             }
             {{#each responses.statusResponse as |response code|}}{{#each content}}
             {{#if response.description}}/// <summary>
-            /// {{response.description}}
+            /// {{linewrap response.description "
+            /// "}}
             /// </summary>{{/if}}
             public static TypeSafe{{../../name}}Result {{mediaTypeId}}StatusCode{{code}}({{#if dataType}}{{{dataType}}} result{{/if}}) =>
                 new TypeSafe{{../../name}}Result({{code}}, "{{mediaType}}", {{#if dataType}}typeof({{{dataType}}}), result{{else}}typeof(void){{/if}});
             {{/each}}{{/each}}{{#if responses.defaultResponse}}{{#each responses.defaultResponse.content}}
             {{#if responses.defaultResponse.description}}/// <summary>
-            /// {{responses.defaultResponse.description}}
+            /// {{linewrap responses.defaultResponse.description "
+            /// "}}
             /// </summary>{{/if}}
             public static TypeSafe{{../name}}Result {{mediaTypeId}}OtherStatusCode(int statusCode{{#if dataType}}, {{{dataType}}} result{{/if}}) =>
                 new TypeSafe{{../name}}Result(statusCode, "{{mediaType}}", {{#if dataType}}typeof({{{dataType}}}), result{{else}}typeof(void){{/if}});

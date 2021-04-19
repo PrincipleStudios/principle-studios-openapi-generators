@@ -17,6 +17,14 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
         {
             var result = Handlebars.Create();
 
+            result.RegisterHelper(
+                "linewrap", 
+                (context, parameters) => 
+                    parameters[0] is string s 
+                        ? s.ToString().Replace("\r", "").Replace("\n", parameters[1].ToString())
+                        : parameters[0]
+            );
+
             foreach (var resourceName in typeof(HandlebarsTemplateProcess).Assembly.GetManifestResourceNames().Where(n => n.EndsWith(".handlebars")))
                 AddTemplate(resourceName, result);
 
