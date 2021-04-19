@@ -20,7 +20,7 @@ namespace {{this.packageName}}
         public {{className}}(
         {{#each vars}}    [JsonProperty(PropertyName="{{baseName}}"){{#required}}, Required{{/required}}]{{!
         data type: }} {{#isEnum}}{{{datatypeWithEnum}}}{{^isContainer}}?{{/isContainer}}{{/isEnum}}{{^isEnum}}{{{dataType}}}{{/isEnum}}{{!
-        name: }} {{name}}{{#hasMore}}, {{/hasMore}}
+        name: }} {{name}}{{#unless @last}}, {{/unless}}
         {{/each}}) { {{#each vars}}
             this.{{name}} = {{name}};{{/each}}
         }

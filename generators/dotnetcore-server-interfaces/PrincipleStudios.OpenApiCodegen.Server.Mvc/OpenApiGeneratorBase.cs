@@ -18,9 +18,10 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
     public abstract class OpenApiGeneratorBase<TOptions> : ISourceGenerator
         where TOptions : OpenApiGeneratorOptions
     {
+        private const string sourceItemGroupKey = "SourceItemGroup";
         private static readonly DiagnosticDescriptor NoFilesGenerated = new DiagnosticDescriptor(id: "PSAPIGEN001",
                                                                                           title: "No files found enabled",
-                                                                                          messageFormat: "No additional files were found enabled with '{0}'",
+                                                                                          messageFormat: "No additional files were found with SourceItemGroup '{0}'",
                                                                                           category: "PrincipleStudios.OpenApiCodegen",
                                                                                           DiagnosticSeverity.Warning,
                                                                                           isEnabledByDefault: true);
@@ -30,24 +31,30 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
                                                                                           category: "PrincipleStudios.OpenApiCodegen",
                                                                                           DiagnosticSeverity.Info,
                                                                                           isEnabledByDefault: true);
+        protected static readonly DiagnosticDescriptor NoSourceGroup = new DiagnosticDescriptor(id: "PSAPIGEN003",
+                                                                                          title: "No source group",
+                                                                                          messageFormat: "No source group for '{0}'",
+                                                                                          category: "PrincipleStudios.OpenApiCodegen",
+                                                                                          DiagnosticSeverity.Info,
+                                                                                          isEnabledByDefault: true);
 
-        private readonly string flagKey;
+        private readonly string sourceGroup;
 
-        public OpenApiGeneratorBase(string flagKey)
+        public OpenApiGeneratorBase(string sourceGroup)
         {
-            this.flagKey = flagKey;
+            this.sourceGroup = sourceGroup;
         }
 
         public virtual void Execute(GeneratorExecutionContext context)
         {
             var options = GetLoadOptions(context).ToArray();
             if (!options.Any())
-                context.ReportDiagnostic(Diagnostic.Create(NoFilesGenerated, Location.None, flagKey));
-            var nameCodeSequence = SourceFilesFromAdditionalFiles(options);
+                context.ReportDiagnostic(Diagnostic.Create(NoFilesGenerated, Location.None, sourceGroup));
+            var nameCodeSequence = SourceFilesFromAdditionalFiles(options).ToArray();
             foreach (var entry in nameCodeSequence)
             {
-                context.AddSource($"PrincipleStudios_NetCore_ServerInterfaces_{entry.Key}", SourceText.From(entry.SourceText, Encoding.UTF8));
-                context.ReportDiagnostic(Diagnostic.Create(FileGenerated, Location.None, $"PrincipleStudios_NetCore_ServerInterfaces_{entry.Key}"));
+                context.AddSource($"PS_{entry.Key}", SourceText.From(entry.SourceText, Encoding.UTF8));
+                context.ReportDiagnostic(Diagnostic.Create(FileGenerated, Location.None, $"PS_{entry.Key}"));
             }
         }
 
@@ -62,9 +69,13 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
             {
                 var opt = context.AnalyzerConfigOptions.GetOptions(file);
 
-                string? parseForThisGeneratorText = opt.GetAdditionalFilesMetadata(flagKey);
-                if (!bool.TryParse(parseForThisGeneratorText, out bool parseForThisGenerator) || !parseForThisGenerator)
+                string? currentSourceGroup = opt.GetAdditionalFilesMetadata(sourceItemGroupKey);
+                if (currentSourceGroup != sourceGroup)
+                {
+                    if (string.IsNullOrEmpty(currentSourceGroup))
+                        context.ReportDiagnostic(Diagnostic.Create(NoSourceGroup, Location.None, file.Path));
                     continue;
+                }
 
                 if (TryParseFile(file, out var document, out var diagnostic))
                 {

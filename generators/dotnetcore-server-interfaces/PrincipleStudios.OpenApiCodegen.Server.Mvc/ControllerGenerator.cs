@@ -22,10 +22,10 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
                                                                                                   DiagnosticSeverity.Warning,
                                                                                                   isEnabledByDefault: true);
 
-        const string propEnabled = "OpenApiServerInterfaceEnabled";
+        const string sourceGroup = "OpenApiServerInterface";
         const string propNamespace = "OpenApiServerInterfaceNamespace";
 
-        public ControllerGenerator() : base(propEnabled)
+        public ControllerGenerator() : base(sourceGroup)
         {
         }
 
@@ -33,8 +33,12 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
 
         public override void Execute(GeneratorExecutionContext context)
         {
-            context.AddSource($"PrincipleStudios_NetCore_Test", Microsoft.CodeAnalysis.Text.SourceText.From("class HelloWorld {}", Encoding.UTF8));
-            context.ReportDiagnostic(Diagnostic.Create(FileGenerated, Location.None, $"PrincipleStudios_NetCore_Test"));
+#if DEBUG
+            if (!System.Diagnostics.Debugger.IsAttached)
+            {
+                System.Diagnostics.Debugger.Launch();
+            }
+#endif 
 
             // check that the users compilation references the expected library 
             if (!context.Compilation.ReferencedAssemblyNames.Any(ai => ai.Name.Equals("Newtonsoft.Json", StringComparison.OrdinalIgnoreCase)))
@@ -57,9 +61,11 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
 
         protected override bool TryCreateOptions(AdditionalText file, OpenApiDocument document, AnalyzerConfigOptions opt, GeneratorExecutionContext context, [NotNullWhen(true)] out Options? result)
         {
-            var documentNamespace = opt.GetAdditionalFilesMetadata(propNamespace) ?? GetStandardNamespace(opt) ?? "PrincipleStudios.UnknownNamespace";
+            var documentNamespace = opt.GetAdditionalFilesMetadata(propNamespace);
+            if (string.IsNullOrEmpty(documentNamespace))
+                documentNamespace = GetStandardNamespace(opt);
 
-            result = new Options(document, documentNamespace);
+            result = new Options(document, documentNamespace ?? "");
             return true;
         }
 

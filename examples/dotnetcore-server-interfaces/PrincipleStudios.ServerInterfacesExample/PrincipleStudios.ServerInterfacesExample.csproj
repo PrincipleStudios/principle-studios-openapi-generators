@@ -3,19 +3,16 @@
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
     <LangVersion>8.0</LangVersion>
+    <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
+    <CompilerGeneratedFilesOutputPath>.vs</CompilerGeneratedFilesOutputPath>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="5.0.3" />
-    <PackageReference Include="PrincipleStudios.OpenApiCodegen.Server.Mvc" Version="0.2.0-alpha" />
+    <PackageReference Include="PrincipleStudios.OpenApiCodegen.Server.Mvc" Version="0.2.0-alpha.1" />
   </ItemGroup>
 
   <ItemGroup>
     <OpenApiSchemaMvcServer Include="..\..\..\schemas\petstore.yaml" Link="Controllers\petstore.yaml" />
   </ItemGroup>
-  
-  <Target Name="_InjectAdditionalFiles" BeforeTargets="GenerateMSBuildEditorConfigFileShouldRun">
-    <Message Text="@(OpenApiSchemaMvcServer->'%(rootdir)%(directory)%(filename)%(extension)')" Importance="high" />
-    <Message Text="@(OpenApiSchemaMvcServer->'%(Identity) @ %(Link)')" Importance="high" />
-  </Target>
 </Project>

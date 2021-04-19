@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace PrincipleStudios.ServerInterfacesExample.Controllers
 {
-    public class DefaultApiController : DefaultApiControllerBase
+    public class DefaultApiController : PrincipleStudios.ServerInterfacesExample.Controllers.PetsControllerBase
     {
         // Obviously, this is a demo. You should use a different class for storage, and only use your controller for mapping.
         private readonly static System.Collections.Concurrent.ConcurrentDictionary<long, (string name, string tag)> pets = new System.Collections.Concurrent.ConcurrentDictionary<long, (string name, string tag)>();
@@ -22,49 +22,57 @@ namespace PrincipleStudios.ServerInterfacesExample.Controllers
             var result = new Pet(newPet.Name, newPet.Tag, newId);
             if (pets.TryAdd(newId, (result.Name, result.Tag)))
             {
-                return TypeSafeAddPetResult.StatusCode200(result);
+                return TypeSafeAddPetResult.ApplicationJsonStatusCode200(result);
             }
             else
             {
-                return TypeSafeAddPetResult.OtherStatusCode(500, new Error(0, "Unable to add pet"));
+                return TypeSafeAddPetResult.ApplicationJsonOtherStatusCode(500, new Error(0, "Unable to add pet"));
             }
         }
 
-        protected override async Task<TypeSafeDeletePetResult> DeletePetTypeSafe(long? id)
-        {
-            await Task.Yield();
-            if (id != null && pets.Remove(id.Value, out var _))
-            {
-                return TypeSafeDeletePetResult.StatusCode204();
-            }
-            else
-            {
-                return TypeSafeDeletePetResult.OtherStatusCode(404, new Error(404, "Could not find pet"));
-            }
-        }
-
-        protected override async Task<TypeSafeFindPetByIdResult> FindPetByIdTypeSafe(long? id)
-        {
-            await Task.Yield();
-            if (id != null && pets.TryGetValue(id.Value, out var tuple))
-            {
-                return TypeSafeFindPetByIdResult.StatusCode200(new Pet(tuple.name, tuple.tag, id.Value));
-            }
-            else
-            {
-                return TypeSafeFindPetByIdResult.OtherStatusCode(404, new Error(404, "Could not find pet"));
-            }
-        }
-
-        protected override async Task<TypeSafeFindPetsResult> FindPetsTypeSafe(IReadOnlyList<string> tags, int? limit)
+        protected override async Task<TypeSafeFindPetsResult> FindPetsTypeSafe(IEnumerable<string> tags, int limit)
         {
             await Task.Yield();
             var result = pets.Where(p => tags.Contains(p.Value.tag));
-            if (limit != null)
+            //if (limit != null)
+            //{
+                result = result.Take(limit);
+            //}
+            return TypeSafeFindPetsResult.ApplicationJsonStatusCode200(result.Select(kvp => new Pet(kvp.Value.name, kvp.Value.tag, kvp.Key)).ToArray());
+        }
+
+    }
+
+    public class PetsIdController : PetsIdControllerBase
+    {
+        // Obviously, this is a demo. You should use a different class for storage, and only use your controller for mapping.
+        private readonly static System.Collections.Concurrent.ConcurrentDictionary<long, (string name, string tag)> pets = new System.Collections.Concurrent.ConcurrentDictionary<long, (string name, string tag)>();
+        private static long lastId = 0;
+
+        protected override async Task<TypeSafeDeletePetResult> DeletePetTypeSafe(long id)
+        {
+            await Task.Yield();
+            if (pets.Remove(id, out var _))
             {
-                result = result.Take(limit.Value);
+                return TypeSafeDeletePetResult.Unsafe(NoContent());
             }
-            return TypeSafeFindPetsResult.StatusCode200(result.Select(kvp => new Pet(kvp.Value.name, kvp.Value.tag, kvp.Key)).ToArray());
+            else
+            {
+                return TypeSafeDeletePetResult.ApplicationJsonOtherStatusCode(404, new Error(404, "Could not find pet"));
+            }
+        }
+
+        protected override async Task<TypeSafeFindPetByIdResult> FindPetByIdTypeSafe(long id)
+        {
+            await Task.Yield();
+            if (pets.TryGetValue(id, out var tuple))
+            {
+                return TypeSafeFindPetByIdResult.ApplicationJsonStatusCode200(new Pet(tuple.name, tuple.tag, id));
+            }
+            else
+            {
+                return TypeSafeFindPetByIdResult.ApplicationJsonOtherStatusCode(404, new Error(404, "Could not find pet"));
+            }
         }
 
     }

@@ -37,7 +37,7 @@ namespace PrincipleStudios.OpenApi.Transformations
 
             foreach (var componentSchema in document.Components.Schemas)
             {
-                if (!openApiSchemaTransformer.UseReference(componentSchema.Value))
+                if (openApiSchemaTransformer.UseReference(componentSchema.Value))
                     yield return openApiSchemaTransformer.TransformComponentSchema(componentSchema.Key, componentSchema.Value);
             }
         }
