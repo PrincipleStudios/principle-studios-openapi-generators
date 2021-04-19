@@ -33,13 +33,6 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
 
         public override void Execute(GeneratorExecutionContext context)
         {
-#if DEBUG
-            if (!System.Diagnostics.Debugger.IsAttached)
-            {
-                System.Diagnostics.Debugger.Launch();
-            }
-#endif 
-
             // check that the users compilation references the expected library 
             if (!context.Compilation.ReferencedAssemblyNames.Any(ai => ai.Name.Equals("Newtonsoft.Json", StringComparison.OrdinalIgnoreCase)))
             {
