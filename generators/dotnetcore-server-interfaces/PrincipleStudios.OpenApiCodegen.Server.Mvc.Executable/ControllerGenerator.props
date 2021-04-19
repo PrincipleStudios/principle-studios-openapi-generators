@@ -1,0 +1,8 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Project>
+  <ItemGroup>
+    <AvailableItemName Include="OpenApiSchemaMvcServer" DisplayName="Open API Schema MVC Server (OpenApiCodeGen)" />
+    <Watch Include="@(OpenApiSchemaMvcServer)" Condition=" '@(OpenApiSchemaMvcServer)' != '' " />
+  </ItemGroup>
+
+</Project>

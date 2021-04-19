@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PrincipleStudios.OpenApiCodegen.Server.Mvc.templates
+namespace PrincipleStudios.OpenApi.CSharp.templates
 {
     public record ModelTemplate<TModel>(
         PartialHeader header,

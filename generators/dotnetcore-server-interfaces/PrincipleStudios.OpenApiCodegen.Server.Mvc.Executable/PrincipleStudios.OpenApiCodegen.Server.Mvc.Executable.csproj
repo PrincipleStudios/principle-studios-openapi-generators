@@ -1,10 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+    <AssemblyName>PrincipleStudios.OpenApiCodegen.Server.Mvc</AssemblyName>
+    <RootNamespace>PrincipleStudios.OpenApi.CSharp</RootNamespace>
     <TargetFramework>netstandard2.0</TargetFramework>
     <LangVersion>9</LangVersion>
     <Nullable>enable</Nullable>
-    <Version>0.2.0-alpha.4</Version>
+    <Version>0.2.0-alpha.3</Version>
 
     <IsPackable>true</IsPackable>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
@@ -29,10 +31,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="3.9.0" PrivateAssets="all" />
     <PackageReference Include="Handlebars.Net" Version="2.0.7" PrivateAssets="all" GeneratePathProperty="true" />
-
-    <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.2" PrivateAssets="all" />
     <PackageReference Include="Microsoft.OpenApi.Readers" Version="1.2.3" PrivateAssets="all" GeneratePathProperty="true" />
     <PackageReference Include="Microsoft.OpenApi" Version="1.2.3" PrivateAssets="all" GeneratePathProperty="true" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" PrivateAssets="all" GeneratePathProperty="true" />
@@ -42,6 +41,8 @@
   <ItemGroup>
     <!-- Package the generator in the analyzer directory of the nuget package -->
     <None Include="$(OutputPath)\*.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+    <!--<None Include="$(PkgMicrosoft_CodeAnalysis_Common)\lib\netstandard2.0\*.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />-->
+    <!--<None Include="$(PkgMicrosoft_CodeAnalysis_Analyzers)\lib\netstandard2.0\*.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />-->
     <None Include="$(PkgMicrosoft_OpenApi_Readers)\lib\netstandard2.0\*.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
     <None Include="$(PkgMicrosoft_OpenApi)\lib\netstandard2.0\*.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
     <None Include="$(PkgSharpYaml)\lib\netstandard2.0\*.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />

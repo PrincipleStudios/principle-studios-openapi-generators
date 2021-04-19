@@ -1,17 +1,18 @@
 ﻿using Microsoft.OpenApi.Models;
-using PrincipleStudios.OpenApiCodegen.Server.Mvc.templates;
+using PrincipleStudios.OpenApi.CSharp.templates;
 using PrincipleStudios.OpenApi.Transformations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using PrincipleStudios.OpenApi.CSharp;
 
-namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
+namespace PrincipleStudios.OpenApi.CSharp
 {
     public class CSharpPathControllerTransformer : CSharpSchemaTransformer, IOpenApiPathControllerTransformer
     {
-        public CSharpPathControllerTransformer(OpenApiDocument document, string baseNamespace) : base(document, baseNamespace)
+        public CSharpPathControllerTransformer(OpenApiDocument document, string baseNamespace) : base(document, baseNamespace, ControllerHandlebarsTemplateProcess.CreateHandlebars)
         {
         }
 
@@ -107,7 +108,7 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
                              )).ToArray()
             );
 
-            var entry = HandlebarsTemplateProcess.ProcessController(template, handlebars.Value);
+            var entry = handlebars.Value.ProcessController(template);
             return new SourceEntry
             {
                 Key = $"{baseNamespace}.{className}ControllerBase.cs",

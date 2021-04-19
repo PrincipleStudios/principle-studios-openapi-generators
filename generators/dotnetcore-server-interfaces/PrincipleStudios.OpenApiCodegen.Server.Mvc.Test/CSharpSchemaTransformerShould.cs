@@ -1,5 +1,6 @@
 ﻿using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers;
+using PrincipleStudios.OpenApi.CSharp;
 using Snapshooter.Xunit;
 using System;
 using System.Collections.Generic;
@@ -61,7 +62,7 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
 
         private static CSharpSchemaTransformer ConstructTarget(OpenApiDocument document, string baseNamespace = "PrincipleStudios.Test")
         {
-            return new CSharpSchemaTransformer(document, baseNamespace);
+            return new CSharpSchemaTransformer(document, baseNamespace, HandlebarsTemplateProcess.CreateHandlebars);
         }
 
     }

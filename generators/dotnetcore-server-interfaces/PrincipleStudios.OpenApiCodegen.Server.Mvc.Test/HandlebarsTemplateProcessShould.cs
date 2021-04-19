@@ -1,3 +1,4 @@
+using PrincipleStudios.OpenApi.CSharp;
 using System;
 using Xunit;
 
@@ -8,9 +9,9 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc.Test
         [Fact]
         public void RegisterAllHandlebarsTemplates()
         {
-            var handlebars = HandlebarsTemplateProcess.CreateHandlebars();
+            var handlebars = ControllerHandlebarsTemplateProcess.CreateHandlebars();
 
-            Assert.True(handlebars.Configuration.RegisteredTemplates.Count >= 5);
+            Assert.True(handlebars.Configuration.RegisteredTemplates.Count >= 4);
         }
     }
 }

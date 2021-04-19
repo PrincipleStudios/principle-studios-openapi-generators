@@ -6,6 +6,7 @@ using System.Text;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.OpenApi.Models;
+using PrincipleStudios.OpenApi.CSharp;
 using PrincipleStudios.OpenApi.Transformations;
 
 #nullable enable

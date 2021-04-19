@@ -1,0 +1,26 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <LangVersion>9</LangVersion>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Handlebars.Net" Version="2.0.7" />
+    <PackageReference Include="Microsoft.OpenApi.Readers" Version="1.2.3" />
+    <PackageReference Include="Microsoft.OpenApi" Version="1.2.3" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="SharpYaml" Version="1.6.5" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="templates\*.handlebars" />
+    <EmbeddedResource Include="templates\*.handlebars" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\PrincipleStudios.OpenApi.Transformations\PrincipleStudios.OpenApi.Transformations.csproj" />
+  </ItemGroup>
+
+</Project>

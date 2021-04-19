@@ -1,5 +1,5 @@
 ﻿using HandlebarsDotNet;
-using PrincipleStudios.OpenApiCodegen.Server.Mvc.templates;
+using PrincipleStudios.OpenApi.CSharp.templates;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -9,7 +9,7 @@ using Newtonsoft.Json;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 
-namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
+namespace PrincipleStudios.OpenApi.CSharp
 {
     public static class HandlebarsTemplateProcess
     {
@@ -26,28 +26,17 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
             );
 
             foreach (var resourceName in typeof(HandlebarsTemplateProcess).Assembly.GetManifestResourceNames().Where(n => n.EndsWith(".handlebars")))
-                AddTemplate(resourceName, result);
+                result.AddTemplate(typeof(HandlebarsTemplateProcess).Assembly, resourceName);
 
             return result;
         }
 
-        private static void AddTemplate(string resourceName, IHandlebars result)
+        public static void AddTemplate(this IHandlebars result, System.Reflection.Assembly assembly, string resourceName)
         {
-            using var stream = typeof(HandlebarsTemplateProcess).Assembly.GetManifestResourceStream(resourceName)!;
+            using var stream = assembly.GetManifestResourceStream(resourceName)!;
             using var reader = new StreamReader(stream);
             var templateName = Path.GetFileNameWithoutExtension(resourceName).Split('.').Last();
             result.RegisterTemplate(templateName: templateName, template: reader.ReadToEnd());
-        }
-
-        public static string ProcessController(ControllerTemplate controllerTemplate, IHandlebars? handlebars = null)
-        {
-            handlebars ??= CreateHandlebars();
-            var template = handlebars.Configuration.RegisteredTemplates["controller"];
-
-            using var sr = new StringWriter();
-            var dict = ToDictionary<templates.ControllerTemplate>(controllerTemplate);
-            template(sr, dict);
-            return sr.ToString();
         }
 
         public static string ProcessModel(
@@ -76,7 +65,7 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
             }
         }
 
-        private static IDictionary<string, object?> ToDictionary<T>(T model)
+        public static IDictionary<string, object?> ToDictionary<T>(T model)
         {
             var result = model == null ? JValue.CreateNull() : JToken.FromObject(model);
 

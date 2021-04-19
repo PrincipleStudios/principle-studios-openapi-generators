@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
+namespace PrincipleStudios.OpenApi.CSharp
 {
     public record InlineDataType(string text, bool nullable = false, bool isEnumerable = false)
     {
@@ -19,12 +19,13 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
     {
         protected readonly string baseNamespace;
         protected readonly OpenApiDocument document;
-        protected readonly Lazy<IHandlebars> handlebars = new Lazy<IHandlebars>(() => HandlebarsTemplateProcess.CreateHandlebars());
+        protected readonly Lazy<IHandlebars> handlebars;
 
-        public CSharpSchemaTransformer(OpenApiDocument document, string baseNamespace)
+        public CSharpSchemaTransformer(OpenApiDocument document, string baseNamespace, Func<IHandlebars> handlebarsFactory)
         {
             this.baseNamespace = baseNamespace;
             this.document = document;
+            this.handlebars = new Lazy<IHandlebars>(handlebarsFactory);
         }
 
         public bool UseInline(OpenApiSchema schema)

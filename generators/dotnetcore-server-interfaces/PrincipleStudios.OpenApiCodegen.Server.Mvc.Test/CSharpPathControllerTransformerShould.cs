@@ -1,4 +1,5 @@
 ﻿using Microsoft.OpenApi.Models;
+using PrincipleStudios.OpenApi.CSharp;
 using PrincipleStudios.OpenApi.Transformations;
 using Snapshooter.Xunit;
 using System;
