@@ -5,4 +5,35 @@
     <Watch Include="@(OpenApiSchemaMvcServer)" Condition=" '@(OpenApiSchemaMvcServer)' != '' " />
   </ItemGroup>
 
+  <Target Name="CompileServerOpenApiCodeGen" BeforeTargets="PrepareForBuild" DependsOnTargets="_CompileServerOpenApiCodeGen" Condition=" '@(OpenApiSchemaMvcServer)' != '' ">
+    <ItemGroup>
+      <Compile Include="%(OpenApiSchemaMvcServer.OutputPath)/**/*.cs" />
+    </ItemGroup>
+  </Target>
+
+  <Target Name="_UpdateServerOpenApiCodeGenMetatdata">
+    <ItemGroup>
+      <OpenApiSchemaMvcServer Condition=" '%(OpenApiSchemaMvcServer.Link)' != '' ">
+        <WorkingOutputPath>$([System.Text.RegularExpressions.Regex]::Replace(%(OpenApiSchemaMvcServer.Link), '(?&lt;=^|\\|/)..(?=$|\\|/)', '__'))</WorkingOutputPath>
+      </OpenApiSchemaMvcServer>
+      <OpenApiSchemaMvcServer Condition=" '%(OpenApiSchemaMvcServer.Link)' == '' ">
+        <WorkingOutputPath>$([System.Text.RegularExpressions.Regex]::Replace(%(OpenApiSchemaMvcServer.Identity), '(?&lt;=^|\\|/)..(?=$|\\|/)', '__'))</WorkingOutputPath>
+      </OpenApiSchemaMvcServer>
+      <OpenApiSchemaMvcServer>
+        <OutputPath>$(IntermediateOutputPath)%(OpenApiSchemaMvcServer.WorkingOutputPath)</OutputPath>
+        <Namespace Condition=" '%(OpenApiSchemaMvcServer.Namespace)' == '' ">$(RootNamespace)$([System.Text.RegularExpressions.Regex]::Replace($([System.Text.RegularExpressions.Regex]::Replace('/$([System.IO.Path]::GetDirectoryName('%(OpenApiSchemaMvcServer.WorkingOutputPath)'))', '[/\\]', '.')), '\.$', ''))</Namespace>
+      </OpenApiSchemaMvcServer>
+    </ItemGroup>
+  </Target>
+
+  <Target Name="CleanServerOpenApiCodeGen" BeforeTargets="Clean" DependsOnTargets="_UpdateServerOpenApiCodeGenMetatdata">
+    <Delete Files="@(OpenApiSchemaMvcServer -> '%(OutputPath)')" ContinueOnError="true" />
+  </Target>
+
+  <Target Name="_CompileServerOpenApiCodeGen" DependsOnTargets="_UpdateServerOpenApiCodeGenMetatdata" Inputs="$(MSBuildThisFileFullPath);$(MSBuildProjectFile);@(OpenApiSchemaMvcServer)" Outputs="@(OpenApiSchemaMvcServer -> '%(OutputPath)')">
+
+    <Exec Command="dotnet &quot;$(MSBuildThisFileDirectory)/PrincipleStudios.OpenApiCodegen.Server.Mvc.dll&quot; -o &quot;$(MSBuildProjectDirectory)/%(OpenApiSchemaMvcServer.OutputPath)&quot; -i &quot;%(OpenApiSchemaMvcServer.FullPath)&quot; -n &quot;%(OpenApiSchemaMvcServer.Namespace)&quot; -c %(OpenApiSchemaMvcServer.AdditionalProperties)"/>
+
+    <Message Text="OpenAPI: %(OpenApiSchemaMvcServer.Identity) -> %(OpenApiSchemaMvcServer.OutputPath)" />
+  </Target>
 </Project>

@@ -3,16 +3,13 @@
   <PropertyGroup>
     <AssemblyName>PrincipleStudios.OpenApiCodegen.Server.Mvc</AssemblyName>
     <RootNamespace>PrincipleStudios.OpenApi.CSharp</RootNamespace>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
     <LangVersion>9</LangVersion>
     <Nullable>enable</Nullable>
-    <Version>0.2.0-alpha.3</Version>
+    <Version>0.2.0-alpha.5</Version>
 
     <IsPackable>true</IsPackable>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-
-    <PublishSingleFile>true</PublishSingleFile>
-    <SelfContained>true</SelfContained>
 
     <PackageLicenseExpression>BSD-2-Clause</PackageLicenseExpression>
     <title>Controller source generators from OpenAPI specification for .NET 5</title>
@@ -28,26 +25,23 @@
     </description>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <IncludeBuildOutput>false</IncludeBuildOutput>
+    <OutputType>Exe</OutputType>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Handlebars.Net" Version="2.0.7" PrivateAssets="all" GeneratePathProperty="true" />
-    <PackageReference Include="Microsoft.OpenApi.Readers" Version="1.2.3" PrivateAssets="all" GeneratePathProperty="true" />
-    <PackageReference Include="Microsoft.OpenApi" Version="1.2.3" PrivateAssets="all" GeneratePathProperty="true" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" PrivateAssets="all" GeneratePathProperty="true" />
-    <PackageReference Include="SharpYaml" Version="1.6.5" PrivateAssets="all" GeneratePathProperty="true" />
+    <PackageReference Include="Handlebars.Net" Version="2.0.7" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.OpenApi.Readers" Version="1.2.3" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.OpenApi" Version="1.2.3" PrivateAssets="all" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" PrivateAssets="all" />
+    <PackageReference Include="SharpYaml" Version="1.6.5" PrivateAssets="all" />
+    <PackageReference Include="CommandLineParser" Version="2.8.0" PrivateAssets="all" />
   </ItemGroup>
 
   <ItemGroup>
     <!-- Package the generator in the analyzer directory of the nuget package -->
-    <None Include="$(OutputPath)\*.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
-    <!--<None Include="$(PkgMicrosoft_CodeAnalysis_Common)\lib\netstandard2.0\*.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />-->
-    <!--<None Include="$(PkgMicrosoft_CodeAnalysis_Analyzers)\lib\netstandard2.0\*.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />-->
-    <None Include="$(PkgMicrosoft_OpenApi_Readers)\lib\netstandard2.0\*.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
-    <None Include="$(PkgMicrosoft_OpenApi)\lib\netstandard2.0\*.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
-    <None Include="$(PkgSharpYaml)\lib\netstandard2.0\*.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
-    <None Include="$(PkgHandlebars_Net)\lib\netstandard2.0\*.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
-    <None Include="$(PkgNewtonsoft_Json)\lib\netstandard2.0\*.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+    <None Include="$(OutputPath)\*.exe" Pack="true" PackagePath="build" Visible="false" />
+    <None Include="$(OutputPath)\*.dll" Pack="true" PackagePath="build" Visible="false" />
+    <None Include="$(OutputPath)\*.json" Pack="true" PackagePath="build" Visible="false" />
   </ItemGroup>
   <ItemGroup>
     <None Include="*.props" Pack="true" PackagePath="build" />
