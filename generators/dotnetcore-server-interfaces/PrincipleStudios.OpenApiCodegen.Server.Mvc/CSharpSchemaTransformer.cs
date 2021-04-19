@@ -20,14 +20,14 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
             this.document = document;
         }
 
-        public bool UseInline(OpenApiSchema schema, OpenApiComponents components)
+        public bool UseInline(OpenApiSchema schema)
         {
             // C# can't inline things that must be referenced, and vice versa.
             // (Except with tuples, but those don't serialize/deserialize reliably yet.)
-            return !UseReference(schema, components);
+            return !UseReference(schema);
         }
 
-        public bool UseReference(OpenApiSchema schema, OpenApiComponents components)
+        public bool UseReference(OpenApiSchema schema)
         {
             return schema switch
             {
@@ -38,7 +38,7 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
                 { Enum: { Count: > 1 } } => true,
                 { Properties: { Count: > 1 } } => true,
                 { Type: "string" or "number" or "integer" or "boolean" } => false,
-                { Type: "array", Items: OpenApiSchema inner } => UseReference(inner, components),
+                { Type: "array", Items: OpenApiSchema inner } => UseReference(inner),
                 _ => throw new NotSupportedException(),
             };
         }
@@ -125,7 +125,7 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
             if (objectModel == null)
                 throw new ArgumentNullException(nameof(objectModel));
             var properties = objectModel.properties();
-            var required = objectModel.required().ToHashSet();
+            var required = new HashSet<string>(objectModel.required());
 
             return new templates.ObjectModel(
                 isEnum: false,

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Project>
+  <PropertyGroup>
+    <Authors>Matt DeKrey</Authors>
+    <PackageProjectUrl>https://github.com/mdekrey/principle-studios-openapi-generators</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/mdekrey/principle-studios-openapi-generators.git</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryBranch>master</RepositoryBranch>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <!-- TODO - PackageIconUrl is deprecated, and this is a bad URL anyway -->
+    <PackageIconUrl>https://principlestudios.com/wp-content/themes/principle/frontend/dist/favicon.png</PackageIconUrl>
+    <Copyright>2021 Matt DeKrey &amp; Principle Studios</Copyright>
+  </PropertyGroup>
+</Project>

@@ -22,19 +22,19 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
 
             var target = ConstructTarget(document);
 
-            Assert.True(target.UseInline(document.Paths["/pets"].Operations[OperationType.Get].Parameters.SingleOrDefault(p => p.Name == "tags").Schema, document.Components));
-            Assert.True(target.UseInline(document.Paths["/pets"].Operations[OperationType.Get].Parameters.SingleOrDefault(p => p.Name == "limit").Schema, document.Components));
-            Assert.False(target.UseInline(document.Paths["/pets"].Operations[OperationType.Get].Responses["200"].Content["application/json"].Schema, document.Components));
-            Assert.False(target.UseInline(document.Paths["/pets"].Operations[OperationType.Get].Responses["default"].Content["application/json"].Schema, document.Components));
-            Assert.False(target.UseInline(document.Paths["/pets"].Operations[OperationType.Post].RequestBody.Content["application/json"].Schema, document.Components));
-            Assert.False(target.UseInline(document.Paths["/pets"].Operations[OperationType.Post].Responses["200"].Content["application/json"].Schema, document.Components));
+            Assert.True(target.UseInline(document.Paths["/pets"].Operations[OperationType.Get].Parameters.SingleOrDefault(p => p.Name == "tags").Schema));
+            Assert.True(target.UseInline(document.Paths["/pets"].Operations[OperationType.Get].Parameters.SingleOrDefault(p => p.Name == "limit").Schema));
+            Assert.False(target.UseInline(document.Paths["/pets"].Operations[OperationType.Get].Responses["200"].Content["application/json"].Schema));
+            Assert.False(target.UseInline(document.Paths["/pets"].Operations[OperationType.Get].Responses["default"].Content["application/json"].Schema));
+            Assert.False(target.UseInline(document.Paths["/pets"].Operations[OperationType.Post].RequestBody.Content["application/json"].Schema));
+            Assert.False(target.UseInline(document.Paths["/pets"].Operations[OperationType.Post].Responses["200"].Content["application/json"].Schema));
 
-            Assert.True(target.UseInline(document.Paths["/pets/{id}"].Operations[OperationType.Get].Parameters.SingleOrDefault(p => p.Name == "id").Schema, document.Components));
-            Assert.True(target.UseInline(document.Paths["/pets/{id}"].Operations[OperationType.Delete].Parameters.SingleOrDefault(p => p.Name == "id").Schema, document.Components));
+            Assert.True(target.UseInline(document.Paths["/pets/{id}"].Operations[OperationType.Get].Parameters.SingleOrDefault(p => p.Name == "id").Schema));
+            Assert.True(target.UseInline(document.Paths["/pets/{id}"].Operations[OperationType.Delete].Parameters.SingleOrDefault(p => p.Name == "id").Schema));
 
-            Assert.False(target.UseInline(document.Components.Schemas["Pet"], document.Components));
-            Assert.False(target.UseInline(document.Components.Schemas["NewPet"], document.Components));
-            Assert.False(target.UseInline(document.Components.Schemas["Error"], document.Components));
+            Assert.False(target.UseInline(document.Components.Schemas["Pet"]));
+            Assert.False(target.UseInline(document.Components.Schemas["NewPet"]));
+            Assert.False(target.UseInline(document.Components.Schemas["Error"]));
         }
 
         [Theory]

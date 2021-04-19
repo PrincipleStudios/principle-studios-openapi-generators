@@ -1,5 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
+using System.Text;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.OpenApi.Models;
@@ -12,6 +15,13 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
     [Generator]
     public class ControllerGenerator : OpenApiGeneratorBase<ControllerGenerator.Options>
     {
+        private static readonly DiagnosticDescriptor IncludeNewtonsoftJson = new DiagnosticDescriptor(id: "PSAPICTRL001",
+                                                                                                  title: "Include a reference to Newtonsoft.Json",
+                                                                                                  messageFormat: "Include a reference to Newtonsoft.Json",
+                                                                                                  category: "PrincipleStudios.OpenApiCodegen.Server.Mvc",
+                                                                                                  DiagnosticSeverity.Warning,
+                                                                                                  isEnabledByDefault: true);
+
         const string propEnabled = "OpenApiServerInterfaceEnabled";
         const string propNamespace = "OpenApiServerInterfaceNamespace";
 
@@ -21,6 +31,18 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
 
         public record Options(OpenApiDocument Document, string DocumentNamespace) : OpenApiGeneratorOptions(Document);
 
+        public override void Execute(GeneratorExecutionContext context)
+        {
+            context.AddSource($"PrincipleStudios_NetCore_Test", Microsoft.CodeAnalysis.Text.SourceText.From("class HelloWorld {}", Encoding.UTF8));
+            context.ReportDiagnostic(Diagnostic.Create(FileGenerated, Location.None, $"PrincipleStudios_NetCore_Test"));
+
+            // check that the users compilation references the expected library 
+            if (!context.Compilation.ReferencedAssemblyNames.Any(ai => ai.Name.Equals("Newtonsoft.Json", StringComparison.OrdinalIgnoreCase)))
+            {
+                context.ReportDiagnostic(Diagnostic.Create(IncludeNewtonsoftJson, Location.None));
+            }
+            base.Execute(context);
+        }
 
         protected override IEnumerable<SourceEntry> SourceFilesFromAdditionalFile(Options options)
         {
@@ -35,16 +57,31 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
 
         protected override bool TryCreateOptions(AdditionalText file, OpenApiDocument document, AnalyzerConfigOptions opt, GeneratorExecutionContext context, [NotNullWhen(true)] out Options? result)
         {
-            if (!opt.TryGetValue($"build_metadata.additionalfiles.{propNamespace}", out var documentNamespace))
-            {
-                // TODO - report missing namespace
-                result = null;
-                return false;
-            }
+            var documentNamespace = opt.GetAdditionalFilesMetadata(propNamespace) ?? GetStandardNamespace(opt) ?? "PrincipleStudios.UnknownNamespace";
 
             result = new Options(document, documentNamespace);
             return true;
         }
 
+        private string? GetStandardNamespace(AnalyzerConfigOptions opt)
+        {
+            var identity = opt.GetAdditionalFilesMetadata("identity");
+            var link = opt.GetAdditionalFilesMetadata("link");
+            opt.TryGetValue("build_property.projectdir", out var projectDir);
+            opt.TryGetValue("build_property.rootnamespace", out var rootNamespace);
+
+            return CSharpNaming.ToNamespace(rootNamespace, projectDir, identity, link);
+        }
     }
+
+#if NETSTANDARD2_0
+    [System.AttributeUsage(AttributeTargets.Parameter, Inherited = false, AllowMultiple = false)]
+    sealed class NotNullWhenAttribute : Attribute
+    {
+        // This is a positional argument
+        public NotNullWhenAttribute(bool result)
+        {
+        }
+    }
+#endif
 }

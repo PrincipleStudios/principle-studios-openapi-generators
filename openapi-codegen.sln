@@ -7,7 +7,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PrincipleStudios.OpenApi.Tr
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PrincipleStudios.OpenApiCodegen.Server.Mvc", "generators\dotnetcore-server-interfaces\PrincipleStudios.OpenApiCodegen.Server.Mvc\PrincipleStudios.OpenApiCodegen.Server.Mvc.csproj", "{62DE31B8-C290-4005-91A5-EC91F276DCC5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PrincipleStudios.OpenApiCodegen.Server.Mvc.Test", "generators\dotnetcore-server-interfaces\PrincipleStudios.OpenApi.NetCore.ServerInterfaces.Test\PrincipleStudios.OpenApiCodegen.Server.Mvc.Test.csproj", "{670269BD-4BB6-4897-8960-C1E8C393FC14}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PrincipleStudios.OpenApiCodegen.Server.Mvc.Test", "generators\dotnetcore-server-interfaces\PrincipleStudios.OpenApi.NetCore.ServerInterfaces.Test\PrincipleStudios.OpenApiCodegen.Server.Mvc.Test.csproj", "{670269BD-4BB6-4897-8960-C1E8C393FC14}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{D2200E3D-74EF-46B0-90B8-A2042FDA416F}"
+	ProjectSection(SolutionItems) = preProject
+		Directory.Build.props = Directory.Build.props
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

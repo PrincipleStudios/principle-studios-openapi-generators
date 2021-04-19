@@ -5,8 +5,8 @@ namespace PrincipleStudios.OpenApi.Transformations
 {
     public interface IOpenApiSchemaTransformer
     {
-        bool UseInline(OpenApiSchema schema, OpenApiComponents components);
-        bool UseReference(OpenApiSchema schema, OpenApiComponents components);
+        bool UseInline(OpenApiSchema schema);
+        bool UseReference(OpenApiSchema schema);
 
         SourceEntry TransformParameter(OpenApiOperation operation, OpenApiParameter parameter);
         SourceEntry TransformResponse(OpenApiOperation operation, KeyValuePair<string, OpenApiResponse> response, OpenApiMediaType mediaType);

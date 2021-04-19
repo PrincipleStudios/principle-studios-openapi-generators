@@ -5,8 +5,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Text.Json;
+using Newtonsoft.Json;
 using System.Threading.Tasks;
+using Newtonsoft.Json.Linq;
 
 namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
 {
@@ -46,7 +47,8 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
             string packageName,
             Model model,
             IHandlebars? handlebars = null
-        ) {
+        )
+        {
             handlebars ??= CreateHandlebars();
             var (templateName, dict) = model switch
             {
@@ -62,34 +64,32 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
             IDictionary<string, object?> ToTemplate<TModel>(TModel m)
                 where TModel : Model
             {
-                return ToDictionary<ModelTemplate<TModel>>(new (header: header, packageName: packageName, model: m));
+                return ToDictionary<ModelTemplate<TModel>>(new(header: header, packageName: packageName, model: m));
             }
         }
 
         private static IDictionary<string, object?> ToDictionary<T>(T model)
         {
-            var serialized = JsonSerializer.Serialize(model, typeof(T));
-            var result = JsonSerializer.Deserialize<JsonElement>(serialized)!;
+            var result = model == null ? JValue.CreateNull() : JToken.FromObject(model);
 
             return (IDictionary<string, object?>)FromElement(result)!;
         }
 
-        private static object? FromElement(JsonElement result)
+        private static object? FromElement(JToken result)
         {
             return result switch
             {
-                { ValueKind: JsonValueKind.Undefined } => null,
-                { ValueKind: JsonValueKind.Null } => null,
-                { ValueKind: JsonValueKind.False } => false,
-                { ValueKind: JsonValueKind.True } => true,
-                { ValueKind: JsonValueKind.Number } => result.GetDouble(),
-                { ValueKind: JsonValueKind.String } => result.GetString(),
-                { ValueKind: JsonValueKind.Array } => (from item in result.EnumerateArray()
-                                                       select FromElement(item)).ToArray(),
-                { ValueKind: JsonValueKind.Object } => (from prop in result.EnumerateObject()
-                                                        let Value = FromElement(prop.Value)
-                                                        where Value != null
-                                                        select (prop.Name, Value)).ToDictionary(kvp => kvp.Name, kvp => kvp.Value),
+                { Type: JTokenType.Undefined } => null,
+                { Type: JTokenType.Null } => null,
+                { Type: JTokenType.Boolean } => result.ToObject<bool>(),
+                { Type: JTokenType.Float } => result.ToObject<double>(),
+                { Type: JTokenType.String } => result.ToObject<string>(),
+                JArray array => (from item in array
+                                 select FromElement(item)).ToArray(),
+                JObject obj => (from prop in obj.Properties()
+                                let Value = FromElement(prop.Value)
+                                where Value != null
+                                select (prop.Name, Value)).ToDictionary(kvp => kvp.Name, kvp => kvp.Value),
                 _ => throw new InvalidOperationException(),
             };
         }

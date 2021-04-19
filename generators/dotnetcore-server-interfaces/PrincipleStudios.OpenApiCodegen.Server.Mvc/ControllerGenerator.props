@@ -1,7 +1,22 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Project>
   <ItemGroup>
+    <CompilerVisibleProperty Include="RootNamespace" />
+    <CompilerVisibleProperty Include="ProjectDir" />
+
+    <CompilerVisibleItemMetadata Include="AdditionalFiles" MetadataName="Identity" />
+    <CompilerVisibleItemMetadata Include="AdditionalFiles" MetadataName="Link" />
     <CompilerVisibleItemMetadata Include="AdditionalFiles" MetadataName="OpenApiServerInterfaceEnabled" />
     <CompilerVisibleItemMetadata Include="AdditionalFiles" MetadataName="OpenApiServerInterfaceNamespace" />
+
+    <AvailableItemName Include="OpenApiSchemaMvcServer" DisplayName="Open API Schema MVC Server (OpenApiCodeGen)" />
+    <Watch Include="@(OpenApiSchemaMvcServer)" Condition=" '@(OpenApiSchemaMvcServer)' != '' " />   
+    
   </ItemGroup>
+
+  <Target Name="_InjectAdditionalFilesForOpenApiSchemaMvcServer" BeforeTargets="GenerateMSBuildEditorConfigFileShouldRun">
+    <ItemGroup>
+      <AdditionalFiles Include="@(OpenApiSchemaMvcServer->'%(rootdir)%(directory)%(filename)%(extension)')" OpenApiServerInterfaceEnabled="true" OpenApiServerInterfaceNamespace="PrincipleStudios.ServerInterfacesExample.Controllers" />
+    </ItemGroup>
+  </Target>
 </Project>

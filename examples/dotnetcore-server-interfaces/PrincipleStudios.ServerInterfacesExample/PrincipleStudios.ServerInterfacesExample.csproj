@@ -7,12 +7,15 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="5.0.3" />
-    <PackageReference Include="PrincipleStudios.OpenApiCodegen.Server.Mvc" Version="0.1.0-alpha.4" />
+    <PackageReference Include="PrincipleStudios.OpenApiCodegen.Server.Mvc" Version="0.2.0-alpha" />
   </ItemGroup>
 
   <ItemGroup>
     <OpenApiSchemaMvcServer Include="..\..\..\schemas\petstore.yaml" Link="Controllers\petstore.yaml" />
   </ItemGroup>
-
-
+  
+  <Target Name="_InjectAdditionalFiles" BeforeTargets="GenerateMSBuildEditorConfigFileShouldRun">
+    <Message Text="@(OpenApiSchemaMvcServer->'%(rootdir)%(directory)%(filename)%(extension)')" Importance="high" />
+    <Message Text="@(OpenApiSchemaMvcServer->'%(Identity) @ %(Link)')" Importance="high" />
+  </Target>
 </Project>

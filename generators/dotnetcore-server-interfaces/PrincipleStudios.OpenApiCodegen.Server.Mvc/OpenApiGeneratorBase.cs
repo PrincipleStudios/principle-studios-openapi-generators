@@ -18,6 +18,19 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
     public abstract class OpenApiGeneratorBase<TOptions> : ISourceGenerator
         where TOptions : OpenApiGeneratorOptions
     {
+        private static readonly DiagnosticDescriptor NoFilesGenerated = new DiagnosticDescriptor(id: "PSAPIGEN001",
+                                                                                          title: "No files found enabled",
+                                                                                          messageFormat: "No additional files were found enabled with '{0}'",
+                                                                                          category: "PrincipleStudios.OpenApiCodegen",
+                                                                                          DiagnosticSeverity.Warning,
+                                                                                          isEnabledByDefault: true);
+        protected static readonly DiagnosticDescriptor FileGenerated = new DiagnosticDescriptor(id: "PSAPIGEN002",
+                                                                                          title: "File generated",
+                                                                                          messageFormat: "Generated file '{0}'",
+                                                                                          category: "PrincipleStudios.OpenApiCodegen",
+                                                                                          DiagnosticSeverity.Info,
+                                                                                          isEnabledByDefault: true);
+
         private readonly string flagKey;
 
         public OpenApiGeneratorBase(string flagKey)
@@ -25,16 +38,21 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
             this.flagKey = flagKey;
         }
 
-        public void Execute(GeneratorExecutionContext context)
+        public virtual void Execute(GeneratorExecutionContext context)
         {
-            var options = GetLoadOptions(context);
+            var options = GetLoadOptions(context).ToArray();
+            if (!options.Any())
+                context.ReportDiagnostic(Diagnostic.Create(NoFilesGenerated, Location.None, flagKey));
             var nameCodeSequence = SourceFilesFromAdditionalFiles(options);
             foreach (var entry in nameCodeSequence)
+            {
                 context.AddSource($"PrincipleStudios_NetCore_ServerInterfaces_{entry.Key}", SourceText.From(entry.SourceText, Encoding.UTF8));
+                context.ReportDiagnostic(Diagnostic.Create(FileGenerated, Location.None, $"PrincipleStudios_NetCore_ServerInterfaces_{entry.Key}"));
+            }
         }
 
 
-        public void Initialize(GeneratorInitializationContext context)
+        public virtual void Initialize(GeneratorInitializationContext context)
         {
         }
 
@@ -42,20 +60,16 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
         {
             foreach (AdditionalText file in context.AdditionalFiles)
             {
-                var extension = Path.GetExtension(file.Path);
-                if (!extension.Equals(".json", StringComparison.OrdinalIgnoreCase) && !extension.Equals(".yaml", StringComparison.OrdinalIgnoreCase))
-                    continue;
-
                 var opt = context.AnalyzerConfigOptions.GetOptions(file);
 
-                opt.TryGetValue($"build_metadata.additionalfiles.{flagKey}", out string? parseForThisGeneratorText);
+                string? parseForThisGeneratorText = opt.GetAdditionalFilesMetadata(flagKey);
                 if (!bool.TryParse(parseForThisGeneratorText, out bool parseForThisGenerator) || !parseForThisGenerator)
                     continue;
 
                 if (TryParseFile(file, out var document, out var diagnostic))
                 {
-                    if (TryCreateOptions(file, document, opt, context, out var fileOptions))
-                        yield return fileOptions;
+                    if (TryCreateOptions(file, document!, opt, context, out var fileOptions))
+                        yield return fileOptions!;
                 }
                 else if (diagnostic != null)
                 {
