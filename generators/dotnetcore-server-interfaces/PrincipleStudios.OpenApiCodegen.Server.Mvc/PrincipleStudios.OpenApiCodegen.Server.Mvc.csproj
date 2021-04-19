@@ -58,4 +58,11 @@
     <ProjectReference Include="..\PrincipleStudios.OpenApiCodegen.Server.Mvc.Base\PrincipleStudios.OpenApiCodegen.Server.Mvc.Base.csproj" PrivateAssets="all" />
   </ItemGroup>
 
+  <Target Name="AddBlankFile" BeforeTargets="CoreCompile">
+    <!-- Resolves NU5128 -->
+    <Touch Files="$(OutputPath)\_._" AlwaysCreate="true" />
+    <ItemGroup>
+      <None Include="$(OutputPath)\_._" Pack="true" PackagePath="lib/$(TargetFramework)" Visible="false" />
+    </ItemGroup>
+  </Target>
 </Project>

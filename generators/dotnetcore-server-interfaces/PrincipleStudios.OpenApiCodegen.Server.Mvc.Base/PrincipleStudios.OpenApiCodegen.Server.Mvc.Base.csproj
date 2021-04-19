@@ -11,9 +11,6 @@
     <IsPackable>true</IsPackable>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 
-    <PublishSingleFile>true</PublishSingleFile>
-    <SelfContained>true</SelfContained>
-
     <PackageLicenseExpression>BSD-2-Clause</PackageLicenseExpression>
     <title>Controller source generators from OpenAPI specification for .NET 5</title>
     <PackageSummary>Adds source generators to generate C# controller base classes from an OpenAPI specification file.</PackageSummary>
@@ -27,7 +24,6 @@
       include the version you need; this package can use any version.
     </description>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <IncludeBuildOutput>false</IncludeBuildOutput>
   </PropertyGroup>
 
   <ItemGroup>

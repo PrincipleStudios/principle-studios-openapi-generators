@@ -4,10 +4,7 @@ using Microsoft.OpenApi.Readers;
 using PrincipleStudios.OpenApi.CSharp;
 using PrincipleStudios.OpenApi.Transformations;
 using System;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 var parserResult = new CommandLine.Parser().ParseArguments<Options>(args);
@@ -76,9 +73,9 @@ public class Options
     [Option('o', "output", Required = false, HelpText = "Output folder for files.")]
     public string? OutputPath { get; set; }
     [Option('i', "input", Required = true, HelpText = "Input path for OpenAPI document.")]
-    public string InputPath { get; set; }
+    public string InputPath { get; set; } = "";
     [Option('n', "namespace", Required = true, HelpText = "Default namespace.")]
-    public string RootNamespace { get; set; }
+    public string RootNamespace { get; set; } = "";
     [Option('c', "clean", Required = false, HelpText = "Clean the folder before generating files.")]
     public bool Clean { get; set; }
 }
