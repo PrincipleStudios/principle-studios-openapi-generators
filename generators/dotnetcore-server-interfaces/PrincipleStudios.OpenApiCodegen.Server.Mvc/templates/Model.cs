@@ -31,6 +31,7 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc.templates
         string baseName,
         string dataType,
         bool nullable,
+        bool isContainer,
         string name,
         bool required
     );

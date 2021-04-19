@@ -48,16 +48,12 @@ namespace {{this.packageName}}
             if (other is null) return false;
             if (ReferenceEquals(this, other)) return true;
 
-            return {{#each vars}}{{#if isContainer}}(
-                {{name}} == other.{{name}} ||
-                {{name}} != null &&
-                {{name}}.SequenceEqual(other.{{name}})
-            )
-            {{else}}(
-                {{name}} == other.{{name}} ||
-                {{^isEnum}}{{name}} != null &&
-                {{/isEnum}}{{name}}.Equals(other.{{name}})
-            ){{/if}}{{#unless @last}} && {{/unless}}{{/each}};
+            return {{#each vars}}(
+                {{name}} == other.{{name}} ||{{#if nullable}}
+                {{name}} != null &&{{/if}}{{#unless isContainer}}
+                {{name}}.Equals(other.{{name}}){{else}}
+                {{name}}.SequenceEqual(other.{{name}}){{/unless}}
+            ){{#unless @last}} && {{/unless}}{{/each}};
         }
 
         /// <summary>

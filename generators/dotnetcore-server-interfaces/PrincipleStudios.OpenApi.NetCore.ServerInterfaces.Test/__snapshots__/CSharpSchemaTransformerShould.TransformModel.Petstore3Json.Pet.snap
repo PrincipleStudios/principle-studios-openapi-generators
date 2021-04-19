@@ -97,16 +97,14 @@ namespace PrincipleStudios.Test
                 Category.Equals(other.Category)
             ) && (
                 Name == other.Name ||
-                Name != null &&
                 Name.Equals(other.Name)
             ) && (
                 PhotoUrls == other.PhotoUrls ||
-                PhotoUrls != null &&
-                PhotoUrls.Equals(other.PhotoUrls)
+                PhotoUrls.SequenceEqual(other.PhotoUrls)
             ) && (
                 Tags == other.Tags ||
                 Tags != null &&
-                Tags.Equals(other.Tags)
+                Tags.SequenceEqual(other.Tags)
             ) && (
                 Status == other.Status ||
                 Status != null &&

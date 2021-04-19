@@ -57,11 +57,9 @@ namespace PrincipleStudios.Test
 
             return (
                 Code == other.Code ||
-                Code != null &&
                 Code.Equals(other.Code)
             ) && (
                 Message == other.Message ||
-                Message != null &&
                 Message.Equals(other.Message)
             );
         }

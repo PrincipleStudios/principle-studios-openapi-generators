@@ -65,7 +65,6 @@ namespace PrincipleStudios.Test
 
             return (
                 Name == other.Name ||
-                Name != null &&
                 Name.Equals(other.Name)
             ) && (
                 Tag == other.Tag ||
@@ -73,7 +72,6 @@ namespace PrincipleStudios.Test
                 Tag.Equals(other.Tag)
             ) && (
                 Id == other.Id ||
-                Id != null &&
                 Id.Equals(other.Id)
             );
         }

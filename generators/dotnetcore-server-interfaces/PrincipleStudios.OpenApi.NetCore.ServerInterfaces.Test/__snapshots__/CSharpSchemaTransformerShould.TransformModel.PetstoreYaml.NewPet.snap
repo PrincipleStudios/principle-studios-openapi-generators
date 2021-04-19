@@ -56,7 +56,6 @@ namespace PrincipleStudios.Test
 
             return (
                 Name == other.Name ||
-                Name != null &&
                 Name.Equals(other.Name)
             ) && (
                 Tag == other.Tag ||

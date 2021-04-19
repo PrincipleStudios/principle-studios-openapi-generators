@@ -8,11 +8,11 @@ using System.Text.RegularExpressions;
 
 namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
 {
-    public record InlineDataType(string text, bool nullable)
+    public record InlineDataType(string text, bool nullable = false, bool isEnumerable = false)
     {
         // Assumes C#9 (thanks to source generators being new at that time)
         internal InlineDataType MakeNullable() =>
-            nullable ? this : new(text + "?", nullable);
+            nullable ? this : new(text + "?", nullable: true, isEnumerable: isEnumerable);
     }
 
     public class CSharpSchemaTransformer : IOpenApiSchemaTransformer
@@ -56,24 +56,24 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
             // from https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.3.md#data-types
             InlineDataType result = schema switch
             {
-                { Reference: not null, UnresolvedReference: false } => new(UseReferenceName(schema), false),
+                { Reference: not null, UnresolvedReference: false } => new(UseReferenceName(schema)),
                 //{ Enum: { Count: > 1 } } => UseReferenceName(schema),
-                { Type: "object", Properties: { Count: 0 }, AdditionalProperties: OpenApiSchema dictionaryValueSchema } => new($"global::System.Collections.Generic.Dictionary<string, {ToInlineDataType(dictionaryValueSchema, true).text}>", false),
-                { Type: "integer", Format: "int32" } => new("int", false),
-                { Type: "integer", Format: "int64" } => new("long", false),
-                { Type: "integer" } => new("int", false),
-                { Type: "number", Format: "float" } => new("float", false),
-                { Type: "number", Format: "double" } => new("double", false),
-                { Type: "number" } => new("double", false),
-                { Type: "string", Format: "byte" } => new("string", false), // TODO - is there a way to automate base64 decoding without custom code?
-                { Type: "string", Format: "binary" } => new("string", false), // TODO - is there a way to automate octet decoding without custom code? Or should this be a Stream?
-                { Type: "string", Format: "date" } => new("string", false), // TODO - make DateOnly available if target is .NET 6
-                { Type: "string", Format: "date-time" } => new("global::System.DateTimeOffset", false),
-                { Type: "string", Format: "uuid" or "guid" } => new("global::System.Guid", false),
-                { Type: "string" } => new("string", false),
-                { Type: "boolean" } => new("bool", false),
-                { Type: "array", Items: OpenApiSchema items } => new($"global::System.Collections.Generic.IEnumerable<{ToInlineDataType(items, true).text}>", false),
-                _ => new(UseReferenceName(schema), false),
+                { Type: "object", Properties: { Count: 0 }, AdditionalProperties: OpenApiSchema dictionaryValueSchema } => new($"global::System.Collections.Generic.Dictionary<string, {ToInlineDataType(dictionaryValueSchema, true).text}>", isEnumerable: true),
+                { Type: "integer", Format: "int32" } => new("int"),
+                { Type: "integer", Format: "int64" } => new("long"),
+                { Type: "integer" } => new("int"),
+                { Type: "number", Format: "float" } => new("float"),
+                { Type: "number", Format: "double" } => new("double"),
+                { Type: "number" } => new("double"),
+                { Type: "string", Format: "byte" } => new("string"), // TODO - is there a way to automate base64 decoding without custom code?
+                { Type: "string", Format: "binary" } => new("string"), // TODO - is there a way to automate octet decoding without custom code? Or should this be a Stream?
+                { Type: "string", Format: "date" } => new("string"), // TODO - make DateOnly available if target is .NET 6
+                { Type: "string", Format: "date-time" } => new("global::System.DateTimeOffset"),
+                { Type: "string", Format: "uuid" or "guid" } => new("global::System.Guid"),
+                { Type: "string" } => new("string"),
+                { Type: "boolean" } => new("bool"),
+                { Type: "array", Items: OpenApiSchema items } => new($"global::System.Collections.Generic.IEnumerable<{ToInlineDataType(items, true).text}>", isEnumerable: true),
+                _ => new(UseReferenceName(schema)),
             };
             return (schema is { Nullable: true } || !required)
                 ? result.MakeNullable()
@@ -149,6 +149,7 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
                            baseName: entry.Key,
                            dataType: dataType.text,
                            nullable: dataType.nullable,
+                           isContainer: dataType.isEnumerable,
                            name: CSharpNaming.ToPropertyName(entry.Key),
                            required: req
                         )).ToArray()
