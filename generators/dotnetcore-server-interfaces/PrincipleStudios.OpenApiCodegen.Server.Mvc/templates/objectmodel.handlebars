@@ -66,8 +66,8 @@ namespace {{this.packageName}}
             {
                 var hashCode = 41;
                 {{#each vars}}
-                if ({{name}} != null)
-                    hashCode = hashCode * 59 + {{name}}.GetHashCode();
+                {{#if nullable}}if ({{name}} != null)
+                    {{/if}}hashCode = hashCode * 59 + {{name}}.GetHashCode();
                 {{/each}}
                 return hashCode;
             }

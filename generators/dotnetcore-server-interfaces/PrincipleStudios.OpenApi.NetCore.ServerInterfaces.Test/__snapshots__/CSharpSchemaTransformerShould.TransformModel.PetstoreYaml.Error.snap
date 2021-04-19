@@ -73,10 +73,8 @@ namespace PrincipleStudios.Test
             unchecked // Overflow is fine, just wrap
             {
                 var hashCode = 41;
-                if (Code != null)
-                    hashCode = hashCode * 59 + Code.GetHashCode();
-                if (Message != null)
-                    hashCode = hashCode * 59 + Message.GetHashCode();
+                hashCode = hashCode * 59 + Code.GetHashCode();
+                hashCode = hashCode * 59 + Message.GetHashCode();
                 return hashCode;
             }
         }
