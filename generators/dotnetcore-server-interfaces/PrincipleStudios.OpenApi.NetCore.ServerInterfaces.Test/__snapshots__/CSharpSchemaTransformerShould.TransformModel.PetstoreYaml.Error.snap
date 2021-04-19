@@ -22,7 +22,7 @@ namespace PrincipleStudios.Test
     public partial class Error : IEquatable<Error>
     {
         public Error(
-            [JsonProperty(PropertyName="code"), Required] int Code
+            [JsonProperty(PropertyName="code"), Required] int Code, 
             [JsonProperty(PropertyName="message"), Required] string Message
         ) { 
             this.Code = Code;

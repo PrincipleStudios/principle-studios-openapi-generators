@@ -22,12 +22,12 @@ namespace PrincipleStudios.Test
     public partial class Pet : IEquatable<Pet>
     {
         public Pet(
-            [JsonProperty(PropertyName="id")] long Id
-            [JsonProperty(PropertyName="category")] Category Category
-            [JsonProperty(PropertyName="name"), Required] string Name
-            [JsonProperty(PropertyName="photoUrls"), Required] global::System.Collections.Generic.IEnumerable<string> PhotoUrls
-            [JsonProperty(PropertyName="tags")] global::System.Collections.Generic.IEnumerable<Tag> Tags
-            [JsonProperty(PropertyName="status")] string Status
+            [JsonProperty(PropertyName="id")] long? Id, 
+            [JsonProperty(PropertyName="category")] Category? Category, 
+            [JsonProperty(PropertyName="name"), Required] string Name, 
+            [JsonProperty(PropertyName="photoUrls"), Required] global::System.Collections.Generic.IEnumerable<string> PhotoUrls, 
+            [JsonProperty(PropertyName="tags")] global::System.Collections.Generic.IEnumerable<Tag>? Tags, 
+            [JsonProperty(PropertyName="status")] string? Status
         ) { 
             this.Id = Id;
             this.Category = Category;
@@ -41,13 +41,13 @@ namespace PrincipleStudios.Test
         /// Gets Id
         /// </summary>
         [JsonProperty(PropertyName="id")]
-        public long Id { get; }
+        public long? Id { get; }
 
         /// <summary>
         /// Gets Category
         /// </summary>
         [JsonProperty(PropertyName="category")]
-        public Category Category { get; }
+        public Category? Category { get; }
 
         /// <summary>
         /// Gets Name
@@ -67,13 +67,13 @@ namespace PrincipleStudios.Test
         /// Gets Tags
         /// </summary>
         [JsonProperty(PropertyName="tags")]
-        public global::System.Collections.Generic.IEnumerable<Tag> Tags { get; }
+        public global::System.Collections.Generic.IEnumerable<Tag>? Tags { get; }
 
         /// <summary>
         /// Gets Status
         /// </summary>
         [JsonProperty(PropertyName="status")]
-        public string Status { get; }
+        public string? Status { get; }
 
         public override bool Equals(object obj)
         {

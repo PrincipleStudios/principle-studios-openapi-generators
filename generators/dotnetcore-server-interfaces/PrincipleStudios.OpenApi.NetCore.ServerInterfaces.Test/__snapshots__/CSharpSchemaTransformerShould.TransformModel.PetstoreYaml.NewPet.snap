@@ -22,8 +22,8 @@ namespace PrincipleStudios.Test
     public partial class NewPet : IEquatable<NewPet>
     {
         public NewPet(
-            [JsonProperty(PropertyName="name"), Required] string Name
-            [JsonProperty(PropertyName="tag")] string Tag
+            [JsonProperty(PropertyName="name"), Required] string Name, 
+            [JsonProperty(PropertyName="tag")] string? Tag
         ) { 
             this.Name = Name;
             this.Tag = Tag;
@@ -40,7 +40,7 @@ namespace PrincipleStudios.Test
         /// Gets Tag
         /// </summary>
         [JsonProperty(PropertyName="tag")]
-        public string Tag { get; }
+        public string? Tag { get; }
 
         public override bool Equals(object obj)
         {

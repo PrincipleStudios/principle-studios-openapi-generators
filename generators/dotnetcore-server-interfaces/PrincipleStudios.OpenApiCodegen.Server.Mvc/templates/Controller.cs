@@ -27,6 +27,7 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc.templates
         string paramName,
         string? description,
         string dataType,
+        bool dataTypeNullable,
         bool isPathParam,
         bool isQueryParam,
         bool isHeaderParam,

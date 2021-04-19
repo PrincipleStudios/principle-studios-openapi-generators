@@ -22,14 +22,14 @@ namespace PrincipleStudios.Test
     public partial class User : IEquatable<User>
     {
         public User(
-            [JsonProperty(PropertyName="id")] long Id
-            [JsonProperty(PropertyName="username")] string Username
-            [JsonProperty(PropertyName="firstName")] string FirstName
-            [JsonProperty(PropertyName="lastName")] string LastName
-            [JsonProperty(PropertyName="email")] string Email
-            [JsonProperty(PropertyName="password")] string Password
-            [JsonProperty(PropertyName="phone")] string Phone
-            [JsonProperty(PropertyName="userStatus")] int UserStatus
+            [JsonProperty(PropertyName="id")] long? Id, 
+            [JsonProperty(PropertyName="username")] string? Username, 
+            [JsonProperty(PropertyName="firstName")] string? FirstName, 
+            [JsonProperty(PropertyName="lastName")] string? LastName, 
+            [JsonProperty(PropertyName="email")] string? Email, 
+            [JsonProperty(PropertyName="password")] string? Password, 
+            [JsonProperty(PropertyName="phone")] string? Phone, 
+            [JsonProperty(PropertyName="userStatus")] int? UserStatus
         ) { 
             this.Id = Id;
             this.Username = Username;
@@ -45,49 +45,49 @@ namespace PrincipleStudios.Test
         /// Gets Id
         /// </summary>
         [JsonProperty(PropertyName="id")]
-        public long Id { get; }
+        public long? Id { get; }
 
         /// <summary>
         /// Gets Username
         /// </summary>
         [JsonProperty(PropertyName="username")]
-        public string Username { get; }
+        public string? Username { get; }
 
         /// <summary>
         /// Gets FirstName
         /// </summary>
         [JsonProperty(PropertyName="firstName")]
-        public string FirstName { get; }
+        public string? FirstName { get; }
 
         /// <summary>
         /// Gets LastName
         /// </summary>
         [JsonProperty(PropertyName="lastName")]
-        public string LastName { get; }
+        public string? LastName { get; }
 
         /// <summary>
         /// Gets Email
         /// </summary>
         [JsonProperty(PropertyName="email")]
-        public string Email { get; }
+        public string? Email { get; }
 
         /// <summary>
         /// Gets Password
         /// </summary>
         [JsonProperty(PropertyName="password")]
-        public string Password { get; }
+        public string? Password { get; }
 
         /// <summary>
         /// Gets Phone
         /// </summary>
         [JsonProperty(PropertyName="phone")]
-        public string Phone { get; }
+        public string? Phone { get; }
 
         /// <summary>
         /// Gets UserStatus
         /// </summary>
         [JsonProperty(PropertyName="userStatus")]
-        public int UserStatus { get; }
+        public int? UserStatus { get; }
 
         public override bool Equals(object obj)
         {

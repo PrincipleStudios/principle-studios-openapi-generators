@@ -22,8 +22,8 @@ namespace PrincipleStudios.Test
     public partial class Pet : IEquatable<Pet>
     {
         public Pet(
-            [JsonProperty(PropertyName="name"), Required] string Name
-            [JsonProperty(PropertyName="tag")] string Tag
+            [JsonProperty(PropertyName="name"), Required] string Name, 
+            [JsonProperty(PropertyName="tag")] string? Tag, 
             [JsonProperty(PropertyName="id"), Required] long Id
         ) { 
             this.Name = Name;
@@ -42,7 +42,7 @@ namespace PrincipleStudios.Test
         /// Gets Tag
         /// </summary>
         [JsonProperty(PropertyName="tag")]
-        public string Tag { get; }
+        public string? Tag { get; }
 
         /// <summary>
         /// Gets Id

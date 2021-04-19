@@ -36,11 +36,13 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
                 operations: (from operation in pathItem.Operations
                              let sharedParams = (
                                      from param in operation.Value.Parameters
+                                     let dataType = ToInlineDataType(param.Schema, param.Required)
                                      select new templates.OperationParameter(
                                          rawName: param.Name,
                                          paramName: CSharpNaming.ToParameterName(param.Name),
                                          description: param.Description,
-                                         dataType: ToInlineDataType(param.Schema),
+                                         dataType: dataType.text,
+                                         dataTypeNullable: dataType.nullable,
                                          isPathParam: param.In == ParameterLocation.Path,
                                          isQueryParam: param.In == ParameterLocation.Query,
                                          isHeaderParam: param.In == ParameterLocation.Header,
@@ -70,13 +72,16 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
                                                  select new templates.OperationRequestBody(
                                                      name: CSharpNaming.ToTitleCaseIdentifier(operation.Value.OperationId + (singleContentType ? "" : contentType.Key)),
                                                      requestBodyType: contentType.Key,
-                                                     allParams: sharedParams.Concat(contentType.Value == null ? Enumerable.Empty<templates.OperationParameter>() : new[]
-                                                     {
-                                                         new templates.OperationParameter(
+                                                     allParams: sharedParams.Concat(contentType.Value == null 
+                                                        ? Enumerable.Empty<templates.OperationParameter>() 
+                                                        : from ct in new[] { contentType.Value }
+                                                          let dataType = ToInlineDataType(ct.Schema, true)
+                                                          select new templates.OperationParameter(
                                                              rawName: null,
                                                              paramName: CSharpNaming.ToParameterName(operation.Value.OperationId + " body"),
                                                              description: null,
-                                                             dataType: ToInlineDataType(contentType.Value.Schema),
+                                                             dataType: dataType.text,
+                                                             dataTypeNullable: dataType.nullable,
                                                              isPathParam: false,
                                                              isQueryParam: false,
                                                              isHeaderParam: false,
@@ -90,7 +95,7 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
                                                              minimum: contentType.Value.Schema.Minimum,
                                                              maximum: contentType.Value.Schema.Maximum
                                                          )
-                                                     })
+                                                     )
                                                  )).ToArray(),
                                  responses: new templates.OperationResponses(
                                      defaultResponse: operation.Value.Responses.ContainsKey("default") ? ToOperationResponse(operation.Value.Responses["default"]) : null,
@@ -121,7 +126,12 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
             return new OperationResponse(
                 description: openApiResponse.Description,
                 content: (from entry in openApiResponse.Content
-                          select new OperationResponseContentOption(mediaType: entry.Key, mediaTypeId: CSharpNaming.ToTitleCaseIdentifier(entry.Key), dataType: entry.Value.Schema != null ? ToInlineDataType(entry.Value.Schema) : null)).ToArray()
+                          let dataType = entry.Value.Schema != null ? ToInlineDataType(entry.Value.Schema, true) : null
+                          select new OperationResponseContentOption(
+                              mediaType: entry.Key,
+                              mediaTypeId: CSharpNaming.ToTitleCaseIdentifier(entry.Key),
+                              dataType: dataType?.text
+                          )).ToArray()
             );
         }
     }

@@ -8,6 +8,13 @@ using System.Text.RegularExpressions;
 
 namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
 {
+    public record InlineDataType(string text, bool nullable)
+    {
+        // Assumes C#9 (thanks to source generators being new at that time)
+        internal InlineDataType MakeNullable() =>
+            nullable ? this : new(text + "?", nullable);
+    }
+
     public class CSharpSchemaTransformer : IOpenApiSchemaTransformer
     {
         protected readonly string baseNamespace;
@@ -43,31 +50,34 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
             };
         }
 
-        protected string ToInlineDataType(OpenApiSchema schema)
+        protected InlineDataType ToInlineDataType(OpenApiSchema schema, bool required)
         {
             // TODO: Allow configuration of this
             // from https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.3.md#data-types
-            return schema switch
+            InlineDataType result = schema switch
             {
-                { Reference: not null, UnresolvedReference: false } => UseReferenceName(schema),
+                { Reference: not null, UnresolvedReference: false } => new(UseReferenceName(schema), false),
                 //{ Enum: { Count: > 1 } } => UseReferenceName(schema),
-                { Type: "object", Properties: { Count: 0 }, AdditionalProperties: OpenApiSchema dictionaryValueSchema } => $"global::System.Collections.Generic.Dictionary<string, {ToInlineDataType(dictionaryValueSchema)}>",
-                { Type: "integer", Format: "int32" } => "int",
-                { Type: "integer", Format: "int64" } => "long",
-                { Type: "integer" } => "int",
-                { Type: "number", Format: "float" } => "float",
-                { Type: "number", Format: "double" } => "double",
-                { Type: "number" } => "double",
-                { Type: "string", Format: "byte" } => "string", // TODO - is there a way to automate base64 decoding without custom code?
-                { Type: "string", Format: "binary" } => "string", // TODO - is there a way to automate octet decoding without custom code?
-                { Type: "string", Format: "date" } => "string", // TODO - make DateOnly available if target is .NET 6
-                { Type: "string", Format: "date-time" } => "global::System.DateTimeOffset",
-                { Type: "string", Format: "uuid" or "guid" } => "global::System.Guid",
-                { Type: "string" } => "string",
-                { Type: "boolean" } => "bool",
-                { Type: "array", Items: OpenApiSchema items } => $"global::System.Collections.Generic.IEnumerable<{ToInlineDataType(items)}>",
-                _ => UseReferenceName(schema),
+                { Type: "object", Properties: { Count: 0 }, AdditionalProperties: OpenApiSchema dictionaryValueSchema } => new($"global::System.Collections.Generic.Dictionary<string, {ToInlineDataType(dictionaryValueSchema, true).text}>", false),
+                { Type: "integer", Format: "int32" } => new("int", false),
+                { Type: "integer", Format: "int64" } => new("long", false),
+                { Type: "integer" } => new("int", false),
+                { Type: "number", Format: "float" } => new("float", false),
+                { Type: "number", Format: "double" } => new("double", false),
+                { Type: "number" } => new("double", false),
+                { Type: "string", Format: "byte" } => new("string", false), // TODO - is there a way to automate base64 decoding without custom code?
+                { Type: "string", Format: "binary" } => new("string", false), // TODO - is there a way to automate octet decoding without custom code? Or should this be a Stream?
+                { Type: "string", Format: "date" } => new("string", false), // TODO - make DateOnly available if target is .NET 6
+                { Type: "string", Format: "date-time" } => new("global::System.DateTimeOffset", false),
+                { Type: "string", Format: "uuid" or "guid" } => new("global::System.Guid", false),
+                { Type: "string" } => new("string", false),
+                { Type: "boolean" } => new("bool", false),
+                { Type: "array", Items: OpenApiSchema items } => new($"global::System.Collections.Generic.IEnumerable<{ToInlineDataType(items, true).text}>", false),
+                _ => new(UseReferenceName(schema), false),
             };
+            return (schema is { Nullable: true } || !required)
+                ? result.MakeNullable()
+                : result;
         }
 
         protected string UseReferenceName(OpenApiSchema schema)
@@ -133,11 +143,14 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
                 className: className,
                 parent: null, // TODO
                 vars: (from entry in properties
+                       let req = required.Contains(entry.Key)
+                       let dataType = ToInlineDataType(entry.Value, req)
                        select new templates.ModelVar(
                            baseName: entry.Key,
-                           dataType: ToInlineDataType(entry.Value),
+                           dataType: dataType.text,
+                           nullable: dataType.nullable,
                            name: CSharpNaming.ToPropertyName(entry.Key),
-                           required: required.Contains(entry.Key)
+                           required: req
                         )).ToArray()
             );
         }
@@ -147,7 +160,8 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
         private ObjectModel? BuildObjectModel(OpenApiSchema schema) =>
             schema switch
             {
-                { AllOf: { Count: > 0 } } => schema.AllOf.Select(BuildObjectModel).ToArray() switch {
+                { AllOf: { Count: > 0 } } => schema.AllOf.Select(BuildObjectModel).ToArray() switch
+                {
                     ObjectModel[] models when models.All(v => v != null) =>
                         new ObjectModel(
                             properties: () => models.SelectMany(m => m!.properties()).ToDictionary(p => p.Key, p => p.Value),

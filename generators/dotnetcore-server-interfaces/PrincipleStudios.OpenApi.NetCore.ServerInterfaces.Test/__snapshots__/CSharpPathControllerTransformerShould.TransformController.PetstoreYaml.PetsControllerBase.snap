@@ -39,13 +39,13 @@ namespace PrincipleStudios.Test
         // pet response
         [ProducesResponseType(200, Type = typeof(global::System.Collections.Generic.IEnumerable<Pet>))] // application/json
         public async Task<IActionResult> FindPets(
-            [FromQuery(Name = "tags")] global::System.Collections.Generic.IEnumerable<string> tags,
-            [FromQuery(Name = "limit")] int limit
+            [FromQuery(Name = "tags")] global::System.Collections.Generic.IEnumerable<string>? tags,
+            [FromQuery(Name = "limit")] int? limit
         ) => (await FindPetsTypeSafe(tags,limit)).ActionResult;
 
         protected abstract Task<TypeSafeFindPetsResult> FindPetsTypeSafe(
-            global::System.Collections.Generic.IEnumerable<string> tags, 
-            int limit);
+            global::System.Collections.Generic.IEnumerable<string>? tags, 
+            int? limit);
 
         public readonly struct TypeSafeFindPetsResult
         {

@@ -22,9 +22,9 @@ namespace PrincipleStudios.Test
     public partial class ApiResponse : IEquatable<ApiResponse>
     {
         public ApiResponse(
-            [JsonProperty(PropertyName="code")] int Code
-            [JsonProperty(PropertyName="type")] string Type
-            [JsonProperty(PropertyName="message")] string Message
+            [JsonProperty(PropertyName="code")] int? Code, 
+            [JsonProperty(PropertyName="type")] string? Type, 
+            [JsonProperty(PropertyName="message")] string? Message
         ) { 
             this.Code = Code;
             this.Type = Type;
@@ -35,19 +35,19 @@ namespace PrincipleStudios.Test
         /// Gets Code
         /// </summary>
         [JsonProperty(PropertyName="code")]
-        public int Code { get; }
+        public int? Code { get; }
 
         /// <summary>
         /// Gets Type
         /// </summary>
         [JsonProperty(PropertyName="type")]
-        public string Type { get; }
+        public string? Type { get; }
 
         /// <summary>
         /// Gets Message
         /// </summary>
         [JsonProperty(PropertyName="message")]
-        public string Message { get; }
+        public string? Message { get; }
 
         public override bool Equals(object obj)
         {

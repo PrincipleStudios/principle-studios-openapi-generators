@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-#nullable disable warnings
+#nullable enable
 
 namespace PrincipleStudios.ServerInterfacesExample.Controllers
 {
@@ -25,14 +25,18 @@ namespace PrincipleStudios.ServerInterfacesExample.Controllers
             }
         }
 
-        protected override async Task<TypeSafeFindPetsResult> FindPetsTypeSafe(IEnumerable<string> tags, int limit)
+        protected override async Task<TypeSafeFindPetsResult> FindPetsTypeSafe(IEnumerable<string>? tags, int? limit)
         {
             await Task.Yield();
-            var result = Data.pets.Where(p => tags.Contains(p.Value.tag));
-            //if (limit != null)
-            //{
-                result = result.Take(limit);
-            //}
+            var result = Data.pets.AsEnumerable();
+            if (tags != null)
+            {
+                result = result.Where(p => tags.Contains(p.Value.tag));
+            }
+            if (limit != null)
+            {
+                result = result.Take(limit.Value);
+            }
             return TypeSafeFindPetsResult.ApplicationJsonStatusCode200(result.Select(kvp => new Pet(kvp.Value.name, kvp.Value.tag, kvp.Key)).ToArray());
         }
 

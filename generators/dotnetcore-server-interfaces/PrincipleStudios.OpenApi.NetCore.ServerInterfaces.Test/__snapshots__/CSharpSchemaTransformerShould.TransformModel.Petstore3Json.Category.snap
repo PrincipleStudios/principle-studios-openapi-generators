@@ -22,8 +22,8 @@ namespace PrincipleStudios.Test
     public partial class Category : IEquatable<Category>
     {
         public Category(
-            [JsonProperty(PropertyName="id")] long Id
-            [JsonProperty(PropertyName="name")] string Name
+            [JsonProperty(PropertyName="id")] long? Id, 
+            [JsonProperty(PropertyName="name")] string? Name
         ) { 
             this.Id = Id;
             this.Name = Name;
@@ -33,13 +33,13 @@ namespace PrincipleStudios.Test
         /// Gets Id
         /// </summary>
         [JsonProperty(PropertyName="id")]
-        public long Id { get; }
+        public long? Id { get; }
 
         /// <summary>
         /// Gets Name
         /// </summary>
         [JsonProperty(PropertyName="name")]
-        public string Name { get; }
+        public string? Name { get; }
 
         public override bool Equals(object obj)
         {

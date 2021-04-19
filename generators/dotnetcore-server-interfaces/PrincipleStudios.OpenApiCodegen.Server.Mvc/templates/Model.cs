@@ -30,6 +30,7 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc.templates
     public record ModelVar(
         string baseName,
         string dataType,
+        bool nullable,
         string name,
         bool required
     );
