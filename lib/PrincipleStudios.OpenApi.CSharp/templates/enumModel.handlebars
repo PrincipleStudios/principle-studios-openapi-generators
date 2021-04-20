@@ -1,0 +1,31 @@
+{{>partial_header header}}
+using System;
+using System.Linq;
+using System.Text;
+using System.Collections.Generic;
+using System.Runtime.Serialization;
+using System.ComponentModel.DataAnnotations;
+using Newtonsoft.Json;
+#nullable enable
+#nullable disable warnings
+
+namespace {{this.packageName}}
+{ {{#with model as |model|}}{{#if description}}
+    /// <summary>
+    /// {{linewrap description "
+    /// "}}
+    /// </summary>{{/if}}
+    {{#if model.isString}}[JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]{{/if}}
+    public enum {{className}}
+    {
+        {{#each enumVars as |enumVar|}}
+        /// <summary>
+        /// Enum {{enumVar.name}} for {{{enumVar.value}}}
+        /// </summary>{{#if model.isString}}
+        [EnumMember(Value = "{{{enumVar.value}}}")]{{/if}}
+        {{enumVar.name}} = {{#if model.isString}}{{@index}}{{else}}{{{enumVar.value}}}{{/if}},
+
+        {{/each}}
+    }
+{{/with}}
+}

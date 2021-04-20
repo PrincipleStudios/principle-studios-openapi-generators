@@ -33,7 +33,7 @@ namespace PrincipleStudios.OpenApi.CSharp
             return schema switch
             {
                 { Reference: not null, UnresolvedReference: false } => false,
-                { Enum: { Count: > 1 } } => true,
+                { Type: "string", Enum: { Count: > 1 } } => true,
                 { AnyOf: { Count: > 1 } } => true,
                 { OneOf: { Count: > 1 } } => true,
                 { AllOf: { Count: > 1 } } => true,
@@ -63,7 +63,7 @@ namespace PrincipleStudios.OpenApi.CSharp
                 { UnresolvedReference: true } => throw new ArgumentException("Unable to resolve reference"),
                 { AllOf: { Count: > 1 } } => true,
                 { AnyOf: { Count: > 1 } } => true,
-                { Enum: { Count: > 1 } } => true,
+                { Type: "string", Enum: { Count: > 1 } } => true,
                 { Properties: { Count: > 1 } } => true,
                 { Type: "string" or "number" or "integer" or "boolean" } => false,
                 { Type: "array", Items: OpenApiSchema inner } => UseReference(inner),
@@ -78,7 +78,6 @@ namespace PrincipleStudios.OpenApi.CSharp
             InlineDataType result = schema switch
             {
                 { Reference: not null, UnresolvedReference: false } => new(UseReferenceName(schema)),
-                //{ Enum: { Count: > 1 } } => UseReferenceName(schema),
                 { Type: "object", Properties: { Count: 0 }, AdditionalProperties: OpenApiSchema dictionaryValueSchema } => new($"global::System.Collections.Generic.Dictionary<string, {ToInlineDataType(dictionaryValueSchema, true).text}>", isEnumerable: true),
                 { Type: "integer", Format: "int32" } => new("int"),
                 { Type: "integer", Format: "int64" } => new("long"),
@@ -122,10 +121,10 @@ namespace PrincipleStudios.OpenApi.CSharp
                 packageName: targetNamespace,
                 model: schema switch
                 {
-                    { Enum: { Count: > 0 }, Type: "string" } => throw new NotSupportedException(),
+                    { Enum: { Count: > 0 }, Type: "string" } => ToEnumModel(className, schema),
                     _ => BuildObjectModel(schema) switch
                     {
-                        ObjectModel model => ToObjectModel(className, schema, model, Enumerable.Empty<string>().ConcatOne(className)),
+                        ObjectModel model => ToObjectModel(className, schema, model),
                         _ => throw new NotSupportedException()
                     }
                 },
@@ -138,7 +137,7 @@ namespace PrincipleStudios.OpenApi.CSharp
             };
         }
 
-        private templates.ObjectModel ToObjectModel(string className, OpenApiSchema schema, ObjectModel objectModel, IEnumerable<string> context)
+        private templates.ObjectModel ToObjectModel(string className, OpenApiSchema schema, ObjectModel objectModel)
         {
             if (objectModel == null)
                 throw new ArgumentNullException(nameof(objectModel));
@@ -146,7 +145,6 @@ namespace PrincipleStudios.OpenApi.CSharp
             var required = new HashSet<string>(objectModel.required());
 
             return new templates.ObjectModel(
-                isEnum: false,
                 description: schema.Description,
                 className: className,
                 parent: null, // TODO
@@ -161,6 +159,21 @@ namespace PrincipleStudios.OpenApi.CSharp
                            name: CSharpNaming.ToPropertyName(entry.Key),
                            required: req
                         )).ToArray()
+            );
+        }
+
+        private templates.EnumModel ToEnumModel(string className, OpenApiSchema schema)
+        {
+            return new templates.EnumModel(
+                schema.Description,
+                className,
+                isString: schema.Type == "string",
+                enumVars: (from entry in schema.Enum
+                           select entry switch
+                           {
+                               Microsoft.OpenApi.Any.OpenApiPrimitive<string> { Value: string name } => new templates.EnumVar(CSharpNaming.ToPropertyName(name), name),
+                               _ => throw new NotSupportedException()
+                           }).ToArray()
             );
         }
 
@@ -181,10 +194,5 @@ namespace PrincipleStudios.OpenApi.CSharp
                 { Type: "object" } => new ObjectModel(properties: () => schema.Properties, required: () => schema.Required),
                 _ => null,
             };
-
-        private templates.Model ToEnumModel(string className, OpenApiSchema schema)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

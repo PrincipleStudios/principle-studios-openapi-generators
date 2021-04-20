@@ -50,6 +50,7 @@ namespace PrincipleStudios.OpenApi.CSharp
             var (templateName, dict) = model switch
             {
                 ObjectModel m => ("objectmodel", ToTemplate(m)),
+                EnumModel m => ("enumModel", ToTemplate(m)),
                 _ => throw new NotImplementedException()
             };
             var template = handlebars.Configuration.RegisteredTemplates[templateName];

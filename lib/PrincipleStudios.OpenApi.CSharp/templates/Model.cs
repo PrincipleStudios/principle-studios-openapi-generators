@@ -19,8 +19,19 @@ namespace PrincipleStudios.OpenApi.CSharp.templates
         string className
     );
 
+    public record EnumModel(
+        string description,
+        string className,
+        bool isString,
+        EnumVar[] enumVars
+    ) : Model(description, className);
+
+    public record EnumVar(
+        string name,
+        string value
+    );
+
     public record ObjectModel(
-        bool isEnum,
         string description,
         string className,
         string? parent,

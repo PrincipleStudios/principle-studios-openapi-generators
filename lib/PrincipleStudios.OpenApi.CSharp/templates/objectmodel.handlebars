@@ -18,8 +18,8 @@ namespace {{this.packageName}}
     {{/if}}public partial class {{className}} : {{#if parent}}{{{parent}}}, {{/if}}IEquatable<{{className}}>
     {
         public {{className}}(
-        {{#each vars}}    [JsonProperty(PropertyName="{{baseName}}"){{#required}}, Required{{/required}}]{{!
-        data type: }} {{#isEnum}}{{{datatypeWithEnum}}}{{^isContainer}}?{{/isContainer}}{{/isEnum}}{{^isEnum}}{{{dataType}}}{{/isEnum}}{{!
+        {{#each vars}}    [JsonProperty(PropertyName="{{baseName}}"){{#if required}}, Required{{/if}}]{{!
+        data type: }} {{{dataType}}}{{!
         name: }} {{name}}{{#unless @last}}, {{/unless}}
         {{/each}}) { {{#each vars}}
             this.{{name}} = {{name}};{{/each}}
@@ -27,7 +27,7 @@ namespace {{this.packageName}}
 
         {{#each vars}}
         /// <summary>
-        /// Gets {{^description}}{{{name}}}{{/description}}{{#description}}{{description}}{{/description}}
+        /// Gets {{^if description}}{{{name}}}{{else}}{{description}}{{/if}}
         /// </summary>
         {{#if required}}
         [Required]
