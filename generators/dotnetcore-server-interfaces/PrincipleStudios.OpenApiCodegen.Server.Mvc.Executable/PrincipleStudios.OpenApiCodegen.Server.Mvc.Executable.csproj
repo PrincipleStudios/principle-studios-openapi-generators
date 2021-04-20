@@ -6,7 +6,7 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <LangVersion>9</LangVersion>
     <Nullable>enable</Nullable>
-    <Version>0.2.0-alpha.8</Version>
+    <Version>0.2.0</Version>
 
     <IsPackable>true</IsPackable>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
@@ -27,7 +27,8 @@
       startup file to ensure you have all base controllers implemented.
 
       This integrates during the build phase, so you can be sure your classes
-      are up to date with your schema documentation.
+      are up to date with your schema documentation. (You may need to
+      unload/reload your project in Visual Studio.)
 
       Depends on Newtonsoft.Json for attributes and serialization control. Be
       sure to include the version you need; this package can use any version.
