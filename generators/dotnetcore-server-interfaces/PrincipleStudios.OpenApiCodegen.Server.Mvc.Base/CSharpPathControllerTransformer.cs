@@ -35,9 +35,10 @@ namespace PrincipleStudios.OpenApi.CSharp
                 description: pathItem.Description,
 
                 operations: (from operation in pathItem.Operations
+                             let context = new[] { operation.Value.OperationId }
                              let sharedParams = (
                                      from param in operation.Value.Parameters
-                                     let dataType = ToInlineDataType(param.Schema, param.Required)
+                                     let dataType = ToInlineDataType(param.Schema, param.Required, context.ConcatOne(param.Name))
                                      select new templates.OperationParameter(
                                          rawName: param.Name,
                                          paramName: CSharpNaming.ToParameterName(param.Name),
@@ -76,7 +77,7 @@ namespace PrincipleStudios.OpenApi.CSharp
                                                      allParams: sharedParams.Concat(contentType.Value == null 
                                                         ? Enumerable.Empty<templates.OperationParameter>() 
                                                         : from ct in new[] { contentType.Value }
-                                                          let dataType = ToInlineDataType(ct.Schema, true)
+                                                          let dataType = ToInlineDataType(ct.Schema, true, context.ConcatOne(contentType.Key + "Request"))
                                                           select new templates.OperationParameter(
                                                              rawName: null,
                                                              paramName: CSharpNaming.ToParameterName(operation.Value.OperationId + " body"),
@@ -99,11 +100,11 @@ namespace PrincipleStudios.OpenApi.CSharp
                                                      )
                                                  )).ToArray(),
                                  responses: new templates.OperationResponses(
-                                     defaultResponse: operation.Value.Responses.ContainsKey("default") ? ToOperationResponse(operation.Value.Responses["default"]) : null,
+                                     defaultResponse: operation.Value.Responses.ContainsKey("default") ? ToOperationResponse(operation.Value.Responses["default"], context) : null,
                                      statusResponse: (from response in operation.Value.Responses
                                                       let parsed = TryParse(response.Key)
                                                       where parsed.parsed
-                                                      select (Key: parsed.value, Value: response.Value)).ToDictionary(p => p.Key, p => ToOperationResponse(p.Value))
+                                                      select (Key: parsed.value, Value: response.Value)).ToDictionary(p => p.Key, p => ToOperationResponse(p.Value, context))
                                 )
                              )).ToArray()
             );
@@ -122,12 +123,14 @@ namespace PrincipleStudios.OpenApi.CSharp
             }
         }
 
-        private OperationResponse ToOperationResponse(OpenApiResponse openApiResponse)
+        private OperationResponse ToOperationResponse(OpenApiResponse openApiResponse, IEnumerable<string> context)
         {
+            
             return new OperationResponse(
                 description: openApiResponse.Description,
                 content: (from entry in openApiResponse.Content
-                          let dataType = entry.Value.Schema != null ? ToInlineDataType(entry.Value.Schema, true) : null
+                          let responseContext = openApiResponse.Reference != null ? Enumerable.Empty<string>().ConcatOne(openApiResponse.Reference.Id) : context.ConcatOne(entry.Key)
+                          let dataType = entry.Value.Schema != null ? ToInlineDataType(entry.Value.Schema, true, responseContext.ConcatOne("response")) : null
                           select new OperationResponseContentOption(
                               mediaType: entry.Key,
                               mediaTypeId: CSharpNaming.ToTitleCaseIdentifier(entry.Key),

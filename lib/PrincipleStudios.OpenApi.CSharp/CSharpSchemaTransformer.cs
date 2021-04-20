@@ -51,7 +51,7 @@ namespace PrincipleStudios.OpenApi.CSharp
             };
         }
 
-        protected InlineDataType ToInlineDataType(OpenApiSchema schema, bool required)
+        protected InlineDataType ToInlineDataType(OpenApiSchema schema, bool required, IEnumerable<string> context)
         {
             // TODO: Allow configuration of this
             // from https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.3.md#data-types
@@ -59,7 +59,7 @@ namespace PrincipleStudios.OpenApi.CSharp
             {
                 { Reference: not null, UnresolvedReference: false } => new(UseReferenceName(schema)),
                 //{ Enum: { Count: > 1 } } => UseReferenceName(schema),
-                { Type: "object", Properties: { Count: 0 }, AdditionalProperties: OpenApiSchema dictionaryValueSchema } => new($"global::System.Collections.Generic.Dictionary<string, {ToInlineDataType(dictionaryValueSchema, true).text}>", isEnumerable: true),
+                { Type: "object", Properties: { Count: 0 }, AdditionalProperties: OpenApiSchema dictionaryValueSchema } => new($"global::System.Collections.Generic.Dictionary<string, {ToInlineDataType(dictionaryValueSchema, true, context.ConcatOne("value")).text}>", isEnumerable: true),
                 { Type: "integer", Format: "int32" } => new("int"),
                 { Type: "integer", Format: "int64" } => new("long"),
                 { Type: "integer" } => new("int"),
@@ -73,8 +73,8 @@ namespace PrincipleStudios.OpenApi.CSharp
                 { Type: "string", Format: "uuid" or "guid" } => new("global::System.Guid"),
                 { Type: "string" } => new("string"),
                 { Type: "boolean" } => new("bool"),
-                { Type: "array", Items: OpenApiSchema items } => new($"global::System.Collections.Generic.IEnumerable<{ToInlineDataType(items, true).text}>", isEnumerable: true),
-                _ => new(UseReferenceName(schema)),
+                { Type: "array", Items: OpenApiSchema items } => new($"global::System.Collections.Generic.IEnumerable<{ToInlineDataType(items, true, context.ConcatOne("item")).text}>", isEnumerable: true),
+                _ => new(CSharpNaming.ToClassName(string.Join(" ", context))),
             };
             return (schema is { Nullable: true } || !required)
                 ? result.MakeNullable()
@@ -118,7 +118,7 @@ namespace PrincipleStudios.OpenApi.CSharp
                     { Enum: { Count: > 0 }, Type: "string" } => throw new NotSupportedException(),
                     _ => BuildObjectModel(schema) switch
                     {
-                        ObjectModel model => ToObjectModel(className, schema, model),
+                        ObjectModel model => ToObjectModel(className, schema, model, Enumerable.Empty<string>().ConcatOne(className)),
                         _ => throw new NotSupportedException()
                     }
                 },
@@ -131,7 +131,7 @@ namespace PrincipleStudios.OpenApi.CSharp
             };
         }
 
-        private templates.ObjectModel ToObjectModel(string className, OpenApiSchema schema, ObjectModel objectModel)
+        private templates.ObjectModel ToObjectModel(string className, OpenApiSchema schema, ObjectModel objectModel, IEnumerable<string> context)
         {
             if (objectModel == null)
                 throw new ArgumentNullException(nameof(objectModel));
@@ -145,7 +145,7 @@ namespace PrincipleStudios.OpenApi.CSharp
                 parent: null, // TODO
                 vars: (from entry in properties
                        let req = required.Contains(entry.Key)
-                       let dataType = ToInlineDataType(entry.Value, req)
+                       let dataType = ToInlineDataType(entry.Value, req, context.ConcatOne(entry.Key))
                        select new templates.ModelVar(
                            baseName: entry.Key,
                            dataType: dataType.text,
