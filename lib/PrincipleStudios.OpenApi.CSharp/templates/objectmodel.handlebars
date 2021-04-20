@@ -53,7 +53,7 @@ namespace {{this.packageName}}
                 {{name}} != null &&{{/if}}{{#unless isContainer}}
                 {{name}}.Equals(other.{{name}}){{else}}
                 {{name}}.SequenceEqual(other.{{name}}){{/unless}}
-            ){{#unless @last}} && {{/unless}}{{/each}};
+            ){{#unless @last}} && {{/unless}}{{else}}true{{/each}};
         }
 
         /// <summary>

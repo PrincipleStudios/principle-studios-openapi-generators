@@ -48,9 +48,6 @@ namespace PrincipleStudios.OpenApi.Transformations
 
             for (var entry = baseSchemas.Pop(); baseSchemas.Count > 0; entry = baseSchemas.Pop())
             {
-                if (openApiSchemaTransformer.UseInline(entry.schema))
-                    continue;
-
                 var context = entry.context;
                 if (entry.schema.Reference != null)
                 {

@@ -5,7 +5,7 @@
     <Watch Include="@(OpenApiSchemaMvcServer)" Condition=" '@(OpenApiSchemaMvcServer)' != '' " />
   </ItemGroup>
 
-  <Target Name="CompileServerOpenApiCodeGen" BeforeTargets="PrepareForBuild" DependsOnTargets="_CompileServerOpenApiCodeGen" Condition=" '@(OpenApiSchemaMvcServer)' != '' ">
+  <Target Name="CompileServerOpenApiCodeGen" BeforeTargets="GenerateMSBuildEditorConfigFileShouldRun" DependsOnTargets="_CompileServerOpenApiCodeGen" Condition=" '@(OpenApiSchemaMvcServer)' != '' ">
     <ItemGroup>
       <Compile Include="%(OpenApiSchemaMvcServer.OutputPath)/**/*.cs" />
     </ItemGroup>

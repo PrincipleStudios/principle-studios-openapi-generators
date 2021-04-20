@@ -37,7 +37,7 @@ namespace PS.Controller
             if (other is null) return false;
             if (ReferenceEquals(this, other)) return true;
 
-            return ;
+            return true;
         }
 
         /// <summary>
