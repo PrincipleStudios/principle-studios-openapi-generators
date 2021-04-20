@@ -1,5 +1,4 @@
 ﻿using HandlebarsDotNet;
-using PrincipleStudios.OpenApi.CSharp.templates;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -23,12 +22,22 @@ namespace PrincipleStudios.OpenApi.CSharp
             return result;
         }
 
-        public static string ProcessController(this IHandlebars handlebars, ControllerTemplate controllerTemplate)
+        public static string ProcessController(this IHandlebars handlebars, templates.ControllerTemplate controllerTemplate)
         {
             var template = handlebars.Configuration.RegisteredTemplates["controller"];
 
             using var sr = new StringWriter();
             var dict = HandlebarsTemplateProcess.ToDictionary<templates.ControllerTemplate>(controllerTemplate);
+            template(sr, dict);
+            return sr.ToString();
+        }
+
+        public static string ProcessAddServices(this IHandlebars handlebars, templates.AddServicesModel addServices)
+        {
+            var template = handlebars.Configuration.RegisteredTemplates["addServices"];
+
+            using var sr = new StringWriter();
+            var dict = HandlebarsTemplateProcess.ToDictionary<templates.AddServicesModel>(addServices);
             template(sr, dict);
             return sr.ToString();
         }

@@ -22,10 +22,7 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
             var document = GetDocument(index);
 
             var schemaTransformer = new CSharpPathControllerTransformer(document, "PS.Controller");
-            var transformer = new CombineOpenApiSourceTransformer(
-                new SchemaSourceTransformer(schemaTransformer),
-                new PathControllerSourceTransformer(schemaTransformer)
-            );
+            var transformer = schemaTransformer.ToOpenApiSourceTransformer();
 
             var entries = transformer.ToSourceEntries(document);
             foreach (var entry in entries)

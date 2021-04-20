@@ -20,7 +20,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="5.0.3" />
-    <PackageReference Include="PrincipleStudios.OpenApiCodegen.Server.Mvc" Version="0.2.0-alpha.5" />
+    <PackageReference Include="PrincipleStudios.OpenApiCodegen.Server.Mvc" Version="0.2.0-alpha.6" />
   </ItemGroup>
 
   <ItemGroup>

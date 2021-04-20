@@ -25,10 +25,7 @@ return await parserResult.MapResult(async options =>
         return 1;
 
     var schemaTransformer = new CSharpPathControllerTransformer(openApiDocument, options.RootNamespace);
-    var transformer = new CombineOpenApiSourceTransformer(
-        new SchemaSourceTransformer(schemaTransformer),
-        new PathControllerSourceTransformer(schemaTransformer)
-    );
+    var transformer = schemaTransformer.ToOpenApiSourceTransformer();
 
     var entries = transformer.ToSourceEntries(openApiDocument);
     foreach (var entry in entries)

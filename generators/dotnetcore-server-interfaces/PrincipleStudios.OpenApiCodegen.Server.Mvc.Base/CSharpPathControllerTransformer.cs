@@ -123,6 +123,25 @@ namespace PrincipleStudios.OpenApi.CSharp
             }
         }
 
+        internal SourceEntry TransformAddServicesHelper(OpenApiPaths paths)
+        {
+            return new SourceEntry
+            {
+                Key = $"{baseNamespace}.AddServicesExtensions.cs",
+                SourceText = handlebars.Value.ProcessAddServices(new templates.AddServicesModel(
+                    header: new templates.PartialHeader(
+                        appName: document.Info.Title,
+                        appDescription: document.Info.Description,
+                        version: document.Info.Version,
+                        infoEmail: document.Info.Contact?.Email
+                    ),
+                    methodName: CSharpNaming.ToMethodName(document.Info.Title),
+                    packageName: baseNamespace,
+                    controllers: paths.Select(p => new templates.ControllerReference(CSharpNaming.ToClassName(p.Key))).ToArray()
+                )),
+            };
+        }
+
         private OperationResponse ToOperationResponse(OpenApiResponse openApiResponse)
         {
             return new OperationResponse(
@@ -134,6 +153,18 @@ namespace PrincipleStudios.OpenApi.CSharp
                               mediaTypeId: CSharpNaming.ToTitleCaseIdentifier(entry.Key),
                               dataType: dataType?.text
                           )).ToArray()
+            );
+        }
+    }
+
+    public static class PathControllerTransformerFactory
+    {
+        public static IOpenApiSourceTransformer ToOpenApiSourceTransformer(this CSharpPathControllerTransformer schemaTransformer)
+        {
+            return new CombineOpenApiSourceTransformer(
+                new SchemaSourceTransformer(schemaTransformer),
+                new PathControllerSourceTransformer(schemaTransformer),
+                new DotNetMvcAddServicesHelperTransformer(schemaTransformer)
             );
         }
     }

@@ -45,10 +45,7 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
         protected override IEnumerable<SourceEntry> SourceFilesFromAdditionalFile(Options options)
         {
             var schemaTransformer = new CSharpPathControllerTransformer(options.Document, options.DocumentNamespace);
-            var transformer = new CombineOpenApiSourceTransformer(
-                new SchemaSourceTransformer(schemaTransformer),
-                new PathControllerSourceTransformer(schemaTransformer)
-            );
+            var transformer = schemaTransformer.ToOpenApiSourceTransformer();
 
             return transformer.ToSourceEntries(options.Document);
         }
