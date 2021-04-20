@@ -15,6 +15,7 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
     {
         [InlineData(0)]
         [InlineData(1)]
+        [InlineData(2)]
         [Theory]
         public void CoverFullFiles(int index)
         {

@@ -1,0 +1,167 @@
+{
+  "openapi": "3.0.2",
+  "info": {
+    "title": "Principle Tech Demo",
+    "version": "1.0.0",
+    "description": "Tech demo for Principle Studios' engineering team",
+    "contact": {
+      "email": "matt.dekrey@principlestudios.com"
+    },
+    "license": {
+      "name": "Apache 2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+    },
+    "x-logo": {
+      "url": ""
+    }
+  },
+  "servers": [
+    {
+      "url": "https://demo.principlestudios.com/api/v1"
+    }
+  ],
+  "paths": {
+    "/power": {
+      "summary": "Get power flows data",
+      "get": {
+        "description": "",
+        "operationId": "getPowerFlows",
+        "summary": "Get information on where electricity is flowing within a virtual home",
+        "parameters": [
+          {
+            "in": "query",
+            "example": "",
+            "required": true,
+            "deprecated": false,
+            "allowEmptyValue": false,
+            "schema": {
+              "example": "",
+              "type": "string",
+              "format": "uuid",
+              "pattern": ""
+            },
+            "name": "houseId"
+          },
+          {
+            "in": "query",
+            "example": "",
+            "schema": {
+              "example": "",
+              "type": "string",
+              "format": "datetime",
+              "pattern": ""
+            },
+            "required": false,
+            "deprecated": false,
+            "allowEmptyValue": false,
+            "name": "start"
+          },
+          {
+            "in": "query",
+            "example": "",
+            "schema": {
+              "example": "",
+              "type": "string",
+              "format": "datetime",
+              "pattern": ""
+            },
+            "required": false,
+            "deprecated": false,
+            "allowEmptyValue": false,
+            "name": "end"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": "",
+                "schema": {
+                  "example": "",
+                  "type": "object",
+                  "properties": {}
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Request range or house id not valid"
+          }
+        }
+      }
+    },
+    "/battery/current": {
+      "summary": "Current information about the battery",
+      "get": {
+        "description": "",
+        "operationId": "getCurrentBatteryState",
+        "summary": "Get current battery state",
+        "parameters": [
+          {
+            "in": "query",
+            "example": "00000000-0000-0000-0000-000000000000",
+            "required": true,
+            "deprecated": false,
+            "allowEmptyValue": false,
+            "schema": {
+              "example": "",
+              "type": "string",
+              "format": "uuid",
+              "pattern": ""
+            },
+            "name": "houseId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": "",
+                "schema": {
+                  "$ref": "#/components/schemas/CurrentBatteryState"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Request range or house id not valid"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "CurrentBatteryState": {
+        "properties": {
+          "percent": {
+            "type": "number",
+            "format": "double",
+            "minimum": 0,
+            "maximum": 100
+          },
+          "currentCharge": {
+            "type": "number",
+            "format": "double"
+          },
+          "maxCharge": {
+            "type": "number",
+            "format": "double"
+          }
+        }
+      }
+    },
+    "responses": {},
+    "parameters": {},
+    "examples": {},
+    "requestBodies": {},
+    "headers": {},
+    "securitySchemes": {},
+    "links": {},
+    "callbacks": {}
+  },
+  "security": [],
+  "tags": []
+}

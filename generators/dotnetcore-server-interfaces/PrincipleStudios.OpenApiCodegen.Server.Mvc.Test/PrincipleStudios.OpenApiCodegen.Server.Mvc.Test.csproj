@@ -9,6 +9,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="..\..\..\schemas\power-sample.json" Link="power-sample.json" />
+  </ItemGroup>
+
+  <ItemGroup>
     <EmbeddedResource Include="..\..\..\schemas\petstore.yaml" Link="petstore.yaml" />
     <EmbeddedResource Include="..\..\..\schemas\petstore3.json" Link="petstore3.json" />
   </ItemGroup>

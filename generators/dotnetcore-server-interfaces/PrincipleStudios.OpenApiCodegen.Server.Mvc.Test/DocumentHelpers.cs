@@ -23,6 +23,7 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
             {
                 0 => "petstore.yaml",
                 1 => "petstore3.json",
+                2 => "power-sample.json",
                 _ => throw new ArgumentException(nameof(index)),
             };
         }

@@ -6,7 +6,7 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <LangVersion>9</LangVersion>
     <Nullable>enable</Nullable>
-    <Version>0.2.0-alpha.6</Version>
+    <Version>0.2.0-alpha.7</Version>
 
     <IsPackable>true</IsPackable>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>

@@ -43,7 +43,7 @@ namespace PrincipleStudios.OpenApi.CSharp
                 { Type: "string" } => false,
                 { Type: "boolean" } => false,
                 { Type: "array", Items: OpenApiSchema items } => false,
-                { Properties: { Count: > 1 } } => true,
+                { Type: "object" } => true,
                 _ => throw new NotSupportedException("Unkonwn schema"),
             };
         }
@@ -64,6 +64,7 @@ namespace PrincipleStudios.OpenApi.CSharp
                 { AllOf: { Count: > 1 } } => true,
                 { AnyOf: { Count: > 1 } } => true,
                 { Type: "string", Enum: { Count: > 1 } } => true,
+                { Type: "object" } => true,
                 { Properties: { Count: > 1 } } => true,
                 { Type: "string" or "number" or "integer" or "boolean" } => false,
                 { Type: "array", Items: OpenApiSchema inner } => UseReference(inner),
@@ -191,7 +192,7 @@ namespace PrincipleStudios.OpenApi.CSharp
                         ),
                     _ => null
                 },
-                { Type: "object" } => new ObjectModel(properties: () => schema.Properties, required: () => schema.Required),
+                { Type: "object" } or { Properties: { Count: > 0 } } => new ObjectModel(properties: () => schema.Properties, required: () => schema.Required),
                 _ => null,
             };
     }
