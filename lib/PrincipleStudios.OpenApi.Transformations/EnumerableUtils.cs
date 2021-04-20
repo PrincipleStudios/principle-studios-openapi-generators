@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace PrincipleStudios.OpenApi.CSharp
+namespace PrincipleStudios.OpenApi.Transformations
 {
     public static class EnumerableUtils
     {

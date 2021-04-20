@@ -38,7 +38,7 @@ namespace PrincipleStudios.OpenApi.CSharp
                              let context = new[] { operation.Value.OperationId }
                              let sharedParams = (
                                      from param in operation.Value.Parameters
-                                     let dataType = ToInlineDataType(param.Schema, param.Required, context.ConcatOne(param.Name))
+                                     let dataType = ToInlineDataType(param.Schema, param.Required)
                                      select new templates.OperationParameter(
                                          rawName: param.Name,
                                          paramName: CSharpNaming.ToParameterName(param.Name),
@@ -77,7 +77,7 @@ namespace PrincipleStudios.OpenApi.CSharp
                                                      allParams: sharedParams.Concat(contentType.Value == null 
                                                         ? Enumerable.Empty<templates.OperationParameter>() 
                                                         : from ct in new[] { contentType.Value }
-                                                          let dataType = ToInlineDataType(ct.Schema, true, context.ConcatOne(contentType.Key + "Request"))
+                                                          let dataType = ToInlineDataType(ct.Schema, true)
                                                           select new templates.OperationParameter(
                                                              rawName: null,
                                                              paramName: CSharpNaming.ToParameterName(operation.Value.OperationId + " body"),
@@ -100,11 +100,11 @@ namespace PrincipleStudios.OpenApi.CSharp
                                                      )
                                                  )).ToArray(),
                                  responses: new templates.OperationResponses(
-                                     defaultResponse: operation.Value.Responses.ContainsKey("default") ? ToOperationResponse(operation.Value.Responses["default"], context) : null,
+                                     defaultResponse: operation.Value.Responses.ContainsKey("default") ? ToOperationResponse(operation.Value.Responses["default"]) : null,
                                      statusResponse: (from response in operation.Value.Responses
                                                       let parsed = TryParse(response.Key)
                                                       where parsed.parsed
-                                                      select (Key: parsed.value, Value: response.Value)).ToDictionary(p => p.Key, p => ToOperationResponse(p.Value, context))
+                                                      select (Key: parsed.value, Value: response.Value)).ToDictionary(p => p.Key, p => ToOperationResponse(p.Value))
                                 )
                              )).ToArray()
             );
@@ -123,14 +123,12 @@ namespace PrincipleStudios.OpenApi.CSharp
             }
         }
 
-        private OperationResponse ToOperationResponse(OpenApiResponse openApiResponse, IEnumerable<string> context)
+        private OperationResponse ToOperationResponse(OpenApiResponse openApiResponse)
         {
-            
             return new OperationResponse(
                 description: openApiResponse.Description,
                 content: (from entry in openApiResponse.Content
-                          let responseContext = openApiResponse.Reference != null ? Enumerable.Empty<string>().ConcatOne(openApiResponse.Reference.Id) : context.ConcatOne(entry.Key)
-                          let dataType = entry.Value.Schema != null ? ToInlineDataType(entry.Value.Schema, true, responseContext.ConcatOne("response")) : null
+                          let dataType = entry.Value.Schema != null ? ToInlineDataType(entry.Value.Schema, true) : null
                           select new OperationResponseContentOption(
                               mediaType: entry.Key,
                               mediaTypeId: CSharpNaming.ToTitleCaseIdentifier(entry.Key),

@@ -55,7 +55,7 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
 
             var target = ConstructTarget(document);
 
-            var result = target.TransformComponentSchema(model, document.Components.Schemas[model]);
+            var result = target.TransformSchema(document.Components.Schemas[model]);
 
             Snapshot.Match(result.SourceText, $"{nameof(CSharpSchemaTransformerShould)}.{nameof(TransformModel)}.{CSharpNaming.ToTitleCaseIdentifier(documentName)}.{CSharpNaming.ToTitleCaseIdentifier(model)}");
         }

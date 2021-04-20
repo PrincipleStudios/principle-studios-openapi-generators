@@ -5,11 +5,11 @@ namespace PrincipleStudios.OpenApi.Transformations
 {
     public interface IOpenApiSchemaTransformer
     {
+        bool MakeReference(OpenApiSchema schema);
         bool UseInline(OpenApiSchema schema);
         bool UseReference(OpenApiSchema schema);
+        string UseReferenceName(OpenApiSchema schema);
 
-        SourceEntry TransformParameter(OpenApiOperation operation, OpenApiParameter parameter);
-        SourceEntry TransformResponse(OpenApiOperation operation, KeyValuePair<string, OpenApiResponse> response, OpenApiMediaType mediaType);
-        SourceEntry TransformComponentSchema(string key, OpenApiSchema schema);
+        SourceEntry TransformSchema(OpenApiSchema schema);
     }
 }

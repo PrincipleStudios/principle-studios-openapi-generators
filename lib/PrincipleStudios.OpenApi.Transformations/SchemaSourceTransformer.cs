@@ -17,28 +17,80 @@ namespace PrincipleStudios.OpenApi.Transformations
 
         public IEnumerable<SourceEntry> ToSourceEntries(OpenApiDocument document)
         {
-            // TODO - deep complex objects
-            //foreach (var operation in document.Paths.SelectMany(path => path.Value.Operations.Values))
-            //{
-            //    foreach (var parameter in operation.Parameters)
-            //    {
-            //        if (!openApiSchemaTransformer.UseInline(parameter.Schema))
-            //            yield return openApiSchemaTransformer.TransformParameter(operation, parameter);
-            //    }
-            //    foreach (var response in operation.Responses)
-            //    {
-            //        foreach (var mediaType in response.Value.Content.Values)
-            //        {
-            //            if (!openApiSchemaTransformer.UseInline(mediaType.Schema))
-            //                yield return openApiSchemaTransformer.TransformResponse(operation, response, mediaType);
-            //        }
-            //    }
-            //}
-
-            foreach (var componentSchema in document.Components.Schemas)
+            var extraSchemas = new HashSet<OpenApiSchema>();
+            var baseSchemas = new Stack<(OpenApiSchema schema, string context)>(new[]
             {
-                if (openApiSchemaTransformer.UseReference(componentSchema.Value))
-                    yield return openApiSchemaTransformer.TransformComponentSchema(componentSchema.Key, componentSchema.Value);
+                from path in document.Paths
+                from operation in path.Value.Operations
+                from param in operation.Value.Parameters
+                select (param.Schema, new[] { operation.Value.OperationId, param.Name }.AsEnumerable()),
+
+                from path in document.Paths
+                from operation in path.Value.Operations
+                from requestType in (operation.Value.RequestBody?.Content.AsEnumerable() ?? Enumerable.Empty<KeyValuePair<string, OpenApiMediaType>>())
+                select (requestType.Value.Schema, new[] { operation.Value.OperationId, requestType.Key, "request" }.AsEnumerable()),
+
+                from path in document.Paths
+                from operation in path.Value.Operations
+                from response in operation.Value.Responses
+                where response.Value.Reference == null
+                from responseType in response.Value.Content
+                select (responseType.Value.Schema, new[] { operation.Value.OperationId, response.Key, responseType.Key }.AsEnumerable()),
+
+                from schema in document.Components.Schemas
+                select (schema.Value, new[] { openApiSchemaTransformer.UseReferenceName(schema.Value) }.AsEnumerable()),
+
+                from response in document.Components.Responses
+                where response.Value.Reference == null
+                from responseType in response.Value.Content
+                select (responseType.Value.Schema, new[] { response.Key, responseType.Key }.AsEnumerable()),
+            }.SelectMany(p => p).Select(p => (p.Item1, string.Join(" ", p.Item2))));
+
+            for (var entry = baseSchemas.Pop(); baseSchemas.Count > 0; entry = baseSchemas.Pop())
+            {
+                if (openApiSchemaTransformer.UseInline(entry.schema))
+                    continue;
+
+                var context = entry.context;
+                if (entry.schema.Reference != null)
+                {
+                    context = entry.schema.Reference.Id;
+                }
+                else if (entry.schema.Reference == null && openApiSchemaTransformer.MakeReference(entry.schema))
+                {
+                    entry.schema.Reference = new OpenApiReference { Id = context, Type = ReferenceType.Schema };
+                    extraSchemas.Add(entry.schema);
+                }
+
+                if (entry.schema.Type == "object" && entry.schema.Properties != null)
+                {
+                    foreach (var p in entry.schema.Properties)
+                    {
+                        baseSchemas.Push((p.Value, context + " " + p.Key));
+                    }
+                }
+                if (entry.schema.Type == "array")
+                {
+                    baseSchemas.Push((entry.schema.Items, context + " items"));
+                }
+                //for (var i = 0; i < entry.schema.AllOf.Count; i++)
+                //{
+                //    baseSchemas.Push((entry.schema.AllOf[i], context + " part" + i.ToString()));
+                //}
+                for (var i = 0; i < entry.schema.AnyOf.Count; i++)
+                {
+                    baseSchemas.Push((entry.schema.AnyOf[i], context + " option" + i.ToString()));
+                }
+                for (var i = 0; i < entry.schema.OneOf.Count; i++)
+                {
+                    baseSchemas.Push((entry.schema.OneOf[i], context + " option" + i.ToString()));
+                }
+            }
+
+            foreach (var componentSchema in document.Components.Schemas.Values.Concat(extraSchemas))
+            {
+                if (openApiSchemaTransformer.UseReference(componentSchema))
+                    yield return openApiSchemaTransformer.TransformSchema(componentSchema);
             }
         }
 

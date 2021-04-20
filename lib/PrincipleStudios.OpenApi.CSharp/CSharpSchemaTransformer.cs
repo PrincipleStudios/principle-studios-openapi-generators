@@ -28,6 +28,26 @@ namespace PrincipleStudios.OpenApi.CSharp
             this.handlebars = new Lazy<IHandlebars>(handlebarsFactory);
         }
 
+        public bool MakeReference(OpenApiSchema schema)
+        {
+            return schema switch
+            {
+                { Reference: not null, UnresolvedReference: false } => false,
+                { Enum: { Count: > 1 } } => true,
+                { AnyOf: { Count: > 1 } } => true,
+                { OneOf: { Count: > 1 } } => true,
+                { AllOf: { Count: > 1 } } => true,
+                { Type: "object", Properties: { Count: 0 }, AdditionalProperties: OpenApiSchema dictionaryValueSchema } => false,
+                { Type: "integer" } => false,
+                { Type: "number" } => false,
+                { Type: "string" } => false,
+                { Type: "boolean" } => false,
+                { Type: "array", Items: OpenApiSchema items } => false,
+                { Properties: { Count: > 1 } } => true,
+                _ => throw new NotSupportedException("Unkonwn schema"),
+            };
+        }
+
         public bool UseInline(OpenApiSchema schema)
         {
             // C# can't inline things that must be referenced, and vice versa.
@@ -51,7 +71,7 @@ namespace PrincipleStudios.OpenApi.CSharp
             };
         }
 
-        protected InlineDataType ToInlineDataType(OpenApiSchema schema, bool required, IEnumerable<string> context)
+        protected InlineDataType ToInlineDataType(OpenApiSchema schema, bool required)
         {
             // TODO: Allow configuration of this
             // from https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.3.md#data-types
@@ -59,7 +79,7 @@ namespace PrincipleStudios.OpenApi.CSharp
             {
                 { Reference: not null, UnresolvedReference: false } => new(UseReferenceName(schema)),
                 //{ Enum: { Count: > 1 } } => UseReferenceName(schema),
-                { Type: "object", Properties: { Count: 0 }, AdditionalProperties: OpenApiSchema dictionaryValueSchema } => new($"global::System.Collections.Generic.Dictionary<string, {ToInlineDataType(dictionaryValueSchema, true, context.ConcatOne("value")).text}>", isEnumerable: true),
+                { Type: "object", Properties: { Count: 0 }, AdditionalProperties: OpenApiSchema dictionaryValueSchema } => new($"global::System.Collections.Generic.Dictionary<string, {ToInlineDataType(dictionaryValueSchema, true).text}>", isEnumerable: true),
                 { Type: "integer", Format: "int32" } => new("int"),
                 { Type: "integer", Format: "int64" } => new("long"),
                 { Type: "integer" } => new("int"),
@@ -73,37 +93,24 @@ namespace PrincipleStudios.OpenApi.CSharp
                 { Type: "string", Format: "uuid" or "guid" } => new("global::System.Guid"),
                 { Type: "string" } => new("string"),
                 { Type: "boolean" } => new("bool"),
-                { Type: "array", Items: OpenApiSchema items } => new($"global::System.Collections.Generic.IEnumerable<{ToInlineDataType(items, true, context.ConcatOne("item")).text}>", isEnumerable: true),
-                _ => new(CSharpNaming.ToClassName(string.Join(" ", context))),
+                { Type: "array", Items: OpenApiSchema items } => new($"global::System.Collections.Generic.IEnumerable<{ToInlineDataType(items, true).text}>", isEnumerable: true),
+                _ => throw new NotSupportedException("Unkonwn schema"),
             };
             return (schema is { Nullable: true } || !required)
                 ? result.MakeNullable()
                 : result;
         }
 
-        protected string UseReferenceName(OpenApiSchema schema)
+        public string UseReferenceName(OpenApiSchema schema)
         {
             return CSharpNaming.ToClassName(schema.Reference.Id);
         }
 
-        public SourceEntry TransformComponentSchema(string key, OpenApiSchema schema)
+        public SourceEntry TransformSchema(OpenApiSchema schema)
         {
-            return TransformSchema(baseNamespace, CSharpNaming.ToClassName(schema.Reference.Id), schema);
-        }
+            var targetNamespace = baseNamespace;
+            var className = CSharpNaming.ToClassName(schema.Reference.Id);
 
-        public SourceEntry TransformParameter(OpenApiOperation operation, OpenApiParameter parameter)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public SourceEntry TransformResponse(OpenApiOperation operation, KeyValuePair<string, OpenApiResponse> response, OpenApiMediaType mediaType)
-        {
-            throw new System.NotImplementedException();
-        }
-
-
-        protected SourceEntry TransformSchema(string targetNamespace, string className, OpenApiSchema schema)
-        {
             var header = new templates.PartialHeader(
                 appName: document.Info.Title,
                 appDescription: document.Info.Description,
@@ -145,7 +152,7 @@ namespace PrincipleStudios.OpenApi.CSharp
                 parent: null, // TODO
                 vars: (from entry in properties
                        let req = required.Contains(entry.Key)
-                       let dataType = ToInlineDataType(entry.Value, req, context.ConcatOne(entry.Key))
+                       let dataType = ToInlineDataType(entry.Value, req)
                        select new templates.ModelVar(
                            baseName: entry.Key,
                            dataType: dataType.text,

@@ -26,7 +26,7 @@ namespace PS.Controller
             [JsonProperty(PropertyName="petId")] long? PetId, 
             [JsonProperty(PropertyName="quantity")] int? Quantity, 
             [JsonProperty(PropertyName="shipDate")] global::System.DateTimeOffset? ShipDate, 
-            [JsonProperty(PropertyName="status")] string? Status, 
+            [JsonProperty(PropertyName="status")] OrderStatus? Status, 
             [JsonProperty(PropertyName="complete")] bool? Complete
         ) { 
             this.Id = Id;
@@ -65,7 +65,7 @@ namespace PS.Controller
         /// Gets Status
         /// </summary>
         [JsonProperty(PropertyName="status")]
-        public string? Status { get; }
+        public OrderStatus? Status { get; }
 
         /// <summary>
         /// Gets Complete

@@ -27,7 +27,7 @@ namespace PS.Controller
             [JsonProperty(PropertyName="name"), Required] string Name, 
             [JsonProperty(PropertyName="photoUrls"), Required] global::System.Collections.Generic.IEnumerable<string> PhotoUrls, 
             [JsonProperty(PropertyName="tags")] global::System.Collections.Generic.IEnumerable<Tag>? Tags, 
-            [JsonProperty(PropertyName="status")] string? Status
+            [JsonProperty(PropertyName="status")] PetStatus? Status
         ) { 
             this.Id = Id;
             this.Category = Category;
@@ -73,7 +73,7 @@ namespace PS.Controller
         /// Gets Status
         /// </summary>
         [JsonProperty(PropertyName="status")]
-        public string? Status { get; }
+        public PetStatus? Status { get; }
 
         public override bool Equals(object obj)
         {
