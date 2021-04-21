@@ -2,7 +2,7 @@ openapi: "3.0.3"
 info:
   version: 1.0.0
   title: No Refs Demo
-  description: A sample API that uses no rfs
+  description: A sample API that uses no refs
 paths:
   /address:
     post:
@@ -68,6 +68,11 @@ paths:
               schema:
                 type: string
                 format: binary
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: "petstore.yaml#/Pet"
         default:
           description: unexpected error
           content:

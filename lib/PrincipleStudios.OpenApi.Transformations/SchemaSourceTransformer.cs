@@ -91,9 +91,8 @@ namespace PrincipleStudios.OpenApi.Transformations
 
             foreach (var componentSchema in allSchemas)
             {
-                if (openApiSchemaTransformer.UseReference(componentSchema.schema))
-                    if (SafeTransform(componentSchema.schema, componentSchema.openApiPath, diagnostic) is SourceEntry e)
-                        yield return e;
+                if (SafeTransform(componentSchema.schema, componentSchema.openApiPath, diagnostic) is SourceEntry e)
+                    yield return e;
             }
         }
 
@@ -101,6 +100,13 @@ namespace PrincipleStudios.OpenApi.Transformations
         {
             try
             {
+                if (componentSchema.UnresolvedReference)
+                {
+                    diagnostic.Errors.Add(new(openApiPath, $"Unrsolved external reference: {componentSchema.Reference.Id} @ {componentSchema.Reference.ExternalResource}"));
+                    return null;
+                }
+                if (!openApiSchemaTransformer.UseReference(componentSchema))
+                    return null;
                 return openApiSchemaTransformer.TransformSchema(componentSchema, diagnostic);
             }
             catch (Exception ex)

@@ -13,6 +13,7 @@
     <EmbeddedResource Include="..\..\schemas\no-refs.yaml" Link="no-refs.yaml" />
     <EmbeddedResource Include="..\..\schemas\petstore.yaml" Link="petstore.yaml" />
     <EmbeddedResource Include="..\..\schemas\petstore3.json" Link="petstore3.json" />
+    <EmbeddedResource Include="..\..\schemas\bad.yaml" Link="bad.yaml" />
   </ItemGroup>
 
   <ItemGroup>

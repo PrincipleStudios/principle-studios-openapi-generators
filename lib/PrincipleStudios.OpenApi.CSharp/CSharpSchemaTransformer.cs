@@ -44,7 +44,7 @@ namespace PrincipleStudios.OpenApi.CSharp
                 { Type: "boolean" } => false,
                 { Type: "array", Items: OpenApiSchema items } => false,
                 { Type: "object" } => true,
-                _ => throw new NotSupportedException("Unkonwn schema"),
+                _ => throw new NotSupportedException("Unknown schema"),
             };
         }
 
@@ -68,7 +68,7 @@ namespace PrincipleStudios.OpenApi.CSharp
                 { Properties: { Count: > 1 } } => true,
                 { Type: "string" or "number" or "integer" or "boolean" } => false,
                 { Type: "array", Items: OpenApiSchema inner } => UseReference(inner),
-                _ => throw new NotSupportedException(),
+                _ => throw new NotSupportedException("Unknown schema"),
             };
         }
 
@@ -78,7 +78,7 @@ namespace PrincipleStudios.OpenApi.CSharp
             // from https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.3.md#data-types
             InlineDataType result = schema switch
             {
-                { Reference: not null, UnresolvedReference: false } => new(UseReferenceName(schema)),
+                { Reference: not null } => new(UseReferenceName(schema)),
                 { Type: "object", Properties: { Count: 0 }, AdditionalProperties: OpenApiSchema dictionaryValueSchema } => new($"global::System.Collections.Generic.Dictionary<string, {ToInlineDataType(dictionaryValueSchema, true).text}>", isEnumerable: true),
                 { Type: "integer", Format: "int32" } => new("int"),
                 { Type: "integer", Format: "int64" } => new("long"),
@@ -94,7 +94,7 @@ namespace PrincipleStudios.OpenApi.CSharp
                 { Type: "string" } => new("string"),
                 { Type: "boolean" } => new("bool"),
                 { Type: "array", Items: OpenApiSchema items } => new($"global::System.Collections.Generic.IEnumerable<{ToInlineDataType(items, true).text}>", isEnumerable: true),
-                _ => throw new NotSupportedException("Unkonwn schema"),
+                _ => throw new NotSupportedException("Unknown schema"),
             };
             return (schema is { Nullable: true } || !required)
                 ? result.MakeNullable()
