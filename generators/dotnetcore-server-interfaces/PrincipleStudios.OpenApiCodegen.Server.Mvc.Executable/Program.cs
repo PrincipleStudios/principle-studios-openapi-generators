@@ -28,7 +28,11 @@ return await parserResult.MapResult(async options =>
     var transformer = schemaTransformer.ToOpenApiSourceTransformer();
 
     var diagnostic = new OpenApiTransformDiagnostic();
-    var entries = transformer.ToSourceEntries(openApiDocument, diagnostic);
+    var entries = transformer.ToSourceEntries(openApiDocument, diagnostic).ToArray();
+    foreach (var error in diagnostic.Errors)
+    {
+        Console.Error.WriteLine($"{options.InputPath}(1): error PSOPENAPI000: {error.Context}: {error.Message}");
+    }
     foreach (var entry in entries)
     {
         await System.IO.File.WriteAllTextAsync(System.IO.Path.Combine(outputPath, entry.Key), entry.SourceText);
@@ -53,7 +57,7 @@ async Task<OpenApiDocument?> LoadOpenApiDocument(string inputPath)
             Console.WriteLine($"Errors while parsing OpenApi spec ({inputPath}):");
             foreach (var error in openApiDiagnostic.Errors)
             {
-                Console.Error.WriteLine($"  {error.Pointer}: {error.Message}");
+                Console.Error.WriteLine($"{inputPath}(1): error PSOPENAPI000: {error.Pointer}: {error.Message}");
             }
         }
 
