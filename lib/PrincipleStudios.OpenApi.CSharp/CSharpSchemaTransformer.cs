@@ -87,7 +87,7 @@ namespace PrincipleStudios.OpenApi.CSharp
                 { Type: "number", Format: "double" } => new("double"),
                 { Type: "number" } => new("double"),
                 { Type: "string", Format: "byte" } => new("string"), // TODO - is there a way to automate base64 decoding without custom code?
-                { Type: "string", Format: "binary" } => new("string"), // TODO - is there a way to automate octet decoding without custom code? Or should this be a Stream?
+                { Type: "string", Format: "binary" } => new("global::System.IO.Stream"),
                 { Type: "string", Format: "date" } => new("string"), // TODO - make DateOnly available if target is .NET 6
                 { Type: "string", Format: "date-time" } => new("global::System.DateTimeOffset"),
                 { Type: "string", Format: "uuid" or "guid" } => new("global::System.Guid"),

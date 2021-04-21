@@ -37,10 +37,10 @@ namespace PrincipleStudios.OpenApi.Transformations
                 from responseType in response.Value.Content
                 select (responseType.Value.Schema, new[] { operation.Value.OperationId, response.Key, responseType.Key }.AsEnumerable()),
 
-                from schema in document.Components.Schemas
-                select (schema.Value, new[] { openApiSchemaTransformer.UseReferenceName(schema.Value) }.AsEnumerable()),
+                from schema in document.Components?.Schemas?.Values.AsEnumerable() ?? Enumerable.Empty<OpenApiSchema>()
+                select (schema, new[] { openApiSchemaTransformer.UseReferenceName(schema) }.AsEnumerable()),
 
-                from response in document.Components.Responses
+                from response in document.Components?.Responses?.AsEnumerable() ?? Enumerable.Empty<KeyValuePair<string, OpenApiResponse>>()
                 where response.Value.Reference == null
                 from responseType in response.Value.Content
                 select (responseType.Value.Schema, new[] { response.Key, responseType.Key }.AsEnumerable()),
@@ -84,7 +84,7 @@ namespace PrincipleStudios.OpenApi.Transformations
                 }
             }
 
-            foreach (var componentSchema in document.Components.Schemas.Values.Concat(extraSchemas))
+            foreach (var componentSchema in (document.Components?.Schemas?.Values.AsEnumerable() ?? Enumerable.Empty<OpenApiSchema>()).Concat(extraSchemas))
             {
                 if (openApiSchemaTransformer.UseReference(componentSchema))
                     yield return openApiSchemaTransformer.TransformSchema(componentSchema);

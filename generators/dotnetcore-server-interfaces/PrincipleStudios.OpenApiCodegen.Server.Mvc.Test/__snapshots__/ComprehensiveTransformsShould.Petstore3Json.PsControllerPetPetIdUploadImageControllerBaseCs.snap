@@ -35,12 +35,12 @@ namespace PS.Controller
         [ProducesResponseType(200, Type = typeof(ApiResponse))] // application/json
         public async Task<IActionResult> UploadFile(
             [FromRoute(Name = "petId"), Required] long petId,
-            [FromBody, Required] string uploadFileBody
+            [FromBody, Required] global::System.IO.Stream uploadFileBody
         ) => (await UploadFileTypeSafe(petId,uploadFileBody)).ActionResult;
 
         protected abstract Task<TypeSafeUploadFileResult> UploadFileTypeSafe(
             long petId, 
-            string uploadFileBody);
+            global::System.IO.Stream uploadFileBody);
 
         public readonly struct TypeSafeUploadFileResult
         {
