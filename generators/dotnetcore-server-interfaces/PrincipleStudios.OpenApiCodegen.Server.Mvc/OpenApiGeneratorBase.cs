@@ -50,7 +50,8 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
             var options = GetLoadOptions(context).ToArray();
             if (!options.Any())
                 context.ReportDiagnostic(Diagnostic.Create(NoFilesGenerated, Location.None, sourceGroup));
-            var nameCodeSequence = SourceFilesFromAdditionalFiles(options).ToArray();
+            var diagnostic = new OpenApiTransformDiagnostic();
+            var nameCodeSequence = SourceFilesFromAdditionalFiles(options, diagnostic).ToArray();
             foreach (var entry in nameCodeSequence)
             {
                 context.AddSource($"PS_{entry.Key}", SourceText.From(entry.SourceText, Encoding.UTF8));
@@ -116,10 +117,10 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
             }
         }
 
-        protected IEnumerable<SourceEntry> SourceFilesFromAdditionalFiles(IEnumerable<TOptions> options) =>
-            options.SelectMany(opt => SourceFilesFromAdditionalFile(opt));
+        protected IEnumerable<SourceEntry> SourceFilesFromAdditionalFiles(IEnumerable<TOptions> options, OpenApiTransformDiagnostic diagnostic) =>
+            options.SelectMany(opt => SourceFilesFromAdditionalFile(opt, diagnostic));
 
-        protected abstract IEnumerable<SourceEntry> SourceFilesFromAdditionalFile(TOptions options);
+        protected abstract IEnumerable<SourceEntry> SourceFilesFromAdditionalFile(TOptions options, OpenApiTransformDiagnostic diagnostic);
         protected abstract bool TryCreateOptions(AdditionalText file, OpenApiDocument document, AnalyzerConfigOptions options, GeneratorExecutionContext context, [NotNullWhen(true)] out TOptions? result);
     }
 }

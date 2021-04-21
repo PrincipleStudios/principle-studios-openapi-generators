@@ -106,7 +106,7 @@ namespace PrincipleStudios.OpenApi.CSharp
             return CSharpNaming.ToClassName(schema.Reference.Id);
         }
 
-        public SourceEntry TransformSchema(OpenApiSchema schema)
+        public SourceEntry TransformSchema(OpenApiSchema schema, OpenApiTransformDiagnostic diagnostic)
         {
             var targetNamespace = baseNamespace;
             var className = CSharpNaming.ToClassName(schema.Reference.Id);

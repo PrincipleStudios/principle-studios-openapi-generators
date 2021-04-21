@@ -37,11 +37,11 @@ namespace PS.Controller
         // Invalid status value
 
         public async Task<IActionResult> FindPetsByStatus(
-            [FromQuery(Name = "status"), Required] global::System.Collections.Generic.IEnumerable<string> status
+            [FromQuery(Name = "status"), Required] global::System.Collections.Generic.IEnumerable<FindPetsByStatusStatusItems> status
         ) => (await FindPetsByStatusTypeSafe(status)).ActionResult;
 
         protected abstract Task<TypeSafeFindPetsByStatusResult> FindPetsByStatusTypeSafe(
-            global::System.Collections.Generic.IEnumerable<string> status);
+            global::System.Collections.Generic.IEnumerable<FindPetsByStatusStatusItems> status);
 
         public readonly struct TypeSafeFindPetsByStatusResult
         {

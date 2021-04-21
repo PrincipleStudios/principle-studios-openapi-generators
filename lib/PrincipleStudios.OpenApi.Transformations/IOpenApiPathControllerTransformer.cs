@@ -5,6 +5,6 @@ namespace PrincipleStudios.OpenApi.Transformations
 {
     public interface IOpenApiPathControllerTransformer
     {
-        SourceEntry TransformController(string key, OpenApiPathItem value);
+        SourceEntry TransformController(string key, OpenApiPathItem value, OpenApiTransformDiagnostic diagnostic);
     }
 }

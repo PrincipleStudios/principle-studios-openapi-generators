@@ -15,11 +15,25 @@ namespace PrincipleStudios.OpenApi.Transformations
             this.pathControllerTransformer = pathControllerTransformer;
         }
 
-        public IEnumerable<SourceEntry> ToSourceEntries(OpenApiDocument document)
+        public IEnumerable<SourceEntry> ToSourceEntries(OpenApiDocument document, OpenApiTransformDiagnostic diagnostic)
         {
             foreach (var controller in document.Paths)
             {
-                yield return pathControllerTransformer.TransformController(controller.Key, controller.Value);
+                if (SafeTransform(controller.Key, controller.Value, diagnostic) is SourceEntry entry)
+                    yield return entry;
+            }
+        }
+
+        private SourceEntry? SafeTransform(string key, OpenApiPathItem value, OpenApiTransformDiagnostic diagnostic)
+        {
+            try
+            {
+                return pathControllerTransformer.TransformController(key, value, diagnostic);
+            }
+            catch (Exception ex)
+            {
+                diagnostic.Errors.Add(new($"#/paths/{key.ToOpenApiPathContext()}", $"Unhandled exception: {ex.Message}"));
+                return null;
             }
         }
     }

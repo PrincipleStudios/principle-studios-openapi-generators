@@ -15,9 +15,9 @@ namespace PrincipleStudios.OpenApi.CSharp
             this.schemaTransformer = schemaTransformer;
         }
 
-        public IEnumerable<SourceEntry> ToSourceEntries(OpenApiDocument document)
+        public IEnumerable<SourceEntry> ToSourceEntries(OpenApiDocument document, OpenApiTransformDiagnostic diagnostic)
         {
-            yield return schemaTransformer.TransformAddServicesHelper(document.Paths);
+            yield return schemaTransformer.TransformAddServicesHelper(document.Paths, diagnostic);
         }
     }
 }

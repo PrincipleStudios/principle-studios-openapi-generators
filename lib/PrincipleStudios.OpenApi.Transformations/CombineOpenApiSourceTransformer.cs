@@ -14,10 +14,10 @@ namespace PrincipleStudios.OpenApi.Transformations
             this.transformers = transformers;
         }
 
-        public IEnumerable<SourceEntry> ToSourceEntries(OpenApiDocument document)
+        public IEnumerable<SourceEntry> ToSourceEntries(OpenApiDocument document, OpenApiTransformDiagnostic diagnostic)
         {
             foreach (var transformer in transformers)
-                foreach (var entry in transformer.ToSourceEntries(document))
+                foreach (var entry in transformer.ToSourceEntries(document, diagnostic))
                     yield return entry;
         }
     }

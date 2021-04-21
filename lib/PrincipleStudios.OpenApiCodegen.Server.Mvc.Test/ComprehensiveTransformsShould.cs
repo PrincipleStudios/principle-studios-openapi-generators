@@ -25,11 +25,13 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
 
             var schemaTransformer = new CSharpPathControllerTransformer(document, "PS.Controller");
             var transformer = schemaTransformer.ToOpenApiSourceTransformer();
+            OpenApiTransformDiagnostic diagnostic = new();
 
-            var entries = transformer.ToSourceEntries(document);
+            var entries = transformer.ToSourceEntries(document, diagnostic);
+
             foreach (var entry in entries)
             {
-                Snapshot.Match(entry.SourceText, $"{nameof(ComprehensiveTransformsShould)}.{CSharpNaming.ToTitleCaseIdentifier(name)}.{CSharpNaming.ToTitleCaseIdentifier(entry.Key)}");
+                Snapshot.Match(entry.SourceText, $"{nameof(ComprehensiveTransformsShould)}.{CSharpNaming.ToTitleCaseIdentifier(name)}.{CSharpNaming.ToTitleCaseIdentifier(entry.Key.Split('.')[^2])}");
             }
         }
     }

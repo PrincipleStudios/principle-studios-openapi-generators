@@ -17,7 +17,7 @@ namespace PrincipleStudios.OpenApi.Transformations
             this.defaultTagName = defaultTagName;
         }
 
-        public IEnumerable<SourceEntry> ToSourceEntries(OpenApiDocument document)
+        public IEnumerable<SourceEntry> ToSourceEntries(OpenApiDocument document, OpenApiTransformDiagnostic diagnostic)
         {
             var controllers = from path in document.Paths
                               from operation in path.Value.Operations
@@ -26,7 +26,7 @@ namespace PrincipleStudios.OpenApi.Transformations
 
             foreach (var controller in controllers)
             {
-                foreach (var entry in tagControllerTransformer.TransformController(controller.Key, controller))
+                foreach (var entry in tagControllerTransformer.TransformController(controller.Key, controller, diagnostic))
                 {
                     yield return entry;
                 }

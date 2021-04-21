@@ -16,7 +16,7 @@ namespace PrincipleStudios.OpenApi.CSharp
         {
         }
 
-        public SourceEntry TransformController(string path, OpenApiPathItem pathItem)
+        public SourceEntry TransformController(string path, OpenApiPathItem pathItem, OpenApiTransformDiagnostic diagnostic)
         {
             var className = CSharpNaming.ToClassName(path);
 
@@ -123,7 +123,7 @@ namespace PrincipleStudios.OpenApi.CSharp
             }
         }
 
-        internal SourceEntry TransformAddServicesHelper(OpenApiPaths paths)
+        internal SourceEntry TransformAddServicesHelper(OpenApiPaths paths, OpenApiTransformDiagnostic diagnostic)
         {
             return new SourceEntry
             {

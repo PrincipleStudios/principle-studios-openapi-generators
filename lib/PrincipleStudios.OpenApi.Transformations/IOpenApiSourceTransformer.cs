@@ -7,6 +7,6 @@ namespace PrincipleStudios.OpenApi.Transformations
 {
     public interface IOpenApiSourceTransformer
     {
-        IEnumerable<SourceEntry> ToSourceEntries(OpenApiDocument document);
+        IEnumerable<SourceEntry> ToSourceEntries(OpenApiDocument document, OpenApiTransformDiagnostic diagnostic);
     }
 }

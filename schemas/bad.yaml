@@ -1,0 +1,84 @@
+openapi: "3.0.3"
+info:
+  version: 1.0.0
+  title: No Refs Demo
+  description: A sample API that uses no rfs
+paths:
+  /address:
+    post:
+      operationId: lookupRecord
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - formattedAddress
+                - location
+              properties:
+                formattedAddress:
+                  type: string
+                location:
+                  type: object
+                  required:
+                    - latitude
+                    - longitude:
+                  properties:
+                    latitude:
+                      type: number
+                    longitude:
+                      type: number
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - code
+                  - message
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+  /photo/{id}:
+    get:
+      operationId: getPhoto
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - code
+                  - message
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string

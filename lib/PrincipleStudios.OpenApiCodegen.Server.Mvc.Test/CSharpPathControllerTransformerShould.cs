@@ -36,10 +36,11 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
             var document = GetDocument(documentId);
 
             var target = ConstructTarget(document);
+            OpenApiTransformDiagnostic diagnostic = new();
 
-            var result = target.TransformController(path, document.Paths[path]);
+            var result = target.TransformController(path, document.Paths[path], diagnostic);
 
-            Snapshot.Match(result.SourceText, $"{nameof(CSharpPathControllerTransformerShould)}.{nameof(TransformController)}.{CSharpNaming.ToTitleCaseIdentifier(documentName)}.{CSharpNaming.ToTitleCaseIdentifier(path)}ControllerBase");
+            Snapshot.Match(result.SourceText, $"{nameof(CSharpPathControllerTransformerShould)}.{nameof(TransformController)}.{CSharpNaming.ToTitleCaseIdentifier(documentName)}.{CSharpNaming.ToTitleCaseIdentifier(path)}");
         }
 
         private static IOpenApiPathControllerTransformer ConstructTarget(OpenApiDocument document, string baseNamespace = "PrincipleStudios.Test")

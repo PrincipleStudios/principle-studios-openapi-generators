@@ -1,6 +1,7 @@
 ﻿using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers;
 using PrincipleStudios.OpenApi.CSharp;
+using PrincipleStudios.OpenApi.Transformations;
 using Snapshooter.Xunit;
 using System;
 using System.Collections.Generic;
@@ -54,10 +55,11 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
             var document = GetDocument(documentId);
 
             var target = ConstructTarget(document);
+            OpenApiTransformDiagnostic diagnostic = new();
 
-            var result = target.TransformSchema(document.Components.Schemas[model]);
+            var result = target.TransformSchema(document.Components.Schemas[model], diagnostic);
 
-            Snapshot.Match(result.SourceText, $"{nameof(CSharpSchemaTransformerShould)}.{nameof(TransformModel)}.{CSharpNaming.ToTitleCaseIdentifier(documentName)}.{CSharpNaming.ToTitleCaseIdentifier(model)}");
+            Snapshot.Match(result.SourceText, $"Full-{nameof(TransformModel)}.{CSharpNaming.ToTitleCaseIdentifier(documentName)}.{CSharpNaming.ToTitleCaseIdentifier(model)}");
         }
 
         private static CSharpSchemaTransformer ConstructTarget(OpenApiDocument document, string baseNamespace = "PrincipleStudios.Test")

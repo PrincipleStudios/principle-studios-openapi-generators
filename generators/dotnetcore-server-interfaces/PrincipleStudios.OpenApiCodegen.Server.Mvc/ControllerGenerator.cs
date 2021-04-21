@@ -42,12 +42,12 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
             base.Execute(context);
         }
 
-        protected override IEnumerable<SourceEntry> SourceFilesFromAdditionalFile(Options options)
+        protected override IEnumerable<SourceEntry> SourceFilesFromAdditionalFile(Options options, OpenApiTransformDiagnostic diagnostic)
         {
             var schemaTransformer = new CSharpPathControllerTransformer(options.Document, options.DocumentNamespace);
             var transformer = schemaTransformer.ToOpenApiSourceTransformer();
 
-            return transformer.ToSourceEntries(options.Document);
+            return transformer.ToSourceEntries(options.Document, diagnostic);
         }
 
         protected override bool TryCreateOptions(AdditionalText file, OpenApiDocument document, AnalyzerConfigOptions opt, GeneratorExecutionContext context, [NotNullWhen(true)] out Options? result)

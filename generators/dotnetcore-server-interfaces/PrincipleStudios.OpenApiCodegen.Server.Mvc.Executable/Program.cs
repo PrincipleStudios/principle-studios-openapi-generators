@@ -27,7 +27,8 @@ return await parserResult.MapResult(async options =>
     var schemaTransformer = new CSharpPathControllerTransformer(openApiDocument, options.RootNamespace);
     var transformer = schemaTransformer.ToOpenApiSourceTransformer();
 
-    var entries = transformer.ToSourceEntries(openApiDocument);
+    var diagnostic = new OpenApiTransformDiagnostic();
+    var entries = transformer.ToSourceEntries(openApiDocument, diagnostic);
     foreach (var entry in entries)
     {
         await System.IO.File.WriteAllTextAsync(System.IO.Path.Combine(outputPath, entry.Key), entry.SourceText);
@@ -49,16 +50,18 @@ async Task<OpenApiDocument?> LoadOpenApiDocument(string inputPath)
         var document = reader.Read(openapiTextContent, out var openApiDiagnostic);
         if (openApiDiagnostic.Errors.Any())
         {
-            // TODO - report issues
-
-            return null;
+            Console.WriteLine($"Errors while parsing OpenApi spec ({inputPath}):");
+            foreach (var error in openApiDiagnostic.Errors)
+            {
+                Console.Error.WriteLine($"  {error.Pointer}: {error.Message}");
+            }
         }
 
         return document;
     }
-    catch
+    catch (Exception ex)
     {
-        // TODO - report invalid files
+        Console.Error.WriteLine($"Unable to parse OpenApi spec ({inputPath}): {ex.Message}");
         
         return null;
     }
