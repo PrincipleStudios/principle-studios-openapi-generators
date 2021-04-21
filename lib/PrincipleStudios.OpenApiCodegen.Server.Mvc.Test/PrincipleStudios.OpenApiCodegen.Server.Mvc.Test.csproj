@@ -9,10 +9,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="..\..\..\schemas\power-sample.json" Link="power-sample.json" />
-    <EmbeddedResource Include="..\..\..\schemas\no-refs.yaml" Link="no-refs.yaml" />
-    <EmbeddedResource Include="..\..\..\schemas\petstore.yaml" Link="petstore.yaml" />
-    <EmbeddedResource Include="..\..\..\schemas\petstore3.json" Link="petstore3.json" />
+    <EmbeddedResource Include="..\..\schemas\power-sample.json" Link="power-sample.json" />
+    <EmbeddedResource Include="..\..\schemas\no-refs.yaml" Link="no-refs.yaml" />
+    <EmbeddedResource Include="..\..\schemas\petstore.yaml" Link="petstore.yaml" />
+    <EmbeddedResource Include="..\..\schemas\petstore3.json" Link="petstore3.json" />
   </ItemGroup>
 
   <ItemGroup>
@@ -31,8 +31,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\lib\PrincipleStudios.OpenApi.Transformations\PrincipleStudios.OpenApi.Transformations.csproj" />
-    <ProjectReference Include="..\PrincipleStudios.OpenApiCodegen.Server.Mvc.Base\PrincipleStudios.OpenApiCodegen.Server.Mvc.Base.csproj" />
+    <ProjectReference Include="..\PrincipleStudios.OpenApi.Transformations\PrincipleStudios.OpenApi.Transformations.csproj" />
+    <ProjectReference Include="..\..\generators\dotnetcore-server-interfaces\PrincipleStudios.OpenApiCodegen.Server.Mvc.Base\PrincipleStudios.OpenApiCodegen.Server.Mvc.Base.csproj" />
   </ItemGroup>
 
   <ItemGroup>
