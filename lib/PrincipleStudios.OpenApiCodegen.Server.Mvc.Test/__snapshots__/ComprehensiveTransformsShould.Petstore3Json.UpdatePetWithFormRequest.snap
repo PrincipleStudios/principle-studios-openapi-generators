@@ -19,9 +19,9 @@ using Newtonsoft.Json;
 
 namespace PS.Controller
 { 
-    public partial class UpdatePetWithFormApplicationWwwFormUrlencodedRequest : IEquatable<UpdatePetWithFormApplicationWwwFormUrlencodedRequest>
+    public partial class UpdatePetWithFormRequest : IEquatable<UpdatePetWithFormRequest>
     {
-        public UpdatePetWithFormApplicationWwwFormUrlencodedRequest(
+        public UpdatePetWithFormRequest(
             [JsonProperty(PropertyName="name")] string? Name, 
             [JsonProperty(PropertyName="status")] string? Status
         ) { 
@@ -45,10 +45,10 @@ namespace PS.Controller
         {
             if (obj is null) return false;
             if (ReferenceEquals(this, obj)) return true;
-            return obj.GetType() == GetType() && Equals((UpdatePetWithFormApplicationWwwFormUrlencodedRequest)obj);
+            return obj.GetType() == GetType() && Equals((UpdatePetWithFormRequest)obj);
         }
 
-        public bool Equals(UpdatePetWithFormApplicationWwwFormUrlencodedRequest other)
+        public bool Equals(UpdatePetWithFormRequest other)
         {
             if (other is null) return false;
             if (ReferenceEquals(this, other)) return true;

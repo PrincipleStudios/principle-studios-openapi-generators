@@ -34,7 +34,7 @@ namespace PS.Controller
         [HttpGet]
         [Route("/power")]
         // 
-        [ProducesResponseType(200, Type = typeof(GetPowerFlows200ApplicationJson))] // application/json
+        [ProducesResponseType(200, Type = typeof(GetPowerFlowsResponse))] // application/json
         // Request range or house id not valid
 
         public async Task<IActionResult> GetPowerFlows(
@@ -73,8 +73,8 @@ namespace PS.Controller
             }
             
             
-            public static TypeSafeGetPowerFlowsResult ApplicationJsonStatusCode200(GetPowerFlows200ApplicationJson result) =>
-                new TypeSafeGetPowerFlowsResult(200, "application/json", typeof(GetPowerFlows200ApplicationJson), result);
+            public static TypeSafeGetPowerFlowsResult ApplicationJsonStatusCode200(GetPowerFlowsResponse result) =>
+                new TypeSafeGetPowerFlowsResult(200, "application/json", typeof(GetPowerFlowsResponse), result);
             
 
             /// <summary>Allows for action results not specified in the API</summary>

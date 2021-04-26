@@ -19,36 +19,48 @@ using Newtonsoft.Json;
 
 namespace PS.Controller
 { 
-    public partial class LookupRecord409ApplicationJson : IEquatable<LookupRecord409ApplicationJson>
+    public partial class GetPhotoOtherResponse : IEquatable<GetPhotoOtherResponse>
     {
-        public LookupRecord409ApplicationJson(
-            [JsonProperty(PropertyName="multiple")] global::System.Collections.Generic.IEnumerable<LookupRecord409ApplicationJsonMultipleItems>? Multiple
+        public GetPhotoOtherResponse(
+            [JsonProperty(PropertyName="code"), Required] string Code, 
+            [JsonProperty(PropertyName="message"), Required] string Message
         ) { 
-            this.Multiple = Multiple;
+            this.Code = Code;
+            this.Message = Message;
         }
 
         /// <summary>
-        /// Gets Multiple
+        /// Gets Code
         /// </summary>
-        [JsonProperty(PropertyName="multiple")]
-        public global::System.Collections.Generic.IEnumerable<LookupRecord409ApplicationJsonMultipleItems>? Multiple { get; }
+        [Required]
+        [JsonProperty(PropertyName="code")]
+        public string Code { get; }
+
+        /// <summary>
+        /// Gets Message
+        /// </summary>
+        [Required]
+        [JsonProperty(PropertyName="message")]
+        public string Message { get; }
 
         public override bool Equals(object obj)
         {
             if (obj is null) return false;
             if (ReferenceEquals(this, obj)) return true;
-            return obj.GetType() == GetType() && Equals((LookupRecord409ApplicationJson)obj);
+            return obj.GetType() == GetType() && Equals((GetPhotoOtherResponse)obj);
         }
 
-        public bool Equals(LookupRecord409ApplicationJson other)
+        public bool Equals(GetPhotoOtherResponse other)
         {
             if (other is null) return false;
             if (ReferenceEquals(this, other)) return true;
 
             return (
-                Multiple == other.Multiple ||
-                Multiple != null &&
-                Multiple.SequenceEqual(other.Multiple)
+                Code == other.Code ||
+                Code.Equals(other.Code)
+            ) && (
+                Message == other.Message ||
+                Message.Equals(other.Message)
             );
         }
 
@@ -61,8 +73,8 @@ namespace PS.Controller
             unchecked // Overflow is fine, just wrap
             {
                 var hashCode = 41;
-                if (Multiple != null)
-                    hashCode = hashCode * 59 + Multiple.GetHashCode();
+                hashCode = hashCode * 59 + Code.GetHashCode();
+                hashCode = hashCode * 59 + Message.GetHashCode();
                 return hashCode;
             }
         }

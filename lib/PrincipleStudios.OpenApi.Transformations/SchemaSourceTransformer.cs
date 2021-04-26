@@ -3,12 +3,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace PrincipleStudios.OpenApi.Transformations
 {
     public class SchemaSourceTransformer : IOpenApiSourceTransformer
     {
         private readonly IOpenApiSchemaTransformer openApiSchemaTransformer;
+        private readonly Regex _2xxRegex = new Regex("2[0-9]{2}");
 
         public SchemaSourceTransformer(IOpenApiSchemaTransformer openApiSchemaTransformer)
         {
@@ -30,15 +32,22 @@ namespace PrincipleStudios.OpenApi.Transformations
 
                 from path in document.Paths
                 from operation in path.Value.Operations
+                let onlyResponseType = (operation.Value.RequestBody?.Content.Count ?? 0) == 1
                 from requestType in (operation.Value.RequestBody?.Content.AsEnumerable() ?? Enumerable.Empty<KeyValuePair<string, OpenApiMediaType>>())
-                select (requestType.Value.Schema, new[] { operation.Value.OperationId, requestType.Key, "request" }.AsEnumerable(), $"#/paths/{path.Key.ToOpenApiPathContext()}/{operation.Key}/requestBody/content/{requestType.Key.ToOpenApiPathContext()}/schema"),
+                select (requestType.Value.Schema, new[] { operation.Value.OperationId, onlyResponseType ? "" : requestType.Key, "request" }.AsEnumerable(), $"#/paths/{path.Key.ToOpenApiPathContext()}/{operation.Key}/requestBody/content/{requestType.Key.ToOpenApiPathContext()}/schema"),
 
                 from path in document.Paths
                 from operation in path.Value.Operations
+                let onlyResponse = operation.Value.Responses.Count == 1
                 from response in operation.Value.Responses
+                let responseName = onlyResponse ? ""
+                    : _2xxRegex.IsMatch(response.Key) && operation.Value.Responses.Keys.Count(_2xxRegex.IsMatch) == 1 ? ""
+                    : response.Key == "default" && !operation.Value.Responses.ContainsKey("other") ? "other"
+                    : response.Key
                 where response.Value.Reference == null
+                let onlyResponseType = response.Value.Content.Count == 1
                 from responseType in response.Value.Content
-                select (responseType.Value.Schema, new[] { operation.Value.OperationId, response.Key, responseType.Key }.AsEnumerable(), $"#/paths/{path.Key.ToOpenApiPathContext()}/{operation.Key}/responses/{response.Key.ToOpenApiPathContext()}/content/{responseType.Key.ToOpenApiPathContext()}/schema"),
+                select (responseType.Value.Schema, new[] { operation.Value.OperationId, responseName, onlyResponseType ? "" : responseType.Key, "response" }.AsEnumerable(), $"#/paths/{path.Key.ToOpenApiPathContext()}/{operation.Key}/responses/{response.Key.ToOpenApiPathContext()}/content/{responseType.Key.ToOpenApiPathContext()}/schema"),
 
                 from response in document.Components?.Responses?.AsEnumerable() ?? Enumerable.Empty<KeyValuePair<string, OpenApiResponse>>()
                 where response.Value.Reference == null

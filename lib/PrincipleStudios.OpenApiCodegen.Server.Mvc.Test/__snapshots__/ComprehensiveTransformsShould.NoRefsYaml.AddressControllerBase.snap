@@ -28,17 +28,17 @@ namespace PS.Controller
         [Route("/address")]
         [Consumes("application/json")]
         // unexpected error
-        [ProducesDefaultResponseType(typeof(LookupRecordDefaultApplicationJson))] // application/json
+        [ProducesDefaultResponseType(typeof(LookupRecordOtherResponse))] // application/json
         // 
-        [ProducesResponseType(200, Type = typeof(LookupRecord200ApplicationJson))] // application/json
+        [ProducesResponseType(200, Type = typeof(LookupRecordResponse))] // application/json
         // 
-        [ProducesResponseType(409, Type = typeof(LookupRecord409ApplicationJson))] // application/json
+        [ProducesResponseType(409, Type = typeof(LookupRecord409Response))] // application/json
         public async Task<IActionResult> LookupRecord(
-            [FromBody, Required] LookupRecordApplicationJsonRequest lookupRecordBody
+            [FromBody, Required] LookupRecordRequest lookupRecordBody
         ) => (await LookupRecordTypeSafe(lookupRecordBody)).ActionResult;
 
         protected abstract Task<TypeSafeLookupRecordResult> LookupRecordTypeSafe(
-            LookupRecordApplicationJsonRequest lookupRecordBody);
+            LookupRecordRequest lookupRecordBody);
 
         public readonly struct TypeSafeLookupRecordResult
         {
@@ -65,16 +65,16 @@ namespace PS.Controller
             }
             
             
-            public static TypeSafeLookupRecordResult ApplicationJsonStatusCode200(LookupRecord200ApplicationJson result) =>
-                new TypeSafeLookupRecordResult(200, "application/json", typeof(LookupRecord200ApplicationJson), result);
+            public static TypeSafeLookupRecordResult ApplicationJsonStatusCode200(LookupRecordResponse result) =>
+                new TypeSafeLookupRecordResult(200, "application/json", typeof(LookupRecordResponse), result);
             
             
-            public static TypeSafeLookupRecordResult ApplicationJsonStatusCode409(LookupRecord409ApplicationJson result) =>
-                new TypeSafeLookupRecordResult(409, "application/json", typeof(LookupRecord409ApplicationJson), result);
+            public static TypeSafeLookupRecordResult ApplicationJsonStatusCode409(LookupRecord409Response result) =>
+                new TypeSafeLookupRecordResult(409, "application/json", typeof(LookupRecord409Response), result);
             
             
-            public static TypeSafeLookupRecordResult ApplicationJsonOtherStatusCode(int statusCode, LookupRecordDefaultApplicationJson result) =>
-                new TypeSafeLookupRecordResult(statusCode, "application/json", typeof(LookupRecordDefaultApplicationJson), result);
+            public static TypeSafeLookupRecordResult ApplicationJsonOtherStatusCode(int statusCode, LookupRecordOtherResponse result) =>
+                new TypeSafeLookupRecordResult(statusCode, "application/json", typeof(LookupRecordOtherResponse), result);
             
 
             /// <summary>Allows for action results not specified in the API</summary>

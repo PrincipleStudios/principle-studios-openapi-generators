@@ -19,48 +19,48 @@ using Newtonsoft.Json;
 
 namespace PS.Controller
 { 
-    public partial class LookupRecord409ApplicationJsonMultipleItemsLocation : IEquatable<LookupRecord409ApplicationJsonMultipleItemsLocation>
+    public partial class LookupRecordOtherResponse : IEquatable<LookupRecordOtherResponse>
     {
-        public LookupRecord409ApplicationJsonMultipleItemsLocation(
-            [JsonProperty(PropertyName="latitude"), Required] double Latitude, 
-            [JsonProperty(PropertyName="longitude"), Required] double Longitude
+        public LookupRecordOtherResponse(
+            [JsonProperty(PropertyName="code"), Required] string Code, 
+            [JsonProperty(PropertyName="message"), Required] string Message
         ) { 
-            this.Latitude = Latitude;
-            this.Longitude = Longitude;
+            this.Code = Code;
+            this.Message = Message;
         }
 
         /// <summary>
-        /// Gets Latitude
+        /// Gets Code
         /// </summary>
         [Required]
-        [JsonProperty(PropertyName="latitude")]
-        public double Latitude { get; }
+        [JsonProperty(PropertyName="code")]
+        public string Code { get; }
 
         /// <summary>
-        /// Gets Longitude
+        /// Gets Message
         /// </summary>
         [Required]
-        [JsonProperty(PropertyName="longitude")]
-        public double Longitude { get; }
+        [JsonProperty(PropertyName="message")]
+        public string Message { get; }
 
         public override bool Equals(object obj)
         {
             if (obj is null) return false;
             if (ReferenceEquals(this, obj)) return true;
-            return obj.GetType() == GetType() && Equals((LookupRecord409ApplicationJsonMultipleItemsLocation)obj);
+            return obj.GetType() == GetType() && Equals((LookupRecordOtherResponse)obj);
         }
 
-        public bool Equals(LookupRecord409ApplicationJsonMultipleItemsLocation other)
+        public bool Equals(LookupRecordOtherResponse other)
         {
             if (other is null) return false;
             if (ReferenceEquals(this, other)) return true;
 
             return (
-                Latitude == other.Latitude ||
-                Latitude.Equals(other.Latitude)
+                Code == other.Code ||
+                Code.Equals(other.Code)
             ) && (
-                Longitude == other.Longitude ||
-                Longitude.Equals(other.Longitude)
+                Message == other.Message ||
+                Message.Equals(other.Message)
             );
         }
 
@@ -73,8 +73,8 @@ namespace PS.Controller
             unchecked // Overflow is fine, just wrap
             {
                 var hashCode = 41;
-                hashCode = hashCode * 59 + Latitude.GetHashCode();
-                hashCode = hashCode * 59 + Longitude.GetHashCode();
+                hashCode = hashCode * 59 + Code.GetHashCode();
+                hashCode = hashCode * 59 + Message.GetHashCode();
                 return hashCode;
             }
         }

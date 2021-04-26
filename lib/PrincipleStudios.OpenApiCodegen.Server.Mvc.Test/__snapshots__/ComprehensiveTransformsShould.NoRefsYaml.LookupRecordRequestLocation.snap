@@ -19,9 +19,9 @@ using Newtonsoft.Json;
 
 namespace PS.Controller
 { 
-    public partial class LookupRecordApplicationJsonRequestLocation : IEquatable<LookupRecordApplicationJsonRequestLocation>
+    public partial class LookupRecordRequestLocation : IEquatable<LookupRecordRequestLocation>
     {
-        public LookupRecordApplicationJsonRequestLocation(
+        public LookupRecordRequestLocation(
             [JsonProperty(PropertyName="latitude"), Required] double Latitude, 
             [JsonProperty(PropertyName="longitude"), Required] double Longitude
         ) { 
@@ -47,10 +47,10 @@ namespace PS.Controller
         {
             if (obj is null) return false;
             if (ReferenceEquals(this, obj)) return true;
-            return obj.GetType() == GetType() && Equals((LookupRecordApplicationJsonRequestLocation)obj);
+            return obj.GetType() == GetType() && Equals((LookupRecordRequestLocation)obj);
         }
 
-        public bool Equals(LookupRecordApplicationJsonRequestLocation other)
+        public bool Equals(LookupRecordRequestLocation other)
         {
             if (other is null) return false;
             if (ReferenceEquals(this, other)) return true;

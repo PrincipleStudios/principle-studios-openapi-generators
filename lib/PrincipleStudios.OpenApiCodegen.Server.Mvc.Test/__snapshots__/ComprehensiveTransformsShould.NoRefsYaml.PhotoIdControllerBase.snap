@@ -27,7 +27,7 @@ namespace PS.Controller
         [HttpGet]
         [Route("/photo/{id}")]
         // unexpected error
-        [ProducesDefaultResponseType(typeof(GetPhotoDefaultApplicationJson))] // application/json
+        [ProducesDefaultResponseType(typeof(GetPhotoOtherResponse))] // application/json
         // 
         [ProducesResponseType(200, Type = typeof(global::System.IO.Stream))] // application/octet-stream
         public async Task<IActionResult> GetPhoto(
@@ -66,8 +66,8 @@ namespace PS.Controller
                 new TypeSafeGetPhotoResult(200, "application/octet-stream", typeof(global::System.IO.Stream), result);
             
             
-            public static TypeSafeGetPhotoResult ApplicationJsonOtherStatusCode(int statusCode, GetPhotoDefaultApplicationJson result) =>
-                new TypeSafeGetPhotoResult(statusCode, "application/json", typeof(GetPhotoDefaultApplicationJson), result);
+            public static TypeSafeGetPhotoResult ApplicationJsonOtherStatusCode(int statusCode, GetPhotoOtherResponse result) =>
+                new TypeSafeGetPhotoResult(statusCode, "application/json", typeof(GetPhotoOtherResponse), result);
             
 
             /// <summary>Allows for action results not specified in the API</summary>

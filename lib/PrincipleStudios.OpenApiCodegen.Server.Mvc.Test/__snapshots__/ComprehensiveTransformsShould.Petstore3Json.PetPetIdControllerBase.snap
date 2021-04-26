@@ -101,12 +101,12 @@ namespace PS.Controller
         [global::Microsoft.AspNetCore.Authorization.Authorize(AuthenticationSchemes = "petstore_auth")]
         public async Task<IActionResult> UpdatePetWithForm(
             [FromRoute(Name = "petId"), Required] long petId,
-            [FromBody, Required] UpdatePetWithFormApplicationWwwFormUrlencodedRequest updatePetWithFormBody
+            [FromBody, Required] UpdatePetWithFormRequest updatePetWithFormBody
         ) => (await UpdatePetWithFormTypeSafe(petId,updatePetWithFormBody)).ActionResult;
 
         protected abstract Task<TypeSafeUpdatePetWithFormResult> UpdatePetWithFormTypeSafe(
             long petId, 
-            UpdatePetWithFormApplicationWwwFormUrlencodedRequest updatePetWithFormBody);
+            UpdatePetWithFormRequest updatePetWithFormBody);
 
         public readonly struct TypeSafeUpdatePetWithFormResult
         {

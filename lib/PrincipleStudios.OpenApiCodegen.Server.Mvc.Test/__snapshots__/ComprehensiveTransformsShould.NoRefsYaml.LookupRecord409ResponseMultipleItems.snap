@@ -19,11 +19,11 @@ using Newtonsoft.Json;
 
 namespace PS.Controller
 { 
-    public partial class LookupRecordApplicationJsonRequest : IEquatable<LookupRecordApplicationJsonRequest>
+    public partial class LookupRecord409ResponseMultipleItems : IEquatable<LookupRecord409ResponseMultipleItems>
     {
-        public LookupRecordApplicationJsonRequest(
+        public LookupRecord409ResponseMultipleItems(
             [JsonProperty(PropertyName="formattedAddress"), Required] string FormattedAddress, 
-            [JsonProperty(PropertyName="location"), Required] LookupRecordApplicationJsonRequestLocation Location
+            [JsonProperty(PropertyName="location"), Required] LookupRecord409ResponseMultipleItemsLocation Location
         ) { 
             this.FormattedAddress = FormattedAddress;
             this.Location = Location;
@@ -41,16 +41,16 @@ namespace PS.Controller
         /// </summary>
         [Required]
         [JsonProperty(PropertyName="location")]
-        public LookupRecordApplicationJsonRequestLocation Location { get; }
+        public LookupRecord409ResponseMultipleItemsLocation Location { get; }
 
         public override bool Equals(object obj)
         {
             if (obj is null) return false;
             if (ReferenceEquals(this, obj)) return true;
-            return obj.GetType() == GetType() && Equals((LookupRecordApplicationJsonRequest)obj);
+            return obj.GetType() == GetType() && Equals((LookupRecord409ResponseMultipleItems)obj);
         }
 
-        public bool Equals(LookupRecordApplicationJsonRequest other)
+        public bool Equals(LookupRecord409ResponseMultipleItems other)
         {
             if (other is null) return false;
             if (ReferenceEquals(this, other)) return true;
