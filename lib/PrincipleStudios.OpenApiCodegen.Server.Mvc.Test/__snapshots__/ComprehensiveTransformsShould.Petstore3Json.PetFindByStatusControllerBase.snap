@@ -36,6 +36,7 @@ namespace PS.Controller
         [ProducesResponseType(200, Type = typeof(global::System.Collections.Generic.IEnumerable<Pet>))] // application/xml        [ProducesResponseType(200, Type = typeof(global::System.Collections.Generic.IEnumerable<Pet>))] // application/json
         // Invalid status value
 
+        [global::Microsoft.AspNetCore.Authorization.Authorize(AuthenticationSchemes = "petstore_auth")]
         public async Task<IActionResult> FindPetsByStatus(
             [FromQuery(Name = "status"), Required] global::System.Collections.Generic.IEnumerable<FindPetsByStatusStatusItems> status
         ) => (await FindPetsByStatusTypeSafe(status)).ActionResult;

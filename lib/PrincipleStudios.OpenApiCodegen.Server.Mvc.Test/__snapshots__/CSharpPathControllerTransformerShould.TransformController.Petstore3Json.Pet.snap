@@ -32,6 +32,7 @@ namespace PrincipleStudios.Test
         [Consumes("application/json")]
         // Invalid input
 
+        [global::Microsoft.AspNetCore.Authorization.Authorize(AuthenticationSchemes = "petstore_auth")]
         public async Task<IActionResult> AddPet(
             [FromBody, Required] Pet addPetBody
         ) => (await AddPetapplicationJsonTypeSafe(addPetBody)).ActionResult;
@@ -48,6 +49,7 @@ namespace PrincipleStudios.Test
         [Consumes("application/xml")]
         // Invalid input
 
+        [global::Microsoft.AspNetCore.Authorization.Authorize(AuthenticationSchemes = "petstore_auth")]
         public async Task<IActionResult> AddPet(
             [FromBody, Required] Pet addPetBody
         ) => (await AddPetapplicationXmlTypeSafe(addPetBody)).ActionResult;
@@ -98,6 +100,7 @@ namespace PrincipleStudios.Test
 
         // Validation exception
 
+        [global::Microsoft.AspNetCore.Authorization.Authorize(AuthenticationSchemes = "petstore_auth")]
         public async Task<IActionResult> UpdatePet(
             [FromBody, Required] Pet updatePetBody
         ) => (await UpdatePetapplicationJsonTypeSafe(updatePetBody)).ActionResult;
@@ -118,6 +121,7 @@ namespace PrincipleStudios.Test
 
         // Validation exception
 
+        [global::Microsoft.AspNetCore.Authorization.Authorize(AuthenticationSchemes = "petstore_auth")]
         public async Task<IActionResult> UpdatePet(
             [FromBody, Required] Pet updatePetBody
         ) => (await UpdatePetapplicationXmlTypeSafe(updatePetBody)).ActionResult;

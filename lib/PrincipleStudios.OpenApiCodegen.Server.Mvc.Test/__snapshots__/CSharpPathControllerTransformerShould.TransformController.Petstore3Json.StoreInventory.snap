@@ -33,6 +33,7 @@ namespace PrincipleStudios.Test
         [Route("/store/inventory")]
         // successful operation
         [ProducesResponseType(200, Type = typeof(global::System.Collections.Generic.Dictionary<string, int>))] // application/json
+        [global::Microsoft.AspNetCore.Authorization.Authorize(AuthenticationSchemes = "api_key")]
         public async Task<IActionResult> GetInventory(
             
         ) => (await GetInventoryTypeSafe()).ActionResult;

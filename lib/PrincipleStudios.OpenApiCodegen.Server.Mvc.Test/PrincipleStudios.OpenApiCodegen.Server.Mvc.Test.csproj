@@ -9,11 +9,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="..\..\schemas\power-sample.json" Link="power-sample.json" />
-    <EmbeddedResource Include="..\..\schemas\no-refs.yaml" Link="no-refs.yaml" />
-    <EmbeddedResource Include="..\..\schemas\petstore.yaml" Link="petstore.yaml" />
-    <EmbeddedResource Include="..\..\schemas\petstore3.json" Link="petstore3.json" />
-    <EmbeddedResource Include="..\..\schemas\bad.yaml" Link="bad.yaml" />
+    <EmbeddedResource Include="..\..\schemas\*.*" Exclude="..\..\schemas\local.*">
+      <Link>%(Filename)%(Extension)</Link>
+    </EmbeddedResource>
   </ItemGroup>
 
   <ItemGroup>

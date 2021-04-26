@@ -33,6 +33,7 @@ namespace PS.Controller
         [Consumes("application/octet-stream")]
         // successful operation
         [ProducesResponseType(200, Type = typeof(ApiResponse))] // application/json
+        [global::Microsoft.AspNetCore.Authorization.Authorize(AuthenticationSchemes = "petstore_auth")]
         public async Task<IActionResult> UploadFile(
             [FromRoute(Name = "petId"), Required] long petId,
             [FromBody, Required] global::System.IO.Stream uploadFileBody

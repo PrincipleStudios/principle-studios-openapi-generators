@@ -26,6 +26,7 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
                 2 => "power-sample.json",
                 3 => "no-refs.yaml",
                 4 => "bad.yaml",
+                5 => "oauth.yaml",
                 _ => throw new ArgumentException(nameof(index)),
             };
         }

@@ -20,7 +20,16 @@ namespace PrincipleStudios.OpenApi.CSharp.templates
         ControllerOperation[] operations
     );
 
-    public record ControllerOperation(string httpMethod, string summary, string description, string name, string path, OperationRequestBody[] requestBodies, OperationResponses responses);
+    public record ControllerOperation(
+        string httpMethod,
+        string summary,
+        string description,
+        string name,
+        string path,
+        OperationRequestBody[] requestBodies,
+        OperationResponses responses,
+        OperationSecurityRequirements[] securityRequirements
+    );
 
     public record OperationParameter(
         string? rawName,
@@ -39,11 +48,13 @@ namespace PrincipleStudios.OpenApi.CSharp.templates
         int? minLength,
         int? maxLength,
         decimal? minimum,
-        decimal? maximum);
+        decimal? maximum
+    );
 
     public record OperationResponses(
         OperationResponse? defaultResponse,
-        Dictionary<int, OperationResponse> statusResponse);
+        Dictionary<int, OperationResponse> statusResponse
+    );
 
     public record OperationResponse(
         string description,
@@ -60,4 +71,10 @@ namespace PrincipleStudios.OpenApi.CSharp.templates
 
     public record OperationRequestBody(string name, string requestBodyType, IEnumerable<OperationParameter> allParams);
 
+    public record OperationSecurityRequirements(
+        // comma delimited
+        string schemeNames,
+        // comma delimited
+        string roleNames
+    );
 }

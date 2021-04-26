@@ -43,8 +43,9 @@ namespace {{packageName}}
         // {{response.description}}
         {{#each response.content}}
         [ProducesResponseType({{statusCode}}{{#if dataType}}, Type = typeof({{{dataType}}}){{/if}})] // {{mediaType}}{{/each}}{{/each}}{{!
-        }}{{#if operation.authMethods}}
-        [Authorize("{{name}}")]{{/if}}
+        }}{{#each operation.securityRequirements}}{{#if schemeNames}}
+        [global::Microsoft.AspNetCore.Authorization.Authorize(AuthenticationSchemes = "{{schemeNames}}")]{{else}}
+        [global::Microsoft.AspNetCore.Authorization.AllowAnonymous]{{/if}}{{/each}}
         public async Task<IActionResult> {{operation.name}}(
             {{#each requestBody.allParams}}{{#unless isCookieParam}}[{{!
             }}{{#if isPathParam}}FromRoute(Name = "{{rawName}}"){{/if}}{{!

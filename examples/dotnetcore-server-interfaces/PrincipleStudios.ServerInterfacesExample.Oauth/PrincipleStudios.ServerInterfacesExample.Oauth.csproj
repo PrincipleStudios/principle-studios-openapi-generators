@@ -2,7 +2,6 @@
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
-    <LangVersion>8.0</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -11,6 +10,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <OpenApiSchemaMvcServer Include="..\..\..\schemas\petstore.yaml" Link="Controllers\petstore.yaml" />
+    <OpenApiSchemaMvcServer Include="..\..\..\schemas\oauth.yaml" Link="Controllers\oauth.yaml" />
   </ItemGroup>
 </Project>

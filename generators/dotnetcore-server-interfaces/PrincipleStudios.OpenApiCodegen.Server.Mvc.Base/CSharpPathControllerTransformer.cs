@@ -105,7 +105,9 @@ namespace PrincipleStudios.OpenApi.CSharp
                                                       let parsed = TryParse(response.Key)
                                                       where parsed.parsed
                                                       select (Key: parsed.value, Value: response.Value)).ToDictionary(p => p.Key, p => ToOperationResponse(p.Value))
-                                )
+                                 ),
+                                 securityRequirements: (from requirement in operation.Value.Security
+                                                        select new templates.OperationSecurityRequirements(string.Join(",", requirement.Keys.Select(k => k.Reference.Id)), string.Join(",", requirement.Values.SelectMany(v => v)))).ToArray()
                              )).ToArray()
             );
 

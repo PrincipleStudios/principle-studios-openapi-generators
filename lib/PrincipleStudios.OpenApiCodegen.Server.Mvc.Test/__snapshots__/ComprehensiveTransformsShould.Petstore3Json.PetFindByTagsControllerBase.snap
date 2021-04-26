@@ -36,6 +36,7 @@ namespace PS.Controller
         [ProducesResponseType(200, Type = typeof(global::System.Collections.Generic.IEnumerable<Pet>))] // application/xml        [ProducesResponseType(200, Type = typeof(global::System.Collections.Generic.IEnumerable<Pet>))] // application/json
         // Invalid tag value
 
+        [global::Microsoft.AspNetCore.Authorization.Authorize(AuthenticationSchemes = "petstore_auth")]
         public async Task<IActionResult> FindPetsByTags(
             [FromQuery(Name = "tags"), Required] global::System.Collections.Generic.IEnumerable<string> tags
         ) => (await FindPetsByTagsTypeSafe(tags)).ActionResult;

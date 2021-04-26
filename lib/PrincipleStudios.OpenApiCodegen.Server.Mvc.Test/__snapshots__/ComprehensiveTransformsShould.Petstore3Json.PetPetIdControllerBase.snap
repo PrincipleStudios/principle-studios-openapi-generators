@@ -38,6 +38,7 @@ namespace PS.Controller
 
         // Pet not found
 
+        [global::Microsoft.AspNetCore.Authorization.Authorize(AuthenticationSchemes = "api_key")]
         public async Task<IActionResult> GetPetById(
             [FromRoute(Name = "petId"), Required] long petId
         ) => (await GetPetByIdTypeSafe(petId)).ActionResult;
@@ -97,6 +98,7 @@ namespace PS.Controller
         [Consumes("application/x-www-form-urlencoded")]
         // Invalid input
 
+        [global::Microsoft.AspNetCore.Authorization.Authorize(AuthenticationSchemes = "petstore_auth")]
         public async Task<IActionResult> UpdatePetWithForm(
             [FromRoute(Name = "petId"), Required] long petId,
             [FromBody, Required] UpdatePetWithFormApplicationWwwFormUrlencodedRequest updatePetWithFormBody
@@ -147,6 +149,7 @@ namespace PS.Controller
 
         // Pet not found
 
+        [global::Microsoft.AspNetCore.Authorization.Authorize(AuthenticationSchemes = "petstore_auth")]
         public async Task<IActionResult> DeletePet(
             [FromHeader(Name = "api_key")] string? apiKey,
             [FromRoute(Name = "petId"), Required] long petId
