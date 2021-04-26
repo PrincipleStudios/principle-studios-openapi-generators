@@ -31,6 +31,8 @@ namespace PS.Controller
         [ProducesDefaultResponseType(typeof(LookupRecordDefaultApplicationJson))] // application/json
         // 
         [ProducesResponseType(200, Type = typeof(LookupRecord200ApplicationJson))] // application/json
+        // 
+        [ProducesResponseType(409, Type = typeof(LookupRecord409ApplicationJson))] // application/json
         public async Task<IActionResult> LookupRecord(
             [FromBody, Required] LookupRecordApplicationJsonRequest lookupRecordBody
         ) => (await LookupRecordTypeSafe(lookupRecordBody)).ActionResult;
@@ -65,6 +67,10 @@ namespace PS.Controller
             
             public static TypeSafeLookupRecordResult ApplicationJsonStatusCode200(LookupRecord200ApplicationJson result) =>
                 new TypeSafeLookupRecordResult(200, "application/json", typeof(LookupRecord200ApplicationJson), result);
+            
+            
+            public static TypeSafeLookupRecordResult ApplicationJsonStatusCode409(LookupRecord409ApplicationJson result) =>
+                new TypeSafeLookupRecordResult(409, "application/json", typeof(LookupRecord409ApplicationJson), result);
             
             
             public static TypeSafeLookupRecordResult ApplicationJsonOtherStatusCode(int statusCode, LookupRecordDefaultApplicationJson result) =>

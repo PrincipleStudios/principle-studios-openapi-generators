@@ -28,13 +28,13 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
             var transformer = schemaTransformer.ToOpenApiSourceTransformer();
             OpenApiTransformDiagnostic diagnostic = new();
 
-            var entries = transformer.ToSourceEntries(document, diagnostic);
+            var entries = transformer.ToSourceEntries(document, diagnostic).ToArray();
 
-            Assert.Empty(diagnostic.Errors);
             foreach (var entry in entries)
             {
                 Snapshot.Match(entry.SourceText, $"{nameof(ComprehensiveTransformsShould)}.{CSharpNaming.ToTitleCaseIdentifier(name)}.{CSharpNaming.ToTitleCaseIdentifier(entry.Key.Split('.')[^2])}");
             }
+            Assert.Empty(diagnostic.Errors);
         }
 
         [InlineData(4)]

@@ -38,6 +38,32 @@ paths:
                 properties:
                   id:
                     type: string
+        '409':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  multiple:
+                    type: array
+                    items:
+                      type: object
+                      required:
+                        - formattedAddress
+                        - location
+                      properties:
+                        formattedAddress:
+                          type: string
+                        location:
+                          type: object
+                          required:
+                            - latitude
+                            - longitude
+                          properties:
+                            latitude:
+                              type: number
+                            longitude:
+                              type: number
         default:
           description: unexpected error
           content:

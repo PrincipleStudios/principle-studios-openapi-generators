@@ -46,8 +46,9 @@ namespace PrincipleStudios.OpenApi.Transformations
                 select (responseType.Value.Schema, new[] { response.Key, responseType.Key }.AsEnumerable(), $"#/components/responses/{response.Key.ToOpenApiPathContext()}/content/{responseType.Key.ToOpenApiPathContext()}/schema"),
             }.SelectMany(p => p).Select(p => (p.Item1, string.Join(" ", p.Item2), p.Item3)));
 
-            for (var entry = baseSchemas.Dequeue(); baseSchemas.Count > 0; entry = baseSchemas.Dequeue())
+            while (baseSchemas.Count > 0)
             {
+                var entry = baseSchemas.Dequeue();
                 var name = entry.name;
                 if (entry.schema.Reference != null)
                 {
