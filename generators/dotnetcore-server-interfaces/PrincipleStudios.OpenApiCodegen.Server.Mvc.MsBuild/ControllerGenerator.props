@@ -1,5 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Project>
+
+  <UsingTask TaskName="PrincipleStudios.OpenApi.CSharp.MvcServerCodegenTask"
+      AssemblyFile="$(MSBuildThisFileDirectory)/PrincipleStudios.OpenApiCodegen.Server.Mvc.dll"/>
+  
   <ItemGroup>
     <AvailableItemName Include="OpenApiSchemaMvcServer" DisplayName="Open API Schema MVC Server (OpenApiCodeGen)" />
     <Watch Include="@(OpenApiSchemaMvcServer)" Condition=" '@(OpenApiSchemaMvcServer)' != '' " />
@@ -31,8 +35,12 @@
   </Target>
 
   <Target Name="_CompileServerOpenApiCodeGen" DependsOnTargets="_UpdateServerOpenApiCodeGenMetatdata" Inputs="$(MSBuildThisFileFullPath);$(MSBuildProjectFile);@(OpenApiSchemaMvcServer)" Outputs="@(OpenApiSchemaMvcServer -> '%(OutputPath)')">
+    <MvcServerCodegenTask OutputPath="$(MSBuildProjectDirectory)/%(OpenApiSchemaMvcServer.OutputPath)"
+                          InputPath="%(OpenApiSchemaMvcServer.FullPath)"
+                          Namespace="%(OpenApiSchemaMvcServer.Namespace)"
+                          />
 
-    <Exec Command="dotnet &quot;$(MSBuildThisFileDirectory)/PrincipleStudios.OpenApiCodegen.Server.Mvc.dll&quot; -o &quot;$(MSBuildProjectDirectory)/%(OpenApiSchemaMvcServer.OutputPath)&quot; -i &quot;%(OpenApiSchemaMvcServer.FullPath)&quot; -n &quot;%(OpenApiSchemaMvcServer.Namespace)&quot; -c %(OpenApiSchemaMvcServer.AdditionalProperties)"/>
+    <!--<Exec Command="dotnet &quot;$(MSBuildThisFileDirectory)/PrincipleStudios.OpenApiCodegen.Server.Mvc.dll&quot; -o &quot;$(MSBuildProjectDirectory)/%(OpenApiSchemaMvcServer.OutputPath)&quot; -i &quot;%(OpenApiSchemaMvcServer.FullPath)&quot; -n &quot;%(OpenApiSchemaMvcServer.Namespace)&quot; -c %(OpenApiSchemaMvcServer.AdditionalProperties)"/>-->
 
     <Message Text="OpenAPI: %(OpenApiSchemaMvcServer.Identity) -> %(OpenApiSchemaMvcServer.OutputPath)" />
   </Target>
