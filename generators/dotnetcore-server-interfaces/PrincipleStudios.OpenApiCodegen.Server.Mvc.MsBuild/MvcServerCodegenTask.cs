@@ -27,10 +27,6 @@ namespace PrincipleStudios.OpenApi.CSharp
 
         public override bool Execute()
         {
-            Log.LogMessage($"OutputPath: {OutputPath}");
-            Log.LogMessage($"InputPath: {InputPath}");
-            Log.LogMessage($"Namespace: {Namespace}");
-            Log.LogMessage($"Clean: {Clean}");
             var outputPath = OutputPath ?? System.IO.Directory.GetCurrentDirectory();
             System.IO.Directory.CreateDirectory(outputPath);
             if (Clean)

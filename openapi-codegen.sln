@@ -16,8 +16,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PrincipleStudios.OpenApi.CS
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PrincipleStudios.OpenApiCodegen.Server.Mvc.Test", "lib\PrincipleStudios.OpenApiCodegen.Server.Mvc.Test\PrincipleStudios.OpenApiCodegen.Server.Mvc.Test.csproj", "{DC8A6FFA-DD3A-4B33-800E-CD8D9166A58D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PrincipleStudios.OpenApiCodegen.Server.Mvc.Executable", "generators\dotnetcore-server-interfaces\PrincipleStudios.OpenApiCodegen.Server.Mvc.Executable\PrincipleStudios.OpenApiCodegen.Server.Mvc.Executable.csproj", "{B13A903E-F556-4C99-83CF-C90F1C406EB4}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PrincipleStudios.OpenApiCodegen.Server.Mvc.Base", "generators\dotnetcore-server-interfaces\PrincipleStudios.OpenApiCodegen.Server.Mvc.Base\PrincipleStudios.OpenApiCodegen.Server.Mvc.Base.csproj", "{9946C7BF-F669-48A1-AAF8-17ED1EC44C6F}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PrincipleStudios.OpenApiCodegen.Server.Mvc.MsBuild", "generators\dotnetcore-server-interfaces\PrincipleStudios.OpenApiCodegen.Server.Mvc.MsBuild\PrincipleStudios.OpenApiCodegen.Server.Mvc.MsBuild.csproj", "{9283F10D-4665-4951-9E93-D41A3DD21D9A}"
@@ -80,18 +78,6 @@ Global
 		{DC8A6FFA-DD3A-4B33-800E-CD8D9166A58D}.Release|x64.Build.0 = Release|Any CPU
 		{DC8A6FFA-DD3A-4B33-800E-CD8D9166A58D}.Release|x86.ActiveCfg = Release|Any CPU
 		{DC8A6FFA-DD3A-4B33-800E-CD8D9166A58D}.Release|x86.Build.0 = Release|Any CPU
-		{B13A903E-F556-4C99-83CF-C90F1C406EB4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B13A903E-F556-4C99-83CF-C90F1C406EB4}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B13A903E-F556-4C99-83CF-C90F1C406EB4}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{B13A903E-F556-4C99-83CF-C90F1C406EB4}.Debug|x64.Build.0 = Debug|Any CPU
-		{B13A903E-F556-4C99-83CF-C90F1C406EB4}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{B13A903E-F556-4C99-83CF-C90F1C406EB4}.Debug|x86.Build.0 = Debug|Any CPU
-		{B13A903E-F556-4C99-83CF-C90F1C406EB4}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B13A903E-F556-4C99-83CF-C90F1C406EB4}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B13A903E-F556-4C99-83CF-C90F1C406EB4}.Release|x64.ActiveCfg = Release|Any CPU
-		{B13A903E-F556-4C99-83CF-C90F1C406EB4}.Release|x64.Build.0 = Release|Any CPU
-		{B13A903E-F556-4C99-83CF-C90F1C406EB4}.Release|x86.ActiveCfg = Release|Any CPU
-		{B13A903E-F556-4C99-83CF-C90F1C406EB4}.Release|x86.Build.0 = Release|Any CPU
 		{9946C7BF-F669-48A1-AAF8-17ED1EC44C6F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{9946C7BF-F669-48A1-AAF8-17ED1EC44C6F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9946C7BF-F669-48A1-AAF8-17ED1EC44C6F}.Debug|x64.ActiveCfg = Debug|Any CPU
