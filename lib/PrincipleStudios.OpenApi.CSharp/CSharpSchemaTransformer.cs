@@ -10,7 +10,7 @@ namespace PrincipleStudios.OpenApi.CSharp
 {
     public record InlineDataType(string text, bool nullable = false, bool isEnumerable = false)
     {
-        // Assumes C#9 (thanks to source generators being new at that time)
+        // Assumes C#8, since it's standard in VS2019+, which is when nullable reference types were introduced
         internal InlineDataType MakeNullable() =>
             nullable ? this : new(text + "?", nullable: true, isEnumerable: isEnumerable);
     }
@@ -148,7 +148,7 @@ namespace PrincipleStudios.OpenApi.CSharp
             return new templates.ObjectModel(
                 description: schema.Description,
                 className: className,
-                parent: null, // TODO
+                parent: null, // TODO - if "all of" and only one was a reference, we should be able to use inheritance.
                 vars: (from entry in properties
                        let req = required.Contains(entry.Key)
                        let dataType = ToInlineDataType(entry.Value, req)
