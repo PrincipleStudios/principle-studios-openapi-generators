@@ -31,7 +31,7 @@ namespace PrincipleStudios.OpenApi.CSharp
         }
 
         public static System.IO.Stream GetDefaultOptionsJson() =>
-            typeof(CSharpSchemaOptions).Assembly.GetManifestResourceStream($"{typeof(CSharpSchemaOptions).Namespace}.csharp.config.json");
+            typeof(CSharpSchemaOptions).Assembly.GetManifestResourceStream($"{typeof(CSharpSchemaOptions).Namespace}.csharp.config.yaml");
     }
 
     public class OpenApiTypeFormats

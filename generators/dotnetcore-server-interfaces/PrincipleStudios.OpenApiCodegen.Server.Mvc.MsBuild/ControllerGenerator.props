@@ -5,6 +5,7 @@
       AssemblyFile="$(MSBuildThisFileDirectory)/PrincipleStudios.OpenApiCodegen.Server.Mvc.dll"/>
   
   <ItemGroup>
+    <AvailableItemName Include="OpenApiSchemaCSharpOptions" DisplayName="C# Options for Open API Code Generation (OpenApiCodeGen)" />
     <AvailableItemName Include="OpenApiSchemaMvcServer" DisplayName="Open API Schema MVC Server (OpenApiCodeGen)" />
     <Watch Include="@(OpenApiSchemaMvcServer)" Condition=" '@(OpenApiSchemaMvcServer)' != '' " />
   </ItemGroup>
@@ -34,10 +35,11 @@
     <Delete Files="@(OpenApiSchemaMvcServer -> '%(OutputPath)')" ContinueOnError="true" />
   </Target>
 
-  <Target Name="_CompileServerOpenApiCodeGen" DependsOnTargets="_UpdateServerOpenApiCodeGenMetatdata" Inputs="$(MSBuildThisFileFullPath);$(MSBuildProjectFile);@(OpenApiSchemaMvcServer)" Outputs="@(OpenApiSchemaMvcServer -> '%(OutputPath)')">
+  <Target Name="_CompileServerOpenApiCodeGen" DependsOnTargets="_UpdateServerOpenApiCodeGenMetatdata" Inputs="$(MSBuildThisFileFullPath);$(MSBuildProjectFile);@(OpenApiSchemaMvcServer);@(OpenApiSchemaCSharpOptions)" Outputs="@(OpenApiSchemaMvcServer -> '%(OutputPath)')">
     <MvcServerCodegenTask OutputPath="$(MSBuildProjectDirectory)/%(OpenApiSchemaMvcServer.OutputPath)"
                           InputPath="%(OpenApiSchemaMvcServer.FullPath)"
                           Namespace="%(OpenApiSchemaMvcServer.Namespace)"
+                          OptionsPath="@(OpenApiSchemaCSharpOptions -> '%(FullPath)')"
                           />
 
     <!--<Exec Command="dotnet &quot;$(MSBuildThisFileDirectory)/PrincipleStudios.OpenApiCodegen.Server.Mvc.dll&quot; -o &quot;$(MSBuildProjectDirectory)/%(OpenApiSchemaMvcServer.OutputPath)&quot; -i &quot;%(OpenApiSchemaMvcServer.FullPath)&quot; -n &quot;%(OpenApiSchemaMvcServer.Namespace)&quot; -c %(OpenApiSchemaMvcServer.AdditionalProperties)"/>-->

@@ -38,7 +38,7 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
         {
             using var defaultJsonStream = CSharpSchemaOptions.GetDefaultOptionsJson();
             var builder = new ConfigurationBuilder();
-            builder.AddJsonStream(defaultJsonStream);
+            builder.AddYamlStream(defaultJsonStream);
             configureBuilder?.Invoke(builder);
             var result = builder.Build().Get<CSharpSchemaOptions>();
             return result;

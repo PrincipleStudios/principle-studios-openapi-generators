@@ -66,9 +66,9 @@ namespace PrincipleStudios.OpenApi.CSharp
         {
             using var defaultJsonStream = CSharpSchemaOptions.GetDefaultOptionsJson();
             var builder = new ConfigurationBuilder();
-            builder.AddJsonStream(defaultJsonStream);
+            builder.AddYamlStream(defaultJsonStream);
             if (optionsPath is { Length: > 0 })
-                builder.AddJsonFile(optionsPath);
+                builder.AddYamlFile(optionsPath);
             var result = builder.Build().Get<CSharpSchemaOptions>();
             return result;
         }

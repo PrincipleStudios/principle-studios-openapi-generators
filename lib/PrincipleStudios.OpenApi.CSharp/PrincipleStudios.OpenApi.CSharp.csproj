@@ -20,11 +20,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="csharp.config.json" />
+    <None Remove="csharp.config.yaml" />
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="csharp.config.json">
+    <EmbeddedResource Include="csharp.config.yaml">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </EmbeddedResource>
   </ItemGroup>
