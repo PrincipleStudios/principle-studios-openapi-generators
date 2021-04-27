@@ -63,7 +63,6 @@ namespace PrincipleStudios.OpenApi.CSharp
                                 .DefaultIfEmpty(new(null, null))
                                 .ToArray()
                              let singleContentType = requestTypes.Length == 1
-                             // TODO - support form request parameters
                              select new templates.ControllerOperation(
                                  httpMethod: operation.Key.ToString("g"),
                                  summary: operation.Value.Summary,
@@ -71,11 +70,34 @@ namespace PrincipleStudios.OpenApi.CSharp
                                  name: CSharpNaming.ToTitleCaseIdentifier(operation.Value.OperationId),
                                  path: path,
                                  requestBodies: (from contentType in requestTypes
+                                                 let isForm = contentType.Key == "application/x-www-form-urlencoded"
                                                  select new templates.OperationRequestBody(
                                                      name: CSharpNaming.ToTitleCaseIdentifier(operation.Value.OperationId + (singleContentType ? "" : contentType.Key)),
                                                      requestBodyType: contentType.Key,
                                                      allParams: sharedParams.Concat(contentType.Value == null 
                                                         ? Enumerable.Empty<templates.OperationParameter>() 
+                                                        : isForm ? from param in contentType.Value.Schema.Properties
+                                                                   let dataType = ToInlineDataType(param.Value, contentType.Value.Schema.Required.Contains(param.Key))
+                                                                   select new templates.OperationParameter(
+                                                                       rawName: param.Key,
+                                                                       paramName: CSharpNaming.ToParameterName(param.Key),
+                                                                       description: null,
+                                                                       dataType: dataType.text,
+                                                                       dataTypeNullable: dataType.nullable,
+                                                                       isPathParam: false,
+                                                                       isQueryParam: false,
+                                                                       isHeaderParam: false,
+                                                                       isCookieParam: false,
+                                                                       isBodyParam: false,
+                                                                       isFormParam: true,
+                                                                       required: contentType.Value.Schema.Required.Contains(param.Key),
+                                                                       pattern: param.Value.Pattern,
+                                                                       minLength: param.Value.MinLength,
+                                                                       maxLength: param.Value.MaxLength,
+                                                                       minimum: param.Value.Minimum,
+                                                                       maximum: param.Value.Maximum
+                                                                   )
+
                                                         : from ct in new[] { contentType.Value }
                                                           let dataType = ToInlineDataType(ct.Schema, true)
                                                           select new templates.OperationParameter(

@@ -20,21 +20,22 @@ namespace PrincipleStudios.OpenApi.Transformations
         public IEnumerable<SourceEntry> ToSourceEntries(OpenApiDocument document, OpenApiTransformDiagnostic diagnostic)
         {
             var allSchemas = new HashSet<(OpenApiSchema schema, string openApiPath)>();
-            var baseSchemas = new Queue<(OpenApiSchema schema, string name, string openApiPath)>(new[]
+            var baseSchemas = new Queue<(OpenApiSchema schema, string name, string openApiPath, bool skip)>(new[]
             {
                 from schema in document.Components?.Schemas?.Values.AsEnumerable() ?? Enumerable.Empty<OpenApiSchema>()
-                select (schema, new[] { openApiSchemaTransformer.UseReferenceName(schema) }.AsEnumerable(), $"#/components/schemas/{schema.Reference.Id.ToOpenApiPathContext()}"),
+                select (schema, new[] { openApiSchemaTransformer.UseReferenceName(schema) }.AsEnumerable(), $"#/components/schemas/{schema.Reference.Id.ToOpenApiPathContext()}", false),
 
                 from path in document.Paths
                 from operation in path.Value.Operations
                 from param in operation.Value.Parameters
-                select (param.Schema, new[] { operation.Value.OperationId, param.Name }.AsEnumerable(), $"#/paths/{path.Key.ToOpenApiPathContext()}/{operation.Key}/parameters/{param.Name.ToOpenApiPathContext()}/schema"),
+                select (param.Schema, new[] { operation.Value.OperationId, param.Name }.AsEnumerable(), $"#/paths/{path.Key.ToOpenApiPathContext()}/{operation.Key}/parameters/{param.Name.ToOpenApiPathContext()}/schema", false),
 
                 from path in document.Paths
                 from operation in path.Value.Operations
                 let onlyResponseType = (operation.Value.RequestBody?.Content.Count ?? 0) == 1
                 from requestType in (operation.Value.RequestBody?.Content.AsEnumerable() ?? Enumerable.Empty<KeyValuePair<string, OpenApiMediaType>>())
-                select (requestType.Value.Schema, new[] { operation.Value.OperationId, onlyResponseType ? "" : requestType.Key, "request" }.AsEnumerable(), $"#/paths/{path.Key.ToOpenApiPathContext()}/{operation.Key}/requestBody/content/{requestType.Key.ToOpenApiPathContext()}/schema"),
+                let isForm = requestType.Key == "application/x-www-form-urlencoded"
+                select (requestType.Value.Schema, new[] { operation.Value.OperationId, onlyResponseType ? "" : requestType.Key, "request" }.AsEnumerable(), $"#/paths/{path.Key.ToOpenApiPathContext()}/{operation.Key}/requestBody/content/{requestType.Key.ToOpenApiPathContext()}/schema", isForm),
 
                 from path in document.Paths
                 from operation in path.Value.Operations
@@ -47,13 +48,13 @@ namespace PrincipleStudios.OpenApi.Transformations
                 where response.Value.Reference == null
                 let onlyResponseType = response.Value.Content.Count == 1
                 from responseType in response.Value.Content
-                select (responseType.Value.Schema, new[] { operation.Value.OperationId, responseName, onlyResponseType ? "" : responseType.Key, "response" }.AsEnumerable(), $"#/paths/{path.Key.ToOpenApiPathContext()}/{operation.Key}/responses/{response.Key.ToOpenApiPathContext()}/content/{responseType.Key.ToOpenApiPathContext()}/schema"),
+                select (responseType.Value.Schema, new[] { operation.Value.OperationId, responseName, onlyResponseType ? "" : responseType.Key, "response" }.AsEnumerable(), $"#/paths/{path.Key.ToOpenApiPathContext()}/{operation.Key}/responses/{response.Key.ToOpenApiPathContext()}/content/{responseType.Key.ToOpenApiPathContext()}/schema", false),
 
                 from response in document.Components?.Responses?.AsEnumerable() ?? Enumerable.Empty<KeyValuePair<string, OpenApiResponse>>()
                 where response.Value.Reference == null
                 from responseType in response.Value.Content
-                select (responseType.Value.Schema, new[] { response.Key, responseType.Key }.AsEnumerable(), $"#/components/responses/{response.Key.ToOpenApiPathContext()}/content/{responseType.Key.ToOpenApiPathContext()}/schema"),
-            }.SelectMany(p => p).Select(p => (p.Item1, string.Join(" ", p.Item2), p.Item3)));
+                select (responseType.Value.Schema, new[] { response.Key, responseType.Key }.AsEnumerable(), $"#/components/responses/{response.Key.ToOpenApiPathContext()}/content/{responseType.Key.ToOpenApiPathContext()}/schema", false),
+            }.SelectMany(p => p).Select(p => (p.Item1, string.Join(" ", p.Item2), p.Item3, p.Item4)));
 
             while (baseSchemas.Count > 0)
             {
@@ -69,7 +70,7 @@ namespace PrincipleStudios.OpenApi.Transformations
                 {
                     entry.schema.Reference = new OpenApiReference { Id = name, Type = ReferenceType.Schema };
                 }
-                if (entry.schema.Reference != null && !allSchemas.Any(e => e.schema == entry.schema))
+                if (entry.schema.Reference != null && !allSchemas.Any(e => e.schema == entry.schema) && !entry.skip)
                 {
                     allSchemas.Add((entry.schema, entry.openApiPath));
                 }
@@ -78,12 +79,12 @@ namespace PrincipleStudios.OpenApi.Transformations
                 {
                     foreach (var p in entry.schema.Properties)
                     {
-                        baseSchemas.Enqueue((p.Value, name + " " + p.Key, $"{entry.openApiPath}"));
+                        baseSchemas.Enqueue((p.Value, name + " " + p.Key, $"{entry.openApiPath}", false));
                     }
                 }
                 if (entry.schema.Type == "array")
                 {
-                    baseSchemas.Enqueue((entry.schema.Items, name + " items", $"{entry.openApiPath}/items"));
+                    baseSchemas.Enqueue((entry.schema.Items, name + " items", $"{entry.openApiPath}/items", false));
                 }
                 //for (var i = 0; i < entry.schema.AllOf.Count; i++)
                 //{
@@ -91,11 +92,11 @@ namespace PrincipleStudios.OpenApi.Transformations
                 //}
                 for (var i = 0; i < entry.schema.AnyOf.Count; i++)
                 {
-                    baseSchemas.Enqueue((entry.schema.AnyOf[i], name + " option" + i.ToString(), $"{entry.openApiPath}/anyOf/{i}"));
+                    baseSchemas.Enqueue((entry.schema.AnyOf[i], name + " option" + i.ToString(), $"{entry.openApiPath}/anyOf/{i}", false));
                 }
                 for (var i = 0; i < entry.schema.OneOf.Count; i++)
                 {
-                    baseSchemas.Enqueue((entry.schema.OneOf[i], name + " option" + i.ToString(), $"{entry.openApiPath}/oneOf/{i}"));
+                    baseSchemas.Enqueue((entry.schema.OneOf[i], name + " option" + i.ToString(), $"{entry.openApiPath}/oneOf/{i}", false));
                 }
             }
 

@@ -6,23 +6,13 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <LangVersion>9</LangVersion>
     <Nullable>enable</Nullable>
-    <Version>0.2.0-alpha.3</Version>
+    <Version>$(OpenApiMvcServerVersion)</Version>
 
     <IsPackable>true</IsPackable>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 
     <PackageLicenseExpression>BSD-2-Clause</PackageLicenseExpression>
     <title>Controller source generators from OpenAPI specification for .NET 5</title>
-    <PackageSummary>Adds source generators to generate C# controller base classes from an OpenAPI specification file.</PackageSummary>
-    <description>
-      Adds source generators to generate C# controller base classes from an OpenAPI
-      specification file.
-
-      Add this package, and ???TODO???.
-
-      Depends on Newtonsoft.Json for attributes and serialization control. Be sure to
-      include the version you need; this package can use any version.
-    </description>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 

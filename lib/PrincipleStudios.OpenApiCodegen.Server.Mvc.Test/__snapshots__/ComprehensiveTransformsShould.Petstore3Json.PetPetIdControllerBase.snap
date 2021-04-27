@@ -92,7 +92,8 @@ namespace PS.Controller
         /// Updates a pet in the store with form data
         /// </summary>
         /// <param name="petId">ID of pet that needs to be updated</param>
-        /// <param name="updatePetWithFormBody"></param>
+        /// <param name="name"></param>
+        /// <param name="status"></param>
         [HttpPost]
         [Route("/pet/{petId}")]
         [Consumes("application/x-www-form-urlencoded")]
@@ -101,12 +102,14 @@ namespace PS.Controller
         [global::Microsoft.AspNetCore.Authorization.Authorize(AuthenticationSchemes = "petstore_auth")]
         public async Task<IActionResult> UpdatePetWithForm(
             [FromRoute(Name = "petId"), Required] long petId,
-            [FromBody, Required] UpdatePetWithFormRequest updatePetWithFormBody
-        ) => (await UpdatePetWithFormTypeSafe(petId,updatePetWithFormBody)).ActionResult;
+            [FromForm(Name = "name")] string? name,
+            [FromForm(Name = "status")] string? status
+        ) => (await UpdatePetWithFormTypeSafe(petId,name,status)).ActionResult;
 
         protected abstract Task<TypeSafeUpdatePetWithFormResult> UpdatePetWithFormTypeSafe(
             long petId, 
-            UpdatePetWithFormRequest updatePetWithFormBody);
+            string? name, 
+            string? status);
 
         public readonly struct TypeSafeUpdatePetWithFormResult
         {
