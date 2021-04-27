@@ -86,7 +86,7 @@ namespace PrincipleStudios.OpenApi.CSharp
                 { Type: "number", Format: "float" } => new("float"),
                 { Type: "number", Format: "double" } => new("double"),
                 { Type: "number" } => new("double"),
-                { Type: "string", Format: "byte" } => new("string"), // TODO - is there a way to automate base64 decoding without custom code?
+                { Type: "string", Format: "byte" } => new("byte[]"),
                 { Type: "string", Format: "binary" } => new("global::System.IO.Stream"),
                 { Type: "string", Format: "date" } => new("string"), // TODO - make DateOnly available if target is .NET 6
                 { Type: "string", Format: "date-time" } => new("global::System.DateTimeOffset"),

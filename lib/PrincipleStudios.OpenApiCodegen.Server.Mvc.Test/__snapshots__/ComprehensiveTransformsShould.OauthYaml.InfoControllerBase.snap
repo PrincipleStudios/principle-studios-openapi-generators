@@ -23,6 +23,7 @@ namespace PS.Controller
     public abstract class InfoControllerBase : ControllerBase
     {
         
+        /// <param name="data">base-64 encoded data</param>
         [HttpGet]
         [Route("/info")]
         // Sample Response
@@ -30,10 +31,11 @@ namespace PS.Controller
         [global::Microsoft.AspNetCore.Authorization.AllowAnonymous]
         [global::Microsoft.AspNetCore.Authorization.Authorize(AuthenticationSchemes = "ApiKeyAuth")]
         public async Task<IActionResult> GetInfo(
-            
-        ) => (await GetInfoTypeSafe()).ActionResult;
+            [FromQuery(Name = "data")] byte[]? data
+        ) => (await GetInfoTypeSafe(data)).ActionResult;
 
-        protected abstract Task<TypeSafeGetInfoResult> GetInfoTypeSafe();
+        protected abstract Task<TypeSafeGetInfoResult> GetInfoTypeSafe(
+            byte[]? data);
 
         public readonly struct TypeSafeGetInfoResult
         {

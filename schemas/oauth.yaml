@@ -10,6 +10,15 @@ paths:
       security:
         - {}
         - ApiKeyAuth: []
+      parameters:
+        - name: data
+          in: query
+          description: base-64 encoded data
+          required: false
+          style: form
+          schema:
+            type: string
+            format: byte
       responses:
         '200':
           description: Sample Response
