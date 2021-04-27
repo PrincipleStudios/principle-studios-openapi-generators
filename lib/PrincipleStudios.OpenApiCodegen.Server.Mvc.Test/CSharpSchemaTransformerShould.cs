@@ -64,7 +64,7 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
 
         private static CSharpSchemaTransformer ConstructTarget(OpenApiDocument document, string baseNamespace = "PrincipleStudios.Test")
         {
-            return new CSharpSchemaTransformer(document, baseNamespace, HandlebarsTemplateProcess.CreateHandlebars);
+            return new CSharpSchemaTransformer(document, baseNamespace, LoadOptions(), HandlebarsTemplateProcess.CreateHandlebars);
         }
 
     }

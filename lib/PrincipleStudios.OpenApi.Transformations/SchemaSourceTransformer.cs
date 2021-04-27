@@ -68,6 +68,7 @@ namespace PrincipleStudios.OpenApi.Transformations
                 }
                 else if (entry.schema.Reference == null && openApiSchemaTransformer.MakeReference(entry.schema))
                 {
+                    // TODO - handle name collisions
                     entry.schema.Reference = new OpenApiReference { Id = name, Type = ReferenceType.Schema };
                 }
                 if (entry.schema.Reference != null && !allSchemas.Any(e => e.schema == entry.schema) && !entry.skip)

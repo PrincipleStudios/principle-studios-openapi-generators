@@ -18,12 +18,14 @@ namespace PrincipleStudios.OpenApi.CSharp
     public class CSharpSchemaTransformer : IOpenApiSchemaTransformer
     {
         protected readonly string baseNamespace;
+        private readonly CSharpSchemaOptions options;
         protected readonly OpenApiDocument document;
         protected readonly Lazy<IHandlebars> handlebars;
 
-        public CSharpSchemaTransformer(OpenApiDocument document, string baseNamespace, Func<IHandlebars> handlebarsFactory)
+        public CSharpSchemaTransformer(OpenApiDocument document, string baseNamespace, CSharpSchemaOptions options, Func<IHandlebars> handlebarsFactory)
         {
             this.baseNamespace = baseNamespace;
+            this.options = options;
             this.document = document;
             this.handlebars = new Lazy<IHandlebars>(handlebarsFactory);
         }
@@ -79,21 +81,9 @@ namespace PrincipleStudios.OpenApi.CSharp
             InlineDataType result = schema switch
             {
                 { Reference: not null } => new(UseReferenceName(schema)),
-                { Type: "object", Properties: { Count: 0 }, AdditionalProperties: OpenApiSchema dictionaryValueSchema } => new($"global::System.Collections.Generic.Dictionary<string, {ToInlineDataType(dictionaryValueSchema, true).text}>", isEnumerable: true),
-                { Type: "integer", Format: "int32" } => new("int"),
-                { Type: "integer", Format: "int64" } => new("long"),
-                { Type: "integer" } => new("int"),
-                { Type: "number", Format: "float" } => new("float"),
-                { Type: "number", Format: "double" } => new("double"),
-                { Type: "number" } => new("double"),
-                { Type: "string", Format: "byte" } => new("byte[]"),
-                { Type: "string", Format: "binary" } => new("global::System.IO.Stream"),
-                { Type: "string", Format: "date" } => new("string"), // TODO - make DateOnly available if target is .NET 6
-                { Type: "string", Format: "date-time" } => new("global::System.DateTimeOffset"),
-                { Type: "string", Format: "uuid" or "guid" } => new("global::System.Guid"),
-                { Type: "string" } => new("string"),
-                { Type: "boolean" } => new("bool"),
-                { Type: "array", Items: OpenApiSchema items } => new($"global::System.Collections.Generic.IEnumerable<{ToInlineDataType(items, true).text}>", isEnumerable: true),
+                { Type: "object", Properties: { Count: 0 }, AdditionalProperties: OpenApiSchema dictionaryValueSchema } => new(options.ToMapType(ToInlineDataType(dictionaryValueSchema, true).text), isEnumerable: true),
+                { Type: "array", Items: OpenApiSchema items } => new(options.ToArrayType(ToInlineDataType(items, true).text), isEnumerable: true),
+                { Type: string type, Format: var format } => new(options.Find(type, format)),
                 _ => throw new NotSupportedException("Unknown schema"),
             };
             return (schema is { Nullable: true } || !required)

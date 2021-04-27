@@ -12,7 +12,7 @@ namespace PrincipleStudios.OpenApi.CSharp
 {
     public class CSharpPathControllerTransformer : CSharpSchemaTransformer, IOpenApiPathControllerTransformer
     {
-        public CSharpPathControllerTransformer(OpenApiDocument document, string baseNamespace) : base(document, baseNamespace, ControllerHandlebarsTemplateProcess.CreateHandlebars)
+        public CSharpPathControllerTransformer(OpenApiDocument document, string baseNamespace, CSharpSchemaOptions options) : base(document, baseNamespace, options, ControllerHandlebarsTemplateProcess.CreateHandlebars)
         {
         }
 

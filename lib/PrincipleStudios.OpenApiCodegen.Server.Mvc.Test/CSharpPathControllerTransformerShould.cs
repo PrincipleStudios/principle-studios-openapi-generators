@@ -45,7 +45,7 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
 
         private static IOpenApiPathControllerTransformer ConstructTarget(OpenApiDocument document, string baseNamespace = "PrincipleStudios.Test")
         {
-            return new CSharpPathControllerTransformer(document, baseNamespace);
+            return new CSharpPathControllerTransformer(document, baseNamespace, LoadOptions());
         }
 
     }

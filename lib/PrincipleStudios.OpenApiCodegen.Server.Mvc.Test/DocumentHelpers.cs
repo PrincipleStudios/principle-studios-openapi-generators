@@ -1,5 +1,7 @@
-﻿using Microsoft.OpenApi.Models;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers;
+using PrincipleStudios.OpenApi.CSharp;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,6 +31,17 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
                 5 => "oauth.yaml",
                 _ => throw new ArgumentException(nameof(index)),
             };
+        }
+
+
+        public static CSharpSchemaOptions LoadOptions(Action<IConfigurationBuilder>? configureBuilder = null)
+        {
+            using var defaultJsonStream = CSharpSchemaOptions.GetDefaultOptionsJson();
+            var builder = new ConfigurationBuilder();
+            builder.AddJsonStream(defaultJsonStream);
+            configureBuilder?.Invoke(builder);
+            var result = builder.Build().Get<CSharpSchemaOptions>();
+            return result;
         }
 
     }

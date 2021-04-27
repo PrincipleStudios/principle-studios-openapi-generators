@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
+using Microsoft.Extensions.Configuration;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers;
 using PrincipleStudios.OpenApi.Transformations;
@@ -22,6 +23,8 @@ namespace PrincipleStudios.OpenApi.CSharp
         [Required]
         public string Namespace { get; set; }
 
+        public string? OptionsPath { get; set; }
+
         public bool Clean { get; set; } = true;
 #nullable enable warnings
 
@@ -37,11 +40,13 @@ namespace PrincipleStudios.OpenApi.CSharp
                 }
             }
 
+            var options = LoadOptions(OptionsPath);
+
             var openApiDocument = LoadOpenApiDocument(InputPath);
             if (openApiDocument == null)
                 return false;
 
-            var schemaTransformer = new CSharpPathControllerTransformer(openApiDocument, Namespace);
+            var schemaTransformer = new CSharpPathControllerTransformer(openApiDocument, Namespace, options);
             var transformer = schemaTransformer.ToOpenApiSourceTransformer();
 
             var diagnostic = new OpenApiTransformDiagnostic();
@@ -57,6 +62,16 @@ namespace PrincipleStudios.OpenApi.CSharp
             return true;
         }
 
+        private CSharpSchemaOptions LoadOptions(string? optionsPath)
+        {
+            using var defaultJsonStream = CSharpSchemaOptions.GetDefaultOptionsJson();
+            var builder = new ConfigurationBuilder();
+            builder.AddJsonStream(defaultJsonStream);
+            if (optionsPath is { Length: > 0 })
+                builder.AddJsonFile(optionsPath);
+            var result = builder.Build().Get<CSharpSchemaOptions>();
+            return result;
+        }
 
         OpenApiDocument? LoadOpenApiDocument(string inputPath)
         {

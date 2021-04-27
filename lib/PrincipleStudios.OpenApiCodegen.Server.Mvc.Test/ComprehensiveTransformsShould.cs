@@ -24,7 +24,7 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
             var name = GetDocumentName(index);
             var document = GetDocument(index);
 
-            var schemaTransformer = new CSharpPathControllerTransformer(document, "PS.Controller");
+            var schemaTransformer = new CSharpPathControllerTransformer(document, "PS.Controller", LoadOptions());
             var transformer = schemaTransformer.ToOpenApiSourceTransformer();
             OpenApiTransformDiagnostic diagnostic = new();
 
@@ -44,7 +44,7 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
             var name = GetDocumentName(index);
             var document = GetDocument(index);
 
-            var schemaTransformer = new CSharpPathControllerTransformer(document, "PS.Controller");
+            var schemaTransformer = new CSharpPathControllerTransformer(document, "PS.Controller", LoadOptions());
             var transformer = schemaTransformer.ToOpenApiSourceTransformer();
             OpenApiTransformDiagnostic diagnostic = new();
 

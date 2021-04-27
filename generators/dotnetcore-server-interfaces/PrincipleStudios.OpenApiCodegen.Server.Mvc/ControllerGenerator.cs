@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
+using Microsoft.Extensions.Configuration;
 using Microsoft.OpenApi.Models;
 using PrincipleStudios.OpenApi.CSharp;
 using PrincipleStudios.OpenApi.Transformations;
@@ -22,13 +23,24 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
                                                                                                   category: "PrincipleStudios.OpenApiCodegen.Server.Mvc",
                                                                                                   DiagnosticSeverity.Warning,
                                                                                                   isEnabledByDefault: true);
-
+        private readonly CSharpSchemaOptions options;
         const string sourceGroup = "OpenApiServerInterface";
         const string propNamespace = "OpenApiServerInterfaceNamespace";
 
         public ControllerGenerator() : base(sourceGroup)
         {
+            this.options = LoadOptions();
         }
+
+        private CSharpSchemaOptions LoadOptions()
+        {
+            using var defaultJsonStream = CSharpSchemaOptions.GetDefaultOptionsJson();
+            var builder = new ConfigurationBuilder();
+            builder.AddJsonStream(defaultJsonStream);
+            var result = builder.Build().Get<CSharpSchemaOptions>();
+            return result;
+        }
+
 
         public record Options(OpenApiDocument Document, string DocumentNamespace) : OpenApiGeneratorOptions(Document);
 
@@ -44,7 +56,7 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
 
         protected override IEnumerable<SourceEntry> SourceFilesFromAdditionalFile(Options options, OpenApiTransformDiagnostic diagnostic)
         {
-            var schemaTransformer = new CSharpPathControllerTransformer(options.Document, options.DocumentNamespace);
+            var schemaTransformer = new CSharpPathControllerTransformer(options.Document, options.DocumentNamespace, this.options);
             var transformer = schemaTransformer.ToOpenApiSourceTransformer();
 
             return transformer.ToSourceEntries(options.Document, diagnostic);
