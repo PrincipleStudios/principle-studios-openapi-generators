@@ -18,7 +18,7 @@ namespace PrincipleStudios.OpenApi.CSharp
     public class CSharpSchemaTransformer : IOpenApiSchemaTransformer
     {
         protected readonly string baseNamespace;
-        private readonly CSharpSchemaOptions options;
+        protected readonly CSharpSchemaOptions options;
         protected readonly OpenApiDocument document;
         protected readonly Lazy<IHandlebars> handlebars;
 
@@ -93,13 +93,13 @@ namespace PrincipleStudios.OpenApi.CSharp
 
         public string UseReferenceName(OpenApiSchema schema)
         {
-            return CSharpNaming.ToClassName(schema.Reference.Id);
+            return CSharpNaming.ToClassName(schema.Reference.Id, options.ReservedIdentifiers);
         }
 
         public SourceEntry TransformSchema(OpenApiSchema schema, OpenApiTransformDiagnostic diagnostic)
         {
             var targetNamespace = baseNamespace;
-            var className = CSharpNaming.ToClassName(schema.Reference.Id);
+            var className = CSharpNaming.ToClassName(schema.Reference.Id, options.ReservedIdentifiers);
 
             var header = new templates.PartialHeader(
                 appName: document.Info.Title,
@@ -147,7 +147,7 @@ namespace PrincipleStudios.OpenApi.CSharp
                            dataType: dataType.text,
                            nullable: dataType.nullable,
                            isContainer: dataType.isEnumerable,
-                           name: CSharpNaming.ToPropertyName(entry.Key),
+                           name: CSharpNaming.ToPropertyName(entry.Key, options.ReservedIdentifiers),
                            required: req
                         )).ToArray()
             );
@@ -162,7 +162,7 @@ namespace PrincipleStudios.OpenApi.CSharp
                 enumVars: (from entry in schema.Enum
                            select entry switch
                            {
-                               Microsoft.OpenApi.Any.OpenApiPrimitive<string> { Value: string name } => new templates.EnumVar(CSharpNaming.ToPropertyName(name), name),
+                               Microsoft.OpenApi.Any.OpenApiPrimitive<string> { Value: string name } => new templates.EnumVar(CSharpNaming.ToPropertyName(name, options.ReservedIdentifiers), name),
                                _ => throw new NotSupportedException()
                            }).ToArray()
             );

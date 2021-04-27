@@ -1,11 +1,4 @@
 {{>partial_header header}}
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
-using System.ComponentModel.DataAnnotations;
 #nullable enable
 #nullable disable warnings
 
@@ -20,7 +13,7 @@ namespace {{packageName}}
     /// "}}
     /// </remarks>{{/if}}{{#if description}}
     [Description("{{description}}")]{{/if}}
-    public abstract class {{className}}ControllerBase : ControllerBase
+    public abstract class {{className}}ControllerBase : global::Microsoft.AspNetCore.Mvc.ControllerBase
     {
         {{#each operations as |operation|}}{{#each requestBodies as |requestBody|}}{{#if operation.summary}}
         /// <summary>
@@ -32,56 +25,56 @@ namespace {{packageName}}
         /// "}}
         /// </remarks>{{/if}}{{#each requestBody.allParams}}
         /// <param name="{{paramName}}">{{description}}</param>{{/each}}
-        [Http{{operation.httpMethod}}]
-        [Route("{{{operation.basePathWithoutHost}}}{{{operation.path}}}")]{{#if requestBody.requestBodyType}}
-        [Consumes("{{{requestBody.requestBodyType}}}")]{{/if}}{{!
+        [global::Microsoft.AspNetCore.Mvc.Http{{operation.httpMethod}}]
+        [global::Microsoft.AspNetCore.Mvc.Route("{{{operation.basePathWithoutHost}}}{{{operation.path}}}")]{{#if requestBody.requestBodyType}}
+        [global::Microsoft.AspNetCore.Mvc.Consumes("{{{requestBody.requestBodyType}}}")]{{/if}}{{!
         }}{{#if operation.responses.defaultResponse}}
         // {{operation.responses.defaultResponse.description}}
         {{#each operation.responses.defaultResponse.content}}
-        [ProducesDefaultResponseType({{#if dataType}}typeof({{{dataType}}}){{/if}})] // {{mediaType}}{{/each}}{{/if}}{{!
+        [global::Microsoft.AspNetCore.Mvc.ProducesDefaultResponseType({{#if dataType}}typeof({{{dataType}}}){{/if}})] // {{mediaType}}{{/each}}{{/if}}{{!
         }}{{#each operation.responses.statusResponse as |response statusCode|}}
         // {{response.description}}
         {{#each response.content}}
-        [ProducesResponseType({{statusCode}}{{#if dataType}}, Type = typeof({{{dataType}}}){{/if}})] // {{mediaType}}{{/each}}{{/each}}{{!
+        [global::Microsoft.AspNetCore.Mvc.ProducesResponseType({{statusCode}}{{#if dataType}}, Type = typeof({{{dataType}}}){{/if}})] // {{mediaType}}{{/each}}{{/each}}{{!
         }}{{#each operation.securityRequirements}}{{#if schemeNames}}
         [global::Microsoft.AspNetCore.Authorization.Authorize(AuthenticationSchemes = "{{schemeNames}}")]{{else}}
         [global::Microsoft.AspNetCore.Authorization.AllowAnonymous]{{/if}}{{/each}}
-        public async Task<IActionResult> {{operation.name}}(
+        public async global::System.Threading.Tasks.Task<global::Microsoft.AspNetCore.Mvc.IActionResult> {{operation.name}}(
             {{#each requestBody.allParams}}{{#unless isCookieParam}}[{{!
-            }}{{#if isPathParam}}FromRoute(Name = "{{rawName}}"){{/if}}{{!
-            }}{{#if isQueryParam}}FromQuery(Name = "{{rawName}}"){{/if}}{{!
-            }}{{#if isBodyParam}}FromBody{{/if}}{{!
-            }}{{#if isFormParam}}FromForm(Name = "{{rawName}}"){{/if}}{{!
-            }}{{#if isHeaderParam}}FromHeader(Name = "{{rawName}}"){{/if}}{{!
-            }}{{#if required}}, Required{{/if}}{{!
-            }}{{#if pattern}}, RegularExpression("{{{pattern}}}"){{/if}}{{!
-            }}{{#if minLength.HasValue}}, MinLength({{minLength}}){{/if}}{{!
-            }}{{#if maxLength.HasValue}}, MaxLength({{maxLength}}){{/if}}{{!
-            }}{{#if minimum.HasValue}}{{#if maximum.HasValue}}, Range({{minimum}}, {{maximum}}){{/if}}{{/if}}{{!
+            }}{{#if isPathParam}}global::Microsoft.AspNetCore.Mvc.FromRoute(Name = "{{rawName}}"){{/if}}{{!
+            }}{{#if isQueryParam}}global::Microsoft.AspNetCore.Mvc.FromQuery(Name = "{{rawName}}"){{/if}}{{!
+            }}{{#if isBodyParam}}global::Microsoft.AspNetCore.Mvc.FromBody{{/if}}{{!
+            }}{{#if isFormParam}}global::Microsoft.AspNetCore.Mvc.FromForm(Name = "{{rawName}}"){{/if}}{{!
+            }}{{#if isHeaderParam}}global::Microsoft.AspNetCore.Mvc.FromHeader(Name = "{{rawName}}"){{/if}}{{!
+            }}{{#if required}}, global::System.ComponentModel.DataAnnotations.Required{{/if}}{{!
+            }}{{#if pattern}}, global::System.ComponentModel.DataAnnotations.RegularExpression("{{{pattern}}}"){{/if}}{{!
+            }}{{#if minLength.HasValue}}, global::System.ComponentModel.DataAnnotations.MinLength({{minLength}}){{/if}}{{!
+            }}{{#if maxLength.HasValue}}, global::System.ComponentModel.DataAnnotations.MaxLength({{maxLength}}){{/if}}{{!
+            }}{{#if minimum.HasValue}}{{#if maximum.HasValue}}, global::System.ComponentModel.DataAnnotations.Range({{minimum}}, {{maximum}}){{/if}}{{/if}}{{!
             }}] {{{dataType}}} {{paramName}}{{#unless @last}},
             {{/unless}}{{/unless}}{{/each}}
         ) => (await {{requestBody.name}}TypeSafe({{#each requestBody.allParams}}{{paramName}}{{#unless @last}},{{/unless}}{{/each}})).ActionResult;
 
-        protected abstract Task<TypeSafe{{operation.name}}Result> {{requestBody.name}}TypeSafe({{#each requestBody.allParams}}
+        protected abstract global::System.Threading.Tasks.Task<TypeSafe{{operation.name}}Result> {{requestBody.name}}TypeSafe({{#each requestBody.allParams}}
             {{{dataType}}} {{paramName}}{{#unless @last}}, {{/unless}}{{/each}});
         {{/each}}
 
         public readonly struct TypeSafe{{name}}Result
         {
-            public readonly IActionResult ActionResult;
+            public readonly global::Microsoft.AspNetCore.Mvc.IActionResult ActionResult;
 
-            private TypeSafe{{name}}Result(IActionResult ActionResult)
+            private TypeSafe{{name}}Result(global::Microsoft.AspNetCore.Mvc.IActionResult ActionResult)
             {
                 this.ActionResult = ActionResult;
             }
 
             private TypeSafe{{name}}Result(int statusCode)
-                : this(new StatusCodeResult(statusCode))
+                : this(new global::Microsoft.AspNetCore.Mvc.StatusCodeResult(statusCode))
             {
             }
 
-            private TypeSafe{{name}}Result(int statusCode, string mediaType, Type declaredType, object? resultObject)
-                : this(new ObjectResult(resultObject)
+            private TypeSafe{{name}}Result(int statusCode, string mediaType, global::System.Type declaredType, object? resultObject)
+                : this(new global::Microsoft.AspNetCore.Mvc.ObjectResult(resultObject)
                 {
                     ContentTypes = new global::Microsoft.AspNetCore.Mvc.Formatters.MediaTypeCollection { { new global::Microsoft.Net.Http.Headers.MediaTypeHeaderValue(mediaType) } },
                     DeclaredType = declaredType,
@@ -106,7 +99,7 @@ namespace {{packageName}}
             {{/each}}{{/if}}
 
             /// <summary>Allows for action results not specified in the API</summary>
-            public static TypeSafe{{name}}Result Unsafe(IActionResult actionResult) =>
+            public static TypeSafe{{name}}Result Unsafe(global::Microsoft.AspNetCore.Mvc.IActionResult actionResult) =>
                 new TypeSafe{{name}}Result(actionResult);
         }
         {{/each}}

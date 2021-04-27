@@ -53,13 +53,14 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
         {
             var documentName = GetDocumentName(documentId);
             var document = GetDocument(documentId);
+            var options = LoadOptions();
 
             var target = ConstructTarget(document);
             OpenApiTransformDiagnostic diagnostic = new();
 
             var result = target.TransformSchema(document.Components.Schemas[model], diagnostic);
 
-            Snapshot.Match(result.SourceText, $"Full-{nameof(TransformModel)}.{CSharpNaming.ToTitleCaseIdentifier(documentName)}.{CSharpNaming.ToTitleCaseIdentifier(model)}");
+            Snapshot.Match(result.SourceText, $"Full-{nameof(TransformModel)}.{CSharpNaming.ToTitleCaseIdentifier(documentName, options.ReservedIdentifiers)}.{CSharpNaming.ToTitleCaseIdentifier(model, options.ReservedIdentifiers)}");
         }
 
         private static CSharpSchemaTransformer ConstructTarget(OpenApiDocument document, string baseNamespace = "PrincipleStudios.Test")

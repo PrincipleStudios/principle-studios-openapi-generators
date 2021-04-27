@@ -19,12 +19,12 @@ using Newtonsoft.Json;
 
 namespace PS.Controller
 { 
-    public partial class CurrentBatteryState : IEquatable<CurrentBatteryState>
+    public partial class CurrentBatteryState : global::System.IEquatable<CurrentBatteryState>
     {
         public CurrentBatteryState(
-            [JsonProperty(PropertyName="percent")] double? Percent, 
-            [JsonProperty(PropertyName="currentCharge")] double? CurrentCharge, 
-            [JsonProperty(PropertyName="maxCharge")] double? MaxCharge
+            [global::Newtonsoft.Json.JsonProperty(PropertyName="percent")] double? Percent, 
+            [global::Newtonsoft.Json.JsonProperty(PropertyName="currentCharge")] double? CurrentCharge, 
+            [global::Newtonsoft.Json.JsonProperty(PropertyName="maxCharge")] double? MaxCharge
         ) { 
             this.Percent = Percent;
             this.CurrentCharge = CurrentCharge;
@@ -34,19 +34,19 @@ namespace PS.Controller
         /// <summary>
         /// Gets Percent
         /// </summary>
-        [JsonProperty(PropertyName="percent")]
+        [global::Newtonsoft.Json.JsonProperty(PropertyName="percent")]
         public double? Percent { get; }
 
         /// <summary>
         /// Gets CurrentCharge
         /// </summary>
-        [JsonProperty(PropertyName="currentCharge")]
+        [global::Newtonsoft.Json.JsonProperty(PropertyName="currentCharge")]
         public double? CurrentCharge { get; }
 
         /// <summary>
         /// Gets MaxCharge
         /// </summary>
-        [JsonProperty(PropertyName="maxCharge")]
+        [global::Newtonsoft.Json.JsonProperty(PropertyName="maxCharge")]
         public double? MaxCharge { get; }
 
         public override bool Equals(object obj)

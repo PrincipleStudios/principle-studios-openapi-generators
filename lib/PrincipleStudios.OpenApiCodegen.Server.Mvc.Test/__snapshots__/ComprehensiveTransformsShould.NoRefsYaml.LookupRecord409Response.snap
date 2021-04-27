@@ -19,10 +19,10 @@ using Newtonsoft.Json;
 
 namespace PS.Controller
 { 
-    public partial class LookupRecord409Response : IEquatable<LookupRecord409Response>
+    public partial class LookupRecord409Response : global::System.IEquatable<LookupRecord409Response>
     {
         public LookupRecord409Response(
-            [JsonProperty(PropertyName="multiple")] global::System.Collections.Generic.IEnumerable<LookupRecord409ResponseMultipleItems>? Multiple
+            [global::Newtonsoft.Json.JsonProperty(PropertyName="multiple")] global::System.Collections.Generic.IEnumerable<LookupRecord409ResponseMultipleItems>? Multiple
         ) { 
             this.Multiple = Multiple;
         }
@@ -30,7 +30,7 @@ namespace PS.Controller
         /// <summary>
         /// Gets Multiple
         /// </summary>
-        [JsonProperty(PropertyName="multiple")]
+        [global::Newtonsoft.Json.JsonProperty(PropertyName="multiple")]
         public global::System.Collections.Generic.IEnumerable<LookupRecord409ResponseMultipleItems>? Multiple { get; }
 
         public override bool Equals(object obj)

@@ -19,17 +19,17 @@ using Newtonsoft.Json;
 
 namespace PS.Controller
 { 
-    public partial class User : IEquatable<User>
+    public partial class User : global::System.IEquatable<User>
     {
         public User(
-            [JsonProperty(PropertyName="id")] long? Id, 
-            [JsonProperty(PropertyName="username")] string? Username, 
-            [JsonProperty(PropertyName="firstName")] string? FirstName, 
-            [JsonProperty(PropertyName="lastName")] string? LastName, 
-            [JsonProperty(PropertyName="email")] string? Email, 
-            [JsonProperty(PropertyName="password")] string? Password, 
-            [JsonProperty(PropertyName="phone")] string? Phone, 
-            [JsonProperty(PropertyName="userStatus")] int? UserStatus
+            [global::Newtonsoft.Json.JsonProperty(PropertyName="id")] long? Id, 
+            [global::Newtonsoft.Json.JsonProperty(PropertyName="username")] string? Username, 
+            [global::Newtonsoft.Json.JsonProperty(PropertyName="firstName")] string? FirstName, 
+            [global::Newtonsoft.Json.JsonProperty(PropertyName="lastName")] string? LastName, 
+            [global::Newtonsoft.Json.JsonProperty(PropertyName="email")] string? Email, 
+            [global::Newtonsoft.Json.JsonProperty(PropertyName="password")] string? Password, 
+            [global::Newtonsoft.Json.JsonProperty(PropertyName="phone")] string? Phone, 
+            [global::Newtonsoft.Json.JsonProperty(PropertyName="userStatus")] int? UserStatus
         ) { 
             this.Id = Id;
             this.Username = Username;
@@ -44,49 +44,49 @@ namespace PS.Controller
         /// <summary>
         /// Gets Id
         /// </summary>
-        [JsonProperty(PropertyName="id")]
+        [global::Newtonsoft.Json.JsonProperty(PropertyName="id")]
         public long? Id { get; }
 
         /// <summary>
         /// Gets Username
         /// </summary>
-        [JsonProperty(PropertyName="username")]
+        [global::Newtonsoft.Json.JsonProperty(PropertyName="username")]
         public string? Username { get; }
 
         /// <summary>
         /// Gets FirstName
         /// </summary>
-        [JsonProperty(PropertyName="firstName")]
+        [global::Newtonsoft.Json.JsonProperty(PropertyName="firstName")]
         public string? FirstName { get; }
 
         /// <summary>
         /// Gets LastName
         /// </summary>
-        [JsonProperty(PropertyName="lastName")]
+        [global::Newtonsoft.Json.JsonProperty(PropertyName="lastName")]
         public string? LastName { get; }
 
         /// <summary>
         /// Gets Email
         /// </summary>
-        [JsonProperty(PropertyName="email")]
+        [global::Newtonsoft.Json.JsonProperty(PropertyName="email")]
         public string? Email { get; }
 
         /// <summary>
         /// Gets Password
         /// </summary>
-        [JsonProperty(PropertyName="password")]
+        [global::Newtonsoft.Json.JsonProperty(PropertyName="password")]
         public string? Password { get; }
 
         /// <summary>
         /// Gets Phone
         /// </summary>
-        [JsonProperty(PropertyName="phone")]
+        [global::Newtonsoft.Json.JsonProperty(PropertyName="phone")]
         public string? Phone { get; }
 
         /// <summary>
         /// Gets UserStatus
         /// </summary>
-        [JsonProperty(PropertyName="userStatus")]
+        [global::Newtonsoft.Json.JsonProperty(PropertyName="userStatus")]
         public int? UserStatus { get; }
 
         public override bool Equals(object obj)

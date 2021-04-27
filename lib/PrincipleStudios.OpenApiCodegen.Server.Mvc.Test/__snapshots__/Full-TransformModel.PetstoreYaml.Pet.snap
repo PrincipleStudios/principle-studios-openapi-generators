@@ -19,12 +19,12 @@ using Newtonsoft.Json;
 
 namespace PrincipleStudios.Test
 { 
-    public partial class Pet : IEquatable<Pet>
+    public partial class Pet : global::System.IEquatable<Pet>
     {
         public Pet(
-            [JsonProperty(PropertyName="name"), Required] string Name, 
-            [JsonProperty(PropertyName="tag")] string? Tag, 
-            [JsonProperty(PropertyName="id"), Required] long Id
+            [global::Newtonsoft.Json.JsonProperty(PropertyName="name"), global::System.ComponentModel.DataAnnotations.Required] string Name, 
+            [global::Newtonsoft.Json.JsonProperty(PropertyName="tag")] string? Tag, 
+            [global::Newtonsoft.Json.JsonProperty(PropertyName="id"), global::System.ComponentModel.DataAnnotations.Required] long Id
         ) { 
             this.Name = Name;
             this.Tag = Tag;
@@ -34,21 +34,21 @@ namespace PrincipleStudios.Test
         /// <summary>
         /// Gets Name
         /// </summary>
-        [Required]
-        [JsonProperty(PropertyName="name")]
+        [global::System.ComponentModel.DataAnnotations.Required]
+        [global::Newtonsoft.Json.JsonProperty(PropertyName="name")]
         public string Name { get; }
 
         /// <summary>
         /// Gets Tag
         /// </summary>
-        [JsonProperty(PropertyName="tag")]
+        [global::Newtonsoft.Json.JsonProperty(PropertyName="tag")]
         public string? Tag { get; }
 
         /// <summary>
         /// Gets Id
         /// </summary>
-        [Required]
-        [JsonProperty(PropertyName="id")]
+        [global::System.ComponentModel.DataAnnotations.Required]
+        [global::Newtonsoft.Json.JsonProperty(PropertyName="id")]
         public long Id { get; }
 
         public override bool Equals(object obj)

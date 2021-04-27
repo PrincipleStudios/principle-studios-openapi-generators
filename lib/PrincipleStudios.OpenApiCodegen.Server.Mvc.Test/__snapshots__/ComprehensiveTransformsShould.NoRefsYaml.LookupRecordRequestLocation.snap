@@ -19,11 +19,11 @@ using Newtonsoft.Json;
 
 namespace PS.Controller
 { 
-    public partial class LookupRecordRequestLocation : IEquatable<LookupRecordRequestLocation>
+    public partial class LookupRecordRequestLocation : global::System.IEquatable<LookupRecordRequestLocation>
     {
         public LookupRecordRequestLocation(
-            [JsonProperty(PropertyName="latitude"), Required] double Latitude, 
-            [JsonProperty(PropertyName="longitude"), Required] double Longitude
+            [global::Newtonsoft.Json.JsonProperty(PropertyName="latitude"), global::System.ComponentModel.DataAnnotations.Required] double Latitude, 
+            [global::Newtonsoft.Json.JsonProperty(PropertyName="longitude"), global::System.ComponentModel.DataAnnotations.Required] double Longitude
         ) { 
             this.Latitude = Latitude;
             this.Longitude = Longitude;
@@ -32,15 +32,15 @@ namespace PS.Controller
         /// <summary>
         /// Gets Latitude
         /// </summary>
-        [Required]
-        [JsonProperty(PropertyName="latitude")]
+        [global::System.ComponentModel.DataAnnotations.Required]
+        [global::Newtonsoft.Json.JsonProperty(PropertyName="latitude")]
         public double Latitude { get; }
 
         /// <summary>
         /// Gets Longitude
         /// </summary>
-        [Required]
-        [JsonProperty(PropertyName="longitude")]
+        [global::System.ComponentModel.DataAnnotations.Required]
+        [global::Newtonsoft.Json.JsonProperty(PropertyName="longitude")]
         public double Longitude { get; }
 
         public override bool Equals(object obj)

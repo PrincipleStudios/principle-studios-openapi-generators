@@ -19,11 +19,11 @@ using Newtonsoft.Json;
 
 namespace PS.Controller
 { 
-    public partial class LookupRecordOtherResponse : IEquatable<LookupRecordOtherResponse>
+    public partial class LookupRecordOtherResponse : global::System.IEquatable<LookupRecordOtherResponse>
     {
         public LookupRecordOtherResponse(
-            [JsonProperty(PropertyName="code"), Required] string Code, 
-            [JsonProperty(PropertyName="message"), Required] string Message
+            [global::Newtonsoft.Json.JsonProperty(PropertyName="code"), global::System.ComponentModel.DataAnnotations.Required] string Code, 
+            [global::Newtonsoft.Json.JsonProperty(PropertyName="message"), global::System.ComponentModel.DataAnnotations.Required] string Message
         ) { 
             this.Code = Code;
             this.Message = Message;
@@ -32,15 +32,15 @@ namespace PS.Controller
         /// <summary>
         /// Gets Code
         /// </summary>
-        [Required]
-        [JsonProperty(PropertyName="code")]
+        [global::System.ComponentModel.DataAnnotations.Required]
+        [global::Newtonsoft.Json.JsonProperty(PropertyName="code")]
         public string Code { get; }
 
         /// <summary>
         /// Gets Message
         /// </summary>
-        [Required]
-        [JsonProperty(PropertyName="message")]
+        [global::System.ComponentModel.DataAnnotations.Required]
+        [global::Newtonsoft.Json.JsonProperty(PropertyName="message")]
         public string Message { get; }
 
         public override bool Equals(object obj)

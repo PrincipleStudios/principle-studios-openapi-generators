@@ -19,11 +19,11 @@ using Newtonsoft.Json;
 
 namespace PS.Controller
 { 
-    public partial class LookupRecord409ResponseMultipleItems : IEquatable<LookupRecord409ResponseMultipleItems>
+    public partial class LookupRecord409ResponseMultipleItems : global::System.IEquatable<LookupRecord409ResponseMultipleItems>
     {
         public LookupRecord409ResponseMultipleItems(
-            [JsonProperty(PropertyName="formattedAddress"), Required] string FormattedAddress, 
-            [JsonProperty(PropertyName="location"), Required] LookupRecord409ResponseMultipleItemsLocation Location
+            [global::Newtonsoft.Json.JsonProperty(PropertyName="formattedAddress"), global::System.ComponentModel.DataAnnotations.Required] string FormattedAddress, 
+            [global::Newtonsoft.Json.JsonProperty(PropertyName="location"), global::System.ComponentModel.DataAnnotations.Required] LookupRecord409ResponseMultipleItemsLocation Location
         ) { 
             this.FormattedAddress = FormattedAddress;
             this.Location = Location;
@@ -32,15 +32,15 @@ namespace PS.Controller
         /// <summary>
         /// Gets FormattedAddress
         /// </summary>
-        [Required]
-        [JsonProperty(PropertyName="formattedAddress")]
+        [global::System.ComponentModel.DataAnnotations.Required]
+        [global::Newtonsoft.Json.JsonProperty(PropertyName="formattedAddress")]
         public string FormattedAddress { get; }
 
         /// <summary>
         /// Gets Location
         /// </summary>
-        [Required]
-        [JsonProperty(PropertyName="location")]
+        [global::System.ComponentModel.DataAnnotations.Required]
+        [global::Newtonsoft.Json.JsonProperty(PropertyName="location")]
         public LookupRecord409ResponseMultipleItemsLocation Location { get; }
 
         public override bool Equals(object obj)

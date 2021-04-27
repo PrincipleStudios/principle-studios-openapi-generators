@@ -36,7 +36,7 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
         {
             using var defaultJsonStream = CSharpSchemaOptions.GetDefaultOptionsJson();
             var builder = new ConfigurationBuilder();
-            builder.AddJsonStream(defaultJsonStream);
+            builder.AddYamlStream(defaultJsonStream);
             // TODO - allow config overrides
             var result = builder.Build().Get<CSharpSchemaOptions>();
             return result;
@@ -80,7 +80,7 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
             opt.TryGetValue("build_property.projectdir", out var projectDir);
             opt.TryGetValue("build_property.rootnamespace", out var rootNamespace);
 
-            return CSharpNaming.ToNamespace(rootNamespace, projectDir, identity, link);
+            return CSharpNaming.ToNamespace(rootNamespace, projectDir, identity, link, options.ReservedIdentifiers);
         }
     }
 

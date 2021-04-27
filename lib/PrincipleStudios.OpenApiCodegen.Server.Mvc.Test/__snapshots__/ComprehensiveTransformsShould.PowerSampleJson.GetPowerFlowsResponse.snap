@@ -19,7 +19,7 @@ using Newtonsoft.Json;
 
 namespace PS.Controller
 { 
-    public partial class GetPowerFlowsResponse : IEquatable<GetPowerFlowsResponse>
+    public partial class GetPowerFlowsResponse : global::System.IEquatable<GetPowerFlowsResponse>
     {
         public GetPowerFlowsResponse(
         ) { 

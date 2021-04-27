@@ -19,11 +19,11 @@ using Newtonsoft.Json;
 
 namespace PS.Controller
 { 
-    public partial class Error : IEquatable<Error>
+    public partial class Error : global::System.IEquatable<Error>
     {
         public Error(
-            [JsonProperty(PropertyName="code"), Required] int Code, 
-            [JsonProperty(PropertyName="message"), Required] string Message
+            [global::Newtonsoft.Json.JsonProperty(PropertyName="code"), global::System.ComponentModel.DataAnnotations.Required] int Code, 
+            [global::Newtonsoft.Json.JsonProperty(PropertyName="message"), global::System.ComponentModel.DataAnnotations.Required] string Message
         ) { 
             this.Code = Code;
             this.Message = Message;
@@ -32,15 +32,15 @@ namespace PS.Controller
         /// <summary>
         /// Gets Code
         /// </summary>
-        [Required]
-        [JsonProperty(PropertyName="code")]
+        [global::System.ComponentModel.DataAnnotations.Required]
+        [global::Newtonsoft.Json.JsonProperty(PropertyName="code")]
         public int Code { get; }
 
         /// <summary>
         /// Gets Message
         /// </summary>
-        [Required]
-        [JsonProperty(PropertyName="message")]
+        [global::System.ComponentModel.DataAnnotations.Required]
+        [global::Newtonsoft.Json.JsonProperty(PropertyName="message")]
         public string Message { get; }
 
         public override bool Equals(object obj)

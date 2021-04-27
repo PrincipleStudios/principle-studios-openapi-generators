@@ -18,7 +18,7 @@ namespace PrincipleStudios.OpenApi.CSharp
 
         public SourceEntry TransformController(string path, OpenApiPathItem pathItem, OpenApiTransformDiagnostic diagnostic)
         {
-            var className = CSharpNaming.ToClassName(path);
+            var className = CSharpNaming.ToClassName(path, options.ReservedIdentifiers);
 
             var template = new templates.ControllerTemplate(
                 header: new templates.PartialHeader(
@@ -41,7 +41,7 @@ namespace PrincipleStudios.OpenApi.CSharp
                                      let dataType = ToInlineDataType(param.Schema, param.Required)
                                      select new templates.OperationParameter(
                                          rawName: param.Name,
-                                         paramName: CSharpNaming.ToParameterName(param.Name),
+                                         paramName: CSharpNaming.ToParameterName(param.Name, options.ReservedIdentifiers),
                                          description: param.Description,
                                          dataType: dataType.text,
                                          dataTypeNullable: dataType.nullable,
@@ -67,12 +67,12 @@ namespace PrincipleStudios.OpenApi.CSharp
                                  httpMethod: operation.Key.ToString("g"),
                                  summary: operation.Value.Summary,
                                  description: operation.Value.Description,
-                                 name: CSharpNaming.ToTitleCaseIdentifier(operation.Value.OperationId),
+                                 name: CSharpNaming.ToTitleCaseIdentifier(operation.Value.OperationId, options.ReservedIdentifiers),
                                  path: path,
                                  requestBodies: (from contentType in requestTypes
                                                  let isForm = contentType.Key == "application/x-www-form-urlencoded"
                                                  select new templates.OperationRequestBody(
-                                                     name: CSharpNaming.ToTitleCaseIdentifier(operation.Value.OperationId + (singleContentType ? "" : contentType.Key)),
+                                                     name: CSharpNaming.ToTitleCaseIdentifier(operation.Value.OperationId + (singleContentType ? "" : contentType.Key), options.ReservedIdentifiers),
                                                      requestBodyType: contentType.Key,
                                                      allParams: sharedParams.Concat(contentType.Value == null 
                                                         ? Enumerable.Empty<templates.OperationParameter>() 
@@ -80,7 +80,7 @@ namespace PrincipleStudios.OpenApi.CSharp
                                                                    let dataType = ToInlineDataType(param.Value, contentType.Value.Schema.Required.Contains(param.Key))
                                                                    select new templates.OperationParameter(
                                                                        rawName: param.Key,
-                                                                       paramName: CSharpNaming.ToParameterName(param.Key),
+                                                                       paramName: CSharpNaming.ToParameterName(param.Key, options.ReservedIdentifiers),
                                                                        description: null,
                                                                        dataType: dataType.text,
                                                                        dataTypeNullable: dataType.nullable,
@@ -102,7 +102,7 @@ namespace PrincipleStudios.OpenApi.CSharp
                                                           let dataType = ToInlineDataType(ct.Schema, true)
                                                           select new templates.OperationParameter(
                                                              rawName: null,
-                                                             paramName: CSharpNaming.ToParameterName(operation.Value.OperationId + " body"),
+                                                             paramName: CSharpNaming.ToParameterName(operation.Value.OperationId + " body", options.ReservedIdentifiers),
                                                              description: null,
                                                              dataType: dataType.text,
                                                              dataTypeNullable: dataType.nullable,
@@ -159,9 +159,9 @@ namespace PrincipleStudios.OpenApi.CSharp
                         version: document.Info.Version,
                         infoEmail: document.Info.Contact?.Email
                     ),
-                    methodName: CSharpNaming.ToMethodName(document.Info.Title),
+                    methodName: CSharpNaming.ToMethodName(document.Info.Title, options.ReservedIdentifiers),
                     packageName: baseNamespace,
-                    controllers: paths.Select(p => new templates.ControllerReference(CSharpNaming.ToClassName(p.Key))).ToArray()
+                    controllers: paths.Select(p => new templates.ControllerReference(CSharpNaming.ToClassName(p.Key, options.ReservedIdentifiers))).ToArray()
                 )),
             };
         }
@@ -174,7 +174,7 @@ namespace PrincipleStudios.OpenApi.CSharp
                           let dataType = entry.Value.Schema != null ? ToInlineDataType(entry.Value.Schema, true) : null
                           select new OperationResponseContentOption(
                               mediaType: entry.Key,
-                              mediaTypeId: CSharpNaming.ToTitleCaseIdentifier(entry.Key),
+                              mediaTypeId: CSharpNaming.ToTitleCaseIdentifier(entry.Key, options.ReservedIdentifiers),
                               dataType: dataType?.text
                           )).ToArray()
             );

@@ -19,12 +19,12 @@ using Newtonsoft.Json;
 
 namespace PS.Controller
 { 
-    public partial class ApiResponse : IEquatable<ApiResponse>
+    public partial class ApiResponse : global::System.IEquatable<ApiResponse>
     {
         public ApiResponse(
-            [JsonProperty(PropertyName="code")] int? Code, 
-            [JsonProperty(PropertyName="type")] string? Type, 
-            [JsonProperty(PropertyName="message")] string? Message
+            [global::Newtonsoft.Json.JsonProperty(PropertyName="code")] int? Code, 
+            [global::Newtonsoft.Json.JsonProperty(PropertyName="type")] string? Type, 
+            [global::Newtonsoft.Json.JsonProperty(PropertyName="message")] string? Message
         ) { 
             this.Code = Code;
             this.Type = Type;
@@ -34,19 +34,19 @@ namespace PS.Controller
         /// <summary>
         /// Gets Code
         /// </summary>
-        [JsonProperty(PropertyName="code")]
+        [global::Newtonsoft.Json.JsonProperty(PropertyName="code")]
         public int? Code { get; }
 
         /// <summary>
         /// Gets Type
         /// </summary>
-        [JsonProperty(PropertyName="type")]
+        [global::Newtonsoft.Json.JsonProperty(PropertyName="type")]
         public string? Type { get; }
 
         /// <summary>
         /// Gets Message
         /// </summary>
-        [JsonProperty(PropertyName="message")]
+        [global::Newtonsoft.Json.JsonProperty(PropertyName="message")]
         public string? Message { get; }
 
         public override bool Equals(object obj)

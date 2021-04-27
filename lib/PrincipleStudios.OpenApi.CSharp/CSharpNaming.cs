@@ -9,18 +9,18 @@ namespace PrincipleStudios.OpenApi.CSharp
 {
     public static class CSharpNaming
     {
-        public static string ToClassName(string key) => ToTitleCaseIdentifier(key);
-        public static string ToPropertyName(string key) => ToTitleCaseIdentifier(key);
+        public static string ToClassName(string key, ICollection<string> reservedIdentifiers) => ToTitleCaseIdentifier(key, reservedIdentifiers);
+        public static string ToPropertyName(string key, ICollection<string> reservedIdentifiers) => ToTitleCaseIdentifier(key, reservedIdentifiers);
 
-        public static string ToTitleCaseIdentifier(string key) => ToIdentifier(ToTitleCase(key));
-        public static string ToCamelCaseIdentifier(string key) => ToIdentifier(ToCamelCase(key));
+        public static string ToTitleCaseIdentifier(string key, ICollection<string> reservedIdentifiers) => ToIdentifier(ToTitleCase(key), reservedIdentifiers);
+        public static string ToCamelCaseIdentifier(string key, ICollection<string> reservedIdentifiers) => ToIdentifier(ToCamelCase(key), reservedIdentifiers);
 
-        public static string ToMethodName(string key) => ToTitleCaseIdentifier(key);
-        public static string ToParameterName(string key) => ToCamelCaseIdentifier(key);
+        public static string ToMethodName(string key, ICollection<string> reservedIdentifiers) => ToTitleCaseIdentifier(key, reservedIdentifiers);
+        public static string ToParameterName(string key, ICollection<string> reservedIdentifiers) => ToCamelCaseIdentifier(key, reservedIdentifiers);
 
         // TODO - check for reserved words... Probably not necessary when doing title case
-        private static string ToIdentifier(string key) =>
-            Regex.IsMatch(key, "^[a-zA-Z]") ? key : ("_" + key);
+        private static string ToIdentifier(string key, ICollection<string> reservedIdentifiers) =>
+            Regex.IsMatch(key, "^[a-zA-Z]") && !reservedIdentifiers.Contains(key) ? key : ("_" + key);
 
         private static string ToTitleCase(string key) =>
             string.Join("", Regex.Split(key, "[^a-zA-Z0-9]+")
@@ -36,7 +36,7 @@ namespace PrincipleStudios.OpenApi.CSharp
                 string s => char.ToLower(s[0]) + s.Substring(1)
             };
 
-        public static string? ToNamespace(string? rootNamespace, string? projectDir, string? identity, string? link)
+        public static string? ToNamespace(string? rootNamespace, string? projectDir, string? identity, string? link, ICollection<string> reservedIdentifiers)
         {
             var prefix = rootNamespace is { Length: > 0 } ? Enumerable.Repeat(rootNamespace, 1) : Enumerable.Empty<string>();
             
@@ -49,7 +49,7 @@ namespace PrincipleStudios.OpenApi.CSharp
 
             var directoryParts = new Regex(@"[/\\]").Split(System.IO.Path.GetDirectoryName(link)).Where(t => t is { Length: > 0 });
 
-            return string.Join(".", prefix.Concat(directoryParts.Select(ToTitleCaseIdentifier)));
+            return string.Join(".", prefix.Concat(directoryParts.Select(v => ToTitleCaseIdentifier(v, reservedIdentifiers))));
         }
     }
 }

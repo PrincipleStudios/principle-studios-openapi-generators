@@ -19,11 +19,11 @@ using Newtonsoft.Json;
 
 namespace PS.Controller
 { 
-    public partial class Category : IEquatable<Category>
+    public partial class Category : global::System.IEquatable<Category>
     {
         public Category(
-            [JsonProperty(PropertyName="id")] long? Id, 
-            [JsonProperty(PropertyName="name")] string? Name
+            [global::Newtonsoft.Json.JsonProperty(PropertyName="id")] long? Id, 
+            [global::Newtonsoft.Json.JsonProperty(PropertyName="name")] string? Name
         ) { 
             this.Id = Id;
             this.Name = Name;
@@ -32,13 +32,13 @@ namespace PS.Controller
         /// <summary>
         /// Gets Id
         /// </summary>
-        [JsonProperty(PropertyName="id")]
+        [global::Newtonsoft.Json.JsonProperty(PropertyName="id")]
         public long? Id { get; }
 
         /// <summary>
         /// Gets Name
         /// </summary>
-        [JsonProperty(PropertyName="name")]
+        [global::Newtonsoft.Json.JsonProperty(PropertyName="name")]
         public string? Name { get; }
 
         public override bool Equals(object obj)

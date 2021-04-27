@@ -19,15 +19,15 @@ using Newtonsoft.Json;
 
 namespace PS.Controller
 { 
-    public partial class Pet : IEquatable<Pet>
+    public partial class Pet : global::System.IEquatable<Pet>
     {
         public Pet(
-            [JsonProperty(PropertyName="id")] long? Id, 
-            [JsonProperty(PropertyName="category")] Category? Category, 
-            [JsonProperty(PropertyName="name"), Required] string Name, 
-            [JsonProperty(PropertyName="photoUrls"), Required] global::System.Collections.Generic.IEnumerable<string> PhotoUrls, 
-            [JsonProperty(PropertyName="tags")] global::System.Collections.Generic.IEnumerable<Tag>? Tags, 
-            [JsonProperty(PropertyName="status")] PetStatus? Status
+            [global::Newtonsoft.Json.JsonProperty(PropertyName="id")] long? Id, 
+            [global::Newtonsoft.Json.JsonProperty(PropertyName="category")] Category? Category, 
+            [global::Newtonsoft.Json.JsonProperty(PropertyName="name"), global::System.ComponentModel.DataAnnotations.Required] string Name, 
+            [global::Newtonsoft.Json.JsonProperty(PropertyName="photoUrls"), global::System.ComponentModel.DataAnnotations.Required] global::System.Collections.Generic.IEnumerable<string> PhotoUrls, 
+            [global::Newtonsoft.Json.JsonProperty(PropertyName="tags")] global::System.Collections.Generic.IEnumerable<Tag>? Tags, 
+            [global::Newtonsoft.Json.JsonProperty(PropertyName="status")] PetStatus? Status
         ) { 
             this.Id = Id;
             this.Category = Category;
@@ -40,39 +40,39 @@ namespace PS.Controller
         /// <summary>
         /// Gets Id
         /// </summary>
-        [JsonProperty(PropertyName="id")]
+        [global::Newtonsoft.Json.JsonProperty(PropertyName="id")]
         public long? Id { get; }
 
         /// <summary>
         /// Gets Category
         /// </summary>
-        [JsonProperty(PropertyName="category")]
+        [global::Newtonsoft.Json.JsonProperty(PropertyName="category")]
         public Category? Category { get; }
 
         /// <summary>
         /// Gets Name
         /// </summary>
-        [Required]
-        [JsonProperty(PropertyName="name")]
+        [global::System.ComponentModel.DataAnnotations.Required]
+        [global::Newtonsoft.Json.JsonProperty(PropertyName="name")]
         public string Name { get; }
 
         /// <summary>
         /// Gets PhotoUrls
         /// </summary>
-        [Required]
-        [JsonProperty(PropertyName="photoUrls")]
+        [global::System.ComponentModel.DataAnnotations.Required]
+        [global::Newtonsoft.Json.JsonProperty(PropertyName="photoUrls")]
         public global::System.Collections.Generic.IEnumerable<string> PhotoUrls { get; }
 
         /// <summary>
         /// Gets Tags
         /// </summary>
-        [JsonProperty(PropertyName="tags")]
+        [global::Newtonsoft.Json.JsonProperty(PropertyName="tags")]
         public global::System.Collections.Generic.IEnumerable<Tag>? Tags { get; }
 
         /// <summary>
         /// Gets Status
         /// </summary>
-        [JsonProperty(PropertyName="status")]
+        [global::Newtonsoft.Json.JsonProperty(PropertyName="status")]
         public PetStatus? Status { get; }
 
         public override bool Equals(object obj)

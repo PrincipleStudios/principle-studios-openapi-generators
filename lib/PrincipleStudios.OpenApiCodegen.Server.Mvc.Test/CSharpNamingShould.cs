@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Xunit;
+using static PrincipleStudios.OpenApiCodegen.Server.Mvc.DocumentHelpers;
 
 namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
 {
@@ -19,7 +20,8 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
         [Theory]
         public void ConvertStringsToValidClassNames(string input, string expected)
         {
-            var actual = CSharpNaming.ToClassName(input);
+            var options = LoadOptions();
+            var actual = CSharpNaming.ToClassName(input, options.ReservedIdentifiers);
             Assert.Equal(expected, actual);
         }
 
@@ -29,10 +31,13 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
         [InlineData("kebab-case", "kebabCase")]
         [InlineData("SCREAMING_CAPS", "screamingCaps")]
         [InlineData("underscore_case", "underscoreCase")]
+        [InlineData("if", "_if")]
+        [InlineData("for", "_for")]
         [Theory]
         public void ConvertStringsToValidParameterNames(string input, string expected)
         {
-            var actual = CSharpNaming.ToParameterName(input);
+            var options = LoadOptions();
+            var actual = CSharpNaming.ToParameterName(input, options.ReservedIdentifiers);
             Assert.Equal(expected, actual);
         }
 
@@ -55,9 +60,9 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
         [Theory]
         public void ConvertPathsToNamespace(string? rootNamespace, string? projectDir, string? identity, string? link, string expected)
         {
-            var actual = CSharpNaming.ToNamespace(rootNamespace, projectDir, identity, link);
+            var options = LoadOptions();
+            var actual = CSharpNaming.ToNamespace(rootNamespace, projectDir, identity, link, options.ReservedIdentifiers);
             Assert.Equal(expected, actual);
         }
-
     }
 }

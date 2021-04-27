@@ -23,8 +23,9 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
         {
             var name = GetDocumentName(index);
             var document = GetDocument(index);
+            var options = LoadOptions();
 
-            var schemaTransformer = new CSharpPathControllerTransformer(document, "PS.Controller", LoadOptions());
+            var schemaTransformer = new CSharpPathControllerTransformer(document, "PS.Controller", options);
             var transformer = schemaTransformer.ToOpenApiSourceTransformer();
             OpenApiTransformDiagnostic diagnostic = new();
 
@@ -32,7 +33,7 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
 
             foreach (var entry in entries)
             {
-                Snapshot.Match(entry.SourceText, $"{nameof(ComprehensiveTransformsShould)}.{CSharpNaming.ToTitleCaseIdentifier(name)}.{CSharpNaming.ToTitleCaseIdentifier(entry.Key.Split('.')[^2])}");
+                Snapshot.Match(entry.SourceText, $"{nameof(ComprehensiveTransformsShould)}.{CSharpNaming.ToTitleCaseIdentifier(name, options.ReservedIdentifiers)}.{CSharpNaming.ToTitleCaseIdentifier(entry.Key.Split('.')[^2], options.ReservedIdentifiers)}");
             }
             Assert.Empty(diagnostic.Errors);
         }
@@ -43,6 +44,7 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
         {
             var name = GetDocumentName(index);
             var document = GetDocument(index);
+            var options = LoadOptions();
 
             var schemaTransformer = new CSharpPathControllerTransformer(document, "PS.Controller", LoadOptions());
             var transformer = schemaTransformer.ToOpenApiSourceTransformer();
@@ -50,7 +52,7 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
 
             var entries = transformer.ToSourceEntries(document, diagnostic).ToArray();
 
-            Snapshot.Match(diagnostic.Errors, $"Diagnostics.{CSharpNaming.ToTitleCaseIdentifier(name)}");
+            Snapshot.Match(diagnostic.Errors, $"Diagnostics.{CSharpNaming.ToTitleCaseIdentifier(name, options.ReservedIdentifiers)}");
         }
     }
 }

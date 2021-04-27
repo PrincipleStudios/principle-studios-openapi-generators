@@ -15,10 +15,10 @@ namespace {{this.packageName}}
     /// {{linewrap description "
     /// "}}
     /// </summary>
-    {{/if}}public partial class {{className}} : {{#if parent}}{{{parent}}}, {{/if}}IEquatable<{{className}}>
+    {{/if}}public partial class {{className}} : {{#if parent}}{{{parent}}}, {{/if}}global::System.IEquatable<{{className}}>
     {
         public {{className}}(
-        {{#each vars}}    [JsonProperty(PropertyName="{{baseName}}"){{#if required}}, Required{{/if}}]{{!
+        {{#each vars}}    [global::Newtonsoft.Json.JsonProperty(PropertyName="{{baseName}}"){{#if required}}, global::System.ComponentModel.DataAnnotations.Required{{/if}}]{{!
         data type: }} {{{dataType}}}{{!
         name: }} {{name}}{{#unless @last}}, {{/unless}}
         {{/each}}) { {{#each vars}}
@@ -30,9 +30,9 @@ namespace {{this.packageName}}
         /// Gets {{^if description}}{{{name}}}{{else}}{{description}}{{/if}}
         /// </summary>
         {{#if required}}
-        [Required]
+        [global::System.ComponentModel.DataAnnotations.Required]
         {{/if}}
-        [JsonProperty(PropertyName="{{baseName}}")]
+        [global::Newtonsoft.Json.JsonProperty(PropertyName="{{baseName}}")]
         public {{{dataType}}} {{name}} { get; }
 
         {{/each}}

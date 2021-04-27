@@ -19,10 +19,10 @@ using Newtonsoft.Json;
 
 namespace PS.Controller
 { 
-    public partial class LookupRecordResponse : IEquatable<LookupRecordResponse>
+    public partial class LookupRecordResponse : global::System.IEquatable<LookupRecordResponse>
     {
         public LookupRecordResponse(
-            [JsonProperty(PropertyName="id")] string? Id
+            [global::Newtonsoft.Json.JsonProperty(PropertyName="id")] string? Id
         ) { 
             this.Id = Id;
         }
@@ -30,7 +30,7 @@ namespace PS.Controller
         /// <summary>
         /// Gets Id
         /// </summary>
-        [JsonProperty(PropertyName="id")]
+        [global::Newtonsoft.Json.JsonProperty(PropertyName="id")]
         public string? Id { get; }
 
         public override bool Equals(object obj)

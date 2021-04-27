@@ -19,15 +19,15 @@ using Newtonsoft.Json;
 
 namespace PrincipleStudios.Test
 { 
-    public partial class Order : IEquatable<Order>
+    public partial class Order : global::System.IEquatable<Order>
     {
         public Order(
-            [JsonProperty(PropertyName="id")] long? Id, 
-            [JsonProperty(PropertyName="petId")] long? PetId, 
-            [JsonProperty(PropertyName="quantity")] int? Quantity, 
-            [JsonProperty(PropertyName="shipDate")] global::System.DateTimeOffset? ShipDate, 
-            [JsonProperty(PropertyName="status")] string? Status, 
-            [JsonProperty(PropertyName="complete")] bool? Complete
+            [global::Newtonsoft.Json.JsonProperty(PropertyName="id")] long? Id, 
+            [global::Newtonsoft.Json.JsonProperty(PropertyName="petId")] long? PetId, 
+            [global::Newtonsoft.Json.JsonProperty(PropertyName="quantity")] int? Quantity, 
+            [global::Newtonsoft.Json.JsonProperty(PropertyName="shipDate")] global::System.DateTimeOffset? ShipDate, 
+            [global::Newtonsoft.Json.JsonProperty(PropertyName="status")] string? Status, 
+            [global::Newtonsoft.Json.JsonProperty(PropertyName="complete")] bool? Complete
         ) { 
             this.Id = Id;
             this.PetId = PetId;
@@ -40,37 +40,37 @@ namespace PrincipleStudios.Test
         /// <summary>
         /// Gets Id
         /// </summary>
-        [JsonProperty(PropertyName="id")]
+        [global::Newtonsoft.Json.JsonProperty(PropertyName="id")]
         public long? Id { get; }
 
         /// <summary>
         /// Gets PetId
         /// </summary>
-        [JsonProperty(PropertyName="petId")]
+        [global::Newtonsoft.Json.JsonProperty(PropertyName="petId")]
         public long? PetId { get; }
 
         /// <summary>
         /// Gets Quantity
         /// </summary>
-        [JsonProperty(PropertyName="quantity")]
+        [global::Newtonsoft.Json.JsonProperty(PropertyName="quantity")]
         public int? Quantity { get; }
 
         /// <summary>
         /// Gets ShipDate
         /// </summary>
-        [JsonProperty(PropertyName="shipDate")]
+        [global::Newtonsoft.Json.JsonProperty(PropertyName="shipDate")]
         public global::System.DateTimeOffset? ShipDate { get; }
 
         /// <summary>
         /// Gets Status
         /// </summary>
-        [JsonProperty(PropertyName="status")]
+        [global::Newtonsoft.Json.JsonProperty(PropertyName="status")]
         public string? Status { get; }
 
         /// <summary>
         /// Gets Complete
         /// </summary>
-        [JsonProperty(PropertyName="complete")]
+        [global::Newtonsoft.Json.JsonProperty(PropertyName="complete")]
         public bool? Complete { get; }
 
         public override bool Equals(object obj)
