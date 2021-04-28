@@ -128,8 +128,10 @@ namespace PrincipleStudios.OpenApi.CSharp
                                                       where parsed.parsed
                                                       select (Key: parsed.value, Value: response.Value)).ToDictionary(p => p.Key, p => ToOperationResponse(p.Value))
                                  ),
-                                 securityRequirements: (from requirement in operation.Value.Security
-                                                        select new templates.OperationSecurityRequirements(string.Join(",", requirement.Keys.Select(k => k.Reference.Id)), string.Join(",", requirement.Values.SelectMany(v => v)))).ToArray()
+                                 securityRequirements: operation.Value.Security.Select(requirement => new OperationSecurityRequirement(
+                                     (from scheme in requirement
+                                      select new templates.OperationSecuritySchemeRequirement(scheme.Key.Reference.Id, scheme.Value.ToArray())).ToArray())
+                                 ).ToArray()
                              )).ToArray()
             );
 

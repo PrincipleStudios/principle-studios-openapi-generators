@@ -28,7 +28,7 @@ namespace PrincipleStudios.OpenApi.CSharp.templates
         string path,
         OperationRequestBody[] requestBodies,
         OperationResponses responses,
-        OperationSecurityRequirements[] securityRequirements
+        OperationSecurityRequirement[] securityRequirements
     );
 
     public record OperationParameter(
@@ -71,10 +71,11 @@ namespace PrincipleStudios.OpenApi.CSharp.templates
 
     public record OperationRequestBody(string name, string requestBodyType, IEnumerable<OperationParameter> allParams);
 
-    public record OperationSecurityRequirements(
-        // comma delimited
-        string schemeNames,
-        // comma delimited
-        string roleNames
+    public record OperationSecurityRequirement(
+        OperationSecuritySchemeRequirement[] schemes
+    );
+    public record OperationSecuritySchemeRequirement(
+        string schemeName,
+        string[] scopeNames
     );
 }

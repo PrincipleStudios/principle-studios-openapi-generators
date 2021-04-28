@@ -32,8 +32,8 @@ paths:
       security:
         - ApiKeyAuth: []
         - OAuth2:
-          - read
-          - write
+          - read:user
+          - user:email
       responses:
         '200':
           description: Sample Response

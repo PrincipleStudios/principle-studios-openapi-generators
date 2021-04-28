@@ -36,8 +36,8 @@ namespace {{packageName}}
         // {{response.description}}
         {{#each response.content}}
         [global::Microsoft.AspNetCore.Mvc.ProducesResponseType({{statusCode}}{{#if dataType}}, Type = typeof({{{dataType}}}){{/if}})] // {{mediaType}}{{/each}}{{/each}}{{!
-        }}{{#each operation.securityRequirements}}{{#if schemeNames}}
-        [global::Microsoft.AspNetCore.Authorization.Authorize(AuthenticationSchemes = "{{schemeNames}}")]{{else}}
+        }}{{#each operation.securityRequirements}}{{#if schemes.Length}}
+        [global::Microsoft.AspNetCore.Authorization.Authorize(AuthenticationSchemes = "{{#each schemes}}{{schemeName}}{{#unless @last}},{{/unless}}{{/each}}")]{{else}}
         [global::Microsoft.AspNetCore.Authorization.AllowAnonymous]{{/if}}{{/each}}
         public async global::System.Threading.Tasks.Task<global::Microsoft.AspNetCore.Mvc.IActionResult> {{operation.name}}(
             {{#each requestBody.allParams}}{{#unless isCookieParam}}[{{!
@@ -54,6 +54,12 @@ namespace {{packageName}}
             }}] {{{dataType}}} {{paramName}}{{#unless @last}},
             {{/unless}}{{/unless}}{{/each}}
         ) => (await {{requestBody.name}}TypeSafe({{#each requestBody.allParams}}{{paramName}}{{#unless @last}},{{/unless}}{{/each}})).ActionResult;
+        {{!--
+            TODO - check scopes
+            {{#each operation.securityRequirements}}{{#if schemes.Length}}{{#if }}
+            if (User.Identity?.AuthenticationType == "OAuth2" && !await VerifyScopes(User, "read:user", "user:email"))
+                return Forbid();{{/if}}{{/if}}{{/each}}
+            return --}}
 
         protected abstract global::System.Threading.Tasks.Task<TypeSafe{{operation.name}}Result> {{requestBody.name}}TypeSafe({{#each requestBody.allParams}}
             {{{dataType}}} {{paramName}}{{#unless @last}}, {{/unless}}{{/each}});

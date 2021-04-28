@@ -39,6 +39,8 @@ namespace PrincipleStudios.ServerInterfacesExample.Oauth
                 .AddScheme<ApiKeyOptions, ApiKeyHandler>("ApiKeyAuth", opt => { })
                 .AddOAuth("OAuth2", options =>
                 {
+                    options.Scope.Add("read:public_key");
+                    options.Scope.Add("read:user");
                     options.ClientId = Configuration["GitHub:ClientId"];
                     options.ClientSecret = Configuration["GitHub:ClientSecret"];
                     options.CallbackPath = new PathString("/github-oauth");
@@ -62,7 +64,8 @@ namespace PrincipleStudios.ServerInterfacesExample.Oauth
                             response.EnsureSuccessStatusCode();
                             var json = System.Text.Json.JsonDocument.Parse(await response.Content.ReadAsStringAsync());
                             context.RunClaimActions(json.RootElement);
-                        }
+                            context.Identity.AddClaim(new Claim("scope", string.Join(' ', options.Scope)));
+                        },
                     };
                 });
         }
