@@ -12,14 +12,4 @@
   <ItemGroup>
     <OpenApiSchemaMvcServer Include="..\..\..\schemas\oauth.yaml" Link="Controllers\oauth.yaml" />
   </ItemGroup>
-
-  <Target Name="_CompileServerOpenApiCodeGen" DependsOnTargets="_UpdateServerOpenApiCodeGenMetatdata" Inputs="$(MSBuildThisFileFullPath);$(MSBuildProjectFile);@(OpenApiSchemaMvcServer);@(OpenApiSchemaCSharpOptions)" Outputs="@(OpenApiSchemaMvcServer -> '%(OutputPath)')">
-    <Message Text="@(OpenApiSchemaCSharpOptions -> '%(FullPath)')" Importance="high" />
-
-    <MvcServerCodegenTask OutputPath="$(MSBuildProjectDirectory)/%(OpenApiSchemaMvcServer.OutputPath)" InputPath="%(OpenApiSchemaMvcServer.FullPath)" Namespace="%(OpenApiSchemaMvcServer.Namespace)" OptionsPath="@(OpenApiSchemaCSharpOptions -> '%(FullPath)')" />
-
-    <!--<Exec Command="dotnet &quot;$(MSBuildThisFileDirectory)/PrincipleStudios.OpenApiCodegen.Server.Mvc.dll&quot; -o &quot;$(MSBuildProjectDirectory)/%(OpenApiSchemaMvcServer.OutputPath)&quot; -i &quot;%(OpenApiSchemaMvcServer.FullPath)&quot; -n &quot;%(OpenApiSchemaMvcServer.Namespace)&quot; -c %(OpenApiSchemaMvcServer.AdditionalProperties)"/>-->
-
-    <Message Text="OpenAPI: %(OpenApiSchemaMvcServer.Identity) -&gt; %(OpenApiSchemaMvcServer.OutputPath)" />
-  </Target>
 </Project>
