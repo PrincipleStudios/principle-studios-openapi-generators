@@ -15,25 +15,24 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
     public class CSharpPathControllerTransformerShould
     {
         [Theory]
-        [InlineData(0, "/pets")]
-        [InlineData(0, "/pets/{id}")]
-        [InlineData(1, "/pet")]
-        [InlineData(1, "/pet/findByStatus")]
-        [InlineData(1, "/pet/findByTags")]
-        [InlineData(1, "/pet/{petId}/uploadImage")]
-        [InlineData(1, "/store/inventory")]
-        [InlineData(1, "/store/order")]
-        [InlineData(1, "/store/order/{orderId}")]
-        [InlineData(1, "/user")]
-        [InlineData(1, "/user/createWithArray")]
-        [InlineData(1, "/user/createWithList")]
-        [InlineData(1, "/user/login")]
-        [InlineData(1, "/user/logout")]
-        [InlineData(1, "/user/{username}")]
-        public void TransformController(int documentId, string path)
+        [InlineData("petstore.yaml", "/pets")]
+        [InlineData("petstore.yaml", "/pets/{id}")]
+        [InlineData("petstore3.json", "/pet")]
+        [InlineData("petstore3.json", "/pet/findByStatus")]
+        [InlineData("petstore3.json", "/pet/findByTags")]
+        [InlineData("petstore3.json", "/pet/{petId}/uploadImage")]
+        [InlineData("petstore3.json", "/store/inventory")]
+        [InlineData("petstore3.json", "/store/order")]
+        [InlineData("petstore3.json", "/store/order/{orderId}")]
+        [InlineData("petstore3.json", "/user")]
+        [InlineData("petstore3.json", "/user/createWithArray")]
+        [InlineData("petstore3.json", "/user/createWithList")]
+        [InlineData("petstore3.json", "/user/login")]
+        [InlineData("petstore3.json", "/user/logout")]
+        [InlineData("petstore3.json", "/user/{username}")]
+        public void TransformController(string documentName, string path)
         {
-            var documentName = GetDocumentName(documentId);
-            var document = GetDocument(documentId);
+            var document = GetDocument(documentName);
             var options = LoadOptions();
 
             var target = ConstructTarget(document);

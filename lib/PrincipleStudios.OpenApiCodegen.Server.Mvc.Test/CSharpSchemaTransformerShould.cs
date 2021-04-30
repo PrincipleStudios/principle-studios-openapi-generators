@@ -20,7 +20,7 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
         [Fact]
         public void RecognizeInlinedValues()
         {
-            var document = GetDocument(0);
+            var document = GetDocument("petstore.yaml");
 
             var target = ConstructTarget(document);
 
@@ -40,19 +40,18 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
         }
 
         [Theory]
-        [InlineData(0, "Pet")]
-        [InlineData(0, "NewPet")]
-        [InlineData(0, "Error")]
-        [InlineData(1, "Order")]
-        [InlineData(1, "Category")]
-        [InlineData(1, "User")]
-        [InlineData(1, "Tag")]
-        [InlineData(1, "Pet")]
-        [InlineData(1, "ApiResponse")]
-        public void TransformModel(int documentId, string model)
+        [InlineData("petstore.yaml", "Pet")]
+        [InlineData("petstore.yaml", "NewPet")]
+        [InlineData("petstore.yaml", "Error")]
+        [InlineData("petstore3.json", "Order")]
+        [InlineData("petstore3.json", "Category")]
+        [InlineData("petstore3.json", "User")]
+        [InlineData("petstore3.json", "Tag")]
+        [InlineData("petstore3.json", "Pet")]
+        [InlineData("petstore3.json", "ApiResponse")]
+        public void TransformModel(string documentName, string model)
         {
-            var documentName = GetDocumentName(documentId);
-            var document = GetDocument(documentId);
+            var document = GetDocument(documentName);
             var options = LoadOptions();
 
             var target = ConstructTarget(document);

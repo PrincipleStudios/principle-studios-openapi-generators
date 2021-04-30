@@ -31,7 +31,12 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
 
         public static OpenApiDocument GetDocument(int index)
         {
-            var documentStream = typeof(CSharpSchemaTransformerShould).Assembly.GetManifestResourceStream($"PrincipleStudios.OpenApiCodegen.Server.Mvc.{GetDocumentName(index)}");
+            return GetDocument(GetDocumentName(index));
+        }
+
+        public static OpenApiDocument GetDocument(string name)
+        {
+            var documentStream = typeof(CSharpSchemaTransformerShould).Assembly.GetManifestResourceStream($"PrincipleStudios.OpenApiCodegen.Server.Mvc.{name}");
             var reader = new OpenApiStreamReader();
             return reader.Read(documentStream, out var openApiDiagnostic);
         }
