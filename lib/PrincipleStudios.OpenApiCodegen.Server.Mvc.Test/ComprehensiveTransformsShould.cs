@@ -13,11 +13,7 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
 {
     public class ComprehensiveTransformsShould
     {
-        [InlineData(0)]
-        [InlineData(1)]
-        [InlineData(2)]
-        [InlineData(3)]
-        [InlineData(5)]
+        [MemberData(nameof(ValidFileIndices))]
         [Theory]
         public void CoverFullFiles(int index)
         {
@@ -38,7 +34,7 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
             Assert.Empty(diagnostic.Errors);
         }
 
-        [InlineData(4)]
+        [MemberData(nameof(InvalidFileIndices))]
         [Theory]
         public void ReportDiagnosticsForMissingReferences(int index)
         {
@@ -54,5 +50,14 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
 
             Snapshot.Match(diagnostic.Errors, $"Diagnostics.{CSharpNaming.ToTitleCaseIdentifier(name, options.ReservedIdentifiers)}");
         }
+
+        public static IEnumerable<object[]> ValidFileIndices =>
+            from fileIndex in GetValidDocumentIndices()
+            select new object[] { fileIndex };
+
+        public static IEnumerable<object[]> InvalidFileIndices =>
+            from fileIndex in GetInvalidDocumentIndices()
+            select new object[] { fileIndex };
+
     }
 }

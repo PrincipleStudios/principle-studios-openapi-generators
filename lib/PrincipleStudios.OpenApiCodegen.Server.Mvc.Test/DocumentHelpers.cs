@@ -12,6 +12,23 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
 {
     public static class DocumentHelpers
     {
+        private static readonly string[] ValidDocumentNames = new[]
+        {
+            "petstore.yaml",
+            "petstore3.json",
+            "power-sample.json",
+            "no-refs.yaml",
+            "oauth.yaml",
+        };
+
+        private static readonly string[] InvalidDocumentNames = new[]
+        {
+            "bad.yaml",
+        };
+
+        public static IEnumerable<int> GetValidDocumentIndices() => Enumerable.Range(0, ValidDocumentNames.Length);
+        public static IEnumerable<int> GetInvalidDocumentIndices() => Enumerable.Range(ValidDocumentNames.Length, InvalidDocumentNames.Length);
+
         public static OpenApiDocument GetDocument(int index)
         {
             var documentStream = typeof(CSharpSchemaTransformerShould).Assembly.GetManifestResourceStream($"PrincipleStudios.OpenApiCodegen.Server.Mvc.{GetDocumentName(index)}");
@@ -23,13 +40,9 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
         {
             return index switch
             {
-                0 => "petstore.yaml",
-                1 => "petstore3.json",
-                2 => "power-sample.json",
-                3 => "no-refs.yaml",
-                4 => "bad.yaml",
-                5 => "oauth.yaml",
-                _ => throw new ArgumentException(nameof(index)),
+                >= 0 when index < ValidDocumentNames.Length => ValidDocumentNames[index],
+                >= 0 when index < ValidDocumentNames.Length + InvalidDocumentNames.Length => InvalidDocumentNames[index - ValidDocumentNames.Length],
+                _ => throw new ArgumentException(nameof(index))
             };
         }
 
