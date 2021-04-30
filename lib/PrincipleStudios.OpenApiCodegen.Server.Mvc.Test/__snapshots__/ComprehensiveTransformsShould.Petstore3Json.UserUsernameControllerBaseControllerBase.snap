@@ -23,7 +23,7 @@ namespace PS.Controller
         [global::Microsoft.AspNetCore.Mvc.HttpGet]
         [global::Microsoft.AspNetCore.Mvc.Route("/user/{username}")]
         // successful operation
-        [global::Microsoft.AspNetCore.Mvc.ProducesResponseType(200, Type = typeof(User))] // application/xml        [global::Microsoft.AspNetCore.Mvc.ProducesResponseType(200, Type = typeof(User))] // application/json
+        [global::Microsoft.AspNetCore.Mvc.ProducesResponseType(200, Type = typeof(_User))] // application/xml        [global::Microsoft.AspNetCore.Mvc.ProducesResponseType(200, Type = typeof(_User))] // application/json
         // Invalid username supplied
 
         // User not found
@@ -62,14 +62,14 @@ namespace PS.Controller
             /// <summary>
             /// successful operation
             /// </summary>
-            public static TypeSafeGetUserByNameResult ApplicationXmlStatusCode200(User result) =>
-                new TypeSafeGetUserByNameResult(200, "application/xml", typeof(User), result);
+            public static TypeSafeGetUserByNameResult ApplicationXmlStatusCode200(_User result) =>
+                new TypeSafeGetUserByNameResult(200, "application/xml", typeof(_User), result);
             
             /// <summary>
             /// successful operation
             /// </summary>
-            public static TypeSafeGetUserByNameResult ApplicationJsonStatusCode200(User result) =>
-                new TypeSafeGetUserByNameResult(200, "application/json", typeof(User), result);
+            public static TypeSafeGetUserByNameResult ApplicationJsonStatusCode200(_User result) =>
+                new TypeSafeGetUserByNameResult(200, "application/json", typeof(_User), result);
             
 
             /// <summary>Allows for action results not specified in the API</summary>
@@ -94,12 +94,12 @@ namespace PS.Controller
 
         public async global::System.Threading.Tasks.Task<global::Microsoft.AspNetCore.Mvc.IActionResult> UpdateUser(
             [global::Microsoft.AspNetCore.Mvc.FromRoute(Name = "username"), global::System.ComponentModel.DataAnnotations.Required] string username,
-            [global::Microsoft.AspNetCore.Mvc.FromBody, global::System.ComponentModel.DataAnnotations.Required] User updateUserBody
+            [global::Microsoft.AspNetCore.Mvc.FromBody, global::System.ComponentModel.DataAnnotations.Required] _User updateUserBody
         ) => (await UpdateUserTypeSafe(username,updateUserBody)).ActionResult;
 
         protected abstract global::System.Threading.Tasks.Task<TypeSafeUpdateUserResult> UpdateUserTypeSafe(
             string username, 
-            User updateUserBody);
+            _User updateUserBody);
 
         public readonly struct TypeSafeUpdateUserResult
         {

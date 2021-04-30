@@ -24,7 +24,7 @@ namespace PrincipleStudios.OpenApi.CSharp
 
         private static string ToTitleCase(string key) =>
             string.Join("", Regex.Split(key, "[^a-zA-Z0-9]+")
-                .Where(s => s is { Length: > 1 })
+                .Where(s => s is { Length: > 0 })
                 .Select(s => s.ToUpper() == s
                     ? char.ToUpper(s[0]) + s.Substring(1).ToLower() // assume acronym, which gets lowercased, such as `HttpMethod` or `CorsPolicy`.
                     : char.ToUpper(s[0]) + s.Substring(1))

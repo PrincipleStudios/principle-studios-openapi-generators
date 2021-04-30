@@ -18,7 +18,7 @@ namespace PrincipleStudios.OpenApi.CSharp
 
         public SourceEntry TransformController(string path, OpenApiPathItem pathItem, OpenApiTransformDiagnostic diagnostic)
         {
-            var className = CSharpNaming.ToClassName(path, options.ReservedIdentifiers);
+            var className = CSharpNaming.ToClassName(path + " controller base", options.ReservedIdentifiers);
 
             var template = new templates.ControllerTemplate(
                 header: new templates.PartialHeader(
@@ -163,7 +163,11 @@ namespace PrincipleStudios.OpenApi.CSharp
                     ),
                     methodName: CSharpNaming.ToMethodName(document.Info.Title, options.ReservedIdentifiers),
                     packageName: baseNamespace,
-                    controllers: paths.Select(p => new templates.ControllerReference(CSharpNaming.ToClassName(p.Key, options.ReservedIdentifiers))).ToArray()
+                    controllers: (from p in paths
+                                  let genericTypeName = CSharpNaming.ToClassName($"T {p.Key} controller", options.ReservedIdentifiers)
+                                  let className = CSharpNaming.ToClassName(p.Key + " controller base", options.ReservedIdentifiers)
+                                  select new templates.ControllerReference(genericTypeName, className)
+                                  ).ToArray()
                 )),
             };
         }

@@ -13,7 +13,7 @@ namespace {{packageName}}
     /// "}}
     /// </remarks>{{/if}}{{#if description}}
     [Description("{{description}}")]{{/if}}
-    public abstract class {{className}}ControllerBase : global::Microsoft.AspNetCore.Mvc.ControllerBase
+    public abstract class {{className}} : global::Microsoft.AspNetCore.Mvc.ControllerBase
     {
         {{#each operations as |operation|}}{{#each requestBodies as |requestBody|}}{{#if operation.summary}}
         /// <summary>

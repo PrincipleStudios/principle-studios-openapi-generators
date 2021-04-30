@@ -13,40 +13,40 @@
 namespace PS.Controller
 { 
     /// <summary>
-    public abstract class UserCreateWithArrayControllerBase : global::Microsoft.AspNetCore.Mvc.ControllerBase
+    public abstract class UserCreateWithListControllerBase : global::Microsoft.AspNetCore.Mvc.ControllerBase
     {
         
         /// <summary>
         /// Creates list of users with given input array
         /// </summary>
-        /// <param name="createUsersWithArrayInputBody"></param>
+        /// <param name="createUsersWithListInputBody"></param>
         [global::Microsoft.AspNetCore.Mvc.HttpPost]
-        [global::Microsoft.AspNetCore.Mvc.Route("/user/createWithArray")]
+        [global::Microsoft.AspNetCore.Mvc.Route("/user/createWithList")]
         [global::Microsoft.AspNetCore.Mvc.Consumes("application/json")]
         // successful operation
 
-        public async global::System.Threading.Tasks.Task<global::Microsoft.AspNetCore.Mvc.IActionResult> CreateUsersWithArrayInput(
-            [global::Microsoft.AspNetCore.Mvc.FromBody, global::System.ComponentModel.DataAnnotations.Required] global::System.Collections.Generic.IEnumerable<User> createUsersWithArrayInputBody
-        ) => (await CreateUsersWithArrayInputTypeSafe(createUsersWithArrayInputBody)).ActionResult;
+        public async global::System.Threading.Tasks.Task<global::Microsoft.AspNetCore.Mvc.IActionResult> CreateUsersWithListInput(
+            [global::Microsoft.AspNetCore.Mvc.FromBody, global::System.ComponentModel.DataAnnotations.Required] global::System.Collections.Generic.IEnumerable<_User> createUsersWithListInputBody
+        ) => (await CreateUsersWithListInputTypeSafe(createUsersWithListInputBody)).ActionResult;
 
-        protected abstract global::System.Threading.Tasks.Task<TypeSafeCreateUsersWithArrayInputResult> CreateUsersWithArrayInputTypeSafe(
-            global::System.Collections.Generic.IEnumerable<User> createUsersWithArrayInputBody);
+        protected abstract global::System.Threading.Tasks.Task<TypeSafeCreateUsersWithListInputResult> CreateUsersWithListInputTypeSafe(
+            global::System.Collections.Generic.IEnumerable<_User> createUsersWithListInputBody);
 
-        public readonly struct TypeSafeCreateUsersWithArrayInputResult
+        public readonly struct TypeSafeCreateUsersWithListInputResult
         {
             public readonly global::Microsoft.AspNetCore.Mvc.IActionResult ActionResult;
 
-            private TypeSafeCreateUsersWithArrayInputResult(global::Microsoft.AspNetCore.Mvc.IActionResult ActionResult)
+            private TypeSafeCreateUsersWithListInputResult(global::Microsoft.AspNetCore.Mvc.IActionResult ActionResult)
             {
                 this.ActionResult = ActionResult;
             }
 
-            private TypeSafeCreateUsersWithArrayInputResult(int statusCode)
+            private TypeSafeCreateUsersWithListInputResult(int statusCode)
                 : this(new global::Microsoft.AspNetCore.Mvc.StatusCodeResult(statusCode))
             {
             }
 
-            private TypeSafeCreateUsersWithArrayInputResult(int statusCode, string mediaType, global::System.Type declaredType, object? resultObject)
+            private TypeSafeCreateUsersWithListInputResult(int statusCode, string mediaType, global::System.Type declaredType, object? resultObject)
                 : this(new global::Microsoft.AspNetCore.Mvc.ObjectResult(resultObject)
                 {
                     ContentTypes = new global::Microsoft.AspNetCore.Mvc.Formatters.MediaTypeCollection { { new global::Microsoft.Net.Http.Headers.MediaTypeHeaderValue(mediaType) } },
@@ -58,8 +58,8 @@ namespace PS.Controller
             
 
             /// <summary>Allows for action results not specified in the API</summary>
-            public static TypeSafeCreateUsersWithArrayInputResult Unsafe(global::Microsoft.AspNetCore.Mvc.IActionResult actionResult) =>
-                new TypeSafeCreateUsersWithArrayInputResult(actionResult);
+            public static TypeSafeCreateUsersWithListInputResult Unsafe(global::Microsoft.AspNetCore.Mvc.IActionResult actionResult) =>
+                new TypeSafeCreateUsersWithListInputResult(actionResult);
         }
     }
 }

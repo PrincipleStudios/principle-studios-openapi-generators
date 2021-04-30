@@ -29,11 +29,11 @@ namespace PS.Controller
         // successful operation
 
         public async global::System.Threading.Tasks.Task<global::Microsoft.AspNetCore.Mvc.IActionResult> CreateUser(
-            [global::Microsoft.AspNetCore.Mvc.FromBody, global::System.ComponentModel.DataAnnotations.Required] User createUserBody
+            [global::Microsoft.AspNetCore.Mvc.FromBody, global::System.ComponentModel.DataAnnotations.Required] _User createUserBody
         ) => (await CreateUserTypeSafe(createUserBody)).ActionResult;
 
         protected abstract global::System.Threading.Tasks.Task<TypeSafeCreateUserResult> CreateUserTypeSafe(
-            User createUserBody);
+            _User createUserBody);
 
         public readonly struct TypeSafeCreateUserResult
         {
