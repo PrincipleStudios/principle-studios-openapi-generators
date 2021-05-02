@@ -37,23 +37,42 @@ namespace PS.Controller
         {
             public readonly global::Microsoft.AspNetCore.Mvc.IActionResult ActionResult;
 
-            private TypeSafeFindPetByIdResult(global::Microsoft.AspNetCore.Mvc.IActionResult ActionResult)
+            private class HeaderActionResult : global::Microsoft.AspNetCore.Mvc.IActionResult
             {
-                this.ActionResult = ActionResult;
+                private readonly global::Microsoft.AspNetCore.Mvc.IActionResult original;
+                private readonly global::System.Collections.Generic.IEnumerable<global::System.Collections.Generic.KeyValuePair<string, string>> headers;
+
+                public HeaderActionResult(global::Microsoft.AspNetCore.Mvc.IActionResult original, global::System.Collections.Generic.IEnumerable<global::System.Collections.Generic.KeyValuePair<string, string>> headers)
+                {
+                    this.original = original;
+                    this.headers = headers;
+                }
+
+                public global::System.Threading.Tasks.Task ExecuteResultAsync(global::Microsoft.AspNetCore.Mvc.ActionContext context)
+                {
+                    foreach (var header in headers)
+                        context.HttpContext.Response.Headers[header.Key] = global::Microsoft.Extensions.Primitives.StringValues.Concat(context.HttpContext.Response.Headers[header.Key], header.Value);
+                    return original.ExecuteResultAsync(context);
+                }
             }
 
-            private TypeSafeFindPetByIdResult(int statusCode)
-                : this(new global::Microsoft.AspNetCore.Mvc.StatusCodeResult(statusCode))
+            private TypeSafeFindPetByIdResult(global::Microsoft.AspNetCore.Mvc.IActionResult ActionResult, global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
+            {
+                this.ActionResult = new HeaderActionResult(ActionResult, headers);
+            }
+
+            private TypeSafeFindPetByIdResult(int statusCode, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
+                : this(new global::Microsoft.AspNetCore.Mvc.StatusCodeResult(statusCode), headers)
             {
             }
 
-            private TypeSafeFindPetByIdResult(int statusCode, string mediaType, global::System.Type declaredType, object? resultObject)
+            private TypeSafeFindPetByIdResult(int statusCode, string mediaType, global::System.Type declaredType, object? resultObject, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
                 : this(new global::Microsoft.AspNetCore.Mvc.ObjectResult(resultObject)
                 {
                     ContentTypes = new global::Microsoft.AspNetCore.Mvc.Formatters.MediaTypeCollection { { new global::Microsoft.Net.Http.Headers.MediaTypeHeaderValue(mediaType) } },
                     DeclaredType = declaredType,
                     StatusCode = statusCode
-                })
+                }, headers)
             {
             }
             
@@ -69,8 +88,8 @@ namespace PS.Controller
             
 
             /// <summary>Allows for action results not specified in the API</summary>
-            public static TypeSafeFindPetByIdResult Unsafe(global::Microsoft.AspNetCore.Mvc.IActionResult actionResult) =>
-                new TypeSafeFindPetByIdResult(actionResult);
+            public static TypeSafeFindPetByIdResult Unsafe(global::Microsoft.AspNetCore.Mvc.IActionResult actionResult, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers) =>
+                new TypeSafeFindPetByIdResult(actionResult, headers);
         }
 
         /// <remarks>
@@ -94,23 +113,42 @@ namespace PS.Controller
         {
             public readonly global::Microsoft.AspNetCore.Mvc.IActionResult ActionResult;
 
-            private TypeSafeDeletePetResult(global::Microsoft.AspNetCore.Mvc.IActionResult ActionResult)
+            private class HeaderActionResult : global::Microsoft.AspNetCore.Mvc.IActionResult
             {
-                this.ActionResult = ActionResult;
+                private readonly global::Microsoft.AspNetCore.Mvc.IActionResult original;
+                private readonly global::System.Collections.Generic.IEnumerable<global::System.Collections.Generic.KeyValuePair<string, string>> headers;
+
+                public HeaderActionResult(global::Microsoft.AspNetCore.Mvc.IActionResult original, global::System.Collections.Generic.IEnumerable<global::System.Collections.Generic.KeyValuePair<string, string>> headers)
+                {
+                    this.original = original;
+                    this.headers = headers;
+                }
+
+                public global::System.Threading.Tasks.Task ExecuteResultAsync(global::Microsoft.AspNetCore.Mvc.ActionContext context)
+                {
+                    foreach (var header in headers)
+                        context.HttpContext.Response.Headers[header.Key] = global::Microsoft.Extensions.Primitives.StringValues.Concat(context.HttpContext.Response.Headers[header.Key], header.Value);
+                    return original.ExecuteResultAsync(context);
+                }
             }
 
-            private TypeSafeDeletePetResult(int statusCode)
-                : this(new global::Microsoft.AspNetCore.Mvc.StatusCodeResult(statusCode))
+            private TypeSafeDeletePetResult(global::Microsoft.AspNetCore.Mvc.IActionResult ActionResult, global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
+            {
+                this.ActionResult = new HeaderActionResult(ActionResult, headers);
+            }
+
+            private TypeSafeDeletePetResult(int statusCode, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
+                : this(new global::Microsoft.AspNetCore.Mvc.StatusCodeResult(statusCode), headers)
             {
             }
 
-            private TypeSafeDeletePetResult(int statusCode, string mediaType, global::System.Type declaredType, object? resultObject)
+            private TypeSafeDeletePetResult(int statusCode, string mediaType, global::System.Type declaredType, object? resultObject, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
                 : this(new global::Microsoft.AspNetCore.Mvc.ObjectResult(resultObject)
                 {
                     ContentTypes = new global::Microsoft.AspNetCore.Mvc.Formatters.MediaTypeCollection { { new global::Microsoft.Net.Http.Headers.MediaTypeHeaderValue(mediaType) } },
                     DeclaredType = declaredType,
                     StatusCode = statusCode
-                })
+                }, headers)
             {
             }
             
@@ -126,8 +164,8 @@ namespace PS.Controller
             
 
             /// <summary>Allows for action results not specified in the API</summary>
-            public static TypeSafeDeletePetResult Unsafe(global::Microsoft.AspNetCore.Mvc.IActionResult actionResult) =>
-                new TypeSafeDeletePetResult(actionResult);
+            public static TypeSafeDeletePetResult Unsafe(global::Microsoft.AspNetCore.Mvc.IActionResult actionResult, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers) =>
+                new TypeSafeDeletePetResult(actionResult, headers);
         }
     }
 }

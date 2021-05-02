@@ -1,0 +1,61 @@
+openapi: "3.0.3"
+info:
+  version: 1.0.0
+  title: Headers Sample
+  description: A sample API that demonstrates header parameters/responses
+paths:
+  /info:
+    get:
+      operationId: getInfo
+      parameters:
+        - name: X-Data
+          in: header
+          description: base-64 encoded data
+          required: true
+          style: form
+          schema:
+            type: string
+            format: byte
+      responses:
+        '200':
+          description: Sample Response
+          headers:
+            X-Data:
+              description: data
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties:
+                  type: string
+        '204':
+          description: Sample Response
+          headers:
+            X-Data:
+              description: data
+              schema:
+                type: string
+        default:
+          description: Another Response
+          headers:
+            X-Data:
+              description: data
+              schema:
+                type: string
+            X-Diag:
+              description: error diagnostic
+              schema:
+                type: string
+  /redirect:
+    get:
+      operationId: redirect
+      responses:
+        '302':
+          description: Redirection Response
+          headers:
+            Location:
+              schema:
+                type: string
+                format: uri

@@ -39,23 +39,42 @@ namespace PS.Controller
         {
             public readonly global::Microsoft.AspNetCore.Mvc.IActionResult ActionResult;
 
-            private TypeSafeGetUserByNameResult(global::Microsoft.AspNetCore.Mvc.IActionResult ActionResult)
+            private class HeaderActionResult : global::Microsoft.AspNetCore.Mvc.IActionResult
             {
-                this.ActionResult = ActionResult;
+                private readonly global::Microsoft.AspNetCore.Mvc.IActionResult original;
+                private readonly global::System.Collections.Generic.IEnumerable<global::System.Collections.Generic.KeyValuePair<string, string>> headers;
+
+                public HeaderActionResult(global::Microsoft.AspNetCore.Mvc.IActionResult original, global::System.Collections.Generic.IEnumerable<global::System.Collections.Generic.KeyValuePair<string, string>> headers)
+                {
+                    this.original = original;
+                    this.headers = headers;
+                }
+
+                public global::System.Threading.Tasks.Task ExecuteResultAsync(global::Microsoft.AspNetCore.Mvc.ActionContext context)
+                {
+                    foreach (var header in headers)
+                        context.HttpContext.Response.Headers[header.Key] = global::Microsoft.Extensions.Primitives.StringValues.Concat(context.HttpContext.Response.Headers[header.Key], header.Value);
+                    return original.ExecuteResultAsync(context);
+                }
             }
 
-            private TypeSafeGetUserByNameResult(int statusCode)
-                : this(new global::Microsoft.AspNetCore.Mvc.StatusCodeResult(statusCode))
+            private TypeSafeGetUserByNameResult(global::Microsoft.AspNetCore.Mvc.IActionResult ActionResult, global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
+            {
+                this.ActionResult = new HeaderActionResult(ActionResult, headers);
+            }
+
+            private TypeSafeGetUserByNameResult(int statusCode, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
+                : this(new global::Microsoft.AspNetCore.Mvc.StatusCodeResult(statusCode), headers)
             {
             }
 
-            private TypeSafeGetUserByNameResult(int statusCode, string mediaType, global::System.Type declaredType, object? resultObject)
+            private TypeSafeGetUserByNameResult(int statusCode, string mediaType, global::System.Type declaredType, object? resultObject, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
                 : this(new global::Microsoft.AspNetCore.Mvc.ObjectResult(resultObject)
                 {
                     ContentTypes = new global::Microsoft.AspNetCore.Mvc.Formatters.MediaTypeCollection { { new global::Microsoft.Net.Http.Headers.MediaTypeHeaderValue(mediaType) } },
                     DeclaredType = declaredType,
                     StatusCode = statusCode
-                })
+                }, headers)
             {
             }
             
@@ -85,8 +104,8 @@ namespace PS.Controller
             
 
             /// <summary>Allows for action results not specified in the API</summary>
-            public static TypeSafeGetUserByNameResult Unsafe(global::Microsoft.AspNetCore.Mvc.IActionResult actionResult) =>
-                new TypeSafeGetUserByNameResult(actionResult);
+            public static TypeSafeGetUserByNameResult Unsafe(global::Microsoft.AspNetCore.Mvc.IActionResult actionResult, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers) =>
+                new TypeSafeGetUserByNameResult(actionResult, headers);
         }
 
         /// <summary>
@@ -117,23 +136,42 @@ namespace PS.Controller
         {
             public readonly global::Microsoft.AspNetCore.Mvc.IActionResult ActionResult;
 
-            private TypeSafeUpdateUserResult(global::Microsoft.AspNetCore.Mvc.IActionResult ActionResult)
+            private class HeaderActionResult : global::Microsoft.AspNetCore.Mvc.IActionResult
             {
-                this.ActionResult = ActionResult;
+                private readonly global::Microsoft.AspNetCore.Mvc.IActionResult original;
+                private readonly global::System.Collections.Generic.IEnumerable<global::System.Collections.Generic.KeyValuePair<string, string>> headers;
+
+                public HeaderActionResult(global::Microsoft.AspNetCore.Mvc.IActionResult original, global::System.Collections.Generic.IEnumerable<global::System.Collections.Generic.KeyValuePair<string, string>> headers)
+                {
+                    this.original = original;
+                    this.headers = headers;
+                }
+
+                public global::System.Threading.Tasks.Task ExecuteResultAsync(global::Microsoft.AspNetCore.Mvc.ActionContext context)
+                {
+                    foreach (var header in headers)
+                        context.HttpContext.Response.Headers[header.Key] = global::Microsoft.Extensions.Primitives.StringValues.Concat(context.HttpContext.Response.Headers[header.Key], header.Value);
+                    return original.ExecuteResultAsync(context);
+                }
             }
 
-            private TypeSafeUpdateUserResult(int statusCode)
-                : this(new global::Microsoft.AspNetCore.Mvc.StatusCodeResult(statusCode))
+            private TypeSafeUpdateUserResult(global::Microsoft.AspNetCore.Mvc.IActionResult ActionResult, global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
+            {
+                this.ActionResult = new HeaderActionResult(ActionResult, headers);
+            }
+
+            private TypeSafeUpdateUserResult(int statusCode, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
+                : this(new global::Microsoft.AspNetCore.Mvc.StatusCodeResult(statusCode), headers)
             {
             }
 
-            private TypeSafeUpdateUserResult(int statusCode, string mediaType, global::System.Type declaredType, object? resultObject)
+            private TypeSafeUpdateUserResult(int statusCode, string mediaType, global::System.Type declaredType, object? resultObject, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
                 : this(new global::Microsoft.AspNetCore.Mvc.ObjectResult(resultObject)
                 {
                     ContentTypes = new global::Microsoft.AspNetCore.Mvc.Formatters.MediaTypeCollection { { new global::Microsoft.Net.Http.Headers.MediaTypeHeaderValue(mediaType) } },
                     DeclaredType = declaredType,
                     StatusCode = statusCode
-                })
+                }, headers)
             {
             }
             
@@ -151,8 +189,8 @@ namespace PS.Controller
             
 
             /// <summary>Allows for action results not specified in the API</summary>
-            public static TypeSafeUpdateUserResult Unsafe(global::Microsoft.AspNetCore.Mvc.IActionResult actionResult) =>
-                new TypeSafeUpdateUserResult(actionResult);
+            public static TypeSafeUpdateUserResult Unsafe(global::Microsoft.AspNetCore.Mvc.IActionResult actionResult, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers) =>
+                new TypeSafeUpdateUserResult(actionResult, headers);
         }
 
         /// <summary>
@@ -179,23 +217,42 @@ namespace PS.Controller
         {
             public readonly global::Microsoft.AspNetCore.Mvc.IActionResult ActionResult;
 
-            private TypeSafeDeleteUserResult(global::Microsoft.AspNetCore.Mvc.IActionResult ActionResult)
+            private class HeaderActionResult : global::Microsoft.AspNetCore.Mvc.IActionResult
             {
-                this.ActionResult = ActionResult;
+                private readonly global::Microsoft.AspNetCore.Mvc.IActionResult original;
+                private readonly global::System.Collections.Generic.IEnumerable<global::System.Collections.Generic.KeyValuePair<string, string>> headers;
+
+                public HeaderActionResult(global::Microsoft.AspNetCore.Mvc.IActionResult original, global::System.Collections.Generic.IEnumerable<global::System.Collections.Generic.KeyValuePair<string, string>> headers)
+                {
+                    this.original = original;
+                    this.headers = headers;
+                }
+
+                public global::System.Threading.Tasks.Task ExecuteResultAsync(global::Microsoft.AspNetCore.Mvc.ActionContext context)
+                {
+                    foreach (var header in headers)
+                        context.HttpContext.Response.Headers[header.Key] = global::Microsoft.Extensions.Primitives.StringValues.Concat(context.HttpContext.Response.Headers[header.Key], header.Value);
+                    return original.ExecuteResultAsync(context);
+                }
             }
 
-            private TypeSafeDeleteUserResult(int statusCode)
-                : this(new global::Microsoft.AspNetCore.Mvc.StatusCodeResult(statusCode))
+            private TypeSafeDeleteUserResult(global::Microsoft.AspNetCore.Mvc.IActionResult ActionResult, global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
+            {
+                this.ActionResult = new HeaderActionResult(ActionResult, headers);
+            }
+
+            private TypeSafeDeleteUserResult(int statusCode, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
+                : this(new global::Microsoft.AspNetCore.Mvc.StatusCodeResult(statusCode), headers)
             {
             }
 
-            private TypeSafeDeleteUserResult(int statusCode, string mediaType, global::System.Type declaredType, object? resultObject)
+            private TypeSafeDeleteUserResult(int statusCode, string mediaType, global::System.Type declaredType, object? resultObject, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
                 : this(new global::Microsoft.AspNetCore.Mvc.ObjectResult(resultObject)
                 {
                     ContentTypes = new global::Microsoft.AspNetCore.Mvc.Formatters.MediaTypeCollection { { new global::Microsoft.Net.Http.Headers.MediaTypeHeaderValue(mediaType) } },
                     DeclaredType = declaredType,
                     StatusCode = statusCode
-                })
+                }, headers)
             {
             }
             
@@ -213,8 +270,8 @@ namespace PS.Controller
             
 
             /// <summary>Allows for action results not specified in the API</summary>
-            public static TypeSafeDeleteUserResult Unsafe(global::Microsoft.AspNetCore.Mvc.IActionResult actionResult) =>
-                new TypeSafeDeleteUserResult(actionResult);
+            public static TypeSafeDeleteUserResult Unsafe(global::Microsoft.AspNetCore.Mvc.IActionResult actionResult, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers) =>
+                new TypeSafeDeleteUserResult(actionResult, headers);
         }
     }
 }

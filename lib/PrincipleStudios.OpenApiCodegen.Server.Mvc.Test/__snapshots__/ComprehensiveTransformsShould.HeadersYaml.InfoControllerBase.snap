@@ -1,7 +1,7 @@
 ﻿/*
- * OAuth Scopes Sample
+ * Headers Sample
  *
- * A sample API that uses oauth scopes
+ * A sample API that demonstrates header parameters/responses
  *
  * OpenAPI spec version: 1.0.0
  * 
@@ -16,19 +16,21 @@ namespace PS.Controller
     public abstract class InfoControllerBase : global::Microsoft.AspNetCore.Mvc.ControllerBase
     {
         
-        /// <param name="data">base-64 encoded data</param>
+        /// <param name="xData">base-64 encoded data</param>
         [global::Microsoft.AspNetCore.Mvc.HttpGet]
         [global::Microsoft.AspNetCore.Mvc.Route("/info")]
+        // Another Response
+        [global::Microsoft.AspNetCore.Mvc.ProducesDefaultResponseType()] // 
         // Sample Response
-        [global::Microsoft.AspNetCore.Mvc.ProducesResponseType(200, Type = typeof(string))] // application/json
-        [global::Microsoft.AspNetCore.Authorization.AllowAnonymous]
-        [global::Microsoft.AspNetCore.Authorization.Authorize(AuthenticationSchemes = "ApiKeyAuth")]
+        [global::Microsoft.AspNetCore.Mvc.ProducesResponseType(200, Type = typeof(global::System.Collections.Generic.Dictionary<string, string>))] // application/json
+        // Sample Response
+        [global::Microsoft.AspNetCore.Mvc.ProducesResponseType(204)] // 
         public async global::System.Threading.Tasks.Task<global::Microsoft.AspNetCore.Mvc.IActionResult> GetInfo(
-            [global::Microsoft.AspNetCore.Mvc.FromQuery(Name = "data")] byte[]? data
-        ) => (await GetInfoTypeSafe(data)).ActionResult;
+            [global::Microsoft.AspNetCore.Mvc.FromHeader(Name = "X-Data"), global::System.ComponentModel.DataAnnotations.Required] byte[] xData
+        ) => (await GetInfoTypeSafe(xData)).ActionResult;
 
         protected abstract global::System.Threading.Tasks.Task<TypeSafeGetInfoResult> GetInfoTypeSafe(
-            byte[]? data);
+            byte[] xData);
 
         public readonly struct TypeSafeGetInfoResult
         {
@@ -76,8 +78,25 @@ namespace PS.Controller
             /// <summary>
             /// Sample Response
             /// </summary>
-            public static TypeSafeGetInfoResult StatusCode200(string result) =>
-                new TypeSafeGetInfoResult(200, "application/json", typeof(string), result);
+            public static TypeSafeGetInfoResult StatusCode200(global::System.Collections.Generic.Dictionary<string, string> result,
+                string headerXData) =>
+                new TypeSafeGetInfoResult(200, "application/json", typeof(global::System.Collections.Generic.Dictionary<string, string>), result,
+                    new global::System.Collections.Generic.KeyValuePair<string, string>("X-Data", headerXData));
+            
+            /// <summary>
+            /// Sample Response
+            /// </summary>
+            public static TypeSafeGetInfoResult StatusCode204(string headerXData) =>
+                new TypeSafeGetInfoResult(204,
+                    new global::System.Collections.Generic.KeyValuePair<string, string>("X-Data", headerXData));
+            
+            
+            public static TypeSafeGetInfoResult OtherStatusCode(int statusCode,
+                string headerXData,
+                string headerXDiag) =>
+                new TypeSafeGetInfoResult(statusCode,
+                    new global::System.Collections.Generic.KeyValuePair<string, string>("X-Data", headerXData),
+                    new global::System.Collections.Generic.KeyValuePair<string, string>("X-Diag", headerXDiag));
             
 
             /// <summary>Allows for action results not specified in the API</summary>

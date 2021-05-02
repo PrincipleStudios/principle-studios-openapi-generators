@@ -58,9 +58,8 @@ namespace PrincipleStudios.OpenApi.CSharp.templates
 
     public record OperationResponse(
         string description,
-        OperationResponseContentOption[] content
-        // TODO - headers
-        // TODO - links
+        OperationResponseContentOption[] content,
+        OperationResponseHeader[] headers
     );
 
     public record OperationResponseContentOption(
@@ -77,5 +76,19 @@ namespace PrincipleStudios.OpenApi.CSharp.templates
     public record OperationSecuritySchemeRequirement(
         string schemeName,
         string[] scopeNames
+    );
+
+    public record OperationResponseHeader(
+        string? rawName,
+        string paramName,
+        string? description,
+        string dataType,
+        bool dataTypeNullable,
+        bool required,
+        string pattern,
+        int? minLength,
+        int? maxLength,
+        decimal? minimum,
+        decimal? maximum
     );
 }

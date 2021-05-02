@@ -19,6 +19,7 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
             "power-sample.json",
             "no-refs.yaml",
             "oauth.yaml",
+            "headers.yaml",
         };
 
         private static readonly string[] InvalidDocumentNames = new[]

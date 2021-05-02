@@ -1,7 +1,7 @@
 ﻿/*
- * OAuth Scopes Sample
+ * Headers Sample
  *
- * A sample API that uses oauth scopes
+ * A sample API that demonstrates header parameters/responses
  *
  * OpenAPI spec version: 1.0.0
  * 
@@ -13,22 +13,20 @@
 namespace PS.Controller
 { 
     /// <summary>
-    public abstract class AddressControllerBase : global::Microsoft.AspNetCore.Mvc.ControllerBase
+    public abstract class RedirectControllerBase : global::Microsoft.AspNetCore.Mvc.ControllerBase
     {
         
         [global::Microsoft.AspNetCore.Mvc.HttpGet]
-        [global::Microsoft.AspNetCore.Mvc.Route("/address")]
-        // Sample Response
-        [global::Microsoft.AspNetCore.Mvc.ProducesResponseType(200, Type = typeof(string))] // application/json
-        [global::Microsoft.AspNetCore.Authorization.Authorize(AuthenticationSchemes = "ApiKeyAuth")]
-        [global::Microsoft.AspNetCore.Authorization.Authorize(AuthenticationSchemes = "OAuth2")]
-        public async global::System.Threading.Tasks.Task<global::Microsoft.AspNetCore.Mvc.IActionResult> GetAddress(
+        [global::Microsoft.AspNetCore.Mvc.Route("/redirect")]
+        // Redirection Response
+        [global::Microsoft.AspNetCore.Mvc.ProducesResponseType(302)] // 
+        public async global::System.Threading.Tasks.Task<global::Microsoft.AspNetCore.Mvc.IActionResult> _Redirect(
             
-        ) => (await GetAddressTypeSafe()).ActionResult;
+        ) => (await _RedirectTypeSafe()).ActionResult;
 
-        protected abstract global::System.Threading.Tasks.Task<TypeSafeGetAddressResult> GetAddressTypeSafe();
+        protected abstract global::System.Threading.Tasks.Task<TypeSafe_RedirectResult> _RedirectTypeSafe();
 
-        public readonly struct TypeSafeGetAddressResult
+        public readonly struct TypeSafe_RedirectResult
         {
             public readonly global::Microsoft.AspNetCore.Mvc.IActionResult ActionResult;
 
@@ -51,17 +49,17 @@ namespace PS.Controller
                 }
             }
 
-            private TypeSafeGetAddressResult(global::Microsoft.AspNetCore.Mvc.IActionResult ActionResult, global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
+            private TypeSafe_RedirectResult(global::Microsoft.AspNetCore.Mvc.IActionResult ActionResult, global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
             {
                 this.ActionResult = new HeaderActionResult(ActionResult, headers);
             }
 
-            private TypeSafeGetAddressResult(int statusCode, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
+            private TypeSafe_RedirectResult(int statusCode, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
                 : this(new global::Microsoft.AspNetCore.Mvc.StatusCodeResult(statusCode), headers)
             {
             }
 
-            private TypeSafeGetAddressResult(int statusCode, string mediaType, global::System.Type declaredType, object? resultObject, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
+            private TypeSafe_RedirectResult(int statusCode, string mediaType, global::System.Type declaredType, object? resultObject, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
                 : this(new global::Microsoft.AspNetCore.Mvc.ObjectResult(resultObject)
                 {
                     ContentTypes = new global::Microsoft.AspNetCore.Mvc.Formatters.MediaTypeCollection { { new global::Microsoft.Net.Http.Headers.MediaTypeHeaderValue(mediaType) } },
@@ -72,15 +70,16 @@ namespace PS.Controller
             }
             
             /// <summary>
-            /// Sample Response
+            /// Redirection Response
             /// </summary>
-            public static TypeSafeGetAddressResult StatusCode200(string result) =>
-                new TypeSafeGetAddressResult(200, "application/json", typeof(string), result);
+            public static TypeSafe_RedirectResult StatusCode302(string headerLocation) =>
+                new TypeSafe_RedirectResult(302,
+                    new global::System.Collections.Generic.KeyValuePair<string, string>("Location", headerLocation));
             
 
             /// <summary>Allows for action results not specified in the API</summary>
-            public static TypeSafeGetAddressResult Unsafe(global::Microsoft.AspNetCore.Mvc.IActionResult actionResult, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers) =>
-                new TypeSafeGetAddressResult(actionResult, headers);
+            public static TypeSafe_RedirectResult Unsafe(global::Microsoft.AspNetCore.Mvc.IActionResult actionResult, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers) =>
+                new TypeSafe_RedirectResult(actionResult, headers);
         }
     }
 }

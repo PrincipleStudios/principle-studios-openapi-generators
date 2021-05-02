@@ -184,6 +184,21 @@ namespace PrincipleStudios.OpenApi.CSharp
                               mediaType: entry.Key,
                               responseMethodName: CSharpNaming.ToTitleCaseIdentifier($"{(openApiResponse.Content.Count > 1 ? entry.Key : "")} {(statusCode == null ? "other status code" : $"status code {statusCode}")}", options.ReservedIdentifiers),
                               dataType: dataType?.text
+                          )).ToArray(),
+                headers: (from entry in openApiResponse.Headers
+                          let dataType = ToInlineDataType(entry.Value.Schema, entry.Value.Required)
+                          select new templates.OperationResponseHeader(
+                              rawName: entry.Key,
+                              paramName: CSharpNaming.ToParameterName("header " + entry.Key, options.ReservedIdentifiers),
+                              description: entry.Value.Description,
+                              dataType: dataType.text,
+                              dataTypeNullable: dataType.nullable,
+                              required: entry.Value.Required,
+                              pattern: entry.Value.Schema.Pattern,
+                              minLength: entry.Value.Schema.MinLength,
+                              maxLength: entry.Value.Schema.MaxLength,
+                              minimum: entry.Value.Schema.Minimum,
+                              maximum: entry.Value.Schema.Maximum
                           )).ToArray()
             );
         }
