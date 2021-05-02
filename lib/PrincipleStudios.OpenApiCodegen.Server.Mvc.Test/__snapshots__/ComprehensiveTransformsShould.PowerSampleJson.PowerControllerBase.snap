@@ -29,7 +29,7 @@ namespace PS.Controller
         // 
         [global::Microsoft.AspNetCore.Mvc.ProducesResponseType(200, Type = typeof(GetPowerFlowsResponse))] // application/json
         // Request range or house id not valid
-
+        [global::Microsoft.AspNetCore.Mvc.ProducesResponseType(400)] // 
         public async global::System.Threading.Tasks.Task<global::Microsoft.AspNetCore.Mvc.IActionResult> GetPowerFlows(
             [global::Microsoft.AspNetCore.Mvc.FromQuery(Name = "houseId"), global::System.ComponentModel.DataAnnotations.Required] global::System.Guid houseId,
             [global::Microsoft.AspNetCore.Mvc.FromQuery(Name = "start")] string? start,
@@ -66,8 +66,14 @@ namespace PS.Controller
             }
             
             
-            public static TypeSafeGetPowerFlowsResult ApplicationJsonStatusCode200(GetPowerFlowsResponse result) =>
+            public static TypeSafeGetPowerFlowsResult StatusCode200(GetPowerFlowsResponse result) =>
                 new TypeSafeGetPowerFlowsResult(200, "application/json", typeof(GetPowerFlowsResponse), result);
+            
+            /// <summary>
+            /// Request range or house id not valid
+            /// </summary>
+            public static TypeSafeGetPowerFlowsResult StatusCode400() =>
+                new TypeSafeGetPowerFlowsResult(400);
             
 
             /// <summary>Allows for action results not specified in the API</summary>

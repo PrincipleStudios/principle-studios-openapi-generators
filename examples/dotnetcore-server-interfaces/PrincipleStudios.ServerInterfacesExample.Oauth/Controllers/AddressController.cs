@@ -21,7 +21,7 @@ namespace PrincipleStudios.ServerInterfacesExample.Oauth.Controllers
                 return Task.FromResult(TypeSafeGetAddressResult.Unsafe(Forbid()));
             }
 
-            return Task.FromResult(TypeSafeGetAddressResult.ApplicationJsonStatusCode200(User.Identity!.IsAuthenticated ? $"success as {User.Identity.Name}" : "success"));
+            return Task.FromResult(TypeSafeGetAddressResult.StatusCode200(User.Identity!.IsAuthenticated ? $"success as {User.Identity.Name}" : "success"));
         }
     }
 }

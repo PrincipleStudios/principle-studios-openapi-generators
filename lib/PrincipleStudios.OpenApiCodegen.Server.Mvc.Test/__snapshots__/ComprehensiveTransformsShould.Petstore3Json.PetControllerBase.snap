@@ -24,7 +24,7 @@ namespace PS.Controller
         [global::Microsoft.AspNetCore.Mvc.Route("/pet")]
         [global::Microsoft.AspNetCore.Mvc.Consumes("application/json")]
         // Invalid input
-
+        [global::Microsoft.AspNetCore.Mvc.ProducesResponseType(405)] // 
         [global::Microsoft.AspNetCore.Authorization.Authorize(AuthenticationSchemes = "petstore_auth")]
         public async global::System.Threading.Tasks.Task<global::Microsoft.AspNetCore.Mvc.IActionResult> AddPet(
             [global::Microsoft.AspNetCore.Mvc.FromBody, global::System.ComponentModel.DataAnnotations.Required] Pet addPetBody
@@ -41,7 +41,7 @@ namespace PS.Controller
         [global::Microsoft.AspNetCore.Mvc.Route("/pet")]
         [global::Microsoft.AspNetCore.Mvc.Consumes("application/xml")]
         // Invalid input
-
+        [global::Microsoft.AspNetCore.Mvc.ProducesResponseType(405)] // 
         [global::Microsoft.AspNetCore.Authorization.Authorize(AuthenticationSchemes = "petstore_auth")]
         public async global::System.Threading.Tasks.Task<global::Microsoft.AspNetCore.Mvc.IActionResult> AddPet(
             [global::Microsoft.AspNetCore.Mvc.FromBody, global::System.ComponentModel.DataAnnotations.Required] Pet addPetBody
@@ -74,6 +74,12 @@ namespace PS.Controller
             {
             }
             
+            /// <summary>
+            /// Invalid input
+            /// </summary>
+            public static TypeSafeAddPetResult StatusCode405() =>
+                new TypeSafeAddPetResult(405);
+            
 
             /// <summary>Allows for action results not specified in the API</summary>
             public static TypeSafeAddPetResult Unsafe(global::Microsoft.AspNetCore.Mvc.IActionResult actionResult) =>
@@ -88,11 +94,11 @@ namespace PS.Controller
         [global::Microsoft.AspNetCore.Mvc.Route("/pet")]
         [global::Microsoft.AspNetCore.Mvc.Consumes("application/json")]
         // Invalid ID supplied
-
+        [global::Microsoft.AspNetCore.Mvc.ProducesResponseType(400)] // 
         // Pet not found
-
+        [global::Microsoft.AspNetCore.Mvc.ProducesResponseType(404)] // 
         // Validation exception
-
+        [global::Microsoft.AspNetCore.Mvc.ProducesResponseType(405)] // 
         [global::Microsoft.AspNetCore.Authorization.Authorize(AuthenticationSchemes = "petstore_auth")]
         public async global::System.Threading.Tasks.Task<global::Microsoft.AspNetCore.Mvc.IActionResult> UpdatePet(
             [global::Microsoft.AspNetCore.Mvc.FromBody, global::System.ComponentModel.DataAnnotations.Required] Pet updatePetBody
@@ -109,11 +115,11 @@ namespace PS.Controller
         [global::Microsoft.AspNetCore.Mvc.Route("/pet")]
         [global::Microsoft.AspNetCore.Mvc.Consumes("application/xml")]
         // Invalid ID supplied
-
+        [global::Microsoft.AspNetCore.Mvc.ProducesResponseType(400)] // 
         // Pet not found
-
+        [global::Microsoft.AspNetCore.Mvc.ProducesResponseType(404)] // 
         // Validation exception
-
+        [global::Microsoft.AspNetCore.Mvc.ProducesResponseType(405)] // 
         [global::Microsoft.AspNetCore.Authorization.Authorize(AuthenticationSchemes = "petstore_auth")]
         public async global::System.Threading.Tasks.Task<global::Microsoft.AspNetCore.Mvc.IActionResult> UpdatePet(
             [global::Microsoft.AspNetCore.Mvc.FromBody, global::System.ComponentModel.DataAnnotations.Required] Pet updatePetBody
@@ -145,6 +151,24 @@ namespace PS.Controller
                 })
             {
             }
+            
+            /// <summary>
+            /// Invalid ID supplied
+            /// </summary>
+            public static TypeSafeUpdatePetResult StatusCode400() =>
+                new TypeSafeUpdatePetResult(400);
+            
+            /// <summary>
+            /// Pet not found
+            /// </summary>
+            public static TypeSafeUpdatePetResult StatusCode404() =>
+                new TypeSafeUpdatePetResult(404);
+            
+            /// <summary>
+            /// Validation exception
+            /// </summary>
+            public static TypeSafeUpdatePetResult StatusCode405() =>
+                new TypeSafeUpdatePetResult(405);
             
 
             /// <summary>Allows for action results not specified in the API</summary>

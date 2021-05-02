@@ -65,7 +65,7 @@ namespace PrincipleStudios.OpenApi.CSharp.templates
 
     public record OperationResponseContentOption(
         string mediaType,
-        string mediaTypeId,
+        string responseMethodName,
         string? dataType
     );
 

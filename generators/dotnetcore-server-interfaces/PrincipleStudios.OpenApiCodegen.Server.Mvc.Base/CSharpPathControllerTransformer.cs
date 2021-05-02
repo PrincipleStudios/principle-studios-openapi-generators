@@ -12,7 +12,7 @@ namespace PrincipleStudios.OpenApi.CSharp
 {
     public class CSharpPathControllerTransformer : CSharpSchemaTransformer, IOpenApiPathControllerTransformer
     {
-        public CSharpPathControllerTransformer(OpenApiDocument document, string baseNamespace, CSharpSchemaOptions options) : base(document, baseNamespace, options, ControllerHandlebarsTemplateProcess.CreateHandlebars)
+        public CSharpPathControllerTransformer(OpenApiDocument document, string baseNamespace, CSharpSchemaOptions options, string versionInfo) : base(document, baseNamespace, options, ControllerHandlebarsTemplateProcess.CreateHandlebars, versionInfo)
         {
         }
 
@@ -25,7 +25,8 @@ namespace PrincipleStudios.OpenApi.CSharp
                     appName: document.Info.Title,
                     appDescription: document.Info.Description,
                     version: document.Info.Version,
-                    infoEmail: document.Info.Contact?.Email
+                    infoEmail: document.Info.Contact?.Email,
+                    codeGeneratorVersionInfo: versionInfo
                 ),
 
                 packageName: baseNamespace,
@@ -74,8 +75,8 @@ namespace PrincipleStudios.OpenApi.CSharp
                                                  select new templates.OperationRequestBody(
                                                      name: CSharpNaming.ToTitleCaseIdentifier(operation.Value.OperationId + (singleContentType ? "" : contentType.Key), options.ReservedIdentifiers),
                                                      requestBodyType: contentType.Key,
-                                                     allParams: sharedParams.Concat(contentType.Value == null 
-                                                        ? Enumerable.Empty<templates.OperationParameter>() 
+                                                     allParams: sharedParams.Concat(contentType.Value == null
+                                                        ? Enumerable.Empty<templates.OperationParameter>()
                                                         : isForm ? from param in contentType.Value.Schema.Properties
                                                                    let dataType = ToInlineDataType(param.Value, contentType.Value.Schema.Required.Contains(param.Key))
                                                                    select new templates.OperationParameter(
@@ -126,7 +127,7 @@ namespace PrincipleStudios.OpenApi.CSharp
                                      statusResponse: (from response in operation.Value.Responses
                                                       let parsed = TryParse(response.Key)
                                                       where parsed.parsed
-                                                      select (Key: parsed.value, Value: response.Value)).ToDictionary(p => p.Key, p => ToOperationResponse(p.Value))
+                                                      select (Key: parsed.value, Value: response.Value)).ToDictionary(p => p.Key, p => ToOperationResponse(p.Value, p.Key))
                                  ),
                                  securityRequirements: operation.Value.Security.Select(requirement => new OperationSecurityRequirement(
                                      (from scheme in requirement
@@ -138,7 +139,7 @@ namespace PrincipleStudios.OpenApi.CSharp
             var entry = handlebars.Value.ProcessController(template);
             return new SourceEntry
             {
-                Key = $"{baseNamespace}.{className}ControllerBase.cs",
+                Key = $"{baseNamespace}.{className}.cs",
                 SourceText = entry,
             };
 
@@ -159,7 +160,8 @@ namespace PrincipleStudios.OpenApi.CSharp
                         appName: document.Info.Title,
                         appDescription: document.Info.Description,
                         version: document.Info.Version,
-                        infoEmail: document.Info.Contact?.Email
+                        infoEmail: document.Info.Contact?.Email,
+                        codeGeneratorVersionInfo: versionInfo
                     ),
                     methodName: CSharpNaming.ToMethodName(document.Info.Title, options.ReservedIdentifiers),
                     packageName: baseNamespace,
@@ -172,15 +174,15 @@ namespace PrincipleStudios.OpenApi.CSharp
             };
         }
 
-        private OperationResponse ToOperationResponse(OpenApiResponse openApiResponse)
+        private OperationResponse ToOperationResponse(OpenApiResponse openApiResponse, int? statusCode = null)
         {
             return new OperationResponse(
                 description: openApiResponse.Description,
-                content: (from entry in openApiResponse.Content
+                content: (from entry in openApiResponse.Content.DefaultIfEmpty(new ("", new OpenApiMediaType()))
                           let dataType = entry.Value.Schema != null ? ToInlineDataType(entry.Value.Schema, true) : null
                           select new OperationResponseContentOption(
                               mediaType: entry.Key,
-                              mediaTypeId: CSharpNaming.ToTitleCaseIdentifier(entry.Key, options.ReservedIdentifiers),
+                              responseMethodName: CSharpNaming.ToTitleCaseIdentifier($"{(openApiResponse.Content.Count > 1 ? entry.Key : "")} {(statusCode == null ? "other status code" : $"status code {statusCode}")}", options.ReservedIdentifiers),
                               dataType: dataType?.text
                           )).ToArray()
             );

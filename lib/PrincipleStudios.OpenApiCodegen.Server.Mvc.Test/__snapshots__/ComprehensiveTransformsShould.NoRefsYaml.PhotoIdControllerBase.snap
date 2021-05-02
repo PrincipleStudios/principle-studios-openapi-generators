@@ -55,11 +55,11 @@ namespace PS.Controller
             }
             
             
-            public static TypeSafeGetPhotoResult ApplicationOctetStreamStatusCode200(global::System.IO.Stream result) =>
+            public static TypeSafeGetPhotoResult StatusCode200(global::System.IO.Stream result) =>
                 new TypeSafeGetPhotoResult(200, "application/octet-stream", typeof(global::System.IO.Stream), result);
             
             
-            public static TypeSafeGetPhotoResult ApplicationJsonOtherStatusCode(int statusCode, GetPhotoOtherResponse result) =>
+            public static TypeSafeGetPhotoResult OtherStatusCode(int statusCode, GetPhotoOtherResponse result) =>
                 new TypeSafeGetPhotoResult(statusCode, "application/json", typeof(GetPhotoOtherResponse), result);
             
 

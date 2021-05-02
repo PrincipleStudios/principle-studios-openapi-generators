@@ -16,11 +16,11 @@ namespace PrincipleStudios.ServerInterfacesExample.Controllers
             var result = new Pet(newPet.Name, newPet.Tag, newId);
             if (Data.pets.TryAdd(newId, (result.Name, result.Tag)))
             {
-                return TypeSafeAddPetResult.ApplicationJsonStatusCode200(result);
+                return TypeSafeAddPetResult.StatusCode200(result);
             }
             else
             {
-                return TypeSafeAddPetResult.ApplicationJsonOtherStatusCode(500, new Error(0, "Unable to add pet"));
+                return TypeSafeAddPetResult.OtherStatusCode(500, new Error(0, "Unable to add pet"));
             }
         }
 
@@ -36,7 +36,7 @@ namespace PrincipleStudios.ServerInterfacesExample.Controllers
             {
                 result = result.Take(limit.Value);
             }
-            return TypeSafeFindPetsResult.ApplicationJsonStatusCode200(result.Select(kvp => new Pet(kvp.Value.name, kvp.Value.tag, kvp.Key)).ToArray());
+            return TypeSafeFindPetsResult.StatusCode200(result.Select(kvp => new Pet(kvp.Value.name, kvp.Value.tag, kvp.Key)).ToArray());
         }
 
     }

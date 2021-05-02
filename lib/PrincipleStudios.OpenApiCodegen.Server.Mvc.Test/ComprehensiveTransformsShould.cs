@@ -13,15 +13,14 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
 {
     public class ComprehensiveTransformsShould
     {
-        [MemberData(nameof(ValidFileIndices))]
+        [MemberData(nameof(ValidFileNames))]
         [Theory]
-        public void CoverFullFiles(int index)
+        public void CoverFullFiles(string name)
         {
-            var name = GetDocumentName(index);
-            var document = GetDocument(index);
+            var document = GetDocument(name);
             var options = LoadOptions();
 
-            var schemaTransformer = new CSharpPathControllerTransformer(document, "PS.Controller", options);
+            var schemaTransformer = new CSharpPathControllerTransformer(document, "PS.Controller", options, "");
             var transformer = schemaTransformer.ToOpenApiSourceTransformer();
             OpenApiTransformDiagnostic diagnostic = new();
 
@@ -34,15 +33,14 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
             Assert.Empty(diagnostic.Errors);
         }
 
-        [MemberData(nameof(InvalidFileIndices))]
+        [MemberData(nameof(InvalidFileNames))]
         [Theory]
-        public void ReportDiagnosticsForMissingReferences(int index)
+        public void ReportDiagnosticsForMissingReferences(string name)
         {
-            var name = GetDocumentName(index);
-            var document = GetDocument(index);
+            var document = GetDocument(name);
             var options = LoadOptions();
 
-            var schemaTransformer = new CSharpPathControllerTransformer(document, "PS.Controller", LoadOptions());
+            var schemaTransformer = new CSharpPathControllerTransformer(document, "PS.Controller", LoadOptions(), "");
             var transformer = schemaTransformer.ToOpenApiSourceTransformer();
             OpenApiTransformDiagnostic diagnostic = new();
 
@@ -51,13 +49,13 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
             Snapshot.Match(diagnostic.Errors, $"Diagnostics.{CSharpNaming.ToTitleCaseIdentifier(name, options.ReservedIdentifiers)}");
         }
 
-        public static IEnumerable<object[]> ValidFileIndices =>
+        public static IEnumerable<object[]> ValidFileNames =>
             from fileIndex in GetValidDocumentIndices()
-            select new object[] { fileIndex };
+            select new object[] { GetDocumentName(fileIndex) };
 
-        public static IEnumerable<object[]> InvalidFileIndices =>
+        public static IEnumerable<object[]> InvalidFileNames =>
             from fileIndex in GetInvalidDocumentIndices()
-            select new object[] { fileIndex };
+            select new object[] { GetDocumentName(fileIndex) };
 
     }
 }

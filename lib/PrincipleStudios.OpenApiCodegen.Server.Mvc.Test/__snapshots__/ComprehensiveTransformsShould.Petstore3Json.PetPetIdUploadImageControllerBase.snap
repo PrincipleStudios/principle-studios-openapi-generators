@@ -63,7 +63,7 @@ namespace PS.Controller
             /// <summary>
             /// successful operation
             /// </summary>
-            public static TypeSafeUploadFileResult ApplicationJsonStatusCode200(ApiResponse result) =>
+            public static TypeSafeUploadFileResult StatusCode200(ApiResponse result) =>
                 new TypeSafeUploadFileResult(200, "application/json", typeof(ApiResponse), result);
             
 

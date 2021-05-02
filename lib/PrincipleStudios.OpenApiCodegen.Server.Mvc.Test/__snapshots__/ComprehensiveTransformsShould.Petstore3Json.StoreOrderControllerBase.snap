@@ -26,7 +26,7 @@ namespace PS.Controller
         // successful operation
         [global::Microsoft.AspNetCore.Mvc.ProducesResponseType(200, Type = typeof(Order))] // application/xml        [global::Microsoft.AspNetCore.Mvc.ProducesResponseType(200, Type = typeof(Order))] // application/json
         // Invalid Order
-
+        [global::Microsoft.AspNetCore.Mvc.ProducesResponseType(400)] // 
         public async global::System.Threading.Tasks.Task<global::Microsoft.AspNetCore.Mvc.IActionResult> PlaceOrder(
             [global::Microsoft.AspNetCore.Mvc.FromBody, global::System.ComponentModel.DataAnnotations.Required] Order placeOrderBody
         ) => (await PlaceOrderTypeSafe(placeOrderBody)).ActionResult;
@@ -69,6 +69,12 @@ namespace PS.Controller
             /// </summary>
             public static TypeSafePlaceOrderResult ApplicationJsonStatusCode200(Order result) =>
                 new TypeSafePlaceOrderResult(200, "application/json", typeof(Order), result);
+            
+            /// <summary>
+            /// Invalid Order
+            /// </summary>
+            public static TypeSafePlaceOrderResult StatusCode400() =>
+                new TypeSafePlaceOrderResult(400);
             
 
             /// <summary>Allows for action results not specified in the API</summary>

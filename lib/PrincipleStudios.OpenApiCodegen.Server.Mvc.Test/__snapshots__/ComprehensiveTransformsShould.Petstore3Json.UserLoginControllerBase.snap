@@ -26,7 +26,7 @@ namespace PS.Controller
         // successful operation
         [global::Microsoft.AspNetCore.Mvc.ProducesResponseType(200, Type = typeof(string))] // application/xml        [global::Microsoft.AspNetCore.Mvc.ProducesResponseType(200, Type = typeof(string))] // application/json
         // Invalid username/password supplied
-
+        [global::Microsoft.AspNetCore.Mvc.ProducesResponseType(400)] // 
         public async global::System.Threading.Tasks.Task<global::Microsoft.AspNetCore.Mvc.IActionResult> LoginUser(
             [global::Microsoft.AspNetCore.Mvc.FromQuery(Name = "username"), global::System.ComponentModel.DataAnnotations.Required] string username,
             [global::Microsoft.AspNetCore.Mvc.FromQuery(Name = "password"), global::System.ComponentModel.DataAnnotations.Required] string password
@@ -71,6 +71,12 @@ namespace PS.Controller
             /// </summary>
             public static TypeSafeLoginUserResult ApplicationJsonStatusCode200(string result) =>
                 new TypeSafeLoginUserResult(200, "application/json", typeof(string), result);
+            
+            /// <summary>
+            /// Invalid username/password supplied
+            /// </summary>
+            public static TypeSafeLoginUserResult StatusCode400() =>
+                new TypeSafeLoginUserResult(400);
             
 
             /// <summary>Allows for action results not specified in the API</summary>

@@ -57,10 +57,15 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
 
         protected override IEnumerable<SourceEntry> SourceFilesFromAdditionalFile(Options options, OpenApiTransformDiagnostic diagnostic)
         {
-            var schemaTransformer = new CSharpPathControllerTransformer(options.Document, options.DocumentNamespace, this.options);
+            var schemaTransformer = new CSharpPathControllerTransformer(options.Document, options.DocumentNamespace, this.options, GetVersionInfo());
             var transformer = schemaTransformer.ToOpenApiSourceTransformer();
 
             return transformer.ToSourceEntries(options.Document, diagnostic);
+        }
+
+        private static string GetVersionInfo()
+        {
+            return $"{typeof(CSharpPathControllerTransformer).FullName} v{typeof(CSharpPathControllerTransformer).Assembly.GetName().Version}";
         }
 
         protected override bool TryCreateOptions(AdditionalText file, OpenApiDocument document, AnalyzerConfigOptions opt, GeneratorExecutionContext context, [NotNullWhen(true)] out Options? result)

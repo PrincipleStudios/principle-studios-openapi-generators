@@ -27,7 +27,7 @@ namespace PrincipleStudios.Test
         [global::Microsoft.AspNetCore.Mvc.Route("/user")]
         [global::Microsoft.AspNetCore.Mvc.Consumes("application/json")]
         // successful operation
-
+        [global::Microsoft.AspNetCore.Mvc.ProducesDefaultResponseType()] // 
         public async global::System.Threading.Tasks.Task<global::Microsoft.AspNetCore.Mvc.IActionResult> CreateUser(
             [global::Microsoft.AspNetCore.Mvc.FromBody, global::System.ComponentModel.DataAnnotations.Required] _User createUserBody
         ) => (await CreateUserTypeSafe(createUserBody)).ActionResult;
@@ -58,6 +58,10 @@ namespace PrincipleStudios.Test
                 })
             {
             }
+            
+            
+            public static TypeSafeCreateUserResult OtherStatusCode(int statusCode) =>
+                new TypeSafeCreateUserResult(statusCode);
             
 
             /// <summary>Allows for action results not specified in the API</summary>

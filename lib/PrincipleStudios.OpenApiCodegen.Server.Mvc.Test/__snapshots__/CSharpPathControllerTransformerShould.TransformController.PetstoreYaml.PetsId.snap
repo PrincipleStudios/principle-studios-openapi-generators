@@ -60,11 +60,11 @@ namespace PrincipleStudios.Test
             /// <summary>
             /// pet response
             /// </summary>
-            public static TypeSafeFindPetByIdResult ApplicationJsonStatusCode200(Pet result) =>
+            public static TypeSafeFindPetByIdResult StatusCode200(Pet result) =>
                 new TypeSafeFindPetByIdResult(200, "application/json", typeof(Pet), result);
             
             
-            public static TypeSafeFindPetByIdResult ApplicationJsonOtherStatusCode(int statusCode, Error result) =>
+            public static TypeSafeFindPetByIdResult OtherStatusCode(int statusCode, Error result) =>
                 new TypeSafeFindPetByIdResult(statusCode, "application/json", typeof(Error), result);
             
 
@@ -82,7 +82,7 @@ namespace PrincipleStudios.Test
         // unexpected error
         [global::Microsoft.AspNetCore.Mvc.ProducesDefaultResponseType(typeof(Error))] // application/json
         // pet deleted
-
+        [global::Microsoft.AspNetCore.Mvc.ProducesResponseType(204)] // 
         public async global::System.Threading.Tasks.Task<global::Microsoft.AspNetCore.Mvc.IActionResult> DeletePet(
             [global::Microsoft.AspNetCore.Mvc.FromRoute(Name = "id"), global::System.ComponentModel.DataAnnotations.Required] long id
         ) => (await DeletePetTypeSafe(id)).ActionResult;
@@ -114,8 +114,14 @@ namespace PrincipleStudios.Test
             {
             }
             
+            /// <summary>
+            /// pet deleted
+            /// </summary>
+            public static TypeSafeDeletePetResult StatusCode204() =>
+                new TypeSafeDeletePetResult(204);
             
-            public static TypeSafeDeletePetResult ApplicationJsonOtherStatusCode(int statusCode, Error result) =>
+            
+            public static TypeSafeDeletePetResult OtherStatusCode(int statusCode, Error result) =>
                 new TypeSafeDeletePetResult(statusCode, "application/json", typeof(Error), result);
             
 

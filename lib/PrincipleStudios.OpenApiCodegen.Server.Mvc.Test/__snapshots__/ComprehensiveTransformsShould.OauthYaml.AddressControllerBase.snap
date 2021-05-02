@@ -55,7 +55,7 @@ namespace PS.Controller
             /// <summary>
             /// Sample Response
             /// </summary>
-            public static TypeSafeGetAddressResult ApplicationJsonStatusCode200(string result) =>
+            public static TypeSafeGetAddressResult StatusCode200(string result) =>
                 new TypeSafeGetAddressResult(200, "application/json", typeof(string), result);
             
 

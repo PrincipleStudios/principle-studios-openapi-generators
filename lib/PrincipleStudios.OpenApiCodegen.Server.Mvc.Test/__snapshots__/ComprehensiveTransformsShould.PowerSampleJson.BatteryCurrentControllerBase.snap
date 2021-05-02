@@ -27,7 +27,7 @@ namespace PS.Controller
         // 
         [global::Microsoft.AspNetCore.Mvc.ProducesResponseType(200, Type = typeof(CurrentBatteryState))] // application/json
         // Request range or house id not valid
-
+        [global::Microsoft.AspNetCore.Mvc.ProducesResponseType(400)] // 
         public async global::System.Threading.Tasks.Task<global::Microsoft.AspNetCore.Mvc.IActionResult> GetCurrentBatteryState(
             [global::Microsoft.AspNetCore.Mvc.FromQuery(Name = "houseId"), global::System.ComponentModel.DataAnnotations.Required] global::System.Guid houseId
         ) => (await GetCurrentBatteryStateTypeSafe(houseId)).ActionResult;
@@ -60,8 +60,14 @@ namespace PS.Controller
             }
             
             
-            public static TypeSafeGetCurrentBatteryStateResult ApplicationJsonStatusCode200(CurrentBatteryState result) =>
+            public static TypeSafeGetCurrentBatteryStateResult StatusCode200(CurrentBatteryState result) =>
                 new TypeSafeGetCurrentBatteryStateResult(200, "application/json", typeof(CurrentBatteryState), result);
+            
+            /// <summary>
+            /// Request range or house id not valid
+            /// </summary>
+            public static TypeSafeGetCurrentBatteryStateResult StatusCode400() =>
+                new TypeSafeGetCurrentBatteryStateResult(400);
             
 
             /// <summary>Allows for action results not specified in the API</summary>

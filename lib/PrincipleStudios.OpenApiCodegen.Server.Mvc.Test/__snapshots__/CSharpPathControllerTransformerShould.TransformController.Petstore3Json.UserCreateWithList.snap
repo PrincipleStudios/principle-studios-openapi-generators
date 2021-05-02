@@ -24,7 +24,7 @@ namespace PrincipleStudios.Test
         [global::Microsoft.AspNetCore.Mvc.Route("/user/createWithList")]
         [global::Microsoft.AspNetCore.Mvc.Consumes("application/json")]
         // successful operation
-
+        [global::Microsoft.AspNetCore.Mvc.ProducesDefaultResponseType()] // 
         public async global::System.Threading.Tasks.Task<global::Microsoft.AspNetCore.Mvc.IActionResult> CreateUsersWithListInput(
             [global::Microsoft.AspNetCore.Mvc.FromBody, global::System.ComponentModel.DataAnnotations.Required] global::System.Collections.Generic.IEnumerable<_User> createUsersWithListInputBody
         ) => (await CreateUsersWithListInputTypeSafe(createUsersWithListInputBody)).ActionResult;
@@ -55,6 +55,10 @@ namespace PrincipleStudios.Test
                 })
             {
             }
+            
+            
+            public static TypeSafeCreateUsersWithListInputResult OtherStatusCode(int statusCode) =>
+                new TypeSafeCreateUsersWithListInputResult(statusCode);
             
 
             /// <summary>Allows for action results not specified in the API</summary>

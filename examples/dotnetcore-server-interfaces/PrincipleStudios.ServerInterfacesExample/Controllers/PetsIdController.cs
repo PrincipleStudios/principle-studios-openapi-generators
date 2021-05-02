@@ -12,11 +12,11 @@ namespace PrincipleStudios.ServerInterfacesExample.Controllers
             await Task.Yield();
             if (Data.pets.Remove(id, out var _))
             {
-                return TypeSafeDeletePetResult.Unsafe(NoContent());
+                return TypeSafeDeletePetResult.StatusCode204();
             }
             else
             {
-                return TypeSafeDeletePetResult.ApplicationJsonOtherStatusCode(404, new Error(404, "Could not find pet"));
+                return TypeSafeDeletePetResult.OtherStatusCode(404, new Error(404, "Could not find pet"));
             }
         }
 
@@ -25,11 +25,11 @@ namespace PrincipleStudios.ServerInterfacesExample.Controllers
             await Task.Yield();
             if (Data.pets.TryGetValue(id, out var tuple))
             {
-                return TypeSafeFindPetByIdResult.ApplicationJsonStatusCode200(new Pet(tuple.name, tuple.tag, id));
+                return TypeSafeFindPetByIdResult.StatusCode200(new Pet(tuple.name, tuple.tag, id));
             }
             else
             {
-                return TypeSafeFindPetByIdResult.ApplicationJsonOtherStatusCode(404, new Error(404, "Could not find pet"));
+                return TypeSafeFindPetByIdResult.OtherStatusCode(404, new Error(404, "Could not find pet"));
             }
         }
 

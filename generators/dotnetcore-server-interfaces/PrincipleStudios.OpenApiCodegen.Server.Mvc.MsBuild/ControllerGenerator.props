@@ -7,7 +7,7 @@
   <ItemGroup>
     <AvailableItemName Include="OpenApiSchemaCSharpOptions" DisplayName="C# Options for Open API Code Generation (OpenApiCodeGen)" />
     <AvailableItemName Include="OpenApiSchemaMvcServer" DisplayName="Open API Schema MVC Server (OpenApiCodeGen)" />
-    <Watch Include="@(OpenApiSchemaMvcServer)" Condition=" '@(OpenApiSchemaMvcServer)' != '' " />
+    <Watch Include="@(OpenApiSchemaMvcServer);@(OpenApiSchemaCSharpOptions)" Condition=" '@(OpenApiSchemaMvcServer)' != '' " />
   </ItemGroup>
 
   <Target Name="CompileServerOpenApiCodeGen" BeforeTargets="GenerateMSBuildEditorConfigFileShouldRun" DependsOnTargets="_CompileServerOpenApiCodeGen" Condition=" '@(OpenApiSchemaMvcServer)' != '' ">
@@ -32,7 +32,7 @@
   </Target>
 
   <Target Name="CleanServerOpenApiCodeGen" BeforeTargets="Clean" DependsOnTargets="_UpdateServerOpenApiCodeGenMetatdata">
-    <Delete Files="@(OpenApiSchemaMvcServer -> '%(OutputPath)')" ContinueOnError="true" />
+    <Delete Files="@(OpenApiSchemaMvcServer -> '%(OutputPath)/**/*')" ContinueOnError="true" />
   </Target>
 
   <Target Name="_CompileServerOpenApiCodeGen"

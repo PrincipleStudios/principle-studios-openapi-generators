@@ -28,9 +28,9 @@ namespace PS.Controller
         // successful operation
         [global::Microsoft.AspNetCore.Mvc.ProducesResponseType(200, Type = typeof(Pet))] // application/xml        [global::Microsoft.AspNetCore.Mvc.ProducesResponseType(200, Type = typeof(Pet))] // application/json
         // Invalid ID supplied
-
+        [global::Microsoft.AspNetCore.Mvc.ProducesResponseType(400)] // 
         // Pet not found
-
+        [global::Microsoft.AspNetCore.Mvc.ProducesResponseType(404)] // 
         [global::Microsoft.AspNetCore.Authorization.Authorize(AuthenticationSchemes = "api_key")]
         public async global::System.Threading.Tasks.Task<global::Microsoft.AspNetCore.Mvc.IActionResult> GetPetById(
             [global::Microsoft.AspNetCore.Mvc.FromRoute(Name = "petId"), global::System.ComponentModel.DataAnnotations.Required] long petId
@@ -75,6 +75,18 @@ namespace PS.Controller
             public static TypeSafeGetPetByIdResult ApplicationJsonStatusCode200(Pet result) =>
                 new TypeSafeGetPetByIdResult(200, "application/json", typeof(Pet), result);
             
+            /// <summary>
+            /// Invalid ID supplied
+            /// </summary>
+            public static TypeSafeGetPetByIdResult StatusCode400() =>
+                new TypeSafeGetPetByIdResult(400);
+            
+            /// <summary>
+            /// Pet not found
+            /// </summary>
+            public static TypeSafeGetPetByIdResult StatusCode404() =>
+                new TypeSafeGetPetByIdResult(404);
+            
 
             /// <summary>Allows for action results not specified in the API</summary>
             public static TypeSafeGetPetByIdResult Unsafe(global::Microsoft.AspNetCore.Mvc.IActionResult actionResult) =>
@@ -91,7 +103,7 @@ namespace PS.Controller
         [global::Microsoft.AspNetCore.Mvc.Route("/pet/{petId}")]
         [global::Microsoft.AspNetCore.Mvc.Consumes("application/x-www-form-urlencoded")]
         // Invalid input
-
+        [global::Microsoft.AspNetCore.Mvc.ProducesResponseType(405)] // 
         [global::Microsoft.AspNetCore.Authorization.Authorize(AuthenticationSchemes = "petstore_auth")]
         public async global::System.Threading.Tasks.Task<global::Microsoft.AspNetCore.Mvc.IActionResult> UpdatePetWithForm(
             [global::Microsoft.AspNetCore.Mvc.FromRoute(Name = "petId"), global::System.ComponentModel.DataAnnotations.Required] long petId,
@@ -128,6 +140,12 @@ namespace PS.Controller
             {
             }
             
+            /// <summary>
+            /// Invalid input
+            /// </summary>
+            public static TypeSafeUpdatePetWithFormResult StatusCode405() =>
+                new TypeSafeUpdatePetWithFormResult(405);
+            
 
             /// <summary>Allows for action results not specified in the API</summary>
             public static TypeSafeUpdatePetWithFormResult Unsafe(global::Microsoft.AspNetCore.Mvc.IActionResult actionResult) =>
@@ -142,9 +160,9 @@ namespace PS.Controller
         [global::Microsoft.AspNetCore.Mvc.HttpDelete]
         [global::Microsoft.AspNetCore.Mvc.Route("/pet/{petId}")]
         // Invalid ID supplied
-
+        [global::Microsoft.AspNetCore.Mvc.ProducesResponseType(400)] // 
         // Pet not found
-
+        [global::Microsoft.AspNetCore.Mvc.ProducesResponseType(404)] // 
         [global::Microsoft.AspNetCore.Authorization.Authorize(AuthenticationSchemes = "petstore_auth")]
         public async global::System.Threading.Tasks.Task<global::Microsoft.AspNetCore.Mvc.IActionResult> DeletePet(
             [global::Microsoft.AspNetCore.Mvc.FromHeader(Name = "api_key")] string? apiKey,
@@ -178,6 +196,18 @@ namespace PS.Controller
                 })
             {
             }
+            
+            /// <summary>
+            /// Invalid ID supplied
+            /// </summary>
+            public static TypeSafeDeletePetResult StatusCode400() =>
+                new TypeSafeDeletePetResult(400);
+            
+            /// <summary>
+            /// Pet not found
+            /// </summary>
+            public static TypeSafeDeletePetResult StatusCode404() =>
+                new TypeSafeDeletePetResult(404);
             
 
             /// <summary>Allows for action results not specified in the API</summary>

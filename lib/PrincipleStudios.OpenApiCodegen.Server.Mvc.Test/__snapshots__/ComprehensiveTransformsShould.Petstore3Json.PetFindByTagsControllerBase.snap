@@ -28,7 +28,7 @@ namespace PS.Controller
         // successful operation
         [global::Microsoft.AspNetCore.Mvc.ProducesResponseType(200, Type = typeof(global::System.Collections.Generic.IEnumerable<Pet>))] // application/xml        [global::Microsoft.AspNetCore.Mvc.ProducesResponseType(200, Type = typeof(global::System.Collections.Generic.IEnumerable<Pet>))] // application/json
         // Invalid tag value
-
+        [global::Microsoft.AspNetCore.Mvc.ProducesResponseType(400)] // 
         [global::Microsoft.AspNetCore.Authorization.Authorize(AuthenticationSchemes = "petstore_auth")]
         public async global::System.Threading.Tasks.Task<global::Microsoft.AspNetCore.Mvc.IActionResult> FindPetsByTags(
             [global::Microsoft.AspNetCore.Mvc.FromQuery(Name = "tags"), global::System.ComponentModel.DataAnnotations.Required] global::System.Collections.Generic.IEnumerable<string> tags
@@ -72,6 +72,12 @@ namespace PS.Controller
             /// </summary>
             public static TypeSafeFindPetsByTagsResult ApplicationJsonStatusCode200(global::System.Collections.Generic.IEnumerable<Pet> result) =>
                 new TypeSafeFindPetsByTagsResult(200, "application/json", typeof(global::System.Collections.Generic.IEnumerable<Pet>), result);
+            
+            /// <summary>
+            /// Invalid tag value
+            /// </summary>
+            public static TypeSafeFindPetsByTagsResult StatusCode400() =>
+                new TypeSafeFindPetsByTagsResult(400);
             
 
             /// <summary>Allows for action results not specified in the API</summary>

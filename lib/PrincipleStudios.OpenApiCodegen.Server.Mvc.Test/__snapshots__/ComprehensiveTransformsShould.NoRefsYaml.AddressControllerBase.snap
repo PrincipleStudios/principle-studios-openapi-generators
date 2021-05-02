@@ -58,15 +58,15 @@ namespace PS.Controller
             }
             
             
-            public static TypeSafeLookupRecordResult ApplicationJsonStatusCode200(LookupRecordResponse result) =>
+            public static TypeSafeLookupRecordResult StatusCode200(LookupRecordResponse result) =>
                 new TypeSafeLookupRecordResult(200, "application/json", typeof(LookupRecordResponse), result);
             
             
-            public static TypeSafeLookupRecordResult ApplicationJsonStatusCode409(LookupRecord409Response result) =>
+            public static TypeSafeLookupRecordResult StatusCode409(LookupRecord409Response result) =>
                 new TypeSafeLookupRecordResult(409, "application/json", typeof(LookupRecord409Response), result);
             
             
-            public static TypeSafeLookupRecordResult ApplicationJsonOtherStatusCode(int statusCode, LookupRecordOtherResponse result) =>
+            public static TypeSafeLookupRecordResult OtherStatusCode(int statusCode, LookupRecordOtherResponse result) =>
                 new TypeSafeLookupRecordResult(statusCode, "application/json", typeof(LookupRecordOtherResponse), result);
             
 

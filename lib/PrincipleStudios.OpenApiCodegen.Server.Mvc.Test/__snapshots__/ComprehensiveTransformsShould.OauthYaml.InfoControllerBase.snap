@@ -57,7 +57,7 @@ namespace PS.Controller
             /// <summary>
             /// Sample Response
             /// </summary>
-            public static TypeSafeGetInfoResult ApplicationJsonStatusCode200(string result) =>
+            public static TypeSafeGetInfoResult StatusCode200(string result) =>
                 new TypeSafeGetInfoResult(200, "application/json", typeof(string), result);
             
 

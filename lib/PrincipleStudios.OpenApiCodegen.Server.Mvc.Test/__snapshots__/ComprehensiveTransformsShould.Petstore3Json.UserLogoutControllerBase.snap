@@ -22,7 +22,7 @@ namespace PS.Controller
         [global::Microsoft.AspNetCore.Mvc.HttpGet]
         [global::Microsoft.AspNetCore.Mvc.Route("/user/logout")]
         // successful operation
-
+        [global::Microsoft.AspNetCore.Mvc.ProducesDefaultResponseType()] // 
         public async global::System.Threading.Tasks.Task<global::Microsoft.AspNetCore.Mvc.IActionResult> LogoutUser(
             
         ) => (await LogoutUserTypeSafe()).ActionResult;
@@ -52,6 +52,10 @@ namespace PS.Controller
                 })
             {
             }
+            
+            
+            public static TypeSafeLogoutUserResult OtherStatusCode(int statusCode) =>
+                new TypeSafeLogoutUserResult(statusCode);
             
 
             /// <summary>Allows for action results not specified in the API</summary>

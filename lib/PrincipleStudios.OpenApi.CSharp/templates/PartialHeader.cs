@@ -4,6 +4,7 @@
         string? appName,
         string? appDescription,
         string? version,
-        string? infoEmail
+        string? infoEmail,
+        string codeGeneratorVersionInfo
     );
 }

@@ -67,11 +67,11 @@ namespace PrincipleStudios.Test
             /// <summary>
             /// pet response
             /// </summary>
-            public static TypeSafeFindPetsResult ApplicationJsonStatusCode200(global::System.Collections.Generic.IEnumerable<Pet> result) =>
+            public static TypeSafeFindPetsResult StatusCode200(global::System.Collections.Generic.IEnumerable<Pet> result) =>
                 new TypeSafeFindPetsResult(200, "application/json", typeof(global::System.Collections.Generic.IEnumerable<Pet>), result);
             
             
-            public static TypeSafeFindPetsResult ApplicationJsonOtherStatusCode(int statusCode, Error result) =>
+            public static TypeSafeFindPetsResult OtherStatusCode(int statusCode, Error result) =>
                 new TypeSafeFindPetsResult(statusCode, "application/json", typeof(Error), result);
             
 
@@ -125,11 +125,11 @@ namespace PrincipleStudios.Test
             /// <summary>
             /// pet response
             /// </summary>
-            public static TypeSafeAddPetResult ApplicationJsonStatusCode200(Pet result) =>
+            public static TypeSafeAddPetResult StatusCode200(Pet result) =>
                 new TypeSafeAddPetResult(200, "application/json", typeof(Pet), result);
             
             
-            public static TypeSafeAddPetResult ApplicationJsonOtherStatusCode(int statusCode, Error result) =>
+            public static TypeSafeAddPetResult OtherStatusCode(int statusCode, Error result) =>
                 new TypeSafeAddPetResult(statusCode, "application/json", typeof(Error), result);
             
 

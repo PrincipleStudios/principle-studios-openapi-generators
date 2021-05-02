@@ -28,7 +28,7 @@ namespace PrincipleStudios.Test
         // successful operation
         [global::Microsoft.AspNetCore.Mvc.ProducesResponseType(200, Type = typeof(global::System.Collections.Generic.IEnumerable<Pet>))] // application/xml        [global::Microsoft.AspNetCore.Mvc.ProducesResponseType(200, Type = typeof(global::System.Collections.Generic.IEnumerable<Pet>))] // application/json
         // Invalid status value
-
+        [global::Microsoft.AspNetCore.Mvc.ProducesResponseType(400)] // 
         [global::Microsoft.AspNetCore.Authorization.Authorize(AuthenticationSchemes = "petstore_auth")]
         public async global::System.Threading.Tasks.Task<global::Microsoft.AspNetCore.Mvc.IActionResult> FindPetsByStatus(
             [global::Microsoft.AspNetCore.Mvc.FromQuery(Name = "status"), global::System.ComponentModel.DataAnnotations.Required] global::System.Collections.Generic.IEnumerable<string> status
@@ -72,6 +72,12 @@ namespace PrincipleStudios.Test
             /// </summary>
             public static TypeSafeFindPetsByStatusResult ApplicationJsonStatusCode200(global::System.Collections.Generic.IEnumerable<Pet> result) =>
                 new TypeSafeFindPetsByStatusResult(200, "application/json", typeof(global::System.Collections.Generic.IEnumerable<Pet>), result);
+            
+            /// <summary>
+            /// Invalid status value
+            /// </summary>
+            public static TypeSafeFindPetsByStatusResult StatusCode400() =>
+                new TypeSafeFindPetsByStatusResult(400);
             
 
             /// <summary>Allows for action results not specified in the API</summary>

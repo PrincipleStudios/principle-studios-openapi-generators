@@ -93,15 +93,15 @@ namespace {{packageName}}
             /// {{linewrap response.description "
             /// "}}
             /// </summary>{{/if}}
-            public static TypeSafe{{../../name}}Result {{mediaTypeId}}StatusCode{{code}}({{#if dataType}}{{{dataType}}} result{{/if}}) =>
-                new TypeSafe{{../../name}}Result({{code}}, "{{mediaType}}", {{#if dataType}}typeof({{{dataType}}}), result{{else}}typeof(void){{/if}});
+            public static TypeSafe{{../../name}}Result {{responseMethodName}}({{#if dataType}}{{{dataType}}} result{{/if}}) =>
+                new TypeSafe{{../../name}}Result({{code}}{{#if dataType}}, "{{mediaType}}", typeof({{{dataType}}}), result{{/if}});
             {{/each}}{{/each}}{{#if responses.defaultResponse}}{{#each responses.defaultResponse.content}}
             {{#if responses.defaultResponse.description}}/// <summary>
             /// {{linewrap responses.defaultResponse.description "
             /// "}}
             /// </summary>{{/if}}
-            public static TypeSafe{{../name}}Result {{mediaTypeId}}OtherStatusCode(int statusCode{{#if dataType}}, {{{dataType}}} result{{/if}}) =>
-                new TypeSafe{{../name}}Result(statusCode, "{{mediaType}}", {{#if dataType}}typeof({{{dataType}}}), result{{else}}typeof(void){{/if}});
+            public static TypeSafe{{../name}}Result {{responseMethodName}}(int statusCode{{#if dataType}}, {{{dataType}}} result{{/if}}) =>
+                new TypeSafe{{../name}}Result(statusCode{{#if dataType}}, "{{mediaType}}", typeof({{{dataType}}}), result{{/if}});
             {{/each}}{{/if}}
 
             /// <summary>Allows for action results not specified in the API</summary>

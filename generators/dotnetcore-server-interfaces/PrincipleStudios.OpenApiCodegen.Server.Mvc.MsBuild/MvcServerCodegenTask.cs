@@ -46,7 +46,7 @@ namespace PrincipleStudios.OpenApi.CSharp
             if (openApiDocument == null)
                 return false;
 
-            var schemaTransformer = new CSharpPathControllerTransformer(openApiDocument, Namespace, options);
+            var schemaTransformer = new CSharpPathControllerTransformer(openApiDocument, Namespace, options, GetVersionInfo());
             var transformer = schemaTransformer.ToOpenApiSourceTransformer();
 
             var diagnostic = new OpenApiTransformDiagnostic();
@@ -60,6 +60,11 @@ namespace PrincipleStudios.OpenApi.CSharp
                 System.IO.File.WriteAllText(System.IO.Path.Combine(outputPath, entry.Key), entry.SourceText);
             }
             return true;
+        }
+
+        private static string GetVersionInfo()
+        {
+            return $"{typeof(MvcServerCodegenTask).FullName} v{typeof(MvcServerCodegenTask).Assembly.GetName().Version}";
         }
 
         private CSharpSchemaOptions LoadOptions(string? optionsPath)

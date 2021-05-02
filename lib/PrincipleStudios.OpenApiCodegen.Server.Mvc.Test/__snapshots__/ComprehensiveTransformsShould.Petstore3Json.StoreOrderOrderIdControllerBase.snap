@@ -28,9 +28,9 @@ namespace PS.Controller
         // successful operation
         [global::Microsoft.AspNetCore.Mvc.ProducesResponseType(200, Type = typeof(Order))] // application/xml        [global::Microsoft.AspNetCore.Mvc.ProducesResponseType(200, Type = typeof(Order))] // application/json
         // Invalid ID supplied
-
+        [global::Microsoft.AspNetCore.Mvc.ProducesResponseType(400)] // 
         // Order not found
-
+        [global::Microsoft.AspNetCore.Mvc.ProducesResponseType(404)] // 
         public async global::System.Threading.Tasks.Task<global::Microsoft.AspNetCore.Mvc.IActionResult> GetOrderById(
             [global::Microsoft.AspNetCore.Mvc.FromRoute(Name = "orderId"), global::System.ComponentModel.DataAnnotations.Required] long orderId
         ) => (await GetOrderByIdTypeSafe(orderId)).ActionResult;
@@ -74,6 +74,18 @@ namespace PS.Controller
             public static TypeSafeGetOrderByIdResult ApplicationJsonStatusCode200(Order result) =>
                 new TypeSafeGetOrderByIdResult(200, "application/json", typeof(Order), result);
             
+            /// <summary>
+            /// Invalid ID supplied
+            /// </summary>
+            public static TypeSafeGetOrderByIdResult StatusCode400() =>
+                new TypeSafeGetOrderByIdResult(400);
+            
+            /// <summary>
+            /// Order not found
+            /// </summary>
+            public static TypeSafeGetOrderByIdResult StatusCode404() =>
+                new TypeSafeGetOrderByIdResult(404);
+            
 
             /// <summary>Allows for action results not specified in the API</summary>
             public static TypeSafeGetOrderByIdResult Unsafe(global::Microsoft.AspNetCore.Mvc.IActionResult actionResult) =>
@@ -90,9 +102,9 @@ namespace PS.Controller
         [global::Microsoft.AspNetCore.Mvc.HttpDelete]
         [global::Microsoft.AspNetCore.Mvc.Route("/store/order/{orderId}")]
         // Invalid ID supplied
-
+        [global::Microsoft.AspNetCore.Mvc.ProducesResponseType(400)] // 
         // Order not found
-
+        [global::Microsoft.AspNetCore.Mvc.ProducesResponseType(404)] // 
         public async global::System.Threading.Tasks.Task<global::Microsoft.AspNetCore.Mvc.IActionResult> DeleteOrder(
             [global::Microsoft.AspNetCore.Mvc.FromRoute(Name = "orderId"), global::System.ComponentModel.DataAnnotations.Required] long orderId
         ) => (await DeleteOrderTypeSafe(orderId)).ActionResult;
@@ -123,6 +135,18 @@ namespace PS.Controller
                 })
             {
             }
+            
+            /// <summary>
+            /// Invalid ID supplied
+            /// </summary>
+            public static TypeSafeDeleteOrderResult StatusCode400() =>
+                new TypeSafeDeleteOrderResult(400);
+            
+            /// <summary>
+            /// Order not found
+            /// </summary>
+            public static TypeSafeDeleteOrderResult StatusCode404() =>
+                new TypeSafeDeleteOrderResult(404);
             
 
             /// <summary>Allows for action results not specified in the API</summary>
