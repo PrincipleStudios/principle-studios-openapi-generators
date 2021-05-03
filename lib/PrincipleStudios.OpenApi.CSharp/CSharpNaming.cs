@@ -18,7 +18,6 @@ namespace PrincipleStudios.OpenApi.CSharp
         public static string ToMethodName(string key, ICollection<string> reservedIdentifiers) => ToTitleCaseIdentifier(key, reservedIdentifiers);
         public static string ToParameterName(string key, ICollection<string> reservedIdentifiers) => ToCamelCaseIdentifier(key, reservedIdentifiers);
 
-        // TODO - check for reserved words... Probably not necessary when doing title case
         private static string ToIdentifier(string key, ICollection<string> reservedIdentifiers) =>
             Regex.IsMatch(key, "^[a-zA-Z]") && !reservedIdentifiers.Contains(key) ? key : ("_" + key);
 
