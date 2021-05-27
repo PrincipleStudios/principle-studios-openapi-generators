@@ -1,6 +1,4 @@
-﻿#nullable enable
-
-using Microsoft.OpenApi.Models;
+﻿using Microsoft.OpenApi.Models;
 
 namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
 {

@@ -16,20 +16,20 @@ namespace PrincipleStudios.OpenApi.Transformations
             this.openApiSchemaTransformer = openApiSchemaTransformer;
         }
 
-        public TInlineDataType ToInlineDataType(OpenApiSchema schema)
+        public TInlineDataType ToInlineDataType(OpenApiSchema schema, OpenApiTransformDiagnostic diagnostic)
         {
             if (referencedSchemas.ContainsKey(schema))
                 return referencedSchemas[schema].Inline;
-            var result = ToInlineDataTypeWithReference(schema);
+            var result = ToInlineDataTypeWithReference(schema, diagnostic);
             referencedSchemas[schema] = result;
             return result.Inline;
         }
 
         protected IEnumerable<TInlineDataType> RegisteredInlineDataTypes => referencedSchemas.Values.Select(sourceEntry => sourceEntry.Inline);
 
-        protected abstract SchemaSourceResolver<TInlineDataType>.SchemaSourceEntry ToInlineDataTypeWithReference(OpenApiSchema schema);
+        protected abstract SchemaSourceResolver<TInlineDataType>.SchemaSourceEntry ToInlineDataTypeWithReference(OpenApiSchema schema, OpenApiTransformDiagnostic diagnostic);
 
-        public IEnumerable<SourceEntry> GetSources() => referencedSchemas.Values.Where(sourceEntry => sourceEntry.SourceEntry.HasValue).Select(sourceEntry => sourceEntry.SourceEntry!.Value);
+        public IEnumerable<SourceEntry> GetSources(OpenApiTransformDiagnostic diagnostic) => referencedSchemas.Values.Where(sourceEntry => sourceEntry.SourceEntry.HasValue).Select(sourceEntry => sourceEntry.SourceEntry!.Value);
 
 
         public struct SchemaSourceEntry

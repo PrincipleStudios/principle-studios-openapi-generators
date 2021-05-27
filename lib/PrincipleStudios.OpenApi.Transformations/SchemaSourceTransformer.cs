@@ -7,17 +7,19 @@ using System.Text.RegularExpressions;
 
 namespace PrincipleStudios.OpenApi.Transformations
 {
-    public class SchemaSourceTransformer : IOpenApiSourceTransformer
+    public class SchemaSourceTransformer : ISourceProvider
     {
+        private readonly OpenApiDocument document;
         private readonly IOpenApiSchemaTransformer openApiSchemaTransformer;
         private readonly Regex _2xxRegex = new Regex("2[0-9]{2}");
 
-        public SchemaSourceTransformer(IOpenApiSchemaTransformer openApiSchemaTransformer)
+        public SchemaSourceTransformer(OpenApiDocument document, IOpenApiSchemaTransformer openApiSchemaTransformer)
         {
+            this.document = document;
             this.openApiSchemaTransformer = openApiSchemaTransformer;
         }
 
-        public IEnumerable<SourceEntry> ToSourceEntries(OpenApiDocument document, OpenApiTransformDiagnostic diagnostic)
+        public IEnumerable<SourceEntry> GetSources(OpenApiTransformDiagnostic diagnostic)
         {
             var allSchemas = new HashSet<(OpenApiSchema schema, string openApiPath)>();
             var baseSchemas = new Queue<(OpenApiSchema schema, string name, string openApiPath, bool skip)>(new[]

@@ -11,12 +11,13 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
-#nullable enable
+#if NETSTANDARD2_0
+#nullable disable warnings
+#endif
 
 namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
 {
-    public abstract class OpenApiGeneratorBase<TOptions> : ISourceGenerator
-        where TOptions : OpenApiGeneratorOptions
+    public abstract class OpenApiGeneratorBase : ISourceGenerator
     {
         private const string sourceItemGroupKey = "SourceItemGroup";
         private static readonly DiagnosticDescriptor NoFilesGenerated = new DiagnosticDescriptor(id: "PSAPIGEN001",
@@ -64,7 +65,7 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
         {
         }
 
-        private IEnumerable<TOptions> GetLoadOptions(GeneratorExecutionContext context)
+        private IEnumerable<ISourceProvider> GetLoadOptions(GeneratorExecutionContext context)
         {
             foreach (AdditionalText file in context.AdditionalFiles)
             {
@@ -80,8 +81,8 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
 
                 if (TryParseFile(file, out var document, out var diagnostic))
                 {
-                    if (TryCreateOptions(file, document!, opt, context, out var fileOptions))
-                        yield return fileOptions!;
+                    if (TryCreateSourceProvider(file, document!, opt, context, out var sourceProvider))
+                        yield return sourceProvider;
                 }
                 else if (diagnostic != null)
                 {
@@ -117,10 +118,11 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
             }
         }
 
-        protected IEnumerable<SourceEntry> SourceFilesFromAdditionalFiles(IEnumerable<TOptions> options, OpenApiTransformDiagnostic diagnostic) =>
+        private IEnumerable<SourceEntry> SourceFilesFromAdditionalFiles(IEnumerable<ISourceProvider> options, OpenApiTransformDiagnostic diagnostic) =>
             options.SelectMany(opt => SourceFilesFromAdditionalFile(opt, diagnostic));
 
-        protected abstract IEnumerable<SourceEntry> SourceFilesFromAdditionalFile(TOptions options, OpenApiTransformDiagnostic diagnostic);
-        protected abstract bool TryCreateOptions(AdditionalText file, OpenApiDocument document, AnalyzerConfigOptions options, GeneratorExecutionContext context, [NotNullWhen(true)] out TOptions? result);
+        protected virtual IEnumerable<SourceEntry> SourceFilesFromAdditionalFile(ISourceProvider options, OpenApiTransformDiagnostic diagnostic) =>
+            options.GetSources(diagnostic);
+        protected abstract bool TryCreateSourceProvider(AdditionalText file, OpenApiDocument document, AnalyzerConfigOptions options, GeneratorExecutionContext context, [NotNullWhen(true)] out ISourceProvider? result);
     }
 }

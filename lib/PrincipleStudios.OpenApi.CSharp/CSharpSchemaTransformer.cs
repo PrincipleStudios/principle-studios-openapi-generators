@@ -20,15 +20,16 @@ namespace PrincipleStudios.OpenApi.CSharp
         protected readonly string baseNamespace;
         protected readonly CSharpSchemaOptions options;
         protected readonly string versionInfo;
-        protected readonly OpenApiDocument document;
         protected readonly Lazy<IHandlebars> handlebars;
+
+        public OpenApiDocument Document { get; }
 
         public CSharpSchemaTransformer(OpenApiDocument document, string baseNamespace, CSharpSchemaOptions options, Func<IHandlebars> handlebarsFactory, string versionInfo)
         {
+            this.Document = document;
             this.baseNamespace = baseNamespace;
             this.options = options;
             this.versionInfo = versionInfo;
-            this.document = document;
             this.handlebars = new Lazy<IHandlebars>(handlebarsFactory);
         }
 
@@ -104,10 +105,10 @@ namespace PrincipleStudios.OpenApi.CSharp
             var className = CSharpNaming.ToClassName(schema.Reference.Id, options.ReservedIdentifiers);
 
             var header = new templates.PartialHeader(
-                appName: document.Info.Title,
-                appDescription: document.Info.Description,
-                version: document.Info.Version,
-                infoEmail: document.Info.Contact?.Email,
+                appName: Document.Info.Title,
+                appDescription: Document.Info.Description,
+                version: Document.Info.Version,
+                infoEmail: Document.Info.Contact?.Email,
                 codeGeneratorVersionInfo: versionInfo
             );
             var entry = HandlebarsTemplateProcess.ProcessModel(

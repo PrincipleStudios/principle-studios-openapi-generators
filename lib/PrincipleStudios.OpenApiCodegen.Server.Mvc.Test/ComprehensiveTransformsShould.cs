@@ -24,7 +24,7 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
             var transformer = schemaTransformer.ToOpenApiSourceTransformer();
             OpenApiTransformDiagnostic diagnostic = new();
 
-            var entries = transformer.ToSourceEntries(document, diagnostic).ToArray();
+            var entries = transformer.GetSources(diagnostic).ToArray();
 
             foreach (var entry in entries)
             {
@@ -44,7 +44,7 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
             var transformer = schemaTransformer.ToOpenApiSourceTransformer();
             OpenApiTransformDiagnostic diagnostic = new();
 
-            var entries = transformer.ToSourceEntries(document, diagnostic).ToArray();
+            var entries = transformer.GetSources(diagnostic).ToArray();
 
             Snapshot.Match(diagnostic.Errors, $"Diagnostics.{CSharpNaming.ToTitleCaseIdentifier(name, options.ReservedIdentifiers)}");
         }

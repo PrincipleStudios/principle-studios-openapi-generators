@@ -6,16 +6,18 @@ using System.Text;
 
 namespace PrincipleStudios.OpenApi.Transformations
 {
-    public class PathControllerSourceTransformer : IOpenApiSourceTransformer
+    public class PathControllerSourceTransformer : ISourceProvider
     {
+        private readonly OpenApiDocument document;
         private readonly IOpenApiPathControllerTransformer pathControllerTransformer;
 
-        public PathControllerSourceTransformer(IOpenApiPathControllerTransformer pathControllerTransformer)
+        public PathControllerSourceTransformer(OpenApiDocument document, IOpenApiPathControllerTransformer pathControllerTransformer)
         {
+            this.document = document;
             this.pathControllerTransformer = pathControllerTransformer;
         }
 
-        public IEnumerable<SourceEntry> ToSourceEntries(OpenApiDocument document, OpenApiTransformDiagnostic diagnostic)
+        public IEnumerable<SourceEntry> GetSources(OpenApiTransformDiagnostic diagnostic)
         {
             foreach (var controller in document.Paths)
             {

@@ -5,19 +5,19 @@ using System.Text;
 
 namespace PrincipleStudios.OpenApi.Transformations
 {
-    public class CombineOpenApiSourceTransformer : IOpenApiSourceTransformer
+    public class CombineOpenApiSourceTransformer : ISourceProvider
     {
-        private readonly IOpenApiSourceTransformer[] transformers;
+        private readonly ISourceProvider[] sourceProviders;
 
-        public CombineOpenApiSourceTransformer(params IOpenApiSourceTransformer[] transformers)
+        public CombineOpenApiSourceTransformer(params ISourceProvider[] sourceProviders)
         {
-            this.transformers = transformers;
+            this.sourceProviders = sourceProviders;
         }
 
-        public IEnumerable<SourceEntry> ToSourceEntries(OpenApiDocument document, OpenApiTransformDiagnostic diagnostic)
+        public IEnumerable<SourceEntry> GetSources(OpenApiTransformDiagnostic diagnostic)
         {
-            foreach (var transformer in transformers)
-                foreach (var entry in transformer.ToSourceEntries(document, diagnostic))
+            foreach (var transformer in sourceProviders)
+                foreach (var entry in transformer.GetSources(diagnostic))
                     yield return entry;
         }
     }

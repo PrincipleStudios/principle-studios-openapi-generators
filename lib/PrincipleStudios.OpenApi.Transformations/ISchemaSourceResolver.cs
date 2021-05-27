@@ -4,6 +4,6 @@ namespace PrincipleStudios.OpenApi.Transformations
 {
     public interface ISchemaSourceResolver<TInlineDataType> : ISourceProvider
     {
-        TInlineDataType ToInlineDataType(OpenApiSchema schema);
+        TInlineDataType ToInlineDataType(OpenApiSchema schema, OpenApiTransformDiagnostic diagnostic);
     }
 }
