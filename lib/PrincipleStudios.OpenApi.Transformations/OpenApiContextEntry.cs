@@ -1,8 +1,8 @@
 ﻿using Microsoft.OpenApi.Interfaces;
-using System.Collections.Generic;
 
 namespace PrincipleStudios.OpenApi.Transformations
 {
+    [System.Diagnostics.DebuggerDisplay("<{Key}, {Element}>")]
     public class OpenApiContextEntry
     {
         public OpenApiContextEntry(string property)

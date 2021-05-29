@@ -5,11 +5,11 @@ using System.Text;
 
 namespace PrincipleStudios.OpenApi.Transformations
 {
-    public class CombineOpenApiSourceTransformer : ISourceProvider
+    public class CompositeOpenApiSourceProvider : ISourceProvider
     {
         private readonly ISourceProvider[] sourceProviders;
 
-        public CombineOpenApiSourceTransformer(params ISourceProvider[] sourceProviders)
+        public CompositeOpenApiSourceProvider(params ISourceProvider[] sourceProviders)
         {
             this.sourceProviders = sourceProviders;
         }

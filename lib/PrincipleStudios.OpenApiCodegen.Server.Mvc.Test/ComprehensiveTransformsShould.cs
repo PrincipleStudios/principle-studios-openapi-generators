@@ -20,8 +20,9 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
             var document = GetDocument(name);
             var options = LoadOptions();
 
-            var schemaTransformer = new CSharpPathControllerTransformer(document, "PS.Controller", options, "");
-            var transformer = schemaTransformer.ToOpenApiSourceTransformer();
+            var handlebarsFactory = new HandlebarsFactory(ControllerHandlebarsTemplateProcess.CreateHandlebars);
+            var resolver = new CSharpSchemaSourceResolver("PS.Controller", options, handlebarsFactory, "");
+            var transformer = document.BuildCSharpPathControllerSourceProvider("", "PS.Controller", options);
             OpenApiTransformDiagnostic diagnostic = new();
 
             var entries = transformer.GetSources(diagnostic).ToArray();
@@ -40,13 +41,14 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
             var document = GetDocument(name);
             var options = LoadOptions();
 
-            var schemaTransformer = new CSharpPathControllerTransformer(document, "PS.Controller", LoadOptions(), "");
-            var transformer = schemaTransformer.ToOpenApiSourceTransformer();
+            var handlebarsFactory = new HandlebarsFactory(ControllerHandlebarsTemplateProcess.CreateHandlebars);
+            var resolver = new CSharpSchemaSourceResolver("PS.Controller", options, handlebarsFactory, "");
+            var transformer = document.BuildCSharpPathControllerSourceProvider("", "PS.Controller", options);
             OpenApiTransformDiagnostic diagnostic = new();
 
             var entries = transformer.GetSources(diagnostic).ToArray();
 
-            Snapshot.Match(diagnostic.Errors, $"Diagnostics.{CSharpNaming.ToTitleCaseIdentifier(name, options.ReservedIdentifiers)}");
+            Snapshot.Match(diagnostic.Errors.Select(err => new { Context = err.Context.ToOpenApiPathContextString(), Message = err.Message }).ToArray(), $"Diagnostics.{CSharpNaming.ToTitleCaseIdentifier(name, options.ReservedIdentifiers)}");
         }
 
         public static IEnumerable<object[]> ValidFileNames =>

@@ -53,14 +53,6 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
             base.Execute(context);
         }
 
-        //protected override IEnumerable<SourceEntry> SourceFilesFromAdditionalFile(ISourceProvider options, OpenApiTransformDiagnostic diagnostic)
-        //{
-        //    var schemaTransformer = new CSharpPathControllerTransformer(options.Document, options.DocumentNamespace, this.options, GetVersionInfo());
-        //    var transformer = schemaTransformer.ToOpenApiSourceTransformer();
-
-        //    return transformer.ToSourceEntries(options.Document, diagnostic);
-        //}
-
         private static string GetVersionInfo()
         {
             return $"{typeof(CSharpPathControllerTransformer).FullName} v{typeof(CSharpPathControllerTransformer).Assembly.GetName().Version}";
@@ -71,10 +63,9 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
             var documentNamespace = opt.GetAdditionalFilesMetadata(propNamespace);
             if (string.IsNullOrEmpty(documentNamespace))
                 documentNamespace = GetStandardNamespace(opt);
+            
+            result = document.BuildCSharpPathControllerSourceProvider(GetVersionInfo(), documentNamespace, this.options);
 
-            var transformer = new CSharpPathControllerTransformer(document, documentNamespace ?? "", this.options, GetVersionInfo());
-
-            result = transformer.ToOpenApiSourceTransformer();
             return true;
         }
 

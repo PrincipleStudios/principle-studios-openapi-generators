@@ -46,8 +46,7 @@ namespace PrincipleStudios.OpenApi.CSharp
             if (openApiDocument == null)
                 return false;
 
-            var schemaTransformer = new CSharpPathControllerTransformer(openApiDocument, Namespace, options, GetVersionInfo());
-            var transformer = schemaTransformer.ToOpenApiSourceTransformer();
+            var transformer = openApiDocument.BuildCSharpPathControllerSourceProvider(GetVersionInfo(), Namespace, options);
 
             var diagnostic = new OpenApiTransformDiagnostic();
             var entries = transformer.GetSources(diagnostic).ToArray();

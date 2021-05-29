@@ -5,57 +5,57 @@ using System.Collections.Generic;
 
 namespace PrincipleStudios.OpenApi.Transformations
 {
-    public interface IOpenApiDocumentVisitor
+    public interface IOpenApiDocumentVisitor<TArgument>
     {
-        void Visit(OpenApiCallback callback, IEnumerable<OpenApiContextEntry> context);
-        void Visit(OpenApiComponents components, IEnumerable<OpenApiContextEntry> context);
-        void Visit(OpenApiDocument document, IEnumerable<OpenApiContextEntry> context);
-        void Visit(OpenApiEncoding encoding, IEnumerable<OpenApiContextEntry> context);
-        void Visit(OpenApiExample example, IEnumerable<OpenApiContextEntry> context);
-        void Visit(OpenApiExternalDocs docs, IEnumerable<OpenApiContextEntry> context);
-        void Visit(OpenApiHeader header, IEnumerable<OpenApiContextEntry> context);
-        void Visit(OpenApiInfo info, IEnumerable<OpenApiContextEntry> context);
-        void Visit(OpenApiLicense license, IEnumerable<OpenApiContextEntry> context);
-        void Visit(OpenApiLink link, IEnumerable<OpenApiContextEntry> context);
-        void Visit(OpenApiMediaType mediaType, IEnumerable<OpenApiContextEntry> context);
-        void Visit(OpenApiOAuthFlow oauthFlow, IEnumerable<OpenApiContextEntry> context);
-        void Visit(OpenApiOAuthFlows oAuthFlows, IEnumerable<OpenApiContextEntry> context);
-        void Visit(OpenApiOperation operation, IEnumerable<OpenApiContextEntry> context);
-        void Visit(OpenApiParameter parameter, IEnumerable<OpenApiContextEntry> context);
-        void Visit(OpenApiPathItem pathItem, IEnumerable<OpenApiContextEntry> context);
-        void Visit(OpenApiPaths paths, IEnumerable<OpenApiContextEntry> context);
-        void Visit(OpenApiRequestBody requestBody, IEnumerable<OpenApiContextEntry> context);
-        void Visit(OpenApiResponse response, IEnumerable<OpenApiContextEntry> context);
-        void Visit(OpenApiResponses responses, IEnumerable<OpenApiContextEntry> context);
-        void Visit(OpenApiSchema schema, IEnumerable<OpenApiContextEntry> context);
-        void Visit(OpenApiSecurityRequirement securityRequirement, IEnumerable<OpenApiContextEntry> context);
-        void Visit(OpenApiSecurityScheme securityScheme, IEnumerable<OpenApiContextEntry> context);
-        void Visit(OpenApiServer server, IEnumerable<OpenApiContextEntry> context);
-        void Visit(OpenApiServerVariable serverVariable, IEnumerable<OpenApiContextEntry> context);
-        void Visit(OpenApiTag tag, IEnumerable<OpenApiContextEntry> context);
-        void Visit(OpenApiXml xml, IEnumerable<OpenApiContextEntry> context);
-        void Visit(RuntimeExpressionAnyWrapper runtimeExpressionAnyWrapper, IEnumerable<OpenApiContextEntry> context);
-        void VisitAny(IOpenApiElement openApiElement, IEnumerable<OpenApiContextEntry> context);
-        void VisitUnknown(IOpenApiElement openApiElement, IEnumerable<OpenApiContextEntry> context);
+        void Visit(OpenApiCallback callback, OpenApiContext context, TArgument argument);
+        void Visit(OpenApiComponents components, OpenApiContext context, TArgument argument);
+        void Visit(OpenApiDocument document, OpenApiContext context, TArgument argument);
+        void Visit(OpenApiEncoding encoding, OpenApiContext context, TArgument argument);
+        void Visit(OpenApiExample example, OpenApiContext context, TArgument argument);
+        void Visit(OpenApiExternalDocs docs, OpenApiContext context, TArgument argument);
+        void Visit(OpenApiHeader header, OpenApiContext context, TArgument argument);
+        void Visit(OpenApiInfo info, OpenApiContext context, TArgument argument);
+        void Visit(OpenApiLicense license, OpenApiContext context, TArgument argument);
+        void Visit(OpenApiLink link, OpenApiContext context, TArgument argument);
+        void Visit(OpenApiMediaType mediaType, OpenApiContext context, TArgument argument);
+        void Visit(OpenApiOAuthFlow oauthFlow, OpenApiContext context, TArgument argument);
+        void Visit(OpenApiOAuthFlows oAuthFlows, OpenApiContext context, TArgument argument);
+        void Visit(OpenApiOperation operation, OpenApiContext context, TArgument argument);
+        void Visit(OpenApiParameter parameter, OpenApiContext context, TArgument argument);
+        void Visit(OpenApiPathItem pathItem, OpenApiContext context, TArgument argument);
+        void Visit(OpenApiPaths paths, OpenApiContext context, TArgument argument);
+        void Visit(OpenApiRequestBody requestBody, OpenApiContext context, TArgument argument);
+        void Visit(OpenApiResponse response, OpenApiContext context, TArgument argument);
+        void Visit(OpenApiResponses responses, OpenApiContext context, TArgument argument);
+        void Visit(OpenApiSchema schema, OpenApiContext context, TArgument argument);
+        void Visit(OpenApiSecurityRequirement securityRequirement, OpenApiContext context, TArgument argument);
+        void Visit(OpenApiSecurityScheme securityScheme, OpenApiContext context, TArgument argument);
+        void Visit(OpenApiServer server, OpenApiContext context, TArgument argument);
+        void Visit(OpenApiServerVariable serverVariable, OpenApiContext context, TArgument argument);
+        void Visit(OpenApiTag tag, OpenApiContext context, TArgument argument);
+        void Visit(OpenApiXml xml, OpenApiContext context, TArgument argument);
+        void Visit(RuntimeExpressionAnyWrapper runtimeExpressionAnyWrapper, OpenApiContext context, TArgument argument);
+        void VisitAny(IOpenApiElement openApiElement, OpenApiContext context, TArgument argument);
+        void VisitUnknown(IOpenApiElement openApiElement, OpenApiContext context, TArgument argument);
     }
 
-    public interface IOpenApiAnyVisitor
+    public interface IOpenApiAnyVisitor<TArgument>
     {
-        void Visit(Microsoft.OpenApi.Any.OpenApiArray _Array, IEnumerable<OpenApiContextEntry> context);
-        void Visit(Microsoft.OpenApi.Any.OpenApiBinary _Binary, IEnumerable<OpenApiContextEntry> context);
-        void Visit(Microsoft.OpenApi.Any.OpenApiBoolean _Boolean, IEnumerable<OpenApiContextEntry> context);
-        void Visit(Microsoft.OpenApi.Any.OpenApiByte _Byte, IEnumerable<OpenApiContextEntry> context);
-        void Visit(Microsoft.OpenApi.Any.OpenApiDate _Date, IEnumerable<OpenApiContextEntry> context);
-        void Visit(Microsoft.OpenApi.Any.OpenApiDateTime _DateTime, IEnumerable<OpenApiContextEntry> context);
-        void Visit(Microsoft.OpenApi.Any.OpenApiDouble _Double, IEnumerable<OpenApiContextEntry> context);
-        void Visit(Microsoft.OpenApi.Any.OpenApiFloat _Float, IEnumerable<OpenApiContextEntry> context);
-        void Visit(Microsoft.OpenApi.Any.OpenApiInteger _Integer, IEnumerable<OpenApiContextEntry> context);
-        void Visit(Microsoft.OpenApi.Any.OpenApiLong _Long, IEnumerable<OpenApiContextEntry> context);
-        void Visit(Microsoft.OpenApi.Any.OpenApiNull _Null, IEnumerable<OpenApiContextEntry> context);
-        void Visit(Microsoft.OpenApi.Any.OpenApiObject _Object, IEnumerable<OpenApiContextEntry> context);
-        void Visit(Microsoft.OpenApi.Any.OpenApiPassword _Password, IEnumerable<OpenApiContextEntry> context);
-        void Visit(Microsoft.OpenApi.Any.OpenApiString _String, IEnumerable<OpenApiContextEntry> context);
-        void VisitAny(Microsoft.OpenApi.Any.IOpenApiAny any, IEnumerable<OpenApiContextEntry> context);
-        void VisitUnknown(IOpenApiAny anyElement, IEnumerable<OpenApiContextEntry> context);
+        void Visit(Microsoft.OpenApi.Any.OpenApiArray _Array, OpenApiContext context, TArgument argument);
+        void Visit(Microsoft.OpenApi.Any.OpenApiBinary _Binary, OpenApiContext context, TArgument argument);
+        void Visit(Microsoft.OpenApi.Any.OpenApiBoolean _Boolean, OpenApiContext context, TArgument argument);
+        void Visit(Microsoft.OpenApi.Any.OpenApiByte _Byte, OpenApiContext context, TArgument argument);
+        void Visit(Microsoft.OpenApi.Any.OpenApiDate _Date, OpenApiContext context, TArgument argument);
+        void Visit(Microsoft.OpenApi.Any.OpenApiDateTime _DateTime, OpenApiContext context, TArgument argument);
+        void Visit(Microsoft.OpenApi.Any.OpenApiDouble _Double, OpenApiContext context, TArgument argument);
+        void Visit(Microsoft.OpenApi.Any.OpenApiFloat _Float, OpenApiContext context, TArgument argument);
+        void Visit(Microsoft.OpenApi.Any.OpenApiInteger _Integer, OpenApiContext context, TArgument argument);
+        void Visit(Microsoft.OpenApi.Any.OpenApiLong _Long, OpenApiContext context, TArgument argument);
+        void Visit(Microsoft.OpenApi.Any.OpenApiNull _Null, OpenApiContext context, TArgument argument);
+        void Visit(Microsoft.OpenApi.Any.OpenApiObject _Object, OpenApiContext context, TArgument argument);
+        void Visit(Microsoft.OpenApi.Any.OpenApiPassword _Password, OpenApiContext context, TArgument argument);
+        void Visit(Microsoft.OpenApi.Any.OpenApiString _String, OpenApiContext context, TArgument argument);
+        void VisitAny(Microsoft.OpenApi.Any.IOpenApiAny any, OpenApiContext context, TArgument argument);
+        void VisitUnknown(IOpenApiAny anyElement, OpenApiContext context, TArgument argument);
     }
 }
