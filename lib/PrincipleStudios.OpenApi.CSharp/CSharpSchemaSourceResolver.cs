@@ -140,6 +140,7 @@ namespace PrincipleStudios.OpenApi.CSharp
                                         responses.Count == 1 ? ""
                                             : _2xxRegex.IsMatch(statusCode) && responses.Keys.Count(_2xxRegex.IsMatch) == 1 ? ""
                                             : statusCode == "default" && !responses.ContainsKey("other") ? "other"
+                                            : int.TryParse(statusCode, out var numeric) ? ((System.Net.HttpStatusCode)numeric).ToString("g")
                                             : statusCode,
                                         response.Content.Count == 1 ? ""
                                             : mimeType,
@@ -186,8 +187,8 @@ namespace PrincipleStudios.OpenApi.CSharp
                                  ),
                              _ => throw new NotImplementedException(),
                          },
-                    { Property: "Items", Element: OpenApiSchema _ } => (new[] { "Items" }, context.Skip(1).ToArray()),
-                    { Property: "AdditionalProperties", Element: OpenApiSchema _ } => (new[] { "AdditionalProperties" }, context.Skip(1).ToArray()),
+                    { Property: "Items", Element: OpenApiSchema _ } => (new[] { "Item" }, context.Skip(1).ToArray()),
+                    { Property: "AdditionalProperties", Element: OpenApiSchema _ } => (new[] { "AdditionalProperty" }, context.Skip(1).ToArray()),
                     { Key: string key, Element: OpenApiSchema _ } => (new[] { key }, context.Skip(1).ToArray()),
                     _ => throw new NotImplementedException(),
                 };

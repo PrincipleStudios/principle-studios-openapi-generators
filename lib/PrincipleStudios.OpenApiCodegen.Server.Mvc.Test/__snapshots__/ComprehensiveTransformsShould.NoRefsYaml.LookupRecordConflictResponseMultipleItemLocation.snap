@@ -19,9 +19,9 @@ using Newtonsoft.Json;
 
 namespace PS.Controller
 { 
-    public partial class LookupRecord409ResponseMultipleItemsLocation : global::System.IEquatable<LookupRecord409ResponseMultipleItemsLocation>
+    public partial class LookupRecordConflictResponseMultipleItemLocation : global::System.IEquatable<LookupRecordConflictResponseMultipleItemLocation>
     {
-        public LookupRecord409ResponseMultipleItemsLocation(
+        public LookupRecordConflictResponseMultipleItemLocation(
             [global::Newtonsoft.Json.JsonProperty(PropertyName="latitude"), global::System.ComponentModel.DataAnnotations.Required] double Latitude, 
             [global::Newtonsoft.Json.JsonProperty(PropertyName="longitude"), global::System.ComponentModel.DataAnnotations.Required] double Longitude
         ) { 
@@ -47,10 +47,10 @@ namespace PS.Controller
         {
             if (obj is null) return false;
             if (ReferenceEquals(this, obj)) return true;
-            return obj.GetType() == GetType() && Equals((LookupRecord409ResponseMultipleItemsLocation)obj);
+            return obj.GetType() == GetType() && Equals((LookupRecordConflictResponseMultipleItemLocation)obj);
         }
 
-        public bool Equals(LookupRecord409ResponseMultipleItemsLocation other)
+        public bool Equals(LookupRecordConflictResponseMultipleItemLocation other)
         {
             if (other is null) return false;
             if (ReferenceEquals(this, other)) return true;

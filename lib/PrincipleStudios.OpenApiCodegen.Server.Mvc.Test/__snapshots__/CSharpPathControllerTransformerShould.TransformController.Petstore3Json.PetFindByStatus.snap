@@ -31,11 +31,11 @@ namespace PrincipleStudios.Test
         [global::Microsoft.AspNetCore.Mvc.ProducesResponseType(400)] // 
         [global::Microsoft.AspNetCore.Authorization.Authorize(AuthenticationSchemes = "petstore_auth")]
         public async global::System.Threading.Tasks.Task<global::Microsoft.AspNetCore.Mvc.IActionResult> FindPetsByStatus(
-            [global::Microsoft.AspNetCore.Mvc.FromQuery(Name = "status"), global::System.ComponentModel.DataAnnotations.Required] global::System.Collections.Generic.IEnumerable<FindPetsByStatusStatusItems> status
+            [global::Microsoft.AspNetCore.Mvc.FromQuery(Name = "status"), global::System.ComponentModel.DataAnnotations.Required] global::System.Collections.Generic.IEnumerable<FindPetsByStatusStatusItem> status
         ) => (await FindPetsByStatusTypeSafe(status)).ActionResult;
 
         protected abstract global::System.Threading.Tasks.Task<TypeSafeFindPetsByStatusResult> FindPetsByStatusTypeSafe(
-            global::System.Collections.Generic.IEnumerable<FindPetsByStatusStatusItems> status);
+            global::System.Collections.Generic.IEnumerable<FindPetsByStatusStatusItem> status);
 
         public readonly struct TypeSafeFindPetsByStatusResult
         {

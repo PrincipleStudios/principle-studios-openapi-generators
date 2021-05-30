@@ -25,7 +25,7 @@ namespace PS.Controller
         // 
         [global::Microsoft.AspNetCore.Mvc.ProducesResponseType(200, Type = typeof(LookupRecordResponse))] // application/json
         // 
-        [global::Microsoft.AspNetCore.Mvc.ProducesResponseType(409, Type = typeof(LookupRecord409Response))] // application/json
+        [global::Microsoft.AspNetCore.Mvc.ProducesResponseType(409, Type = typeof(LookupRecordConflictResponse))] // application/json
         public async global::System.Threading.Tasks.Task<global::Microsoft.AspNetCore.Mvc.IActionResult> LookupRecord(
             [global::Microsoft.AspNetCore.Mvc.FromBody, global::System.ComponentModel.DataAnnotations.Required] LookupRecordRequest lookupRecordBody
         ) => (await LookupRecordTypeSafe(lookupRecordBody)).ActionResult;
@@ -81,8 +81,8 @@ namespace PS.Controller
                 new TypeSafeLookupRecordResult(200, "application/json", typeof(LookupRecordResponse), result);
             
             
-            public static TypeSafeLookupRecordResult StatusCode409(LookupRecord409Response result) =>
-                new TypeSafeLookupRecordResult(409, "application/json", typeof(LookupRecord409Response), result);
+            public static TypeSafeLookupRecordResult StatusCode409(LookupRecordConflictResponse result) =>
+                new TypeSafeLookupRecordResult(409, "application/json", typeof(LookupRecordConflictResponse), result);
             
             
             public static TypeSafeLookupRecordResult OtherStatusCode(int statusCode, LookupRecordOtherResponse result) =>
