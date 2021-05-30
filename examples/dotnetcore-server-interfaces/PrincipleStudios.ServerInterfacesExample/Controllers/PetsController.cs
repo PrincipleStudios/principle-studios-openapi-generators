@@ -16,7 +16,7 @@ namespace PrincipleStudios.ServerInterfacesExample.Controllers
             var result = new Pet(newPet.Name, newPet.Tag, newId);
             if (Data.pets.TryAdd(newId, (result.Name, result.Tag)))
             {
-                return TypeSafeAddPetResult.StatusCode200(result);
+                return TypeSafeAddPetResult.Ok(result);
             }
             else
             {
@@ -36,7 +36,7 @@ namespace PrincipleStudios.ServerInterfacesExample.Controllers
             {
                 result = result.Take(limit.Value);
             }
-            return TypeSafeFindPetsResult.StatusCode200(result.Select(kvp => new Pet(kvp.Value.name, kvp.Value.tag, kvp.Key)).ToArray());
+            return TypeSafeFindPetsResult.Ok(result.Select(kvp => new Pet(kvp.Value.name, kvp.Value.tag, kvp.Key)).ToArray());
         }
 
     }

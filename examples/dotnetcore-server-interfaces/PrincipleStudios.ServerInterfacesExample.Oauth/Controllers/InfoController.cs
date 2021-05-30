@@ -6,7 +6,7 @@ namespace PrincipleStudios.ServerInterfacesExample.Oauth.Controllers
     {
         protected override Task<TypeSafeGetInfoResult> GetInfoTypeSafe(byte[]? data)
         {
-            return Task.FromResult(TypeSafeGetInfoResult.StatusCode200(User.Identity!.IsAuthenticated ? $"success as {User.Identity.Name}" : "success"));
+            return Task.FromResult(TypeSafeGetInfoResult.Ok(User.Identity!.IsAuthenticated ? $"success as {User.Identity.Name}" : "success"));
         }
     }
 }
