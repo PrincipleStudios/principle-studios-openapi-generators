@@ -23,7 +23,7 @@ namespace PrincipleStudios.Test
         [global::Microsoft.AspNetCore.Mvc.HttpGet]
         [global::Microsoft.AspNetCore.Mvc.Route("/user/{username}")]
         // successful operation
-        [global::Microsoft.AspNetCore.Mvc.ProducesResponseType(200, Type = typeof(_User))] // application/xml        [global::Microsoft.AspNetCore.Mvc.ProducesResponseType(200, Type = typeof(_User))] // application/json
+        [global::Microsoft.AspNetCore.Mvc.ProducesResponseType(200, Type = typeof(User))] // application/xml        [global::Microsoft.AspNetCore.Mvc.ProducesResponseType(200, Type = typeof(User))] // application/json
         // Invalid username supplied
         [global::Microsoft.AspNetCore.Mvc.ProducesResponseType(400)] // 
         // User not found
@@ -81,25 +81,25 @@ namespace PrincipleStudios.Test
             /// <summary>
             /// successful operation
             /// </summary>
-            public static TypeSafeGetUserByNameResult ApplicationXmlStatusCode200(_User result) =>
-                new TypeSafeGetUserByNameResult(200, "application/xml", typeof(_User), result);
+            public static TypeSafeGetUserByNameResult ApplicationXmlOk(User result) =>
+                new TypeSafeGetUserByNameResult(200, "application/xml", typeof(User), result);
             
             /// <summary>
             /// successful operation
             /// </summary>
-            public static TypeSafeGetUserByNameResult ApplicationJsonStatusCode200(_User result) =>
-                new TypeSafeGetUserByNameResult(200, "application/json", typeof(_User), result);
+            public static TypeSafeGetUserByNameResult ApplicationJsonOk(User result) =>
+                new TypeSafeGetUserByNameResult(200, "application/json", typeof(User), result);
             
             /// <summary>
             /// Invalid username supplied
             /// </summary>
-            public static TypeSafeGetUserByNameResult StatusCode400() =>
+            public static TypeSafeGetUserByNameResult BadRequest() =>
                 new TypeSafeGetUserByNameResult(400);
             
             /// <summary>
             /// User not found
             /// </summary>
-            public static TypeSafeGetUserByNameResult StatusCode404() =>
+            public static TypeSafeGetUserByNameResult NotFound() =>
                 new TypeSafeGetUserByNameResult(404);
             
 
@@ -125,12 +125,12 @@ namespace PrincipleStudios.Test
         [global::Microsoft.AspNetCore.Mvc.ProducesResponseType(404)] // 
         public async global::System.Threading.Tasks.Task<global::Microsoft.AspNetCore.Mvc.IActionResult> UpdateUser(
             [global::Microsoft.AspNetCore.Mvc.FromRoute(Name = "username"), global::System.ComponentModel.DataAnnotations.Required] string username,
-            [global::Microsoft.AspNetCore.Mvc.FromBody, global::System.ComponentModel.DataAnnotations.Required] _User updateUserBody
+            [global::Microsoft.AspNetCore.Mvc.FromBody, global::System.ComponentModel.DataAnnotations.Required] User updateUserBody
         ) => (await UpdateUserTypeSafe(username,updateUserBody)).ActionResult;
 
         protected abstract global::System.Threading.Tasks.Task<TypeSafeUpdateUserResult> UpdateUserTypeSafe(
             string username, 
-            _User updateUserBody);
+            User updateUserBody);
 
         public readonly struct TypeSafeUpdateUserResult
         {
@@ -178,13 +178,13 @@ namespace PrincipleStudios.Test
             /// <summary>
             /// Invalid user supplied
             /// </summary>
-            public static TypeSafeUpdateUserResult StatusCode400() =>
+            public static TypeSafeUpdateUserResult BadRequest() =>
                 new TypeSafeUpdateUserResult(400);
             
             /// <summary>
             /// User not found
             /// </summary>
-            public static TypeSafeUpdateUserResult StatusCode404() =>
+            public static TypeSafeUpdateUserResult NotFound() =>
                 new TypeSafeUpdateUserResult(404);
             
 
@@ -259,13 +259,13 @@ namespace PrincipleStudios.Test
             /// <summary>
             /// Invalid username supplied
             /// </summary>
-            public static TypeSafeDeleteUserResult StatusCode400() =>
+            public static TypeSafeDeleteUserResult BadRequest() =>
                 new TypeSafeDeleteUserResult(400);
             
             /// <summary>
             /// User not found
             /// </summary>
-            public static TypeSafeDeleteUserResult StatusCode404() =>
+            public static TypeSafeDeleteUserResult NotFound() =>
                 new TypeSafeDeleteUserResult(404);
             
 

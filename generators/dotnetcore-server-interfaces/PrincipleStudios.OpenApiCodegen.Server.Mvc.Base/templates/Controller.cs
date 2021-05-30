@@ -68,7 +68,7 @@ namespace PrincipleStudios.OpenApi.CSharp.templates
         string? dataType
     );
 
-    public record OperationRequestBody(string name, string requestBodyType, IEnumerable<OperationParameter> allParams);
+    public record OperationRequestBody(string name, string? requestBodyType, IEnumerable<OperationParameter> allParams);
 
     public record OperationSecurityRequirement(
         OperationSecuritySchemeRequirement[] schemes

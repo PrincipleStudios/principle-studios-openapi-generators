@@ -17,11 +17,11 @@ using Newtonsoft.Json;
 #nullable enable
 #nullable disable warnings
 
-namespace PS.Controller
+namespace PrincipleStudios.Test
 { 
-    public partial class _User : global::System.IEquatable<_User>
+    public partial class User : global::System.IEquatable<User>
     {
-        public _User(
+        public User(
             [global::Newtonsoft.Json.JsonProperty(PropertyName="id")] long? Id, 
             [global::Newtonsoft.Json.JsonProperty(PropertyName="username")] string? Username, 
             [global::Newtonsoft.Json.JsonProperty(PropertyName="firstName")] string? FirstName, 
@@ -93,10 +93,10 @@ namespace PS.Controller
         {
             if (obj is null) return false;
             if (ReferenceEquals(this, obj)) return true;
-            return obj.GetType() == GetType() && Equals((_User)obj);
+            return obj.GetType() == GetType() && Equals((User)obj);
         }
 
-        public bool Equals(_User other)
+        public bool Equals(User other)
         {
             if (other is null) return false;
             if (ReferenceEquals(this, other)) return true;

@@ -80,19 +80,19 @@ namespace PS.Controller
             /// <summary>
             /// successful operation
             /// </summary>
-            public static TypeSafePlaceOrderResult ApplicationXmlStatusCode200(Order result) =>
+            public static TypeSafePlaceOrderResult ApplicationXmlOk(Order result) =>
                 new TypeSafePlaceOrderResult(200, "application/xml", typeof(Order), result);
             
             /// <summary>
             /// successful operation
             /// </summary>
-            public static TypeSafePlaceOrderResult ApplicationJsonStatusCode200(Order result) =>
+            public static TypeSafePlaceOrderResult ApplicationJsonOk(Order result) =>
                 new TypeSafePlaceOrderResult(200, "application/json", typeof(Order), result);
             
             /// <summary>
             /// Invalid Order
             /// </summary>
-            public static TypeSafePlaceOrderResult StatusCode400() =>
+            public static TypeSafePlaceOrderResult BadRequest() =>
                 new TypeSafePlaceOrderResult(400);
             
 

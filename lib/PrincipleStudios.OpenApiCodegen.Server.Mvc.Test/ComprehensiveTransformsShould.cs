@@ -20,15 +20,14 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
             var document = GetDocument(name);
             var options = LoadOptions();
 
-            var schemaTransformer = new CSharpPathControllerTransformer(document, "PS.Controller", options, "");
-            var transformer = schemaTransformer.ToOpenApiSourceTransformer();
+            var transformer = document.BuildCSharpPathControllerSourceProvider("", "PS.Controller", options);
             OpenApiTransformDiagnostic diagnostic = new();
 
-            var entries = transformer.ToSourceEntries(document, diagnostic).ToArray();
+            var entries = transformer.GetSources(diagnostic).ToArray();
 
             foreach (var entry in entries)
             {
-                Snapshot.Match(entry.SourceText, $"{nameof(ComprehensiveTransformsShould)}.{CSharpNaming.ToTitleCaseIdentifier(name, options.ReservedIdentifiers)}.{CSharpNaming.ToTitleCaseIdentifier(entry.Key.Split('.')[^2], options.ReservedIdentifiers)}");
+                Snapshot.Match(entry.SourceText, $"{nameof(ComprehensiveTransformsShould)}.{CSharpNaming.ToTitleCaseIdentifier(name, options.ReservedIdentifiers())}.{CSharpNaming.ToTitleCaseIdentifier(entry.Key.Split('.')[^2], options.ReservedIdentifiers())}");
             }
             Assert.Empty(diagnostic.Errors);
         }
@@ -40,13 +39,12 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
             var document = GetDocument(name);
             var options = LoadOptions();
 
-            var schemaTransformer = new CSharpPathControllerTransformer(document, "PS.Controller", LoadOptions(), "");
-            var transformer = schemaTransformer.ToOpenApiSourceTransformer();
+            var transformer = document.BuildCSharpPathControllerSourceProvider("", "PS.Controller", options);
             OpenApiTransformDiagnostic diagnostic = new();
 
-            var entries = transformer.ToSourceEntries(document, diagnostic).ToArray();
+            var entries = transformer.GetSources(diagnostic).ToArray();
 
-            Snapshot.Match(diagnostic.Errors, $"Diagnostics.{CSharpNaming.ToTitleCaseIdentifier(name, options.ReservedIdentifiers)}");
+            Snapshot.Match(diagnostic.Errors.Select(err => new { Context = err.Context.ToOpenApiPathContextString(), Message = err.Message }).ToArray(), $"Diagnostics.{CSharpNaming.ToTitleCaseIdentifier(name, options.ReservedIdentifiers())}");
         }
 
         public static IEnumerable<object[]> ValidFileNames =>

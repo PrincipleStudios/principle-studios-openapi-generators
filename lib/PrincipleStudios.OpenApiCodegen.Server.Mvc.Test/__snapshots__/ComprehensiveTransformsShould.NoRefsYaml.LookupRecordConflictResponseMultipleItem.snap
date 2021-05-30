@@ -19,11 +19,11 @@ using Newtonsoft.Json;
 
 namespace PS.Controller
 { 
-    public partial class LookupRecord409ResponseMultipleItems : global::System.IEquatable<LookupRecord409ResponseMultipleItems>
+    public partial class LookupRecordConflictResponseMultipleItem : global::System.IEquatable<LookupRecordConflictResponseMultipleItem>
     {
-        public LookupRecord409ResponseMultipleItems(
+        public LookupRecordConflictResponseMultipleItem(
             [global::Newtonsoft.Json.JsonProperty(PropertyName="formattedAddress"), global::System.ComponentModel.DataAnnotations.Required] string FormattedAddress, 
-            [global::Newtonsoft.Json.JsonProperty(PropertyName="location"), global::System.ComponentModel.DataAnnotations.Required] LookupRecord409ResponseMultipleItemsLocation Location
+            [global::Newtonsoft.Json.JsonProperty(PropertyName="location"), global::System.ComponentModel.DataAnnotations.Required] LookupRecordConflictResponseMultipleItemLocation Location
         ) { 
             this.FormattedAddress = FormattedAddress;
             this.Location = Location;
@@ -41,16 +41,16 @@ namespace PS.Controller
         /// </summary>
         [global::System.ComponentModel.DataAnnotations.Required]
         [global::Newtonsoft.Json.JsonProperty(PropertyName="location")]
-        public LookupRecord409ResponseMultipleItemsLocation Location { get; }
+        public LookupRecordConflictResponseMultipleItemLocation Location { get; }
 
         public override bool Equals(object obj)
         {
             if (obj is null) return false;
             if (ReferenceEquals(this, obj)) return true;
-            return obj.GetType() == GetType() && Equals((LookupRecord409ResponseMultipleItems)obj);
+            return obj.GetType() == GetType() && Equals((LookupRecordConflictResponseMultipleItem)obj);
         }
 
-        public bool Equals(LookupRecord409ResponseMultipleItems other)
+        public bool Equals(LookupRecordConflictResponseMultipleItem other)
         {
             if (other is null) return false;
             if (ReferenceEquals(this, other)) return true;

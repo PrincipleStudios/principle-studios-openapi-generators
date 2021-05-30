@@ -21,7 +21,7 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
         public void ConvertStringsToValidClassNames(string input, string expected)
         {
             var options = LoadOptions();
-            var actual = CSharpNaming.ToClassName(input, options.ReservedIdentifiers);
+            var actual = CSharpNaming.ToClassName(input, options.ReservedIdentifiers());
             Assert.Equal(expected, actual);
         }
 
@@ -37,7 +37,7 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
         public void ConvertStringsToValidParameterNames(string input, string expected)
         {
             var options = LoadOptions();
-            var actual = CSharpNaming.ToParameterName(input, options.ReservedIdentifiers);
+            var actual = CSharpNaming.ToParameterName(input, options.ReservedIdentifiers());
             Assert.Equal(expected, actual);
         }
 
@@ -61,7 +61,7 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
         public void ConvertPathsToNamespace(string? rootNamespace, string? projectDir, string? identity, string? link, string expected)
         {
             var options = LoadOptions();
-            var actual = CSharpNaming.ToNamespace(rootNamespace, projectDir, identity, link, options.ReservedIdentifiers);
+            var actual = CSharpNaming.ToNamespace(rootNamespace, projectDir, identity, link, options.ReservedIdentifiers());
             Assert.Equal(expected, actual);
         }
     }

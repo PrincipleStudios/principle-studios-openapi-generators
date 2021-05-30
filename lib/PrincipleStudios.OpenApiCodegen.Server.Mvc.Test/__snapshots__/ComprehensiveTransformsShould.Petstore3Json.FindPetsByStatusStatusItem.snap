@@ -13,7 +13,7 @@
 namespace PS.Controller
 { 
     [global::Newtonsoft.Json.Converters.JsonConverter(typeof(global::Newtonsoft.Json.Converters.StringEnumConverter))]
-    public enum FindPetsByStatusStatusItems
+    public enum FindPetsByStatusStatusItem
     {
         /// <summary>
         /// Enum Available for available

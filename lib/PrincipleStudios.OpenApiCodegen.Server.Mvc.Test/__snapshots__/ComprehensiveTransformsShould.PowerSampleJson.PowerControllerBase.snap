@@ -85,13 +85,13 @@ namespace PS.Controller
             }
             
             
-            public static TypeSafeGetPowerFlowsResult StatusCode200(GetPowerFlowsResponse result) =>
+            public static TypeSafeGetPowerFlowsResult Ok(GetPowerFlowsResponse result) =>
                 new TypeSafeGetPowerFlowsResult(200, "application/json", typeof(GetPowerFlowsResponse), result);
             
             /// <summary>
             /// Request range or house id not valid
             /// </summary>
-            public static TypeSafeGetPowerFlowsResult StatusCode400() =>
+            public static TypeSafeGetPowerFlowsResult BadRequest() =>
                 new TypeSafeGetPowerFlowsResult(400);
             
 

@@ -10,6 +10,6 @@ namespace PrincipleStudios.OpenApi.Transformations
         bool UseReference(OpenApiSchema schema);
         string UseReferenceName(OpenApiSchema schema);
 
-        SourceEntry TransformSchema(OpenApiSchema schema, OpenApiTransformDiagnostic diagnostic);
+        SourceEntry TransformSchema(OpenApiSchema schema, OpenApiInfo info, OpenApiTransformDiagnostic diagnostic);
     }
 }

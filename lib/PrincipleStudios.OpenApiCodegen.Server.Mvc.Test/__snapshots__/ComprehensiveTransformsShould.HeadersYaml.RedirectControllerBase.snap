@@ -22,9 +22,9 @@ namespace PS.Controller
         [global::Microsoft.AspNetCore.Mvc.ProducesResponseType(302)] // 
         public async global::System.Threading.Tasks.Task<global::Microsoft.AspNetCore.Mvc.IActionResult> _Redirect(
             
-        ) => (await _RedirectTypeSafe()).ActionResult;
+        ) => (await RedirectTypeSafe()).ActionResult;
 
-        protected abstract global::System.Threading.Tasks.Task<TypeSafe_RedirectResult> _RedirectTypeSafe();
+        protected abstract global::System.Threading.Tasks.Task<TypeSafe_RedirectResult> RedirectTypeSafe();
 
         public readonly struct TypeSafe_RedirectResult
         {
@@ -72,7 +72,7 @@ namespace PS.Controller
             /// <summary>
             /// Redirection Response
             /// </summary>
-            public static TypeSafe_RedirectResult StatusCode302(string headerLocation) =>
+            public static TypeSafe_RedirectResult Redirect(string headerLocation) =>
                 new TypeSafe_RedirectResult(302,
                     new global::System.Collections.Generic.KeyValuePair<string, string>("Location", headerLocation));
             

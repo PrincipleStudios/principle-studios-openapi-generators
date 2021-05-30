@@ -79,7 +79,7 @@ namespace PS.Controller
             /// <summary>
             /// pet response
             /// </summary>
-            public static TypeSafeFindPetByIdResult StatusCode200(Pet result) =>
+            public static TypeSafeFindPetByIdResult Ok(Pet result) =>
                 new TypeSafeFindPetByIdResult(200, "application/json", typeof(Pet), result);
             
             
@@ -155,7 +155,7 @@ namespace PS.Controller
             /// <summary>
             /// pet deleted
             /// </summary>
-            public static TypeSafeDeletePetResult StatusCode204() =>
+            public static TypeSafeDeletePetResult NoContent() =>
                 new TypeSafeDeletePetResult(204);
             
             

@@ -19,10 +19,10 @@ using Newtonsoft.Json;
 
 namespace PS.Controller
 { 
-    public partial class LookupRecord409Response : global::System.IEquatable<LookupRecord409Response>
+    public partial class LookupRecordConflictResponse : global::System.IEquatable<LookupRecordConflictResponse>
     {
-        public LookupRecord409Response(
-            [global::Newtonsoft.Json.JsonProperty(PropertyName="multiple")] global::System.Collections.Generic.IEnumerable<LookupRecord409ResponseMultipleItems>? Multiple
+        public LookupRecordConflictResponse(
+            [global::Newtonsoft.Json.JsonProperty(PropertyName="multiple")] global::System.Collections.Generic.IEnumerable<LookupRecordConflictResponseMultipleItem>? Multiple
         ) { 
             this.Multiple = Multiple;
         }
@@ -31,16 +31,16 @@ namespace PS.Controller
         /// Gets Multiple
         /// </summary>
         [global::Newtonsoft.Json.JsonProperty(PropertyName="multiple")]
-        public global::System.Collections.Generic.IEnumerable<LookupRecord409ResponseMultipleItems>? Multiple { get; }
+        public global::System.Collections.Generic.IEnumerable<LookupRecordConflictResponseMultipleItem>? Multiple { get; }
 
         public override bool Equals(object obj)
         {
             if (obj is null) return false;
             if (ReferenceEquals(this, obj)) return true;
-            return obj.GetType() == GetType() && Equals((LookupRecord409Response)obj);
+            return obj.GetType() == GetType() && Equals((LookupRecordConflictResponse)obj);
         }
 
-        public bool Equals(LookupRecord409Response other)
+        public bool Equals(LookupRecordConflictResponse other)
         {
             if (other is null) return false;
             if (ReferenceEquals(this, other)) return true;

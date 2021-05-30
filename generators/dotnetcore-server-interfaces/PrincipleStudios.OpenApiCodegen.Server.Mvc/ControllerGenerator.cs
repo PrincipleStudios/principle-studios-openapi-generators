@@ -10,12 +10,10 @@ using Microsoft.OpenApi.Models;
 using PrincipleStudios.OpenApi.CSharp;
 using PrincipleStudios.OpenApi.Transformations;
 
-#nullable enable
-
 namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
 {
     [Generator]
-    public class ControllerGenerator : OpenApiGeneratorBase<ControllerGenerator.Options>
+    public class ControllerGenerator : OpenApiGeneratorBase
     {
         private static readonly DiagnosticDescriptor IncludeNewtonsoftJson = new DiagnosticDescriptor(id: "PSAPICTRL001",
                                                                                                   title: "Include a reference to Newtonsoft.Json",
@@ -55,26 +53,19 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
             base.Execute(context);
         }
 
-        protected override IEnumerable<SourceEntry> SourceFilesFromAdditionalFile(Options options, OpenApiTransformDiagnostic diagnostic)
-        {
-            var schemaTransformer = new CSharpPathControllerTransformer(options.Document, options.DocumentNamespace, this.options, GetVersionInfo());
-            var transformer = schemaTransformer.ToOpenApiSourceTransformer();
-
-            return transformer.ToSourceEntries(options.Document, diagnostic);
-        }
-
         private static string GetVersionInfo()
         {
             return $"{typeof(CSharpPathControllerTransformer).FullName} v{typeof(CSharpPathControllerTransformer).Assembly.GetName().Version}";
         }
 
-        protected override bool TryCreateOptions(AdditionalText file, OpenApiDocument document, AnalyzerConfigOptions opt, GeneratorExecutionContext context, [NotNullWhen(true)] out Options? result)
+        protected override bool TryCreateSourceProvider(AdditionalText file, OpenApiDocument document, AnalyzerConfigOptions opt, GeneratorExecutionContext context, [NotNullWhen(true)] out ISourceProvider? result)
         {
             var documentNamespace = opt.GetAdditionalFilesMetadata(propNamespace);
             if (string.IsNullOrEmpty(documentNamespace))
                 documentNamespace = GetStandardNamespace(opt);
+            
+            result = document.BuildCSharpPathControllerSourceProvider(GetVersionInfo(), documentNamespace, this.options);
 
-            result = new Options(document, documentNamespace ?? "");
             return true;
         }
 
@@ -85,7 +76,7 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
             opt.TryGetValue("build_property.projectdir", out var projectDir);
             opt.TryGetValue("build_property.rootnamespace", out var rootNamespace);
 
-            return CSharpNaming.ToNamespace(rootNamespace, projectDir, identity, link, options.ReservedIdentifiers);
+            return CSharpNaming.ToNamespace(rootNamespace, projectDir, identity, link, options.ReservedIdentifiers());
         }
     }
 

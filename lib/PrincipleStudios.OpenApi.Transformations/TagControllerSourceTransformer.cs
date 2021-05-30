@@ -6,18 +6,20 @@ using System.Text;
 
 namespace PrincipleStudios.OpenApi.Transformations
 {
-    public class TagControllerSourceTransformer : IOpenApiSourceTransformer
+    public class TagControllerSourceTransformer : ISourceProvider
     {
+        private readonly OpenApiDocument document;
         private readonly IOpenApiTagControllerTransformer tagControllerTransformer;
         private readonly string defaultTagName;
 
-        public TagControllerSourceTransformer(IOpenApiTagControllerTransformer tagControllerTransformer, string defaultTagName = "default")
+        public TagControllerSourceTransformer(OpenApiDocument document, IOpenApiTagControllerTransformer tagControllerTransformer, string defaultTagName = "default")
         {
+            this.document = document;
             this.tagControllerTransformer = tagControllerTransformer;
             this.defaultTagName = defaultTagName;
         }
 
-        public IEnumerable<SourceEntry> ToSourceEntries(OpenApiDocument document, OpenApiTransformDiagnostic diagnostic)
+        public IEnumerable<SourceEntry> GetSources(OpenApiTransformDiagnostic diagnostic)
         {
             var controllers = from path in document.Paths
                               from operation in path.Value.Operations

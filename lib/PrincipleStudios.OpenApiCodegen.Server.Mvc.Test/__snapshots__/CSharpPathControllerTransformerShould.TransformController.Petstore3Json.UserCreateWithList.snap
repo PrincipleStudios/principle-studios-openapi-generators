@@ -26,11 +26,11 @@ namespace PrincipleStudios.Test
         // successful operation
         [global::Microsoft.AspNetCore.Mvc.ProducesDefaultResponseType()] // 
         public async global::System.Threading.Tasks.Task<global::Microsoft.AspNetCore.Mvc.IActionResult> CreateUsersWithListInput(
-            [global::Microsoft.AspNetCore.Mvc.FromBody, global::System.ComponentModel.DataAnnotations.Required] global::System.Collections.Generic.IEnumerable<_User> createUsersWithListInputBody
+            [global::Microsoft.AspNetCore.Mvc.FromBody, global::System.ComponentModel.DataAnnotations.Required] global::System.Collections.Generic.IEnumerable<User> createUsersWithListInputBody
         ) => (await CreateUsersWithListInputTypeSafe(createUsersWithListInputBody)).ActionResult;
 
         protected abstract global::System.Threading.Tasks.Task<TypeSafeCreateUsersWithListInputResult> CreateUsersWithListInputTypeSafe(
-            global::System.Collections.Generic.IEnumerable<_User> createUsersWithListInputBody);
+            global::System.Collections.Generic.IEnumerable<User> createUsersWithListInputBody);
 
         public readonly struct TypeSafeCreateUsersWithListInputResult
         {

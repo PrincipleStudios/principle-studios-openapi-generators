@@ -26,7 +26,7 @@ namespace PrincipleStudios.Test
             [global::Newtonsoft.Json.JsonProperty(PropertyName="petId")] long? PetId, 
             [global::Newtonsoft.Json.JsonProperty(PropertyName="quantity")] int? Quantity, 
             [global::Newtonsoft.Json.JsonProperty(PropertyName="shipDate")] global::System.DateTimeOffset? ShipDate, 
-            [global::Newtonsoft.Json.JsonProperty(PropertyName="status")] string? Status, 
+            [global::Newtonsoft.Json.JsonProperty(PropertyName="status")] OrderStatus? Status, 
             [global::Newtonsoft.Json.JsonProperty(PropertyName="complete")] bool? Complete
         ) { 
             this.Id = Id;
@@ -65,7 +65,7 @@ namespace PrincipleStudios.Test
         /// Gets Status
         /// </summary>
         [global::Newtonsoft.Json.JsonProperty(PropertyName="status")]
-        public string? Status { get; }
+        public OrderStatus? Status { get; }
 
         /// <summary>
         /// Gets Complete

@@ -96,7 +96,7 @@ namespace PrincipleStudios.Test
             /// <summary>
             /// Invalid input
             /// </summary>
-            public static TypeSafeAddPetResult StatusCode405() =>
+            public static TypeSafeAddPetResult MethodNotAllowed() =>
                 new TypeSafeAddPetResult(405);
             
 
@@ -193,19 +193,19 @@ namespace PrincipleStudios.Test
             /// <summary>
             /// Invalid ID supplied
             /// </summary>
-            public static TypeSafeUpdatePetResult StatusCode400() =>
+            public static TypeSafeUpdatePetResult BadRequest() =>
                 new TypeSafeUpdatePetResult(400);
             
             /// <summary>
             /// Pet not found
             /// </summary>
-            public static TypeSafeUpdatePetResult StatusCode404() =>
+            public static TypeSafeUpdatePetResult NotFound() =>
                 new TypeSafeUpdatePetResult(404);
             
             /// <summary>
             /// Validation exception
             /// </summary>
-            public static TypeSafeUpdatePetResult StatusCode405() =>
+            public static TypeSafeUpdatePetResult MethodNotAllowed() =>
                 new TypeSafeUpdatePetResult(405);
             
 

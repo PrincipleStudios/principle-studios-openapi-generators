@@ -12,7 +12,7 @@ namespace PrincipleStudios.ServerInterfacesExample.Controllers
             await Task.Yield();
             if (Data.pets.Remove(id, out var _))
             {
-                return TypeSafeDeletePetResult.StatusCode204();
+                return TypeSafeDeletePetResult.NoContent();
             }
             else
             {
@@ -25,7 +25,7 @@ namespace PrincipleStudios.ServerInterfacesExample.Controllers
             await Task.Yield();
             if (Data.pets.TryGetValue(id, out var tuple))
             {
-                return TypeSafeFindPetByIdResult.StatusCode200(new Pet(tuple.name, tuple.tag, id));
+                return TypeSafeFindPetByIdResult.Ok(new Pet(tuple.name, tuple.tag, id));
             }
             else
             {

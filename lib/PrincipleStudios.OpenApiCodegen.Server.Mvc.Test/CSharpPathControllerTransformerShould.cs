@@ -35,17 +35,19 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
             var document = GetDocument(documentName);
             var options = LoadOptions();
 
-            var target = ConstructTarget(document);
+            var target = ConstructTarget(document, options);
             OpenApiTransformDiagnostic diagnostic = new();
 
-            var result = target.TransformController(path, document.Paths[path], diagnostic);
+            var result = target.TransformController(document.Paths[path], OpenApiContext.From(document).Append(nameof(document.Paths), path, document.Paths[path]), diagnostic);
 
-            Snapshot.Match(result.SourceText, $"{nameof(CSharpPathControllerTransformerShould)}.{nameof(TransformController)}.{CSharpNaming.ToTitleCaseIdentifier(documentName, options.ReservedIdentifiers)}.{CSharpNaming.ToTitleCaseIdentifier(path, options.ReservedIdentifiers)}");
+            Snapshot.Match(result.SourceText, $"{nameof(CSharpPathControllerTransformerShould)}.{nameof(TransformController)}.{CSharpNaming.ToTitleCaseIdentifier(documentName, options.ReservedIdentifiers())}.{CSharpNaming.ToTitleCaseIdentifier(path, options.ReservedIdentifiers())}");
         }
 
-        private static IOpenApiPathControllerTransformer ConstructTarget(OpenApiDocument document, string baseNamespace = "PrincipleStudios.Test")
+        private static CSharpPathControllerTransformer ConstructTarget(OpenApiDocument document, CSharpSchemaOptions options, string baseNamespace = "PrincipleStudios.Test")
         {
-            return new CSharpPathControllerTransformer(document, baseNamespace, LoadOptions(), "");
+            var handlebarsFactory = new HandlebarsFactory(ControllerHandlebarsTemplateProcess.CreateHandlebars);
+            var resolver = new CSharpSchemaSourceResolver("PS.Controller", options, handlebarsFactory, "");
+            return new CSharpPathControllerTransformer(resolver, document, baseNamespace, options, "", handlebarsFactory);
         }
 
     }

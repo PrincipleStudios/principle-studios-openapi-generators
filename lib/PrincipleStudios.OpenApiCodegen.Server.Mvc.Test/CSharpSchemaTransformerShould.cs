@@ -22,7 +22,7 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
         {
             var document = GetDocument("petstore.yaml");
 
-            var target = ConstructTarget(document);
+            var target = ConstructTarget(document, LoadOptions());
 
             Assert.True(target.UseInline(document.Paths["/pets"].Operations[OperationType.Get].Parameters.Single(p => p.Name == "tags").Schema));
             Assert.True(target.UseInline(document.Paths["/pets"].Operations[OperationType.Get].Parameters.Single(p => p.Name == "limit").Schema));
@@ -54,17 +54,19 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
             var document = GetDocument(documentName);
             var options = LoadOptions();
 
-            var target = ConstructTarget(document);
+            var target = ConstructTarget(document, options);
             OpenApiTransformDiagnostic diagnostic = new();
 
-            var result = target.TransformSchema(document.Components.Schemas[model], diagnostic);
+            var context = OpenApiContext.From(document).Append(nameof(document.Components), null, document.Components).Append(nameof(document.Components.Schemas), model, document.Components.Schemas[model]);
 
-            Snapshot.Match(result.SourceText, $"Full-{nameof(TransformModel)}.{CSharpNaming.ToTitleCaseIdentifier(documentName, options.ReservedIdentifiers)}.{CSharpNaming.ToTitleCaseIdentifier(model, options.ReservedIdentifiers)}");
+            var result = target.TransformSchema(document.Components.Schemas[model], context, diagnostic);
+
+            Snapshot.Match(result?.SourceText, $"Full-{nameof(TransformModel)}.{CSharpNaming.ToTitleCaseIdentifier(documentName, options.ReservedIdentifiers())}.{CSharpNaming.ToTitleCaseIdentifier(model, options.ReservedIdentifiers())}");
         }
 
-        private static CSharpSchemaTransformer ConstructTarget(OpenApiDocument document, string baseNamespace = "PrincipleStudios.Test")
+        private static CSharpSchemaSourceResolver ConstructTarget(OpenApiDocument document, CSharpSchemaOptions options, string baseNamespace = "PrincipleStudios.Test")
         {
-            return new CSharpSchemaTransformer(document, baseNamespace, LoadOptions(), HandlebarsTemplateProcess.CreateHandlebars, "");
+            return new CSharpSchemaSourceResolver(baseNamespace, options, new HandlebarsFactory(HandlebarsTemplateProcess.CreateHandlebars), "");
         }
 
     }

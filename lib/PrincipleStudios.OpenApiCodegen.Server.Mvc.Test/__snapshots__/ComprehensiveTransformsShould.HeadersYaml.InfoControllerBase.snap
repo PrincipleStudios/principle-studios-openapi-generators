@@ -78,7 +78,7 @@ namespace PS.Controller
             /// <summary>
             /// Sample Response
             /// </summary>
-            public static TypeSafeGetInfoResult StatusCode200(global::System.Collections.Generic.Dictionary<string, string> result,
+            public static TypeSafeGetInfoResult Ok(global::System.Collections.Generic.Dictionary<string, string> result,
                 string headerXData) =>
                 new TypeSafeGetInfoResult(200, "application/json", typeof(global::System.Collections.Generic.Dictionary<string, string>), result,
                     new global::System.Collections.Generic.KeyValuePair<string, string>("X-Data", headerXData));
@@ -86,7 +86,7 @@ namespace PS.Controller
             /// <summary>
             /// Sample Response
             /// </summary>
-            public static TypeSafeGetInfoResult StatusCode204(string headerXData) =>
+            public static TypeSafeGetInfoResult NoContent(string headerXData) =>
                 new TypeSafeGetInfoResult(204,
                     new global::System.Collections.Generic.KeyValuePair<string, string>("X-Data", headerXData));
             
