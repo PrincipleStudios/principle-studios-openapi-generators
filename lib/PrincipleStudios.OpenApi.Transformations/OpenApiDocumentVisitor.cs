@@ -130,7 +130,7 @@ namespace PrincipleStudios.OpenApi.Transformations
         }
         public virtual void Visit(OpenApiSchema schema, OpenApiContext context, TArgument argument)
         {
-            if (context.Any(e => e.Element == schema))
+            if (context.Take(context.Entries.Count - 1).Any(e => e.Element == schema))
             {
                 DetectedLoop(schema);
                 return;
@@ -209,5 +209,6 @@ namespace PrincipleStudios.OpenApi.Transformations
             throw new NotSupportedException();
         }
 
+        public void Visit(OpenApiContact contact, OpenApiContext context, TArgument? argument) { }
     }
 }

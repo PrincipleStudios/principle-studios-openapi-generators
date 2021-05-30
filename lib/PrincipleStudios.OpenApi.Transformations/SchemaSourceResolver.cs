@@ -6,7 +6,7 @@ using System.Text;
 
 namespace PrincipleStudios.OpenApi.Transformations
 {
-    public delegate void SchemaCallback(OpenApiSchema schema, OpenApiContext context, out bool shouldRecurse);
+    public delegate void SchemaCallback(OpenApiSchema schema, OpenApiContext context);
     public abstract class SchemaSourceResolver<TInlineDataType> : ISchemaSourceResolver<TInlineDataType>
     {
         public SchemaSourceResolver()
@@ -26,7 +26,7 @@ namespace PrincipleStudios.OpenApi.Transformations
         {
             context.AssertLast(schema);
 
-            EnsureRegistered(schema, context, diagnostic);
+            EnsureSchemasRegistered(schema, context, diagnostic);
 
             return referencedSchemas[schema].Inline;
         }
@@ -37,12 +37,11 @@ namespace PrincipleStudios.OpenApi.Transformations
 
         public IEnumerable<SourceEntry> GetSources(OpenApiTransformDiagnostic diagnostic) => referencedSchemas.Values.Where(sourceEntry => sourceEntry.SourceEntry != null).Select(sourceEntry => sourceEntry.SourceEntry!.Value);
 
-        public void EnsureRegistered(OpenApiSchema schema, OpenApiContext context, OpenApiTransformDiagnostic diagnostic)
+        public void EnsureSchemasRegistered(Microsoft.OpenApi.Interfaces.IOpenApiElement element, OpenApiContext context, OpenApiTransformDiagnostic diagnostic)
         {
             var newSchemas = new Dictionary<OpenApiSchema, List<OpenApiContext>>();
-            this.schemaVisitor.Visit(schema, context, (OpenApiSchema nestedSchema, OpenApiContext nestedContext, out bool shouldRecurse) =>
+            this.schemaVisitor.VisitAny(element, context, (nestedSchema, nestedContext) =>
             {
-                shouldRecurse = !(newSchemas.ContainsKey(nestedSchema) || referencedSchemas.ContainsKey(nestedSchema));
                 if (!newSchemas.ContainsKey(nestedSchema))
                     newSchemas.Add(nestedSchema, new());
                 newSchemas[nestedSchema].Add(nestedContext);
@@ -53,7 +52,7 @@ namespace PrincipleStudios.OpenApi.Transformations
                 if (s.Key.UnresolvedReference)
                 {
                     diagnostic.Errors.Add(new OpenApiTransformError(s.Value.First(), $"Unresolved external reference: {s.Key.Reference.Id} @ {s.Key.Reference.ExternalResource}"));
-                    referencedSchemas[schema] = new SchemaSourceEntry
+                    referencedSchemas[s.Key] = new SchemaSourceEntry
                     {
                         Inline = UnresolvedReferencePlaceholder(),
                         SourceEntry = null,
@@ -61,9 +60,11 @@ namespace PrincipleStudios.OpenApi.Transformations
                     continue;
                 }
 
-                referencedSchemas[schema] = ToInlineDataTypeWithReference(s.Key, s.Value.First() /* TODO - don't just use the first one?? */, diagnostic);
+                referencedSchemas[s.Key] = ToInlineDataTypeWithReference(s.Key, GetBestContext(s.Key, s.Value), diagnostic);
             }
         }
+
+        protected abstract OpenApiContext GetBestContext(OpenApiSchema key, IEnumerable<OpenApiContext> value);
 
         protected abstract TInlineDataType UnresolvedReferencePlaceholder();
 
@@ -78,9 +79,8 @@ namespace PrincipleStudios.OpenApi.Transformations
     {
         public override void Visit(OpenApiSchema schema, OpenApiContext context, SchemaCallback callback)
         {
-            callback(schema, context, out var shouldRecurse);
-            if (shouldRecurse)
-                base.Visit(schema, context, callback);
+            callback(schema, context);
+            base.Visit(schema, context, callback);
         }
     }
 }

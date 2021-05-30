@@ -42,6 +42,7 @@ namespace PrincipleStudios.OpenApi.Transformations
                 case OpenApiServerVariable serverVariable: visitor.Visit(serverVariable, context, argument); break;
                 case OpenApiTag tag: visitor.Visit(tag, context, argument); break;
                 case OpenApiXml xml: visitor.Visit(xml, context, argument); break;
+                case OpenApiContact contact: visitor.Visit(contact, context, argument); break;
                 case RuntimeExpressionAnyWrapper runtimeExpressionAnyWrapper: visitor.Visit(runtimeExpressionAnyWrapper, context, argument); break;
                 case Microsoft.OpenApi.Any.IOpenApiAny any when visitor is IOpenApiAnyVisitor<TArgument> anyVisitor: anyVisitor.VisitAny(any, context, argument); break;
                 default: visitor.VisitUnknown(openApiElement, context, argument); break;

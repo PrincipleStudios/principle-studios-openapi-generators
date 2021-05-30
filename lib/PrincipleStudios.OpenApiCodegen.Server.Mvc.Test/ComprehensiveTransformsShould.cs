@@ -20,8 +20,6 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
             var document = GetDocument(name);
             var options = LoadOptions();
 
-            var handlebarsFactory = new HandlebarsFactory(ControllerHandlebarsTemplateProcess.CreateHandlebars);
-            var resolver = new CSharpSchemaSourceResolver("PS.Controller", options, handlebarsFactory, "");
             var transformer = document.BuildCSharpPathControllerSourceProvider("", "PS.Controller", options);
             OpenApiTransformDiagnostic diagnostic = new();
 
@@ -41,8 +39,6 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
             var document = GetDocument(name);
             var options = LoadOptions();
 
-            var handlebarsFactory = new HandlebarsFactory(ControllerHandlebarsTemplateProcess.CreateHandlebars);
-            var resolver = new CSharpSchemaSourceResolver("PS.Controller", options, handlebarsFactory, "");
             var transformer = document.BuildCSharpPathControllerSourceProvider("", "PS.Controller", options);
             OpenApiTransformDiagnostic diagnostic = new();
 

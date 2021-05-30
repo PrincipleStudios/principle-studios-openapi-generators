@@ -41,7 +41,9 @@ namespace PrincipleStudios.OpenApi.Transformations
             {
                 try
                 {
-                    pathControllerTransformer.TransformController(pathItem, context, argument.Diagnostic);
+                    argument.RegisterSourceEntry(
+                        pathControllerTransformer.TransformController(pathItem, context, argument.Diagnostic)
+                    );
                 }
                 catch (Exception ex)
                 {

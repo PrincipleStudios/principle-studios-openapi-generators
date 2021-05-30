@@ -32,6 +32,8 @@ namespace PrincipleStudios.OpenApi.CSharp
 
         public SourceEntry TransformController(OpenApiPathItem pathItem, OpenApiContext context, OpenApiTransformDiagnostic diagnostic)
         {
+            csharpSchemaResolver.EnsureSchemasRegistered(document, OpenApiContext.From(document), diagnostic);
+
             var path = context.GetLastKeyFor(pathItem);
 
             var className = CSharpNaming.ToClassName(path + " controller base", options.ReservedIdentifiers);

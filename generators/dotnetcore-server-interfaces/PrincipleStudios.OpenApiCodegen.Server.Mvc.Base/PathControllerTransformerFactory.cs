@@ -13,9 +13,9 @@ namespace PrincipleStudios.OpenApi.CSharp
             var controllerTransformer = new CSharpPathControllerTransformer(schemaResolver, document, documentNamespace ?? "", options, versionInfo, handlebarsFactory);
 
             result = new CompositeOpenApiSourceProvider(
-                schemaResolver,
                 new PathControllerSourceTransformer(document, controllerTransformer),
-                new DotNetMvcAddServicesHelperTransformer(document, controllerTransformer)
+                new DotNetMvcAddServicesHelperTransformer(document, controllerTransformer),
+                schemaResolver
             );
             return result;
         }

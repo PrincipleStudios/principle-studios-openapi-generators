@@ -27,7 +27,7 @@ namespace PrincipleStudios.Test
             [global::Newtonsoft.Json.JsonProperty(PropertyName="name"), global::System.ComponentModel.DataAnnotations.Required] string Name, 
             [global::Newtonsoft.Json.JsonProperty(PropertyName="photoUrls"), global::System.ComponentModel.DataAnnotations.Required] global::System.Collections.Generic.IEnumerable<string> PhotoUrls, 
             [global::Newtonsoft.Json.JsonProperty(PropertyName="tags")] global::System.Collections.Generic.IEnumerable<Tag>? Tags, 
-            [global::Newtonsoft.Json.JsonProperty(PropertyName="status")] string? Status
+            [global::Newtonsoft.Json.JsonProperty(PropertyName="status")] PetStatus? Status
         ) { 
             this.Id = Id;
             this.Category = Category;
@@ -73,7 +73,7 @@ namespace PrincipleStudios.Test
         /// Gets Status
         /// </summary>
         [global::Newtonsoft.Json.JsonProperty(PropertyName="status")]
-        public string? Status { get; }
+        public PetStatus? Status { get; }
 
         public override bool Equals(object obj)
         {

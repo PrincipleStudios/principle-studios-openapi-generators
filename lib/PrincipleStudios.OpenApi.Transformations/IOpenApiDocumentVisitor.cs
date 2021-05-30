@@ -35,6 +35,7 @@ namespace PrincipleStudios.OpenApi.Transformations
         void Visit(OpenApiTag tag, OpenApiContext context, TArgument argument);
         void Visit(OpenApiXml xml, OpenApiContext context, TArgument argument);
         void Visit(RuntimeExpressionAnyWrapper runtimeExpressionAnyWrapper, OpenApiContext context, TArgument argument);
+        void Visit(OpenApiContact contact, OpenApiContext context, TArgument? argument);
         void VisitAny(IOpenApiElement openApiElement, OpenApiContext context, TArgument argument);
         void VisitUnknown(IOpenApiElement openApiElement, OpenApiContext context, TArgument argument);
     }

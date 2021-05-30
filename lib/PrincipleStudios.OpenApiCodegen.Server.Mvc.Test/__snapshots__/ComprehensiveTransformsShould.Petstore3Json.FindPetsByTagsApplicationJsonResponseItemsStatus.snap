@@ -16,7 +16,7 @@ namespace PS.Controller
     /// pet status in the store
     /// </summary>
     [global::Newtonsoft.Json.Converters.JsonConverter(typeof(global::Newtonsoft.Json.Converters.StringEnumConverter))]
-    public enum PetStatus
+    public enum FindPetsByTagsApplicationJsonResponseItemsStatus
     {
         /// <summary>
         /// Enum Available for available
