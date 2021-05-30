@@ -8,6 +8,9 @@
     <AvailableItemName Include="OpenApiSchemaCSharpOptions" DisplayName="C# Options for Open API Code Generation (OpenApiCodeGen)" />
     <AvailableItemName Include="OpenApiSchemaMvcServer" DisplayName="Open API Schema MVC Server (OpenApiCodeGen)" />
     <Watch Include="@(OpenApiSchemaMvcServer);@(OpenApiSchemaCSharpOptions)" Condition=" '@(OpenApiSchemaMvcServer)' != '' " />
+
+    <PSOpenApiControllerGeneratorInputs Include="$(MSBuildProjectFile)" Visible="false" />
+    <PSOpenApiControllerGeneratorInputs Include="$(MSBuildThisFileDirectory)**/*" Visible="false" />
   </ItemGroup>
 
   <Target Name="CompileServerOpenApiCodeGen" BeforeTargets="GenerateMSBuildEditorConfigFileShouldRun" DependsOnTargets="_CompileServerOpenApiCodeGen" Condition=" '@(OpenApiSchemaMvcServer)' != '' ">
@@ -32,12 +35,16 @@
   </Target>
 
   <Target Name="CleanServerOpenApiCodeGen" BeforeTargets="Clean" DependsOnTargets="_UpdateServerOpenApiCodeGenMetatdata">
-    <Delete Files="@(OpenApiSchemaMvcServer -> '%(OutputPath)/**/*')" ContinueOnError="true" />
+    <ItemGroup>
+      <CleanServerOpenApiCodeGen Include="%(OpenApiSchemaMvcServer.OutputPath)/**/*" />
+    </ItemGroup>
+
+    <Delete Files="@(CleanServerOpenApiCodeGen)" ContinueOnError="true" />
   </Target>
 
   <Target Name="_CompileServerOpenApiCodeGen"
           DependsOnTargets="_UpdateServerOpenApiCodeGenMetatdata"
-          Inputs="$(MSBuildThisFileFullPath);$(MSBuildProjectFile);@(OpenApiSchemaMvcServer);@(OpenApiSchemaCSharpOptions)"
+          Inputs="@(PSOpenApiControllerGeneratorInputs);@(OpenApiSchemaMvcServer);@(OpenApiSchemaCSharpOptions)"
           Outputs="@(OpenApiSchemaMvcServer -> '%(OutputPath)/_._')"
           >
     <MvcServerCodegenTask OutputPath="$(MSBuildProjectDirectory)/%(OpenApiSchemaMvcServer.OutputPath)"
