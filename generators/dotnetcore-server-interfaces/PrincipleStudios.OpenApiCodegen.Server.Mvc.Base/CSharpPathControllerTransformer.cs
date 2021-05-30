@@ -35,6 +35,8 @@ namespace PrincipleStudios.OpenApi.CSharp
             csharpSchemaResolver.EnsureSchemasRegistered(document, OpenApiContext.From(document), diagnostic);
 
             var path = context.GetLastKeyFor(pathItem);
+            if (path == null)
+                throw new ArgumentException("Expected path from the context", nameof(context));
 
             var className = CSharpNaming.ToClassName(path + " controller base", options.ReservedIdentifiers());
 
