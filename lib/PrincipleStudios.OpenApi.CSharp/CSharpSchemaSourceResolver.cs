@@ -259,13 +259,14 @@ namespace PrincipleStudios.OpenApi.CSharp
         protected override InlineDataType GetInlineDataType(OpenApiSchema schema, IEnumerable<OpenApiContext> allContexts, OpenApiTransformDiagnostic diagnostic)
         {
             var inline = CreateInlineDataType(schema, GetBestContext(allContexts), diagnostic);
-            if (inline.text == "FindPetsByTagsApplicationJsonResponseItemStatus" && System.Diagnostics.Debugger.IsAttached)
-                System.Diagnostics.Debugger.Break();
             return inline;
         }
 
         protected override SourceEntry? GetSourceEntry(OpenApiSchema schema, IEnumerable<OpenApiContext> allContexts, OpenApiTransformDiagnostic diagnostic)
         {
+            var bestContext = GetBestContext(allContexts);
+            if (bestContext.Any(c => c.Property is "AllOf"))
+                return null;
             return !UseInline(schema)
                     ? TransformSchema(schema, GetBestContext(allContexts), diagnostic)
                     : null;
@@ -297,11 +298,9 @@ namespace PrincipleStudios.OpenApi.CSharp
             return new InlineDataType("object", false, false);
         }
 
-        protected virtual OpenApiContext GetBestContext(IEnumerable<OpenApiContext> value)
+        protected virtual OpenApiContext GetBestContext(IEnumerable<OpenApiContext> allContexts)
         {
-            return (from context in value
-                    orderby CSharpNaming.ToClassName(ContextToIdentifier(context), options.ReservedIdentifiers).Length
-                    select context).First();
+            return allContexts.OrderBy(c => c.Entries.Count).First();
         }
     }
 }

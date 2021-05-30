@@ -125,6 +125,8 @@ namespace PrincipleStudios.OpenApi.CSharp
             public override void Visit(OpenApiOperation operation, OpenApiContext context, Argument argument)
             {
                 var httpMethod = context.GetLastKeyFor(operation);
+                if (httpMethod == null)
+                    throw new ArgumentException("Expected HTTP method from context", nameof(context));
 
                 var builder = new OperationBuilder(operation);
 
