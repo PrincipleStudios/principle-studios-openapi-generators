@@ -84,25 +84,25 @@ namespace PS.Controller
             /// <summary>
             /// successful operation
             /// </summary>
-            public static TypeSafeGetOrderByIdResult ApplicationXmlStatusCode200(Order result) =>
+            public static TypeSafeGetOrderByIdResult ApplicationXmlOk(Order result) =>
                 new TypeSafeGetOrderByIdResult(200, "application/xml", typeof(Order), result);
             
             /// <summary>
             /// successful operation
             /// </summary>
-            public static TypeSafeGetOrderByIdResult ApplicationJsonStatusCode200(Order result) =>
+            public static TypeSafeGetOrderByIdResult ApplicationJsonOk(Order result) =>
                 new TypeSafeGetOrderByIdResult(200, "application/json", typeof(Order), result);
             
             /// <summary>
             /// Invalid ID supplied
             /// </summary>
-            public static TypeSafeGetOrderByIdResult StatusCode400() =>
+            public static TypeSafeGetOrderByIdResult _BadRequest() =>
                 new TypeSafeGetOrderByIdResult(400);
             
             /// <summary>
             /// Order not found
             /// </summary>
-            public static TypeSafeGetOrderByIdResult StatusCode404() =>
+            public static TypeSafeGetOrderByIdResult _NotFound() =>
                 new TypeSafeGetOrderByIdResult(404);
             
 
@@ -177,13 +177,13 @@ namespace PS.Controller
             /// <summary>
             /// Invalid ID supplied
             /// </summary>
-            public static TypeSafeDeleteOrderResult StatusCode400() =>
+            public static TypeSafeDeleteOrderResult _BadRequest() =>
                 new TypeSafeDeleteOrderResult(400);
             
             /// <summary>
             /// Order not found
             /// </summary>
-            public static TypeSafeDeleteOrderResult StatusCode404() =>
+            public static TypeSafeDeleteOrderResult _NotFound() =>
                 new TypeSafeDeleteOrderResult(404);
             
 

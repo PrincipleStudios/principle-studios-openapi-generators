@@ -79,7 +79,7 @@ namespace PrincipleStudios.Test
             /// <summary>
             /// successful operation
             /// </summary>
-            public static TypeSafeGetInventoryResult StatusCode200(global::System.Collections.Generic.Dictionary<string, int> result) =>
+            public static TypeSafeGetInventoryResult _Ok(global::System.Collections.Generic.Dictionary<string, int> result) =>
                 new TypeSafeGetInventoryResult(200, "application/json", typeof(global::System.Collections.Generic.Dictionary<string, int>), result);
             
 

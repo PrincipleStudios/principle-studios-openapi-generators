@@ -82,7 +82,7 @@ namespace PrincipleStudios.Test
             /// <summary>
             /// successful operation
             /// </summary>
-            public static TypeSafeLoginUserResult ApplicationXmlStatusCode200(string result,
+            public static TypeSafeLoginUserResult ApplicationXmlOk(string result,
                 string headerXRateLimit,
                 string headerXExpiresAfter) =>
                 new TypeSafeLoginUserResult(200, "application/xml", typeof(string), result,
@@ -92,7 +92,7 @@ namespace PrincipleStudios.Test
             /// <summary>
             /// successful operation
             /// </summary>
-            public static TypeSafeLoginUserResult ApplicationJsonStatusCode200(string result,
+            public static TypeSafeLoginUserResult ApplicationJsonOk(string result,
                 string headerXRateLimit,
                 string headerXExpiresAfter) =>
                 new TypeSafeLoginUserResult(200, "application/json", typeof(string), result,
@@ -102,7 +102,7 @@ namespace PrincipleStudios.Test
             /// <summary>
             /// Invalid username/password supplied
             /// </summary>
-            public static TypeSafeLoginUserResult StatusCode400() =>
+            public static TypeSafeLoginUserResult _BadRequest() =>
                 new TypeSafeLoginUserResult(400);
             
 

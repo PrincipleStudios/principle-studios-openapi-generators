@@ -74,7 +74,7 @@ namespace PS.Controller
             }
             
             
-            public static TypeSafeGetPhotoResult StatusCode200(global::System.IO.Stream result) =>
+            public static TypeSafeGetPhotoResult _Ok(global::System.IO.Stream result) =>
                 new TypeSafeGetPhotoResult(200, "application/octet-stream", typeof(global::System.IO.Stream), result);
             
             

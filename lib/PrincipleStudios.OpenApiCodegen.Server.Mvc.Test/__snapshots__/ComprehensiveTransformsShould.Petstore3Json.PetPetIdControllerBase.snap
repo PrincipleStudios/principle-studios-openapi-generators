@@ -85,25 +85,25 @@ namespace PS.Controller
             /// <summary>
             /// successful operation
             /// </summary>
-            public static TypeSafeGetPetByIdResult ApplicationXmlStatusCode200(Pet result) =>
+            public static TypeSafeGetPetByIdResult ApplicationXmlOk(Pet result) =>
                 new TypeSafeGetPetByIdResult(200, "application/xml", typeof(Pet), result);
             
             /// <summary>
             /// successful operation
             /// </summary>
-            public static TypeSafeGetPetByIdResult ApplicationJsonStatusCode200(Pet result) =>
+            public static TypeSafeGetPetByIdResult ApplicationJsonOk(Pet result) =>
                 new TypeSafeGetPetByIdResult(200, "application/json", typeof(Pet), result);
             
             /// <summary>
             /// Invalid ID supplied
             /// </summary>
-            public static TypeSafeGetPetByIdResult StatusCode400() =>
+            public static TypeSafeGetPetByIdResult _BadRequest() =>
                 new TypeSafeGetPetByIdResult(400);
             
             /// <summary>
             /// Pet not found
             /// </summary>
-            public static TypeSafeGetPetByIdResult StatusCode404() =>
+            public static TypeSafeGetPetByIdResult _NotFound() =>
                 new TypeSafeGetPetByIdResult(404);
             
 
@@ -181,7 +181,7 @@ namespace PS.Controller
             /// <summary>
             /// Invalid input
             /// </summary>
-            public static TypeSafeUpdatePetWithFormResult StatusCode405() =>
+            public static TypeSafeUpdatePetWithFormResult MethodNotAllowed() =>
                 new TypeSafeUpdatePetWithFormResult(405);
             
 
@@ -257,13 +257,13 @@ namespace PS.Controller
             /// <summary>
             /// Invalid ID supplied
             /// </summary>
-            public static TypeSafeDeletePetResult StatusCode400() =>
+            public static TypeSafeDeletePetResult _BadRequest() =>
                 new TypeSafeDeletePetResult(400);
             
             /// <summary>
             /// Pet not found
             /// </summary>
-            public static TypeSafeDeletePetResult StatusCode404() =>
+            public static TypeSafeDeletePetResult _NotFound() =>
                 new TypeSafeDeletePetResult(404);
             
 

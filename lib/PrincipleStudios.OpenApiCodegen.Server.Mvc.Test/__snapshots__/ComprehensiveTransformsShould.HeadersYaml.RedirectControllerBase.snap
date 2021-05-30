@@ -72,7 +72,7 @@ namespace PS.Controller
             /// <summary>
             /// Redirection Response
             /// </summary>
-            public static TypeSafe_RedirectResult StatusCode302(string headerLocation) =>
+            public static TypeSafe_RedirectResult _Redirect(string headerLocation) =>
                 new TypeSafe_RedirectResult(302,
                     new global::System.Collections.Generic.KeyValuePair<string, string>("Location", headerLocation));
             

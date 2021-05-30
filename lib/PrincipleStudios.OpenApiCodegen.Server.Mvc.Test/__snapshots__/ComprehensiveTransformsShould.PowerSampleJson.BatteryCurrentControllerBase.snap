@@ -79,13 +79,13 @@ namespace PS.Controller
             }
             
             
-            public static TypeSafeGetCurrentBatteryStateResult StatusCode200(CurrentBatteryState result) =>
+            public static TypeSafeGetCurrentBatteryStateResult _Ok(CurrentBatteryState result) =>
                 new TypeSafeGetCurrentBatteryStateResult(200, "application/json", typeof(CurrentBatteryState), result);
             
             /// <summary>
             /// Request range or house id not valid
             /// </summary>
-            public static TypeSafeGetCurrentBatteryStateResult StatusCode400() =>
+            public static TypeSafeGetCurrentBatteryStateResult _BadRequest() =>
                 new TypeSafeGetCurrentBatteryStateResult(400);
             
 

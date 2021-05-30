@@ -83,19 +83,19 @@ namespace PrincipleStudios.Test
             /// <summary>
             /// successful operation
             /// </summary>
-            public static TypeSafeFindPetsByTagsResult ApplicationXmlStatusCode200(global::System.Collections.Generic.IEnumerable<Pet> result) =>
+            public static TypeSafeFindPetsByTagsResult ApplicationXmlOk(global::System.Collections.Generic.IEnumerable<Pet> result) =>
                 new TypeSafeFindPetsByTagsResult(200, "application/xml", typeof(global::System.Collections.Generic.IEnumerable<Pet>), result);
             
             /// <summary>
             /// successful operation
             /// </summary>
-            public static TypeSafeFindPetsByTagsResult ApplicationJsonStatusCode200(global::System.Collections.Generic.IEnumerable<Pet> result) =>
+            public static TypeSafeFindPetsByTagsResult ApplicationJsonOk(global::System.Collections.Generic.IEnumerable<Pet> result) =>
                 new TypeSafeFindPetsByTagsResult(200, "application/json", typeof(global::System.Collections.Generic.IEnumerable<Pet>), result);
             
             /// <summary>
             /// Invalid tag value
             /// </summary>
-            public static TypeSafeFindPetsByTagsResult StatusCode400() =>
+            public static TypeSafeFindPetsByTagsResult _BadRequest() =>
                 new TypeSafeFindPetsByTagsResult(400);
             
 

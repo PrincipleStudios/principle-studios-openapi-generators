@@ -185,7 +185,13 @@ namespace PrincipleStudios.OpenApi.CSharp
                               let dataType = entry.Value.Schema != null ? csharpSchemaResolver.ToInlineDataType(entry.Value.Schema, entryContext.Append(nameof(entry.Value.Schema), null, entry.Value.Schema), argument.Diagnostic)() : null
                               select new OperationResponseContentOption(
                                   mediaType: entry.Key,
-                                  responseMethodName: CSharpNaming.ToTitleCaseIdentifier($"{(response.Content.Count > 1 ? entry.Key : "")} {(statusCode == null ? "other status code" : $"status code {statusCode}")}", options.ReservedIdentifiers),
+                                  responseMethodName: CSharpNaming.ToTitleCaseIdentifier(string.Join(" ", new[]
+                                  {
+                                      response.Content.Count > 1 ? entry.Key : "",
+                                      statusCode == null ? "other status code"
+                                      : ((System.Net.HttpStatusCode)statusCode).ToString("g") is string namedStatusCode && namedStatusCode != responseKey ? namedStatusCode
+                                      : $"status code {statusCode}"
+                                  }), options.ReservedIdentifiers),
                                   dataType: dataType?.text
                               )).ToArray(),
                     headers: (from entry in response.Headers
