@@ -96,13 +96,13 @@ namespace PrincipleStudios.Test
             /// <summary>
             /// Invalid ID supplied
             /// </summary>
-            public static TypeSafeGetOrderByIdResult _BadRequest() =>
+            public static TypeSafeGetOrderByIdResult BadRequest() =>
                 new TypeSafeGetOrderByIdResult(400);
             
             /// <summary>
             /// Order not found
             /// </summary>
-            public static TypeSafeGetOrderByIdResult _NotFound() =>
+            public static TypeSafeGetOrderByIdResult NotFound() =>
                 new TypeSafeGetOrderByIdResult(404);
             
 
@@ -177,13 +177,13 @@ namespace PrincipleStudios.Test
             /// <summary>
             /// Invalid ID supplied
             /// </summary>
-            public static TypeSafeDeleteOrderResult _BadRequest() =>
+            public static TypeSafeDeleteOrderResult BadRequest() =>
                 new TypeSafeDeleteOrderResult(400);
             
             /// <summary>
             /// Order not found
             /// </summary>
-            public static TypeSafeDeleteOrderResult _NotFound() =>
+            public static TypeSafeDeleteOrderResult NotFound() =>
                 new TypeSafeDeleteOrderResult(404);
             
 

@@ -193,13 +193,13 @@ namespace PS.Controller
             /// <summary>
             /// Invalid ID supplied
             /// </summary>
-            public static TypeSafeUpdatePetResult _BadRequest() =>
+            public static TypeSafeUpdatePetResult BadRequest() =>
                 new TypeSafeUpdatePetResult(400);
             
             /// <summary>
             /// Pet not found
             /// </summary>
-            public static TypeSafeUpdatePetResult _NotFound() =>
+            public static TypeSafeUpdatePetResult NotFound() =>
                 new TypeSafeUpdatePetResult(404);
             
             /// <summary>

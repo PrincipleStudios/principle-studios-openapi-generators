@@ -86,7 +86,7 @@ namespace PS.Controller
             /// <summary>
             /// pet response
             /// </summary>
-            public static TypeSafeFindPetsResult _Ok(global::System.Collections.Generic.IEnumerable<Pet> result) =>
+            public static TypeSafeFindPetsResult Ok(global::System.Collections.Generic.IEnumerable<Pet> result) =>
                 new TypeSafeFindPetsResult(200, "application/json", typeof(global::System.Collections.Generic.IEnumerable<Pet>), result);
             
             
@@ -163,7 +163,7 @@ namespace PS.Controller
             /// <summary>
             /// pet response
             /// </summary>
-            public static TypeSafeAddPetResult _Ok(Pet result) =>
+            public static TypeSafeAddPetResult Ok(Pet result) =>
                 new TypeSafeAddPetResult(200, "application/json", typeof(Pet), result);
             
             

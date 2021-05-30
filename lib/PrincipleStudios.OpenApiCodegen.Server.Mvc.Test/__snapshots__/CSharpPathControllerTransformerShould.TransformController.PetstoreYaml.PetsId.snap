@@ -79,7 +79,7 @@ namespace PrincipleStudios.Test
             /// <summary>
             /// pet response
             /// </summary>
-            public static TypeSafeFindPetByIdResult _Ok(Pet result) =>
+            public static TypeSafeFindPetByIdResult Ok(Pet result) =>
                 new TypeSafeFindPetByIdResult(200, "application/json", typeof(Pet), result);
             
             
@@ -155,7 +155,7 @@ namespace PrincipleStudios.Test
             /// <summary>
             /// pet deleted
             /// </summary>
-            public static TypeSafeDeletePetResult _NoContent() =>
+            public static TypeSafeDeletePetResult NoContent() =>
                 new TypeSafeDeletePetResult(204);
             
             

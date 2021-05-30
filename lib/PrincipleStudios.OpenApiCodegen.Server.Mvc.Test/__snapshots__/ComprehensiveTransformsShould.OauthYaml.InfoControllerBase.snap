@@ -76,7 +76,7 @@ namespace PS.Controller
             /// <summary>
             /// Sample Response
             /// </summary>
-            public static TypeSafeGetInfoResult _Ok(string result) =>
+            public static TypeSafeGetInfoResult Ok(string result) =>
                 new TypeSafeGetInfoResult(200, "application/json", typeof(string), result);
             
 

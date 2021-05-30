@@ -95,7 +95,7 @@ namespace PrincipleStudios.Test
             /// <summary>
             /// Invalid tag value
             /// </summary>
-            public static TypeSafeFindPetsByTagsResult _BadRequest() =>
+            public static TypeSafeFindPetsByTagsResult BadRequest() =>
                 new TypeSafeFindPetsByTagsResult(400);
             
 

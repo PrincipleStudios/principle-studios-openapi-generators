@@ -77,11 +77,11 @@ namespace PS.Controller
             }
             
             
-            public static TypeSafeLookupRecordResult _Ok(LookupRecordResponse result) =>
+            public static TypeSafeLookupRecordResult Ok(LookupRecordResponse result) =>
                 new TypeSafeLookupRecordResult(200, "application/json", typeof(LookupRecordResponse), result);
             
             
-            public static TypeSafeLookupRecordResult _Conflict(LookupRecordConflictResponse result) =>
+            public static TypeSafeLookupRecordResult Conflict(LookupRecordConflictResponse result) =>
                 new TypeSafeLookupRecordResult(409, "application/json", typeof(LookupRecordConflictResponse), result);
             
             

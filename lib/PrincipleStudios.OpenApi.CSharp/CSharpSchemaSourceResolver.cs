@@ -72,14 +72,14 @@ namespace PrincipleStudios.OpenApi.CSharp
 
         public string UseReferenceName(OpenApiSchema schema)
         {
-            return CSharpNaming.ToClassName(schema.Reference.Id, options.ReservedIdentifiers);
+            return CSharpNaming.ToClassName(schema.Reference.Id, options.ReservedIdentifiers());
         }
 
         public SourceEntry? TransformSchema(OpenApiSchema schema, OpenApiContext context, OpenApiTransformDiagnostic diagnostic)
         {
             var targetNamespace = baseNamespace;
             var info = context.Select(v => v.Element).OfType<OpenApiDocument>().Last().Info;
-            var className = CSharpNaming.ToClassName(schema.Reference?.Id ?? ContextToIdentifier(context), options.ReservedIdentifiers);
+            var className = CSharpNaming.ToClassName(schema.Reference?.Id ?? ContextToIdentifier(context), options.ReservedIdentifiers());
 
             var header = new templates.PartialHeader(
                 appName: info.Title,
@@ -112,8 +112,8 @@ namespace PrincipleStudios.OpenApi.CSharp
             };
         }
 
-        private readonly Regex _2xxRegex = new Regex("2[0-9]{2}");
-        private string ContextToIdentifier(OpenApiContext context)
+        protected readonly Regex _2xxRegex = new Regex("2[0-9]{2}");
+        protected virtual string ContextToIdentifier(OpenApiContext context)
         {
             var (parts, remaining) = Simplify(context.Entries);
             while (remaining.Length > 0)
@@ -211,7 +211,7 @@ namespace PrincipleStudios.OpenApi.CSharp
                             dataType: dataType().text,
                             nullable: dataType().nullable,
                             isContainer: dataType().isEnumerable,
-                            name: CSharpNaming.ToPropertyName(entry.Key, options.ReservedIdentifiers),
+                            name: CSharpNaming.ToPropertyName(entry.Key, options.ReservedIdentifiers("object", className)),
                             required: req
                          ))).ToArray();
 
@@ -232,7 +232,7 @@ namespace PrincipleStudios.OpenApi.CSharp
                 enumVars: (from entry in schema.Enum
                            select entry switch
                            {
-                               Microsoft.OpenApi.Any.OpenApiPrimitive<string> { Value: string name } => new templates.EnumVar(CSharpNaming.ToPropertyName(name, options.ReservedIdentifiers), name),
+                               Microsoft.OpenApi.Any.OpenApiPrimitive<string> { Value: string name } => new templates.EnumVar(CSharpNaming.ToPropertyName(name, options.ReservedIdentifiers("enum", className)), name),
                                _ => throw new NotSupportedException()
                            }).ToArray()
             );
@@ -283,7 +283,7 @@ namespace PrincipleStudios.OpenApi.CSharp
                 { Type: "array", Items: OpenApiSchema items } =>
                     new(options.ToArrayType(ToInlineDataType(items, context.Append(nameof(schema.Items), null, items), diagnostic)().text), isEnumerable: true),
                 _ when !UseInline(schema) =>
-                    new(CSharpNaming.ToClassName(ContextToIdentifier(context), options.ReservedIdentifiers)),
+                    new(CSharpNaming.ToClassName(ContextToIdentifier(context), options.ReservedIdentifiers())),
                 { Type: string type, Format: var format } =>
                     new(options.Find(type, format)),
                 _ => throw new NotSupportedException("Unknown schema"),

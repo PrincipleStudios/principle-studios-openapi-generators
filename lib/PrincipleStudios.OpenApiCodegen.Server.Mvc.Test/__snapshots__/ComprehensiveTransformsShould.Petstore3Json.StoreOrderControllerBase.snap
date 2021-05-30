@@ -92,7 +92,7 @@ namespace PS.Controller
             /// <summary>
             /// Invalid Order
             /// </summary>
-            public static TypeSafePlaceOrderResult _BadRequest() =>
+            public static TypeSafePlaceOrderResult BadRequest() =>
                 new TypeSafePlaceOrderResult(400);
             
 

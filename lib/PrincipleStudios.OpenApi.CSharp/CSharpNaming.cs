@@ -9,16 +9,16 @@ namespace PrincipleStudios.OpenApi.CSharp
 {
     public static class CSharpNaming
     {
-        public static string ToClassName(string key, ICollection<string> reservedIdentifiers) => ToTitleCaseIdentifier(key, reservedIdentifiers);
-        public static string ToPropertyName(string key, ICollection<string> reservedIdentifiers) => ToTitleCaseIdentifier(key, reservedIdentifiers);
+        public static string ToClassName(string key, IEnumerable<string> reservedIdentifiers) => ToTitleCaseIdentifier(key, reservedIdentifiers);
+        public static string ToPropertyName(string key, IEnumerable<string> reservedIdentifiers) => ToTitleCaseIdentifier(key, reservedIdentifiers);
 
-        public static string ToTitleCaseIdentifier(string key, ICollection<string> reservedIdentifiers) => ToIdentifier(ToTitleCase(key), reservedIdentifiers);
-        public static string ToCamelCaseIdentifier(string key, ICollection<string> reservedIdentifiers) => ToIdentifier(ToCamelCase(key), reservedIdentifiers);
+        public static string ToTitleCaseIdentifier(string key, IEnumerable<string> reservedIdentifiers) => ToIdentifier(ToTitleCase(key), reservedIdentifiers);
+        public static string ToCamelCaseIdentifier(string key, IEnumerable<string> reservedIdentifiers) => ToIdentifier(ToCamelCase(key), reservedIdentifiers);
 
-        public static string ToMethodName(string key, ICollection<string> reservedIdentifiers) => ToTitleCaseIdentifier(key, reservedIdentifiers);
-        public static string ToParameterName(string key, ICollection<string> reservedIdentifiers) => ToCamelCaseIdentifier(key, reservedIdentifiers);
+        public static string ToMethodName(string key, IEnumerable<string> reservedIdentifiers) => ToTitleCaseIdentifier(key, reservedIdentifiers);
+        public static string ToParameterName(string key, IEnumerable<string> reservedIdentifiers) => ToCamelCaseIdentifier(key, reservedIdentifiers);
 
-        private static string ToIdentifier(string key, ICollection<string> reservedIdentifiers) =>
+        private static string ToIdentifier(string key, IEnumerable<string> reservedIdentifiers) =>
             Regex.IsMatch(key, "^[a-zA-Z]") && !reservedIdentifiers.Contains(key) ? key : ("_" + key);
 
         private static string ToTitleCase(string key) =>
@@ -35,7 +35,7 @@ namespace PrincipleStudios.OpenApi.CSharp
                 string s => char.ToLower(s[0]) + s.Substring(1)
             };
 
-        public static string? ToNamespace(string? rootNamespace, string? projectDir, string? identity, string? link, ICollection<string> reservedIdentifiers)
+        public static string? ToNamespace(string? rootNamespace, string? projectDir, string? identity, string? link, IEnumerable<string> reservedIdentifiers)
         {
             var prefix = rootNamespace is { Length: > 0 } ? Enumerable.Repeat(rootNamespace, 1) : Enumerable.Empty<string>();
             

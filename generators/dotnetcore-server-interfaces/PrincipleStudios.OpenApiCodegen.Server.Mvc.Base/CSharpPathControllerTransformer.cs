@@ -36,10 +36,10 @@ namespace PrincipleStudios.OpenApi.CSharp
 
             var path = context.GetLastKeyFor(pathItem);
 
-            var className = CSharpNaming.ToClassName(path + " controller base", options.ReservedIdentifiers);
+            var className = CSharpNaming.ToClassName(path + " controller base", options.ReservedIdentifiers());
 
             var operations = new List<ControllerOperation>();
-            var visitor = new ControllerOperationVisitor(csharpSchemaResolver, options);
+            var visitor = new ControllerOperationVisitor(csharpSchemaResolver, options, controllerClassName: className);
             visitor.Visit(pathItem, context, new ControllerOperationVisitor.Argument(path, diagnostic, operations.Add));
 
             var template = new templates.ControllerTemplate(
@@ -81,11 +81,11 @@ namespace PrincipleStudios.OpenApi.CSharp
                         infoEmail: document.Info.Contact?.Email,
                         codeGeneratorVersionInfo: versionInfo
                     ),
-                    methodName: CSharpNaming.ToMethodName(document.Info.Title, options.ReservedIdentifiers),
+                    methodName: CSharpNaming.ToMethodName(document.Info.Title, options.ReservedIdentifiers()),
                     packageName: baseNamespace,
                     controllers: (from p in paths
-                                  let genericTypeName = CSharpNaming.ToClassName($"T {p.Key} controller", options.ReservedIdentifiers)
-                                  let className = CSharpNaming.ToClassName(p.Key + " controller base", options.ReservedIdentifiers)
+                                  let genericTypeName = CSharpNaming.ToClassName($"T {p.Key} controller", options.ReservedIdentifiers())
+                                  let className = CSharpNaming.ToClassName(p.Key + " controller base", options.ReservedIdentifiers())
                                   select new templates.ControllerReference(genericTypeName, className)
                                   ).ToArray()
                 )),
@@ -96,6 +96,7 @@ namespace PrincipleStudios.OpenApi.CSharp
         {
             private readonly ISchemaSourceResolver<InlineDataType> csharpSchemaResolver;
             private readonly CSharpSchemaOptions options;
+            private readonly string controllerClassName;
 
             public record Argument(string Path, OpenApiTransformDiagnostic Diagnostic, RegisterControllerOperation RegisterControllerOperation, OperationBuilder? Builder = null);
             public delegate void RegisterControllerOperation(templates.ControllerOperation operation);
@@ -116,10 +117,11 @@ namespace PrincipleStudios.OpenApi.CSharp
                 public OpenApiOperation Operation { get; }
             }
 
-            public ControllerOperationVisitor(ISchemaSourceResolver<InlineDataType> csharpSchemaResolver, CSharpSchemaOptions options)
+            public ControllerOperationVisitor(ISchemaSourceResolver<InlineDataType> csharpSchemaResolver, CSharpSchemaOptions options, string controllerClassName)
             {
                 this.csharpSchemaResolver = csharpSchemaResolver;
                 this.options = options;
+                this.controllerClassName = controllerClassName;
             }
 
             public override void Visit(OpenApiOperation operation, OpenApiContext context, Argument argument)
@@ -138,7 +140,7 @@ namespace PrincipleStudios.OpenApi.CSharp
                      httpMethod: httpMethod,
                      summary: operation.Summary,
                      description: operation.Description,
-                     name: CSharpNaming.ToTitleCaseIdentifier(operation.OperationId, options.ReservedIdentifiers),
+                     name: CSharpNaming.ToTitleCaseIdentifier(operation.OperationId, options.ReservedIdentifiers("ControllerBase", controllerClassName)),
                      path: argument.Path,
                      requestBodies: builder.RequestBodies.DefaultIfEmpty(OperationRequestBodyFactory(operation.OperationId, null, Enumerable.Empty<OperationParameter>())).Select(transform => transform(sharedParameters)).ToArray(),
                      responses: new templates.OperationResponses(
@@ -155,7 +157,7 @@ namespace PrincipleStudios.OpenApi.CSharp
                 var dataType = param.Required ? dataTypeBase : dataTypeBase.MakeNullable();
                 argument.Builder?.SharedParameters.Add(new templates.OperationParameter(
                     rawName: param.Name,
-                    paramName: CSharpNaming.ToParameterName(param.Name, options.ReservedIdentifiers),
+                    paramName: CSharpNaming.ToParameterName(param.Name, options.ReservedIdentifiers()),
                     description: param.Description,
                     dataType: dataType.text,
                     dataTypeNullable: dataType.nullable,
@@ -177,6 +179,9 @@ namespace PrincipleStudios.OpenApi.CSharp
             {
                 var responseKey = context.GetLastKeyFor(response);
                 int? statusCode = int.TryParse(responseKey, out var s) ? s : null;
+                var statusCodeName = statusCode.HasValue ? ((System.Net.HttpStatusCode)statusCode).ToString("g") : "other status code";
+                if (statusCodeName == responseKey)
+                    statusCodeName = $"status code {statusCode}";
 
                 var result = new OperationResponse(
                     description: response.Description,
@@ -185,13 +190,7 @@ namespace PrincipleStudios.OpenApi.CSharp
                               let dataType = entry.Value.Schema != null ? csharpSchemaResolver.ToInlineDataType(entry.Value.Schema, entryContext.Append(nameof(entry.Value.Schema), null, entry.Value.Schema), argument.Diagnostic)() : null
                               select new OperationResponseContentOption(
                                   mediaType: entry.Key,
-                                  responseMethodName: CSharpNaming.ToTitleCaseIdentifier(string.Join(" ", new[]
-                                  {
-                                      response.Content.Count > 1 ? entry.Key : "",
-                                      statusCode == null ? "other status code"
-                                      : ((System.Net.HttpStatusCode)statusCode).ToString("g") is string namedStatusCode && namedStatusCode != responseKey ? namedStatusCode
-                                      : $"status code {statusCode}"
-                                  }), options.ReservedIdentifiers),
+                                  responseMethodName: CSharpNaming.ToTitleCaseIdentifier($"{(response.Content.Count > 1 ? entry.Key : "")} {statusCodeName}", options.ReservedIdentifiers()),
                                   dataType: dataType?.text
                               )).ToArray(),
                     headers: (from entry in response.Headers
@@ -201,7 +200,7 @@ namespace PrincipleStudios.OpenApi.CSharp
                               let dataType = required ? dataTypeBase : dataTypeBase.MakeNullable()
                               select new templates.OperationResponseHeader(
                                   rawName: entry.Key,
-                                  paramName: CSharpNaming.ToParameterName("header " + entry.Key, options.ReservedIdentifiers),
+                                  paramName: CSharpNaming.ToParameterName("header " + entry.Key, options.ReservedIdentifiers()),
                                   description: entry.Value.Description,
                                   dataType: dataType.text,
                                   dataTypeNullable: dataType.nullable,
@@ -242,7 +241,7 @@ namespace PrincipleStudios.OpenApi.CSharp
                     let dataType = required ? dataTypeBase : dataTypeBase.MakeNullable()
                     select new templates.OperationParameter(
                         rawName: param.Key,
-                        paramName: CSharpNaming.ToParameterName(param.Key, options.ReservedIdentifiers),
+                        paramName: CSharpNaming.ToParameterName(param.Key, options.ReservedIdentifiers()),
                         description: null,
                         dataType: dataType.text,
                         dataTypeNullable: dataType.nullable,
@@ -264,7 +263,7 @@ namespace PrincipleStudios.OpenApi.CSharp
                     let dataType = csharpSchemaResolver.ToInlineDataType(ct.Schema, context.Append(nameof(ct.Schema), null, ct.Schema), argument.Diagnostic)()
                     select new templates.OperationParameter(
                        rawName: null,
-                       paramName: CSharpNaming.ToParameterName(argument.Builder?.Operation.OperationId + " body", options.ReservedIdentifiers),
+                       paramName: CSharpNaming.ToParameterName(argument.Builder?.Operation.OperationId + " body", options.ReservedIdentifiers()),
                        description: null,
                        dataType: dataType.text,
                        dataTypeNullable: dataType.nullable,
@@ -286,7 +285,7 @@ namespace PrincipleStudios.OpenApi.CSharp
             private Func<OperationParameter[], OperationRequestBody> OperationRequestBodyFactory(string operationName, string? requestBodyMimeType, IEnumerable<OperationParameter> parameters)
             {
                 return sharedParams => new templates.OperationRequestBody(
-                     name: CSharpNaming.ToTitleCaseIdentifier(operationName, options.ReservedIdentifiers),
+                     name: CSharpNaming.ToTitleCaseIdentifier(operationName, options.ReservedIdentifiers()),
                      requestBodyType: requestBodyMimeType,
                      allParams: sharedParams.Concat(parameters)
                  );

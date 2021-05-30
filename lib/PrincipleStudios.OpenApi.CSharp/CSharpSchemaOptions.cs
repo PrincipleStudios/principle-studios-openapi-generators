@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace PrincipleStudios.OpenApi.CSharp
 {
     public class CSharpSchemaOptions
     {
-        public List<string> ReservedIdentifiers { get; set; } = new();
+        public List<string> GlobalReservedIdentifiers { get; set; } = new();
+        public Dictionary<string, List<string>> ContextualReservedIdentifiers { get; set; } = new();
         public string MapType { get; set; } = "global::System.Collections.Generic.Dictionary<string, {}>";
         public string ArrayType { get; set; } = "global::System.Collections.Generic.IEnumerable<{}>";
         public string FallbackType { get; set; } = "object";
@@ -32,6 +34,15 @@ namespace PrincipleStudios.OpenApi.CSharp
 
         public static System.IO.Stream GetDefaultOptionsJson() =>
             typeof(CSharpSchemaOptions).Assembly.GetManifestResourceStream($"{typeof(CSharpSchemaOptions).Namespace}.csharp.config.yaml");
+
+        public IEnumerable<string> ReservedIdentifiers(string? scope = null, params string[] extraReserved) => 
+            (
+                scope is not null && ContextualReservedIdentifiers.ContainsKey(scope) 
+                    ? GlobalReservedIdentifiers.Concat(ContextualReservedIdentifiers[scope]) 
+                    : GlobalReservedIdentifiers
+            ).Concat(
+                extraReserved
+            );
     }
 
     public class OpenApiTypeFormats

@@ -76,7 +76,7 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
             opt.TryGetValue("build_property.projectdir", out var projectDir);
             opt.TryGetValue("build_property.rootnamespace", out var rootNamespace);
 
-            return CSharpNaming.ToNamespace(rootNamespace, projectDir, identity, link, options.ReservedIdentifiers);
+            return CSharpNaming.ToNamespace(rootNamespace, projectDir, identity, link, options.ReservedIdentifiers());
         }
     }
 

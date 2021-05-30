@@ -95,7 +95,7 @@ namespace PrincipleStudios.Test
             /// <summary>
             /// Invalid status value
             /// </summary>
-            public static TypeSafeFindPetsByStatusResult _BadRequest() =>
+            public static TypeSafeFindPetsByStatusResult BadRequest() =>
                 new TypeSafeFindPetsByStatusResult(400);
             
 

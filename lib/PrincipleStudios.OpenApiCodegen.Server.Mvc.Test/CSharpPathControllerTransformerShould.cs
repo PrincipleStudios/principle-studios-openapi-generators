@@ -40,7 +40,7 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
 
             var result = target.TransformController(document.Paths[path], OpenApiContext.From(document).Append(nameof(document.Paths), path, document.Paths[path]), diagnostic);
 
-            Snapshot.Match(result.SourceText, $"{nameof(CSharpPathControllerTransformerShould)}.{nameof(TransformController)}.{CSharpNaming.ToTitleCaseIdentifier(documentName, options.ReservedIdentifiers)}.{CSharpNaming.ToTitleCaseIdentifier(path, options.ReservedIdentifiers)}");
+            Snapshot.Match(result.SourceText, $"{nameof(CSharpPathControllerTransformerShould)}.{nameof(TransformController)}.{CSharpNaming.ToTitleCaseIdentifier(documentName, options.ReservedIdentifiers())}.{CSharpNaming.ToTitleCaseIdentifier(path, options.ReservedIdentifiers())}");
         }
 
         private static CSharpPathControllerTransformer ConstructTarget(OpenApiDocument document, CSharpSchemaOptions options, string baseNamespace = "PrincipleStudios.Test")

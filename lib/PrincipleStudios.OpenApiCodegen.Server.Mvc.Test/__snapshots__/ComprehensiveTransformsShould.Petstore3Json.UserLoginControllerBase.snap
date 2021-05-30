@@ -102,7 +102,7 @@ namespace PS.Controller
             /// <summary>
             /// Invalid username/password supplied
             /// </summary>
-            public static TypeSafeLoginUserResult _BadRequest() =>
+            public static TypeSafeLoginUserResult BadRequest() =>
                 new TypeSafeLoginUserResult(400);
             
 

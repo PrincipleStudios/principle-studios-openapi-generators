@@ -97,13 +97,13 @@ namespace PS.Controller
             /// <summary>
             /// Invalid ID supplied
             /// </summary>
-            public static TypeSafeGetPetByIdResult _BadRequest() =>
+            public static TypeSafeGetPetByIdResult BadRequest() =>
                 new TypeSafeGetPetByIdResult(400);
             
             /// <summary>
             /// Pet not found
             /// </summary>
-            public static TypeSafeGetPetByIdResult _NotFound() =>
+            public static TypeSafeGetPetByIdResult NotFound() =>
                 new TypeSafeGetPetByIdResult(404);
             
 
@@ -257,13 +257,13 @@ namespace PS.Controller
             /// <summary>
             /// Invalid ID supplied
             /// </summary>
-            public static TypeSafeDeletePetResult _BadRequest() =>
+            public static TypeSafeDeletePetResult BadRequest() =>
                 new TypeSafeDeletePetResult(400);
             
             /// <summary>
             /// Pet not found
             /// </summary>
-            public static TypeSafeDeletePetResult _NotFound() =>
+            public static TypeSafeDeletePetResult NotFound() =>
                 new TypeSafeDeletePetResult(404);
             
 
