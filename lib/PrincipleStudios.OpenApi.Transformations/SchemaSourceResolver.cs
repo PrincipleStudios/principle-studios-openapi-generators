@@ -22,7 +22,7 @@ namespace PrincipleStudios.OpenApi.Transformations
         private readonly Dictionary<OpenApiSchema, SchemaSourceEntry> referencedSchemas = new Dictionary<OpenApiSchema, SchemaSourceEntry>();
         private readonly IOpenApiDocumentVisitor<SchemaCallback> schemaVisitor;
 
-        public TInlineDataType ToInlineDataType(OpenApiSchema schema, OpenApiContext context, OpenApiTransformDiagnostic diagnostic)
+        public InlineDataTypeResolver<TInlineDataType> ToInlineDataType(OpenApiSchema schema, OpenApiContext context, OpenApiTransformDiagnostic diagnostic)
         {
             context.AssertLast(schema);
 
@@ -31,11 +31,11 @@ namespace PrincipleStudios.OpenApi.Transformations
             return referencedSchemas[schema].Inline;
         }
 
-        protected IEnumerable<TInlineDataType> RegisteredInlineDataTypes => referencedSchemas.Values.Select(sourceEntry => sourceEntry.Inline);
-
-        protected abstract SchemaSourceResolver<TInlineDataType>.SchemaSourceEntry ToInlineDataTypeWithReference(OpenApiSchema schema, OpenApiContext context, OpenApiTransformDiagnostic diagnostic);
-
-        public IEnumerable<SourceEntry> GetSources(OpenApiTransformDiagnostic diagnostic) => referencedSchemas.Values.Where(sourceEntry => sourceEntry.SourceEntry != null).Select(sourceEntry => sourceEntry.SourceEntry!.Value);
+        public IEnumerable<SourceEntry> GetSources(OpenApiTransformDiagnostic diagnostic) => 
+            from entry in referencedSchemas.Values
+            let sourceEntry = entry.GetSourceEntry?.Invoke()
+            where sourceEntry != null
+            select sourceEntry.Value;
 
         public void EnsureSchemasRegistered(Microsoft.OpenApi.Interfaces.IOpenApiElement element, OpenApiContext context, OpenApiTransformDiagnostic diagnostic)
         {
@@ -49,29 +49,49 @@ namespace PrincipleStudios.OpenApi.Transformations
             
             foreach (var s in newSchemas)
             {
+                if (referencedSchemas.ContainsKey(s.Key))
+                {
+                    referencedSchemas[s.Key].AllContext.AddRange(s.Value);
+                    continue;
+                }
+
                 if (s.Key.UnresolvedReference)
                 {
                     diagnostic.Errors.Add(new OpenApiTransformError(s.Value.First(), $"Unresolved external reference: {s.Key.Reference.Id} @ {s.Key.Reference.ExternalResource}"));
                     referencedSchemas[s.Key] = new SchemaSourceEntry
                     {
-                        Inline = UnresolvedReferencePlaceholder(),
-                        SourceEntry = null,
+                        Schema = s.Key,
+                        Inline = UnresolvedReferencePlaceholder,
+                        AllContext = new List<OpenApiContext>(s.Value),
+                        GetSourceEntry = null,
                     };
                     continue;
                 }
 
-                referencedSchemas[s.Key] = ToInlineDataTypeWithReference(s.Key, GetBestContext(s.Key, s.Value), diagnostic);
+                var allContext = new List<OpenApiContext>(s.Value);
+                referencedSchemas[s.Key] = new SchemaSourceEntry
+                {
+                    Schema = s.Key,
+                    Inline = () => GetInlineDataType(s.Key, allContext, diagnostic),
+                    AllContext = allContext,
+                    GetSourceEntry = () => GetSourceEntry(s.Key, allContext, diagnostic),
+                };
             }
         }
 
-        protected abstract OpenApiContext GetBestContext(OpenApiSchema key, IEnumerable<OpenApiContext> value);
+        protected abstract TInlineDataType GetInlineDataType(OpenApiSchema schema, IEnumerable<OpenApiContext> allContexts, OpenApiTransformDiagnostic diagnostic);
+        protected abstract SourceEntry? GetSourceEntry(OpenApiSchema schema, IEnumerable<OpenApiContext> allContexts, OpenApiTransformDiagnostic diagnostic);
 
         protected abstract TInlineDataType UnresolvedReferencePlaceholder();
 
-        public struct SchemaSourceEntry
+        public delegate SourceEntry? SourceEntryResolver();
+
+        private struct SchemaSourceEntry
         {
-            public TInlineDataType Inline { get; set; }
-            public SourceEntry? SourceEntry { get; set; }
+            public OpenApiSchema Schema { get; set; }
+            public InlineDataTypeResolver<TInlineDataType> Inline { get; set; }
+            public List<OpenApiContext> AllContext { get; set; }
+            public SourceEntryResolver? GetSourceEntry { get; set; }
         }
     }
 

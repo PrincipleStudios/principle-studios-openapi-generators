@@ -93,7 +93,7 @@ namespace PrincipleStudios.OpenApi.CSharp
                 { Enum: { Count: > 0 }, Type: "string" } => ToEnumModel(className, schema),
                 _ => BuildObjectModel(schema) switch
                 {
-                    ObjectModel objectModel => ToObjectModel(className, schema, context, objectModel, diagnostic),
+                    ObjectModel objectModel => ToObjectModel(className, schema, context, objectModel, diagnostic)(),
                     _ => null
                 }
             };
@@ -192,77 +192,34 @@ namespace PrincipleStudios.OpenApi.CSharp
                     { Key: string key, Element: OpenApiSchema _ } => (new[] { key }, context.Skip(1).ToArray()),
                     _ => throw new NotImplementedException(),
                 };
-                //if (context[0].Element is OpenApiDocument)
-                //    return (Enumerable.Empty<string>(), context.Skip(1).ToArray());
-                //if (context.Skip(1).FirstOrDefault(e => e.Element is OpenApiOperation) is { Element: OpenApiOperation newOperation })
-                //{
-                //    return (new[] { newOperation.OperationId }, context.SkipWhile(e => e.Element != newOperation).ToArray());
-                //}
-                //if (context[0] is { Element: OpenApiOperation operation })
-                //{
-                //    if (context[1].Key == "Responses" && context[2] is { Element: OpenApiResponse response, Key: string responseKey } && context[3].Key == "Content" && context[4] is { Key: string mimeType, Element: OpenApiMediaType _ })
-                //        return (
-                //            new[] {
-                //                operation.Responses.Count == 1 ? ""
-                //                    : _2xxRegex.IsMatch(responseKey) && operation.Responses.Keys.Count(_2xxRegex.IsMatch) == 1 ? ""
-                //                    : responseKey == "default" && !operation.Responses.ContainsKey("other") ? "other"
-                //                    : responseKey,
-                //                response.Content.Count == 1 ? ""
-                //                    : mimeType,
-                //                "response"
-                //            },
-                //            context.Skip(6).ToArray()
-                //        );
-                //    if (context[1].Key == "Parameters" && context[2] is { Element: OpenApiParameter { Name: string paramName } })
-                //        return (
-                //            new[] { paramName },
-                //            context.Skip(4).ToArray()
-                //        );
-                //}
-                //if (context[0] is { Element: OpenApiRequestBody requestBody } && context[2] is { Key: string requestType, Element: OpenApiMediaType _ })
-                //    return (
-                //        new[] { requestBody.Content.Count == 1 ? "" : requestType, "request" },
-                //        context.Skip(4).ToArray()
-                //    );
-                //if (context.FirstOrDefault(e => e.Element is OpenApiRequestBody) is { Element: OpenApiRequestBody firstBody, Key: string requestName })
-                //{
-                //    return (
-                //        context[0].Element is OpenApiOperation ? Array.Empty<string>() : new[] { requestName }, 
-                //        new[] { new OpenApiContextEntry(firstBody) }.Concat(context.SkipWhile(e => e.Element is not OpenApiRequestBody).Skip(1)).ToArray()
-                //    );
-                //}
-                //if (context.FirstOrDefault(e => e.Element is OpenApiSchema) is { Element: OpenApiSchema firstSchema, Key: string name } && name != "Schema" /* && name != "Items" */)
-                //{
-                //    return (new[] { name }, context.SkipWhile(e => e.Element != firstSchema && e.Key != name).Skip(1).ToArray());
-                //}
-
-                throw new NotImplementedException();
             }
         }
 
-        private templates.ObjectModel ToObjectModel(string className, OpenApiSchema schema, OpenApiContext context, ObjectModel objectModel, OpenApiTransformDiagnostic diagnostic)
+        private Func<templates.ObjectModel> ToObjectModel(string className, OpenApiSchema schema, OpenApiContext context, ObjectModel objectModel, OpenApiTransformDiagnostic diagnostic)
         {
             if (objectModel == null)
                 throw new ArgumentNullException(nameof(objectModel));
             var properties = objectModel.properties();
             var required = new HashSet<string>(objectModel.required());
 
-            return new templates.ObjectModel(
+            Func<templates.ModelVar>[] vars = (from entry in properties
+                        let req = required.Contains(entry.Key)
+                        let dataTypeBase = ToInlineDataType(entry.Value, context.Append(nameof(schema.Properties), entry.Key, entry.Value), diagnostic)
+                        let dataType = req ? dataTypeBase : () => dataTypeBase().MakeNullable()
+                        select (Func<templates.ModelVar>)(() => new templates.ModelVar(
+                            baseName: entry.Key,
+                            dataType: dataType().text,
+                            nullable: dataType().nullable,
+                            isContainer: dataType().isEnumerable,
+                            name: CSharpNaming.ToPropertyName(entry.Key, options.ReservedIdentifiers),
+                            required: req
+                         ))).ToArray();
+
+            return () => new templates.ObjectModel(
                 description: schema.Description,
                 className: className,
                 parent: null, // TODO - if "all of" and only one was a reference, we should be able to use inheritance.
-                vars: (from entry in properties
-                       let req = required.Contains(entry.Key)
-                       let dataTypeBase = ToInlineDataType(entry.Value, context.Append(nameof(schema.Properties), entry.Key, entry.Value), diagnostic)
-                       let dataType = req ? dataTypeBase : dataTypeBase.MakeNullable()
-                       select new templates.ModelVar(
-                           baseName: entry.Key,
-                           dataType: dataType.text,
-                           nullable: dataType.nullable,
-                           isContainer: dataType.isEnumerable,
-                           name: CSharpNaming.ToPropertyName(entry.Key, options.ReservedIdentifiers),
-                           required: req
-                        )).ToArray()
+                vars: vars.Select(v => v()).ToArray()
             );
         }
 
@@ -299,14 +256,19 @@ namespace PrincipleStudios.OpenApi.CSharp
                 _ => null,
             };
 
-        protected override SchemaSourceEntry ToInlineDataTypeWithReference(OpenApiSchema schema, OpenApiContext context, OpenApiTransformDiagnostic diagnostic)
+        protected override InlineDataType GetInlineDataType(OpenApiSchema schema, IEnumerable<OpenApiContext> allContexts, OpenApiTransformDiagnostic diagnostic)
         {
-            // TODO - should probably defer the inline data type for the shortest context
-            return new SchemaSourceEntry
-            {
-                Inline = CreateInlineDataType(schema, context, diagnostic),
-                SourceEntry = !UseInline(schema) ? TransformSchema(schema, context, diagnostic) : null,
-            };
+            var inline = CreateInlineDataType(schema, GetBestContext(allContexts), diagnostic);
+            if (inline.text == "FindPetsByTagsApplicationJsonResponseItemStatus" && System.Diagnostics.Debugger.IsAttached)
+                System.Diagnostics.Debugger.Break();
+            return inline;
+        }
+
+        protected override SourceEntry? GetSourceEntry(OpenApiSchema schema, IEnumerable<OpenApiContext> allContexts, OpenApiTransformDiagnostic diagnostic)
+        {
+            return !UseInline(schema)
+                    ? TransformSchema(schema, GetBestContext(allContexts), diagnostic)
+                    : null;
         }
 
         protected InlineDataType CreateInlineDataType(OpenApiSchema schema, OpenApiContext context, OpenApiTransformDiagnostic diagnostic)
@@ -316,9 +278,9 @@ namespace PrincipleStudios.OpenApi.CSharp
                 { Reference: not null } =>
                     new(UseReferenceName(schema)),
                 { Type: "object", Properties: { Count: 0 }, AdditionalProperties: OpenApiSchema dictionaryValueSchema } =>
-                    new(options.ToMapType(ToInlineDataType(dictionaryValueSchema, context.Append(nameof(schema.AdditionalProperties), null, dictionaryValueSchema), diagnostic).text), isEnumerable: true),
+                    new(options.ToMapType(ToInlineDataType(dictionaryValueSchema, context.Append(nameof(schema.AdditionalProperties), null, dictionaryValueSchema), diagnostic)().text), isEnumerable: true),
                 { Type: "array", Items: OpenApiSchema items } =>
-                    new(options.ToArrayType(ToInlineDataType(items, context.Append(nameof(schema.Items), null, items), diagnostic).text), isEnumerable: true),
+                    new(options.ToArrayType(ToInlineDataType(items, context.Append(nameof(schema.Items), null, items), diagnostic)().text), isEnumerable: true),
                 _ when !UseInline(schema) =>
                     new(CSharpNaming.ToClassName(ContextToIdentifier(context), options.ReservedIdentifiers)),
                 { Type: string type, Format: var format } =>
@@ -335,7 +297,7 @@ namespace PrincipleStudios.OpenApi.CSharp
             return new InlineDataType("object", false, false);
         }
 
-        protected override OpenApiContext GetBestContext(OpenApiSchema key, IEnumerable<OpenApiContext> value)
+        protected virtual OpenApiContext GetBestContext(IEnumerable<OpenApiContext> value)
         {
             return (from context in value
                     orderby CSharpNaming.ToClassName(ContextToIdentifier(context), options.ReservedIdentifiers).Length

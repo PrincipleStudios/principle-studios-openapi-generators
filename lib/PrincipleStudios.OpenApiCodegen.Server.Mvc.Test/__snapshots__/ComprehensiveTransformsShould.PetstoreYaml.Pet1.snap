@@ -19,9 +19,9 @@ using Newtonsoft.Json;
 
 namespace PS.Controller
 { 
-    public partial class FindPetByIdResponse1 : global::System.IEquatable<FindPetByIdResponse1>
+    public partial class Pet1 : global::System.IEquatable<Pet1>
     {
-        public FindPetByIdResponse1(
+        public Pet1(
             [global::Newtonsoft.Json.JsonProperty(PropertyName="id"), global::System.ComponentModel.DataAnnotations.Required] long Id
         ) { 
             this.Id = Id;
@@ -38,10 +38,10 @@ namespace PS.Controller
         {
             if (obj is null) return false;
             if (ReferenceEquals(this, obj)) return true;
-            return obj.GetType() == GetType() && Equals((FindPetByIdResponse1)obj);
+            return obj.GetType() == GetType() && Equals((Pet1)obj);
         }
 
-        public bool Equals(FindPetByIdResponse1 other)
+        public bool Equals(Pet1 other)
         {
             if (other is null) return false;
             if (ReferenceEquals(this, other)) return true;
