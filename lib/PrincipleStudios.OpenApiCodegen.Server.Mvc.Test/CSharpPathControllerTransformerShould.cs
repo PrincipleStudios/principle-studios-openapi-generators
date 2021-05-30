@@ -38,7 +38,7 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
             var target = ConstructTarget(document, options);
             OpenApiTransformDiagnostic diagnostic = new();
 
-            var result = target.TransformController(document.Paths[path], OpenApiContext.From(document).Append(nameof(document.Paths)).Append(path, document.Paths[path]), diagnostic);
+            var result = target.TransformController(document.Paths[path], OpenApiContext.From(document).Append(nameof(document.Paths), path, document.Paths[path]), diagnostic);
 
             Snapshot.Match(result.SourceText, $"{nameof(CSharpPathControllerTransformerShould)}.{nameof(TransformController)}.{CSharpNaming.ToTitleCaseIdentifier(documentName, options.ReservedIdentifiers)}.{CSharpNaming.ToTitleCaseIdentifier(path, options.ReservedIdentifiers)}");
         }

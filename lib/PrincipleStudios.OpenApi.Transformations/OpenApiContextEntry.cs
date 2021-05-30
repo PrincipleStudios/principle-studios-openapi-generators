@@ -2,26 +2,24 @@
 
 namespace PrincipleStudios.OpenApi.Transformations
 {
-    [System.Diagnostics.DebuggerDisplay("<{Key}, {Element}>")]
+    [System.Diagnostics.DebuggerDisplay("{Property}[{Key}], {Element}")]
     public class OpenApiContextEntry
     {
-        public OpenApiContextEntry(string property)
+        public OpenApiContextEntry(string? property, string? key, IOpenApiElement elementEntry)
         {
-            this.Key = property;
-            this.Element = null;
-        }
-        public OpenApiContextEntry(string key, IOpenApiElement elementEntry)
-        {
+            Property = property;
             this.Key = key;
             this.Element = elementEntry;
         }
         public OpenApiContextEntry(IOpenApiElement elementEntry)
         {
             this.Element = elementEntry;
+            this.Property = null;
             this.Key = null;
         }
 
-        public IOpenApiElement? Element { get; }
+        public IOpenApiElement Element { get; }
+        public string? Property { get; }
         public string? Key { get; }
     }
 }

@@ -20,13 +20,9 @@ namespace PrincipleStudios.OpenApi.Transformations
 
         IEnumerator IEnumerable.GetEnumerator() => Entries.GetEnumerator();
         
-        public OpenApiContext Append(string property)
+        public OpenApiContext Append(string? property, string? key, IOpenApiElement elementEntry)
         {
-            return this with { Entries = Entries.Add(new OpenApiContextEntry(property)) };
-        }
-        public OpenApiContext Append(string key, IOpenApiElement elementEntry)
-        {
-            return this with { Entries = Entries.Add(new OpenApiContextEntry(key, elementEntry)) };
+            return this with { Entries = Entries.Add(new OpenApiContextEntry(property, key, elementEntry)) };
         }
         public OpenApiContext Append(OpenApiDocument elementEntry)
         {
@@ -43,9 +39,9 @@ namespace PrincipleStudios.OpenApi.Transformations
 
             throw new ArgumentException("Context does not contain the element", nameof(element));
         }
-        public string GetLastKeyFor(IOpenApiElement element)
+        public string? GetLastKeyFor(IOpenApiElement element)
         {
-            if (Entries[Entries.Count - 1] is not { Element: var e, Key: string key } || e != element)
+            if (Entries[Entries.Count - 1] is not { Element: var e, Key: var key, Property: var property } || e != element)
                 throw new ArgumentException("Context is not initialized properly", nameof(element));
             return key;
         }

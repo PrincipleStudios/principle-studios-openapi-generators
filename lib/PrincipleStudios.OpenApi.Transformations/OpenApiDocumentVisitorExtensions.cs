@@ -72,29 +72,29 @@ namespace PrincipleStudios.OpenApi.Transformations
             };
         }
 
-        public static void VisitHelper<TArgument, TKey, T>(this IOpenApiDocumentVisitor<TArgument> visitor, IEnumerable<KeyValuePair<TKey, T>> entries, OpenApiContext context, TArgument argument)
+        public static void VisitHelper<TArgument, TKey, T>(this IOpenApiDocumentVisitor<TArgument> visitor, IEnumerable<KeyValuePair<TKey, T>> entries, OpenApiContext context, TArgument argument, string? property)
             where T : IOpenApiElement
         {
             foreach (var kvp in entries)
-                visitor.VisitAny(kvp.Value, context.Append(kvp.Key!.ToString(), kvp.Value), argument);
+                visitor.VisitAny(kvp.Value, context.Append(property, kvp.Key!.ToString(), kvp.Value), argument);
         }
 
-        public static void VisitHelper<TArgument, T>(this IOpenApiDocumentVisitor<TArgument> visitor, IEnumerable<T> entries, OpenApiContext context, TArgument argument)
+        public static void VisitHelper<TArgument, T>(this IOpenApiDocumentVisitor<TArgument> visitor, IEnumerable<T> entries, OpenApiContext context, TArgument argument, string? property)
             where T : IOpenApiElement 
-            => visitor.VisitHelper(entries.Select((value, key) => new KeyValuePair<int, T>(key, value)), context, argument);
+            => visitor.VisitHelper(entries.Select((value, key) => new KeyValuePair<int, T>(key, value)), context, argument, property);
 
         public static void VisitHelper<TArgument, TKey, T>(this IOpenApiDocumentVisitor<TArgument> visitor, IEnumerable<KeyValuePair<TKey, T>> entries, OpenApiContext context, string sourceProperty, TArgument argument)
             where T : IOpenApiElement
-            => visitor.VisitHelper(entries, context.Append(sourceProperty), argument);
+            => visitor.VisitHelper(entries, context, argument, property: sourceProperty);
 
         public static void VisitHelper<TArgument, T>(this IOpenApiDocumentVisitor<TArgument> visitor, IEnumerable<T> entries, OpenApiContext context, string sourceProperty, TArgument argument)
             where T : IOpenApiElement
-            => visitor.VisitHelper(entries, context.Append(sourceProperty), argument);
+            => visitor.VisitHelper(entries, context, argument, property: sourceProperty);
 
         public static void VisitHelper<TArgument, T>(this IOpenApiDocumentVisitor<TArgument> visitor, T e, OpenApiContext context, string sourceProperty, TArgument argument)
             where T : IOpenApiElement
         {
-            visitor.VisitAny(e, context.Append(sourceProperty, e), argument);
+            visitor.VisitAny(e, context.Append(sourceProperty, key: null, elementEntry: e), argument);
         }
     }
 }

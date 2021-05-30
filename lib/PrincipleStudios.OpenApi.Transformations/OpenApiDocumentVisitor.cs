@@ -111,7 +111,7 @@ namespace PrincipleStudios.OpenApi.Transformations
 
         public virtual void Visit(OpenApiPaths paths, OpenApiContext context, TArgument argument)
         {
-            this.VisitHelper<TArgument, string, OpenApiPathItem>(paths, context, argument);
+            this.VisitHelper<TArgument, string, OpenApiPathItem>(paths, context, argument, property: null);
         }
 
         public virtual void Visit(OpenApiRequestBody requestBody, OpenApiContext context, TArgument argument)
@@ -126,7 +126,7 @@ namespace PrincipleStudios.OpenApi.Transformations
         }
         public virtual void Visit(OpenApiResponses responses, OpenApiContext context, TArgument argument)
         {
-            this.VisitHelper<TArgument, string, OpenApiResponse>(responses, context, argument);
+            this.VisitHelper<TArgument, string, OpenApiResponse>(responses, context, argument, property: null);
         }
         public virtual void Visit(OpenApiSchema schema, OpenApiContext context, TArgument argument)
         {
@@ -178,7 +178,7 @@ namespace PrincipleStudios.OpenApi.Transformations
 
         public virtual void Visit(Microsoft.OpenApi.Any.OpenApiArray _Array, OpenApiContext context, TArgument argument)
         {
-            this.VisitHelper(_Array.AsEnumerable(), context, argument);
+            this.VisitHelper(_Array.AsEnumerable(), context, argument, property: null);
         }
         public virtual void Visit(Microsoft.OpenApi.Any.OpenApiBinary _Binary, OpenApiContext context, TArgument argument) { }
         public virtual void Visit(Microsoft.OpenApi.Any.OpenApiBoolean _Boolean, OpenApiContext context, TArgument argument) { }
@@ -192,7 +192,7 @@ namespace PrincipleStudios.OpenApi.Transformations
         public virtual void Visit(Microsoft.OpenApi.Any.OpenApiNull _Null, OpenApiContext context, TArgument argument) { }
         public virtual void Visit(Microsoft.OpenApi.Any.OpenApiObject _Object, OpenApiContext context, TArgument argument)
         {
-            this.VisitHelper<TArgument, string, Microsoft.OpenApi.Any.IOpenApiAny>(_Object, context, argument);
+            this.VisitHelper<TArgument, string, Microsoft.OpenApi.Any.IOpenApiAny>(_Object, context, argument, property: null);
         }
         public virtual void Visit(Microsoft.OpenApi.Any.OpenApiPassword _Password, OpenApiContext context, TArgument argument) { }
         public virtual void Visit(Microsoft.OpenApi.Any.OpenApiString _String, OpenApiContext context, TArgument argument) { }

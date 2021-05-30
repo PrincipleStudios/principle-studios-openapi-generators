@@ -118,56 +118,122 @@ namespace PrincipleStudios.OpenApi.CSharp
             var (parts, remaining) = Simplify(context.Entries);
             while (remaining.Length > 0)
             {
-                string[] newParts;
+                IEnumerable<string> newParts;
                 (newParts, remaining) = Simplify(remaining);
                 parts = parts.Concat(newParts).ToArray();
             }
 
             return string.Join(" ", parts);
 
-            (string[] parts, OpenApiContextEntry[] remaining) Simplify(IReadOnlyList<OpenApiContextEntry> context)
+            (IEnumerable<string> parts, OpenApiContextEntry[] remaining) Simplify(IReadOnlyList<OpenApiContextEntry> context)
             {
-                if (context.Skip(1).FirstOrDefault(e => e.Element is OpenApiOperation) is { Element: OpenApiOperation newOperation })
+                return context[0] switch
                 {
-                    return (new[] { newOperation.OperationId }, context.SkipWhile(e => e.Element != newOperation).ToArray());
-                }
-                if (context[0] is { Element: OpenApiOperation operation })
-                {
-                    if (context[1].Key == "Responses" && context[2] is { Element: OpenApiResponse response, Key: string responseKey } && context[3].Key == "Content" && context[4] is { Key: string mimeType, Element: OpenApiMediaType _ })
-                        return (
-                            new[] {
-                                operation.Responses.Count == 1 ? ""
-                                    : _2xxRegex.IsMatch(responseKey) && operation.Responses.Keys.Count(_2xxRegex.IsMatch) == 1 ? ""
-                                    : responseKey == "default" && !operation.Responses.ContainsKey("other") ? "other"
-                                    : responseKey,
-                                response.Content.Count == 1 ? ""
-                                    : mimeType,
-                                "response"
-                            },
-                            context.Skip(6).ToArray()
-                        );
-                    if (context[1].Key == "Parameters" && context[2] is { Element: OpenApiParameter { Name: string paramName } })
-                        return (
-                            new[] { paramName },
-                            context.Skip(4).ToArray()
-                        );
-                }
-                if (context[0] is { Element: OpenApiRequestBody requestBody } && context[2] is { Key: string requestType, Element: OpenApiMediaType _ })
-                    return (
-                        new[] { requestBody.Content.Count == 1 ? "" : requestType, "request" },
-                        context.Skip(4).ToArray()
-                    );
-                if (context.FirstOrDefault(e => e.Element is OpenApiRequestBody) is { Element: OpenApiRequestBody firstBody, Key: string requestName })
-                {
-                    return (
-                        context[0].Element is OpenApiOperation ? Array.Empty<string>() : new[] { requestName }, 
-                        new[] { new OpenApiContextEntry(firstBody) }.Concat(context.SkipWhile(e => e.Element is not OpenApiRequestBody).Skip(1)).ToArray()
-                    );
-                }
-                if (context.FirstOrDefault(e => e.Element is OpenApiSchema) is { Element: OpenApiSchema firstSchema, Key: string name } && name != "Schema" /* && name != "Items" */)
-                {
-                    return (new[] { name }, context.SkipWhile(e => e.Element != firstSchema && e.Key != name).Skip(1).ToArray());
-                }
+                    { Element: OpenApiDocument _ or OpenApiPaths _ or OpenApiPathItem _ or OpenApiComponents _ } => (Enumerable.Empty<string>(), context.Skip(1).ToArray()),
+                    { Element: OpenApiOperation operation } => (new[] { operation.OperationId }, context.Skip(1).ToArray()),
+                    { Property: "Responses", Element: OpenApiResponses responses } =>
+                        (context[1], context[2], context[3]) switch
+                        {
+                            ({ Key: string statusCode, Element: OpenApiResponse response }, { Property: "Content", Key: string mimeType }, { Property: "Schema" }) =>
+                                (
+                                    new[] {
+                                        responses.Count == 1 ? ""
+                                            : _2xxRegex.IsMatch(statusCode) && responses.Keys.Count(_2xxRegex.IsMatch) == 1 ? ""
+                                            : statusCode == "default" && !responses.ContainsKey("other") ? "other"
+                                            : statusCode,
+                                        response.Content.Count == 1 ? ""
+                                            : mimeType,
+                                        "response"
+                                    },
+                                    context.Skip(4).ToArray()
+                                ),
+                            ({ Key: string statusCode, Element: OpenApiResponse response }, { Property: "Headers", Key: string headerName }, { Property: "Schema" }) =>
+                                (
+                                    new[] {
+                                        responses.Count == 1 ? ""
+                                            : _2xxRegex.IsMatch(statusCode) && responses.Keys.Count(_2xxRegex.IsMatch) == 1 ? ""
+                                            : statusCode == "default" && !responses.ContainsKey("other") ? "other"
+                                            : statusCode,
+                                        headerName,
+                                        "response header"
+                                    },
+                                    context.Skip(4).ToArray()
+                                ),
+                            _ => throw new NotImplementedException(),
+                        },
+                    { Property: "RequestBody" or "RequestBodies", Key: var namedRequest, Element: OpenApiRequestBody requestBody } =>
+                         (context[1], context[2]) switch
+                         {
+                             ({ Property: "Content", Key: string mimeType }, { Property: "Schema" }) =>
+                                 (
+                                     new[] {
+                                         namedRequest ?? "",
+                                        requestBody.Content.Count == 1 ? ""
+                                            : mimeType,
+                                        "request"
+                                     },
+                                     context.Skip(3).ToArray()
+                                 ),
+                             _ => throw new NotImplementedException(),
+                         },
+                    { Property: "Parameters", Key: string, Element: OpenApiParameter parameter } =>
+                         context[1] switch
+                         {
+                             { Property: "Schema" } =>
+                                 (
+                                     new[] { parameter.Name },
+                                     context.Skip(2).ToArray()
+                                 ),
+                             _ => throw new NotImplementedException(),
+                         },
+                    { Property: "Items", Element: OpenApiSchema _ } => (new[] { "Items" }, context.Skip(1).ToArray()),
+                    { Property: "AdditionalProperties", Element: OpenApiSchema _ } => (new[] { "AdditionalProperties" }, context.Skip(1).ToArray()),
+                    { Key: string key, Element: OpenApiSchema _ } => (new[] { key }, context.Skip(1).ToArray()),
+                    _ => throw new NotImplementedException(),
+                };
+                //if (context[0].Element is OpenApiDocument)
+                //    return (Enumerable.Empty<string>(), context.Skip(1).ToArray());
+                //if (context.Skip(1).FirstOrDefault(e => e.Element is OpenApiOperation) is { Element: OpenApiOperation newOperation })
+                //{
+                //    return (new[] { newOperation.OperationId }, context.SkipWhile(e => e.Element != newOperation).ToArray());
+                //}
+                //if (context[0] is { Element: OpenApiOperation operation })
+                //{
+                //    if (context[1].Key == "Responses" && context[2] is { Element: OpenApiResponse response, Key: string responseKey } && context[3].Key == "Content" && context[4] is { Key: string mimeType, Element: OpenApiMediaType _ })
+                //        return (
+                //            new[] {
+                //                operation.Responses.Count == 1 ? ""
+                //                    : _2xxRegex.IsMatch(responseKey) && operation.Responses.Keys.Count(_2xxRegex.IsMatch) == 1 ? ""
+                //                    : responseKey == "default" && !operation.Responses.ContainsKey("other") ? "other"
+                //                    : responseKey,
+                //                response.Content.Count == 1 ? ""
+                //                    : mimeType,
+                //                "response"
+                //            },
+                //            context.Skip(6).ToArray()
+                //        );
+                //    if (context[1].Key == "Parameters" && context[2] is { Element: OpenApiParameter { Name: string paramName } })
+                //        return (
+                //            new[] { paramName },
+                //            context.Skip(4).ToArray()
+                //        );
+                //}
+                //if (context[0] is { Element: OpenApiRequestBody requestBody } && context[2] is { Key: string requestType, Element: OpenApiMediaType _ })
+                //    return (
+                //        new[] { requestBody.Content.Count == 1 ? "" : requestType, "request" },
+                //        context.Skip(4).ToArray()
+                //    );
+                //if (context.FirstOrDefault(e => e.Element is OpenApiRequestBody) is { Element: OpenApiRequestBody firstBody, Key: string requestName })
+                //{
+                //    return (
+                //        context[0].Element is OpenApiOperation ? Array.Empty<string>() : new[] { requestName }, 
+                //        new[] { new OpenApiContextEntry(firstBody) }.Concat(context.SkipWhile(e => e.Element is not OpenApiRequestBody).Skip(1)).ToArray()
+                //    );
+                //}
+                //if (context.FirstOrDefault(e => e.Element is OpenApiSchema) is { Element: OpenApiSchema firstSchema, Key: string name } && name != "Schema" /* && name != "Items" */)
+                //{
+                //    return (new[] { name }, context.SkipWhile(e => e.Element != firstSchema && e.Key != name).Skip(1).ToArray());
+                //}
 
                 throw new NotImplementedException();
             }
@@ -186,7 +252,7 @@ namespace PrincipleStudios.OpenApi.CSharp
                 parent: null, // TODO - if "all of" and only one was a reference, we should be able to use inheritance.
                 vars: (from entry in properties
                        let req = required.Contains(entry.Key)
-                       let dataTypeBase = ToInlineDataType(entry.Value, context.Append(nameof(schema.Properties)).Append(entry.Key, entry.Value), diagnostic)
+                       let dataTypeBase = ToInlineDataType(entry.Value, context.Append(nameof(schema.Properties), entry.Key, entry.Value), diagnostic)
                        let dataType = req ? dataTypeBase : dataTypeBase.MakeNullable()
                        select new templates.ModelVar(
                            baseName: entry.Key,
@@ -246,11 +312,16 @@ namespace PrincipleStudios.OpenApi.CSharp
         {
             InlineDataType result = schema switch
             {
-                { Reference: not null } => new(UseReferenceName(schema)),
-                { Type: "object", Properties: { Count: 0 }, AdditionalProperties: OpenApiSchema dictionaryValueSchema } => new(options.ToMapType(ToInlineDataType(dictionaryValueSchema, context.Append(nameof(schema.AdditionalProperties), dictionaryValueSchema), diagnostic).text), isEnumerable: true),
-                { Type: "array", Items: OpenApiSchema items } => new(options.ToArrayType(ToInlineDataType(items, context.Append(nameof(schema.Items), items), diagnostic).text), isEnumerable: true),
-                _ when !UseInline(schema) => new(CSharpNaming.ToClassName(ContextToIdentifier(context), options.ReservedIdentifiers)),
-                { Type: string type, Format: var format } => new(options.Find(type, format)),
+                { Reference: not null } =>
+                    new(UseReferenceName(schema)),
+                { Type: "object", Properties: { Count: 0 }, AdditionalProperties: OpenApiSchema dictionaryValueSchema } =>
+                    new(options.ToMapType(ToInlineDataType(dictionaryValueSchema, context.Append(nameof(schema.AdditionalProperties), null, dictionaryValueSchema), diagnostic).text), isEnumerable: true),
+                { Type: "array", Items: OpenApiSchema items } =>
+                    new(options.ToArrayType(ToInlineDataType(items, context.Append(nameof(schema.Items), null, items), diagnostic).text), isEnumerable: true),
+                _ when !UseInline(schema) =>
+                    new(CSharpNaming.ToClassName(ContextToIdentifier(context), options.ReservedIdentifiers)),
+                { Type: string type, Format: var format } =>
+                    new(options.Find(type, format)),
                 _ => throw new NotSupportedException("Unknown schema"),
             };
             return schema is { Nullable: true }

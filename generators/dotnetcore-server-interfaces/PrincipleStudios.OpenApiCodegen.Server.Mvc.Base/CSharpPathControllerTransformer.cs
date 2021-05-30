@@ -149,10 +149,7 @@ namespace PrincipleStudios.OpenApi.CSharp
 
             public override void Visit(OpenApiParameter param, OpenApiContext context, Argument argument)
             {
-                //this.VisitHelper(parameter.Schema, context, nameof(parameter.Schema), argument);
-
-                // TODO - is that the right document for the schema?
-                var dataTypeBase = csharpSchemaResolver.ToInlineDataType(param.Schema, context.Append(nameof(param.Schema), param.Schema), argument.Diagnostic);
+                var dataTypeBase = csharpSchemaResolver.ToInlineDataType(param.Schema, context.Append(nameof(param.Schema), null, param.Schema), argument.Diagnostic);
                 var dataType = param.Required ? dataTypeBase : dataTypeBase.MakeNullable();
                 argument.Builder?.SharedParameters.Add(new templates.OperationParameter(
                     rawName: param.Name,
@@ -182,17 +179,17 @@ namespace PrincipleStudios.OpenApi.CSharp
                 var result = new OperationResponse(
                     description: response.Description,
                     content: (from entry in response.Content.DefaultIfEmpty(new("", new OpenApiMediaType()))
-                              let entryContext = context.Append(nameof(response.Content)).Append(entry.Key, entry.Value)
-                              let dataType = entry.Value.Schema != null ? csharpSchemaResolver.ToInlineDataType(entry.Value.Schema, entryContext.Append(nameof(entry.Value.Schema), entry.Value.Schema), argument.Diagnostic) : null
+                              let entryContext = context.Append(nameof(response.Content), entry.Key, entry.Value)
+                              let dataType = entry.Value.Schema != null ? csharpSchemaResolver.ToInlineDataType(entry.Value.Schema, entryContext.Append(nameof(entry.Value.Schema), null, entry.Value.Schema), argument.Diagnostic) : null
                               select new OperationResponseContentOption(
                                   mediaType: entry.Key,
                                   responseMethodName: CSharpNaming.ToTitleCaseIdentifier($"{(response.Content.Count > 1 ? entry.Key : "")} {(statusCode == null ? "other status code" : $"status code {statusCode}")}", options.ReservedIdentifiers),
                                   dataType: dataType?.text
                               )).ToArray(),
                     headers: (from entry in response.Headers
-                              let entryContext = context.Append(nameof(response.Headers)).Append(entry.Key, entry.Value)
+                              let entryContext = context.Append(nameof(response.Headers), entry.Key, entry.Value)
                               let required = entry.Value.Required
-                              let dataTypeBase = csharpSchemaResolver.ToInlineDataType(entry.Value.Schema, entryContext.Append(nameof(entry.Value.Schema), entry.Value.Schema), argument.Diagnostic)
+                              let dataTypeBase = csharpSchemaResolver.ToInlineDataType(entry.Value.Schema, entryContext.Append(nameof(entry.Value.Schema), null, entry.Value.Schema), argument.Diagnostic)
                               let dataType = required ? dataTypeBase : dataTypeBase.MakeNullable()
                               select new templates.OperationResponseHeader(
                                   rawName: entry.Key,
@@ -233,7 +230,7 @@ namespace PrincipleStudios.OpenApi.CSharp
                 IEnumerable<OperationParameter> GetFormParams() =>
                     from param in mediaType.Schema.Properties
                     let required = mediaType.Schema.Required.Contains(param.Key)
-                    let dataTypeBase = csharpSchemaResolver.ToInlineDataType(param.Value, context.Append(nameof(mediaType.Schema), mediaType.Schema).Append(nameof(mediaType.Schema.Properties)).Append(param.Key, param.Value), argument.Diagnostic)
+                    let dataTypeBase = csharpSchemaResolver.ToInlineDataType(param.Value, context.Append(nameof(mediaType.Schema), null, mediaType.Schema).Append(nameof(mediaType.Schema.Properties), param.Key, param.Value), argument.Diagnostic)
                     let dataType = required ? dataTypeBase : dataTypeBase.MakeNullable()
                     select new templates.OperationParameter(
                         rawName: param.Key,
@@ -256,7 +253,7 @@ namespace PrincipleStudios.OpenApi.CSharp
                     );
                 IEnumerable<OperationParameter> GetStandardParams() =>
                     from ct in new[] { mediaType }
-                    let dataType = csharpSchemaResolver.ToInlineDataType(ct.Schema, context.Append(nameof(ct.Schema), ct.Schema), argument.Diagnostic)
+                    let dataType = csharpSchemaResolver.ToInlineDataType(ct.Schema, context.Append(nameof(ct.Schema), null, ct.Schema), argument.Diagnostic)
                     select new templates.OperationParameter(
                        rawName: null,
                        paramName: CSharpNaming.ToParameterName(argument.Builder?.Operation.OperationId + " body", options.ReservedIdentifiers),

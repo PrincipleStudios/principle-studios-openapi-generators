@@ -57,7 +57,7 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
             var target = ConstructTarget(document, options);
             OpenApiTransformDiagnostic diagnostic = new();
 
-            var context = OpenApiContext.From(document).Append(nameof(document.Components), document.Components).Append(nameof(document.Components.Schemas)).Append(model, document.Components.Schemas[model]);
+            var context = OpenApiContext.From(document).Append(nameof(document.Components), null, document.Components).Append(nameof(document.Components.Schemas), model, document.Components.Schemas[model]);
 
             var result = target.TransformSchema(document.Components.Schemas[model], context, diagnostic);
 
