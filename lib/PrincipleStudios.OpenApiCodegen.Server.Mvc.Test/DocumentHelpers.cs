@@ -20,6 +20,7 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
             "no-refs.yaml",
             "oauth.yaml",
             "headers.yaml",
+            "empty.yaml",
         };
 
         private static readonly string[] InvalidDocumentNames = new[]

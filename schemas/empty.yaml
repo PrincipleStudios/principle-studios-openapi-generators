@@ -1,0 +1,6 @@
+openapi: "3.0.3"
+info:
+  version: 1.0.0
+  title: Empty Sample
+  description: A sample API with no paths. Useful for initial stubs.
+paths: {}
