@@ -12,7 +12,7 @@ using static PrincipleStudios.OpenApiCodegen.Server.Mvc.DocumentHelpers;
 
 namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
 {
-    public class CSharpPathControllerTransformerShould
+    public class CSharpControllerTransformerShould
     {
         [Theory]
         [InlineData("petstore.yaml", "/pets")]
@@ -38,16 +38,18 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
             var target = ConstructTarget(document, options);
             OpenApiTransformDiagnostic diagnostic = new();
 
-            var result = target.TransformController(document.Paths[path], OpenApiContext.From(document).Append(nameof(document.Paths), path, document.Paths[path]), diagnostic);
+            var transformer = new OperationGroupingSourceTransformer(document.Paths[path], OpenApiContext.From(document).Append(nameof(document.Paths), path, document.Paths[path]), (_, _) => (path, null, null), target);
 
-            Snapshot.Match(result.SourceText, $"{nameof(CSharpPathControllerTransformerShould)}.{nameof(TransformController)}.{CSharpNaming.ToTitleCaseIdentifier(documentName, options.ReservedIdentifiers())}.{CSharpNaming.ToTitleCaseIdentifier(path, options.ReservedIdentifiers())}");
+            var result = transformer.GetSources(diagnostic).Single();
+
+            Snapshot.Match(result.SourceText, $"{nameof(CSharpControllerTransformerShould)}.{nameof(TransformController)}.{CSharpNaming.ToTitleCaseIdentifier(documentName, options.ReservedIdentifiers())}.{CSharpNaming.ToTitleCaseIdentifier(path, options.ReservedIdentifiers())}");
         }
 
-        private static CSharpPathControllerTransformer ConstructTarget(OpenApiDocument document, CSharpSchemaOptions options, string baseNamespace = "PrincipleStudios.Test")
+        private static CSharpControllerTransformer ConstructTarget(OpenApiDocument document, CSharpSchemaOptions options, string baseNamespace = "PrincipleStudios.Test")
         {
             var handlebarsFactory = new HandlebarsFactory(ControllerHandlebarsTemplateProcess.CreateHandlebars);
             var resolver = new CSharpSchemaSourceResolver("PS.Controller", options, handlebarsFactory, "");
-            return new CSharpPathControllerTransformer(resolver, document, baseNamespace, options, "", handlebarsFactory);
+            return new CSharpControllerTransformer(resolver, document, baseNamespace, options, "", handlebarsFactory);
         }
 
     }

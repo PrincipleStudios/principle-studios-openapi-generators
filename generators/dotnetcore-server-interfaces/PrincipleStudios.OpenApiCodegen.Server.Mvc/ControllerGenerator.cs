@@ -55,7 +55,7 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
 
         private static string GetVersionInfo()
         {
-            return $"{typeof(CSharpPathControllerTransformer).FullName} v{typeof(CSharpPathControllerTransformer).Assembly.GetName().Version}";
+            return $"{typeof(CSharpControllerTransformer).FullName} v{typeof(CSharpControllerTransformer).Assembly.GetName().Version}";
         }
 
         protected override bool TryCreateSourceProvider(AdditionalText file, OpenApiDocument document, AnalyzerConfigOptions opt, GeneratorExecutionContext context, [NotNullWhen(true)] out ISourceProvider? result)

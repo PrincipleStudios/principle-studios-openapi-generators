@@ -9,9 +9,9 @@ namespace PrincipleStudios.OpenApi.CSharp
     public class DotNetMvcAddServicesHelperTransformer : ISourceProvider
     {
         private readonly OpenApiDocument document;
-        private CSharpPathControllerTransformer schemaTransformer;
+        private CSharpControllerTransformer schemaTransformer;
 
-        public DotNetMvcAddServicesHelperTransformer(OpenApiDocument document, CSharpPathControllerTransformer schemaTransformer)
+        public DotNetMvcAddServicesHelperTransformer(OpenApiDocument document, CSharpControllerTransformer schemaTransformer)
         {
             this.document = document;
             this.schemaTransformer = schemaTransformer;

@@ -1,64 +1,34 @@
 ﻿using Microsoft.OpenApi.Models;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
+using System.Linq;
 
 namespace PrincipleStudios.OpenApi.Transformations
 {
-    public class PathControllerSourceTransformer : ISourceProvider
+    public class PathControllerSourceTransformer : OperationGroupingSourceTransformer
     {
-        private readonly OpenApiDocument document;
-        private readonly IOpenApiPathControllerTransformer pathControllerTransformer;
-        private readonly PathVisitor visitor;
+        public delegate string? OperationToGroupOverride(OpenApiOperation operation, OpenApiContext context);
 
-        public PathControllerSourceTransformer(OpenApiDocument document, IOpenApiPathControllerTransformer pathControllerTransformer)
+
+        public PathControllerSourceTransformer(OpenApiDocument document, IOpenApiOperationControllerTransformer operationControllerTransformer, OperationToGroupOverride? operationToGroupOverride = null)
+            : base(document, GetGroup(operationToGroupOverride), operationControllerTransformer)
         {
-            this.document = document;
-            this.pathControllerTransformer = pathControllerTransformer;
-            this.visitor = new PathVisitor(pathControllerTransformer);
         }
 
-        public IEnumerable<SourceEntry> GetSources(OpenApiTransformDiagnostic diagnostic)
+        private static OperationToGroup GetGroup(OperationToGroupOverride? operationToGroupOverride)
         {
-            var result = new List<SourceEntry>();
-            visitor.Visit(document, OpenApiContext.From(document), new PathVisitor.Argument(result.Add, diagnostic));
-            return result;
-        }
-
-        class PathVisitor : OpenApiDocumentVisitor<PathVisitor.Argument>
-        {
-            private readonly IOpenApiPathControllerTransformer pathControllerTransformer;
-            public record Argument(RegisterSourceEntry RegisterSourceEntry, OpenApiTransformDiagnostic Diagnostic);
-            public delegate void RegisterSourceEntry(SourceEntry sourceEntry);
-
-            public PathVisitor(IOpenApiPathControllerTransformer pathControllerTransformer)
+            return (operation, context) =>
             {
-                this.pathControllerTransformer = pathControllerTransformer;
-            }
+                var group = operationToGroupOverride?.Invoke(operation, context);
+                if (group != null)
+                    return (group, null, null);
 
-            public override void Visit(OpenApiPathItem pathItem, OpenApiContext context, Argument argument)
-            {
-                try
-                {
-                    argument.RegisterSourceEntry(
-                        pathControllerTransformer.TransformController(pathItem, context, argument.Diagnostic)
-                    );
-                }
-                catch (Exception ex)
-                {
-                    argument.Diagnostic.Errors.Add(new(context, $"Unhandled exception: {ex.Message}"));
-                }
-            }
-
-            public override void Visit(OpenApiExternalDocs ignored, OpenApiContext context, Argument argument) { }
-            public override void Visit(OpenApiServer ignored, OpenApiContext context, Argument argument) { }
-            public override void Visit(OpenApiComponents ignored, OpenApiContext context, Argument argument) { }
-            public override void Visit(OpenApiInfo ignored, OpenApiContext context, Argument argument) { }
-            public override void Visit(OpenApiSecurityRequirement ignored, OpenApiContext context, Argument argument) { }
-            public override void Visit(OpenApiTag ignored, OpenApiContext context, Argument argument) { }
-
-
+                var pathEntry = context.Where(c => c.Element is OpenApiPathItem).Last();
+                if (pathEntry is not { Key: string path, Element: OpenApiPathItem pathItem })
+                    throw new ArgumentException("Context is not initialized properly - key expected for path items", nameof(context));
+                return (path, pathItem.Summary, pathItem.Description);
+            };
         }
     }
 }

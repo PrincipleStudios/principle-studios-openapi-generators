@@ -10,7 +10,7 @@ namespace PrincipleStudios.OpenApi.CSharp
             ISourceProvider? result;
             var handlebarsFactory = new HandlebarsFactory(ControllerHandlebarsTemplateProcess.CreateHandlebars);
             ISchemaSourceResolver<InlineDataType> schemaResolver = new CSharpSchemaSourceResolver(documentNamespace ?? "", options, handlebarsFactory, versionInfo);
-            var controllerTransformer = new CSharpPathControllerTransformer(schemaResolver, document, documentNamespace ?? "", options, versionInfo, handlebarsFactory);
+            var controllerTransformer = new CSharpControllerTransformer(schemaResolver, document, documentNamespace ?? "", options, versionInfo, handlebarsFactory);
 
             result = new CompositeOpenApiSourceProvider(
                 new PathControllerSourceTransformer(document, controllerTransformer),
