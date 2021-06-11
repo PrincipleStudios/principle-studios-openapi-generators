@@ -1,4 +1,5 @@
-﻿globalReservedIdentifiers:
+﻿controllerNameExtension: dotnet-mvc-server-controller
+globalReservedIdentifiers:
   - "string"
   - "bool"
   - "double"

@@ -6,6 +6,7 @@ namespace PrincipleStudios.OpenApi.CSharp
 {
     public class CSharpSchemaOptions
     {
+        public string ControllerNameExtension { get; set; } = "dotnet-mvc-server-controller";
         public List<string> GlobalReservedIdentifiers { get; set; } = new();
         public Dictionary<string, List<string>> ContextualReservedIdentifiers { get; set; } = new();
         public string MapType { get; set; } = "global::System.Collections.Generic.Dictionary<string, {}>";

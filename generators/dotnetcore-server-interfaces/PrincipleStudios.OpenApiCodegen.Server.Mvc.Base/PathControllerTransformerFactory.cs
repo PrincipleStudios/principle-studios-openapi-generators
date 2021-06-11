@@ -1,5 +1,6 @@
 ﻿using Microsoft.OpenApi.Models;
 using PrincipleStudios.OpenApi.Transformations;
+using System.Linq;
 
 namespace PrincipleStudios.OpenApi.CSharp
 {
@@ -13,7 +14,17 @@ namespace PrincipleStudios.OpenApi.CSharp
             var controllerTransformer = new CSharpControllerTransformer(schemaResolver, document, documentNamespace ?? "", options, versionInfo, handlebarsFactory);
 
             result = new CompositeOpenApiSourceProvider(
-                new PathControllerSourceTransformer(document, controllerTransformer),
+                new PathControllerSourceTransformer(document, controllerTransformer, (operation, context) =>
+                {
+                    var extensionValue = context.Reverse()
+                        .Select(ctx => ctx.Element is not Microsoft.OpenApi.Interfaces.IOpenApiExtensible extensible ? null
+                            : !extensible.Extensions.TryGetValue($"x-{options.ControllerNameExtension}", out var value) ? null
+                            : value is not Microsoft.OpenApi.Any.OpenApiString s ? null
+                            : s.Value)
+                        .Where(value => value != null)
+                        .FirstOrDefault();
+                    return extensionValue;
+                }),
                 new DotNetMvcAddServicesHelperTransformer(document, controllerTransformer),
                 schemaResolver
             );
