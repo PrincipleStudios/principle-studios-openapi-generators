@@ -35,7 +35,7 @@ namespace PrincipleStudios.OpenApi.CSharp
             var (summary, description, operations) = groupData;
             csharpSchemaResolver.EnsureSchemasRegistered(document, OpenApiContext.From(document), diagnostic);
 
-            var className = CSharpNaming.ToClassName(groupName + " controller base", options.ReservedIdentifiers());
+            var className = CSharpNaming.ToClassName(groupName + " base", options.ReservedIdentifiers());
 
             var resultOperations = new List<ControllerOperation>();
             var visitor = new ControllerOperationVisitor(csharpSchemaResolver, options, controllerClassName: className);
@@ -68,7 +68,12 @@ namespace PrincipleStudios.OpenApi.CSharp
             };
         }
 
-        internal SourceEntry TransformAddServicesHelper(OpenApiPaths paths, OpenApiTransformDiagnostic diagnostic)
+        public string SanitizeGroupName(string groupName)
+        {
+            return CSharpNaming.ToClassName(groupName + " controller", options.ReservedIdentifiers());
+        }
+
+        internal SourceEntry TransformAddServicesHelper(IEnumerable<string> groups, OpenApiTransformDiagnostic diagnostic)
         {
             return new SourceEntry
             {
@@ -83,9 +88,9 @@ namespace PrincipleStudios.OpenApi.CSharp
                     ),
                     methodName: CSharpNaming.ToMethodName(document.Info.Title, options.ReservedIdentifiers()),
                     packageName: baseNamespace,
-                    controllers: (from p in paths
-                                  let genericTypeName = CSharpNaming.ToClassName($"T {p.Key} controller", options.ReservedIdentifiers())
-                                  let className = CSharpNaming.ToClassName(p.Key + " controller base", options.ReservedIdentifiers())
+                    controllers: (from p in groups
+                                  let genericTypeName = CSharpNaming.ToClassName($"T {p}", options.ReservedIdentifiers())
+                                  let className = CSharpNaming.ToClassName(p + " base", options.ReservedIdentifiers())
                                   select new templates.ControllerReference(genericTypeName, className)
                                   ).ToArray()
                 )),

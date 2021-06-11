@@ -29,12 +29,13 @@ namespace PrincipleStudios.OpenApi.Transformations
             this.operationControllerTransformer = operationControllerTransformer;
         }
 
-        public IEnumerable<SourceEntry> GetSources(OpenApiTransformDiagnostic diagnostic)
+        private Dictionary<string, OperationGroupData> GetGroups(OpenApiTransformDiagnostic diagnostic)
         {
             var result = new Dictionary<string, OperationGroupData>();
             visitor.VisitAny(openApiElement, openApiContext, new OperationGroupingVisitor.Argument((operation, context) =>
             {
                 var (group, summary, description) = operationToGroup(operation, context);
+                group = operationControllerTransformer.SanitizeGroupName(group);
                 var resultList = result[group] = result.TryGetValue(group, out var list) ? list : new()
                 {
                     Summary = summary,
@@ -46,7 +47,17 @@ namespace PrincipleStudios.OpenApi.Transformations
                     resultList.Description = null;
                 resultList.Operations.Add((operation, context));
             }, diagnostic));
-            return result.Select(kvp => operationControllerTransformer.TransformController(kvp.Key, kvp.Value, diagnostic)).ToArray();
+            return result;
+        }
+
+        public IEnumerable<string> GetGroupNames(OpenApiTransformDiagnostic diagnostic)
+        {
+            return GetGroups(diagnostic).Keys;
+        }
+
+        public IEnumerable<SourceEntry> GetSources(OpenApiTransformDiagnostic diagnostic)
+        {
+            return GetGroups(diagnostic).Select(kvp => operationControllerTransformer.TransformController(kvp.Key, kvp.Value, diagnostic)).ToArray();
         }
 
         class OperationGroupingVisitor : OpenApiDocumentVisitor<OperationGroupingVisitor.Argument>

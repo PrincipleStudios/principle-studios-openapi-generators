@@ -26,8 +26,7 @@ namespace PrincipleStudios.ServerInterfacesExample
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddOpenApiSwaggerPetstore<
-                Controllers.PetsController,
-                Controllers.PetsIdController
+                Controllers.PetsController
             >();
         }
 

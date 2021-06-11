@@ -13,7 +13,7 @@ namespace PrincipleStudios.OpenApi.CSharp
             ISchemaSourceResolver<InlineDataType> schemaResolver = new CSharpSchemaSourceResolver(documentNamespace ?? "", options, handlebarsFactory, versionInfo);
             var controllerTransformer = new CSharpControllerTransformer(schemaResolver, document, documentNamespace ?? "", options, versionInfo, handlebarsFactory);
 
-            result = new CompositeOpenApiSourceProvider(
+            var operationGrouping =
                 new PathControllerSourceTransformer(document, controllerTransformer, (operation, context) =>
                 {
                     var extensionValue = context.Reverse()
@@ -24,8 +24,11 @@ namespace PrincipleStudios.OpenApi.CSharp
                         .Where(value => value != null)
                         .FirstOrDefault();
                     return extensionValue;
-                }),
-                new DotNetMvcAddServicesHelperTransformer(document, controllerTransformer),
+                });
+
+            result = new CompositeOpenApiSourceProvider(
+                operationGrouping,
+                new DotNetMvcAddServicesHelperTransformer(controllerTransformer, operationGrouping),
                 schemaResolver
             );
             return result;

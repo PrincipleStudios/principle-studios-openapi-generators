@@ -11,9 +11,8 @@ namespace Microsoft.Extensions.DependencyInjection
 {
     public static partial class OpenApiControllerRegistrationExtensions
     {
-        public static IMvcBuilder AddOpenApiSwaggerPetstore<TPetsController, TPetsIdController>(this IServiceCollection services)
+        public static IMvcBuilder AddOpenApiSwaggerPetstore<TPetsController>(this IServiceCollection services)
             where TPetsController : global::PS.Controller.PetsControllerBase
-            where TPetsIdController : global::PS.Controller.PetsIdControllerBase
         {
             return services.AddControllers().AddNewtonsoftJson();
         }

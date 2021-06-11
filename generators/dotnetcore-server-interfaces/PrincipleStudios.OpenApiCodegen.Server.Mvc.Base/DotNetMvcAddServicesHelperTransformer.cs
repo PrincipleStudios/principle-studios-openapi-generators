@@ -8,18 +8,18 @@ namespace PrincipleStudios.OpenApi.CSharp
 {
     public class DotNetMvcAddServicesHelperTransformer : ISourceProvider
     {
-        private readonly OpenApiDocument document;
         private CSharpControllerTransformer schemaTransformer;
+        private readonly OperationGroupingSourceTransformer operationGrouping;
 
-        public DotNetMvcAddServicesHelperTransformer(OpenApiDocument document, CSharpControllerTransformer schemaTransformer)
+        public DotNetMvcAddServicesHelperTransformer(CSharpControllerTransformer schemaTransformer, OperationGroupingSourceTransformer operationGrouping)
         {
-            this.document = document;
             this.schemaTransformer = schemaTransformer;
+            this.operationGrouping = operationGrouping;
         }
 
         public IEnumerable<SourceEntry> GetSources(OpenApiTransformDiagnostic diagnostic)
         {
-            yield return schemaTransformer.TransformAddServicesHelper(document.Paths, diagnostic);
+            yield return schemaTransformer.TransformAddServicesHelper(operationGrouping.GetGroupNames(diagnostic), diagnostic);
         }
     }
 }

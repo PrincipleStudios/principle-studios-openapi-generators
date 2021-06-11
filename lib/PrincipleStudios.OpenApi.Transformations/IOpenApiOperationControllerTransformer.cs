@@ -6,6 +6,7 @@ namespace PrincipleStudios.OpenApi.Transformations
     public interface IOpenApiOperationControllerTransformer
     {
         SourceEntry TransformController(string groupName, OperationGroupData groupData, OpenApiTransformDiagnostic diagnostic);
+        string SanitizeGroupName(string groupName);
     }
 
     public class OperationGroupData
