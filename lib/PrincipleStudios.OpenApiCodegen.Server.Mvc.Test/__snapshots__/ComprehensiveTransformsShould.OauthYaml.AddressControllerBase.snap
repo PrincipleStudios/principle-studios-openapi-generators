@@ -12,7 +12,6 @@
 
 namespace PS.Controller
 { 
-    /// <summary>
     public abstract class AddressControllerBase : global::Microsoft.AspNetCore.Mvc.ControllerBase
     {
         

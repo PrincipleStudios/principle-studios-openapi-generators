@@ -12,7 +12,6 @@
 
 namespace PrincipleStudios.Test
 { 
-    /// <summary>
     public abstract class UserUsernameControllerBase : global::Microsoft.AspNetCore.Mvc.ControllerBase
     {
         

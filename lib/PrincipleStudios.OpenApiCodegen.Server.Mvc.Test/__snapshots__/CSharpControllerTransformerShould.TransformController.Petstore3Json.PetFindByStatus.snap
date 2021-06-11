@@ -12,7 +12,6 @@
 
 namespace PrincipleStudios.Test
 { 
-    /// <summary>
     public abstract class PetFindByStatusControllerBase : global::Microsoft.AspNetCore.Mvc.ControllerBase
     {
         

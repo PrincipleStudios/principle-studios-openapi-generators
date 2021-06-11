@@ -12,7 +12,6 @@
 
 namespace PS.Controller
 { 
-    /// <summary>
     public abstract class StoreOrderOrderIdControllerBase : global::Microsoft.AspNetCore.Mvc.ControllerBase
     {
         

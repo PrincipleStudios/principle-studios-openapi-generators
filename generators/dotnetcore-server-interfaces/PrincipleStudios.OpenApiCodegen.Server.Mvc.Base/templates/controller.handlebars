@@ -3,8 +3,8 @@
 #nullable disable warnings
 
 namespace {{packageName}}
-{ {{#if operations}}
-    /// <summary>{{#if summary}}
+{ {{#if operations}}{{#if summary}}
+    /// <summary>
     /// {{linewrap summary "
     /// "}}
     /// </summary>{{/if}}{{#if description}}
