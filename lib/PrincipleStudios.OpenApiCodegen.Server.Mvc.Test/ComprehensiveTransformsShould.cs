@@ -7,7 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Xunit;
-using static PrincipleStudios.OpenApiCodegen.Server.Mvc.DocumentHelpers;
+using static PrincipleStudios.OpenApiCodegen.Server.Mvc.OptionsHelpers;
+using static PrincipleStudios.OpenApiCodegen.TestUtils.DocumentHelpers;
 
 namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
 {

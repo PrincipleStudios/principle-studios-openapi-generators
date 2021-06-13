@@ -5,10 +5,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Xunit;
-using static PrincipleStudios.OpenApiCodegen.Server.Mvc.DocumentHelpers;
+using static PrincipleStudios.OpenApiCodegen.TestUtils.DocumentHelpers;
 
 namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
 {
+    using static OptionsHelpers;
     public class CSharpNamingShould
     {
         [InlineData("CSharpNamingShould", "CSharpNamingShould")]

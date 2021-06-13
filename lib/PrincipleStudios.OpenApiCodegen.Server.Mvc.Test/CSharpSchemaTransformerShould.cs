@@ -10,33 +10,51 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Xunit;
-using static PrincipleStudios.OpenApiCodegen.Server.Mvc.DocumentHelpers;
+using static PrincipleStudios.OpenApiCodegen.TestUtils.DocumentHelpers;
 
 namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
 {
+    using static OptionsHelpers;
 
     public class CSharpSchemaTransformerShould
     {
-        [Fact]
-        public void RecognizeInlinedValues()
+        public delegate OpenApiSchema SchemaAccessor(OpenApiDocument document);
+        [Theory]
+        [InlineData(true, "petstore.yaml", "paths./pets.get.parameters[?(@.name=='tags')].schema")]
+        [InlineData(true, "petstore.yaml", "paths./pets.get.parameters[?(@.name=='limit')].schema")]
+        [InlineData(false, "petstore.yaml", "paths./pets.get.responses.200.content.application/json.schema")]
+        [InlineData(false, "petstore.yaml", "paths./pets.get.responses.default.content.application/json.schema")]
+        [InlineData(false, "petstore.yaml", "paths./pets.post.requestBody.content.application/json.schema")]
+        [InlineData(false, "petstore.yaml", "paths./pets.post.responses.200.content.application/json.schema")]
+        [InlineData(true, "petstore.yaml", "paths./pets/{id}.get.parameters[?(@.name=='id')].schema")]
+        [InlineData(true, "petstore.yaml", "paths./pets/{id}.delete.parameters[?(@.name=='id')].schema")]
+        [InlineData(false, "petstore.yaml", "components.schemas.Pet")]
+        [InlineData(false, "petstore.yaml", "components.schemas.NewPet")]
+        [InlineData(false, "petstore.yaml", "components.schemas.Error")]
+        [InlineData(false, "no-refs.yaml", "paths./address.post.requestBody.content.application/json.schema")]
+        [InlineData(false, "no-refs.yaml", "paths./address.post.requestBody.content.application/json.schema.properties.location")]
+        public void RecognizeInlinedValues(bool expectedInline, string documentName, string path)
         {
-            var document = GetDocument("petstore.yaml");
+            var docContents = GetDocumentString(documentName);
 
+            using var reader = new StringReader(docContents);
+            var serializer = new SharpYaml.Serialization.Serializer();
+            var documentJObject = Newtonsoft.Json.Linq.JObject.FromObject(serializer.Deserialize(reader));
+            var token = documentJObject.SelectToken(path);
+            if (token == null)
+            {
+                Assert.NotNull(token);
+                return;
+            }
+
+            var openApiReader = new OpenApiStringReader();
+            var document = openApiReader.Read(docContents, out var docDiagnostic);
+            var schema = openApiReader.ReadFragment<OpenApiSchema>(token.ToString(), ToSpecVersion((documentJObject["openapi"] ?? documentJObject["swagger"])?.ToObject<string>()), out var openApiDiagnostic);
             var target = ConstructTarget(document, LoadOptions());
 
-            Assert.True(target.UseInline(document.Paths["/pets"].Operations[OperationType.Get].Parameters.Single(p => p.Name == "tags").Schema));
-            Assert.True(target.UseInline(document.Paths["/pets"].Operations[OperationType.Get].Parameters.Single(p => p.Name == "limit").Schema));
-            Assert.False(target.UseInline(document.Paths["/pets"].Operations[OperationType.Get].Responses["200"].Content["application/json"].Schema));
-            Assert.False(target.UseInline(document.Paths["/pets"].Operations[OperationType.Get].Responses["default"].Content["application/json"].Schema));
-            Assert.False(target.UseInline(document.Paths["/pets"].Operations[OperationType.Post].RequestBody.Content["application/json"].Schema));
-            Assert.False(target.UseInline(document.Paths["/pets"].Operations[OperationType.Post].Responses["200"].Content["application/json"].Schema));
+            var actual = target.UseInline(schema, document);
 
-            Assert.True(target.UseInline(document.Paths["/pets/{id}"].Operations[OperationType.Get].Parameters.Single(p => p.Name == "id").Schema));
-            Assert.True(target.UseInline(document.Paths["/pets/{id}"].Operations[OperationType.Delete].Parameters.Single(p => p.Name == "id").Schema));
-
-            Assert.False(target.UseInline(document.Components.Schemas["Pet"]));
-            Assert.False(target.UseInline(document.Components.Schemas["NewPet"]));
-            Assert.False(target.UseInline(document.Components.Schemas["Error"]));
+            Assert.Equal(expectedInline, actual);
         }
 
         [Theory]

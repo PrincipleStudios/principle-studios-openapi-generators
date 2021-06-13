@@ -51,13 +51,14 @@ namespace PrincipleStudios.OpenApi.TypeScript
             };
         }
 
-        public bool UseInline(OpenApiSchema schema)
+        public bool UseInline(OpenApiSchema schema, OpenApiDocument documentContext)
         {
             // C# can't inline things that must be referenced, and vice versa.
             // (Except with tuples, but those don't serialize/deserialize reliably yet.)
             return schema switch
             {
                 { Type: "object", Properties: { Count: 0 }, AdditionalProperties: OpenApiSchema _ } => true,
+                { UnresolvedReference: true, Reference: { IsExternal: false } } => UseInline((OpenApiSchema)documentContext.ResolveReference(schema.Reference), documentContext),
                 { UnresolvedReference: true } => throw new ArgumentException("Unable to resolve reference"),
                 { AllOf: { Count: > 1 } } => false,
                 { AnyOf: { Count: > 1 } } => false,
@@ -65,7 +66,7 @@ namespace PrincipleStudios.OpenApi.TypeScript
                 { Type: "object" } => false,
                 { Properties: { Count: > 1 } } => false,
                 { Type: "string" or "number" or "integer" or "boolean" } => true,
-                { Type: "array", Items: OpenApiSchema inner } => UseInline(inner),
+                { Type: "array", Items: OpenApiSchema inner } => UseInline(inner, documentContext),
                 _ => throw new NotSupportedException("Unknown schema"),
             };
         }
@@ -267,13 +268,14 @@ namespace PrincipleStudios.OpenApi.TypeScript
             var bestContext = GetBestContext(allContexts);
             if (bestContext.Any(c => c.Property is "AllOf"))
                 return null;
-            return !UseInline(schema)
+            return !UseInline(schema, allContexts.First().Reverse().Select(e => e.Element).OfType<OpenApiDocument>().Last())
                     ? TransformSchema(schema, GetBestContext(allContexts), diagnostic)
                     : null;
         }
 
         protected InlineDataType CreateInlineDataType(OpenApiSchema schema, OpenApiContext context, OpenApiTransformDiagnostic diagnostic)
         {
+            var documentContext = context.Reverse().Select(e => e.Element).OfType<OpenApiDocument>().Last();
             InlineDataType result = schema switch
             {
                 { Reference: not null } =>
@@ -282,7 +284,7 @@ namespace PrincipleStudios.OpenApi.TypeScript
                     new(options.ToMapType(ToInlineDataType(dictionaryValueSchema, context.Append(nameof(schema.AdditionalProperties), null, dictionaryValueSchema), diagnostic)().text), isEnumerable: true),
                 { Type: "array", Items: OpenApiSchema items } =>
                     new(options.ToArrayType(ToInlineDataType(items, context.Append(nameof(schema.Items), null, items), diagnostic)().text), isEnumerable: true),
-                _ when !UseInline(schema) =>
+                _ when !UseInline(schema, documentContext) =>
                     new(TypeScriptNaming.ToClassName(ContextToIdentifier(context), options.ReservedIdentifiers())),
                 { Type: string type, Format: var format } =>
                     new(options.Find(type, format)),

@@ -14,9 +14,9 @@ import {
  * @interface {{classname}}
  */
 export interface {{classname}} {{#if parent}}extends {{{parent}}} {{/if}}{
-{{#if additionalPropertiesType}}
-    [key: string]: {{{additionalPropertiesType}}}{{#if}} | any{{/if}}; {{! TODO - we really don't want `| any` here... see if TypeScript has an update for us. }}
-{{/if}}
+{{!-- {{#if additionalPropertiesType}}
+    [key: string]: {{{additionalPropertiesType}}}{{#if vars.Length}} | any{{/if}}; {{! TODO - we really don't want `| any` here... see if TypeScript has an update for us. }}
+{{/if}} --}}
 {{#each vars}}
     /**{{#if description}}
      * {{{description}}}{{/if}}
