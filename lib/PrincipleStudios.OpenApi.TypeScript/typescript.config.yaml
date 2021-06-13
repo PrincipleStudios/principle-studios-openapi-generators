@@ -1,0 +1,95 @@
+﻿controllerNameExtension: dotnet-mvc-server-controller
+globalReservedIdentifiers:
+  - "break"
+  - "case"
+  - "catch"
+  - "class"
+  - "const"
+  - "continue"
+  - "debugger"
+  - "default"
+  - "delete"
+  - "do"
+  - "else"
+  - "enum"
+  - "export"
+  - "extends"
+  - "false"
+  - "finally"
+  - "for"
+  - "function"
+  - "if"
+  - "import"
+  - "in"
+  - "instanceof"
+  - "new"
+  - "null"
+  - "return"
+  - "super"
+  - "switch"
+  - "this"
+  - "throw"
+  - "true"
+  - "try"
+  - "typeof"
+  - "var"
+  - "void"
+  - "while"
+  - "with"
+  - "as"
+  - "implements"
+  - "interface"
+  - "let"
+  - "package"
+  - "private"
+  - "protected"
+  - "public"
+  - "static"
+  - "yield"
+  - "any"
+  - "boolean"
+  - "constructor"
+  - "declare"
+  - "get"
+  - "module"
+  - "require"
+  - "number"
+  - "set"
+  - "string"
+  - "symbol"
+  - "type"
+  - "from"
+  - "of"
+  - "Record"
+  - "Array"
+contextualReservedIdentifiers: {}
+mapType: Record<string, {}>
+arrayType: Array<{}>
+fallbackType: any
+types:
+  boolean:
+    default: bool
+  string:
+    formats:
+      byte: byte[]
+      binary: global::System.IO.Stream
+      date-time: global::System.DateTimeOffset
+      uuid: global::System.Guid
+      guid: global::System.Guid
+    default: string
+  number:
+    formats:
+      float: float
+      double: double
+    default: double
+  integer:
+    formats:
+      int8: byte
+      int16: short
+      int32: int
+      int64: long
+      sint8: sbyte
+      uint16: ushort
+      uint32: uint
+      uint64: ulong
+    default: int

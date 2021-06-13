@@ -18,11 +18,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="csharp.config.yaml" />
+    <None Remove="typescript.config.yaml" />
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="csharp.config.yaml">
+    <EmbeddedResource Include="typescript.config.yaml">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </EmbeddedResource>
   </ItemGroup>
