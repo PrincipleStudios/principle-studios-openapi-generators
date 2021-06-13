@@ -9,6 +9,7 @@
  */
 #nullable enable
 #nullable disable warnings
+#pragma warning disable
 
 namespace PS.Controller
 { 
