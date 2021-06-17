@@ -18,7 +18,7 @@ namespace PrincipleStudios.OpenApiCodegen.Client.TypeScriptRxJs
         [InlineData(true, "petstore.yaml", "paths./pets.get.parameters[?(@.name=='tags')].schema")]
         [InlineData(true, "petstore.yaml", "paths./pets.get.parameters[?(@.name=='limit')].schema")]
         [InlineData(false, "petstore.yaml", "paths./pets.get.responses.200.content.application/json.schema")]
-        [InlineData(false, "petstore.yaml", "paths./pets.get.responses.default.content.application/json.schema")]
+        [InlineData(true, "petstore.yaml", "paths./pets.get.responses.default.content.application/json.schema")]
         [InlineData(false, "petstore.yaml", "paths./pets.post.requestBody.content.application/json.schema")]
         [InlineData(false, "petstore.yaml", "paths./pets.post.responses.200.content.application/json.schema")]
         [InlineData(true, "petstore.yaml", "paths./pets/{id}.get.parameters[?(@.name=='id')].schema")]
@@ -26,8 +26,8 @@ namespace PrincipleStudios.OpenApiCodegen.Client.TypeScriptRxJs
         [InlineData(false, "petstore.yaml", "components.schemas.Pet")]
         [InlineData(false, "petstore.yaml", "components.schemas.NewPet")]
         [InlineData(false, "petstore.yaml", "components.schemas.Error")]
-        [InlineData(false, "no-refs.yaml", "paths./address.post.requestBody.content.application/json.schema")]
-        [InlineData(false, "no-refs.yaml", "paths./address.post.requestBody.content.application/json.schema.properties.location")]
+        [InlineData(true, "no-refs.yaml", "paths./address.post.requestBody.content.application/json.schema")]
+        [InlineData(true, "no-refs.yaml", "paths./address.post.requestBody.content.application/json.schema.properties.location")]
         public void RecognizeInlinedValues(bool expectedInline, string documentName, string path)
         {
             var docContents = GetDocumentString(documentName);

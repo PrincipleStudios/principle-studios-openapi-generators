@@ -57,17 +57,10 @@ namespace PrincipleStudios.OpenApi.TypeScript
             // (Except with tuples, but those don't serialize/deserialize reliably yet.)
             return schema switch
             {
-                { Type: "object", Properties: { Count: 0 }, AdditionalProperties: OpenApiSchema _ } => true,
+                { Reference: null } => true,
+                { UnresolvedReference: false } => false,
                 { UnresolvedReference: true, Reference: { IsExternal: false } } => UseInline((OpenApiSchema)documentContext.ResolveReference(schema.Reference), documentContext),
                 { UnresolvedReference: true } => throw new ArgumentException("Unable to resolve reference"),
-                { AllOf: { Count: > 1 } } => false,
-                { AnyOf: { Count: > 1 } } => false,
-                { Type: "string", Enum: { Count: > 1 } } => false,
-                { Type: "object" } => false,
-                { Properties: { Count: > 1 } } => false,
-                { Type: "string" or "number" or "integer" or "boolean" } => true,
-                { Type: "array", Items: OpenApiSchema inner } => UseInline(inner, documentContext),
-                _ => throw new NotSupportedException("Unknown schema"),
             };
         }
 
