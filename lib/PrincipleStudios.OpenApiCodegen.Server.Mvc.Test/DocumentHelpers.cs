@@ -22,6 +22,7 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
             "headers.yaml",
             "empty.yaml",
             "controller-extension.yaml",
+            "dictionary-ref.yaml",
         };
 
         private static readonly string[] InvalidDocumentNames = new[]

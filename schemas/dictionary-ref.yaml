@@ -1,0 +1,27 @@
+openapi: "3.0.3"
+info:
+  version: 1.0.0
+  title: Dictionary Ref Demo
+  description: A sample API that uses a ref for something C# could inline
+paths:
+  /address:
+    post:
+      operationId: lookupRecord
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Record'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Record'
+components:
+  schemas:
+    Record:
+      type: object
+      additionalProperties:
+        type: string
