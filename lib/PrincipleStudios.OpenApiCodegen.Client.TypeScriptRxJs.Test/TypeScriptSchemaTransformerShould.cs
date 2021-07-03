@@ -17,8 +17,9 @@ namespace PrincipleStudios.OpenApiCodegen.Client.TypeScriptRxJs
         [Theory]
         [InlineData(true, "petstore.yaml", "paths./pets.get.parameters[?(@.name=='tags')].schema")]
         [InlineData(true, "petstore.yaml", "paths./pets.get.parameters[?(@.name=='limit')].schema")]
-        [InlineData(false, "petstore.yaml", "paths./pets.get.responses.200.content.application/json.schema")]
-        [InlineData(true, "petstore.yaml", "paths./pets.get.responses.default.content.application/json.schema")]
+        [InlineData(true, "petstore.yaml", "paths./pets.get.responses.200.content.application/json.schema")]
+        [InlineData(false, "petstore.yaml", "paths./pets.get.responses.200.content.application/json.schema.items")]
+        [InlineData(false, "petstore.yaml", "paths./pets.get.responses.default.content.application/json.schema")]
         [InlineData(false, "petstore.yaml", "paths./pets.post.requestBody.content.application/json.schema")]
         [InlineData(false, "petstore.yaml", "paths./pets.post.responses.200.content.application/json.schema")]
         [InlineData(true, "petstore.yaml", "paths./pets/{id}.get.parameters[?(@.name=='id')].schema")]
@@ -32,24 +33,40 @@ namespace PrincipleStudios.OpenApiCodegen.Client.TypeScriptRxJs
         {
             var docContents = GetDocumentString(documentName);
 
-            using var reader = new StringReader(docContents);
-            var serializer = new SharpYaml.Serialization.Serializer();
-            var documentJObject = Newtonsoft.Json.Linq.JObject.FromObject(serializer.Deserialize(reader));
-            var token = documentJObject.SelectToken(path);
-            if (token == null)
-            {
-                Assert.NotNull(token);
-                return;
-            }
+            var (document, schema) = GetSchema(docContents, path);
+            Assert.NotNull(document);
+            Assert.NotNull(schema);
 
-            var openApiReader = new OpenApiStringReader();
-            var document = openApiReader.Read(docContents, out var docDiagnostic);
-            var schema = openApiReader.ReadFragment<OpenApiSchema>(token.ToString(), ToSpecVersion((documentJObject["openapi"] ?? documentJObject["swagger"])?.ToObject<string>()), out var openApiDiagnostic);
-            var target = ConstructTarget(document, LoadOptions());
-
-            var actual = target.UseInline(schema, document);
+            var target = ConstructTarget(document!, LoadOptions());
+            var actual = target.UseInline(schema!, document!);
 
             Assert.Equal(expectedInline, actual);
+        }
+
+        private (OpenApiDocument? document, OpenApiSchema? schema) GetSchema(string docContents, string path)
+        {
+            const string prefix = "components.schemas.";
+            var openApiReader = new OpenApiStringReader();
+            var document = openApiReader.Read(docContents, out var docDiagnostic);
+
+            if (!path.StartsWith(prefix))
+            {
+                using var reader = new StringReader(docContents);
+                var serializer = new SharpYaml.Serialization.Serializer();
+                var documentJObject = Newtonsoft.Json.Linq.JObject.FromObject(serializer.Deserialize(reader));
+                var token = documentJObject.SelectToken(path);
+                if (token == null)
+                {
+                    return (document, null);
+                }
+
+                var schema = openApiReader.ReadFragment<OpenApiSchema>(token.ToString(), ToSpecVersion((documentJObject["openapi"] ?? documentJObject["swagger"])?.ToObject<string>()), out var openApiDiagnostic);
+                return (document, schema);
+            }
+            else
+            {
+                return (document, document.Components.Schemas[path.Substring(prefix.Length)]);
+            }
         }
 
         //[Theory]
