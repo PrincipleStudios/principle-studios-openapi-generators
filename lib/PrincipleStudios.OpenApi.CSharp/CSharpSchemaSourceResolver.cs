@@ -278,12 +278,14 @@ namespace PrincipleStudios.OpenApi.CSharp
             var documentContext = context.Reverse().Select(e => e.Element).OfType<OpenApiDocument>().Last();
             InlineDataType result = schema switch
             {
-                { Reference: not null } =>
-                    new(UseReferenceName(schema)),
                 { Type: "object", Properties: { Count: 0 }, AdditionalProperties: OpenApiSchema dictionaryValueSchema } =>
                     new(options.ToMapType(ToInlineDataType(dictionaryValueSchema, context.Append(nameof(schema.AdditionalProperties), null, dictionaryValueSchema), diagnostic)().text), isEnumerable: true),
                 { Type: "array", Items: OpenApiSchema items } =>
                     new(options.ToArrayType(ToInlineDataType(items, context.Append(nameof(schema.Items), null, items), diagnostic)().text), isEnumerable: true),
+                { Type: string type, Format: var format } when UseInline(schema, documentContext) && options.Find(type, format) != "object" =>
+                    new(options.Find(type, format)),
+                { Reference: not null } =>
+                    new(UseReferenceName(schema)),
                 _ when !UseInline(schema, documentContext) =>
                     new(CSharpNaming.ToClassName(ContextToIdentifier(context), options.ReservedIdentifiers())),
                 { Type: string type, Format: var format } =>

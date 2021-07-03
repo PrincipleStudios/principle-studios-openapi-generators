@@ -16,25 +16,25 @@ namespace PS.Controller
     /// <summary>
     /// pet status in the store
     /// </summary>
-    [global::Newtonsoft.Json.Converters.JsonConverter(typeof(global::Newtonsoft.Json.Converters.StringEnumConverter))]
+    [global::Newtonsoft.Json.JsonConverter(typeof(global::Newtonsoft.Json.Converters.StringEnumConverter))]
     public enum PetStatus
     {
         /// <summary>
         /// Enum Available for available
         /// </summary>
-        [global::Newtonsoft.Json.Converters.EnumMember(Value = "available")]
+        [global::System.Runtime.Serialization.EnumMember(Value = "available")]
         Available = 0,
 
         /// <summary>
         /// Enum Pending for pending
         /// </summary>
-        [global::Newtonsoft.Json.Converters.EnumMember(Value = "pending")]
+        [global::System.Runtime.Serialization.EnumMember(Value = "pending")]
         Pending = 1,
 
         /// <summary>
         /// Enum Sold for sold
         /// </summary>
-        [global::Newtonsoft.Json.Converters.EnumMember(Value = "sold")]
+        [global::System.Runtime.Serialization.EnumMember(Value = "sold")]
         Sold = 2,
 
     }

@@ -9,14 +9,14 @@ namespace {{this.packageName}}
     /// {{linewrap description "
     /// "}}
     /// </summary>{{/if}}
-    {{#if model.isString}}[global::Newtonsoft.Json.Converters.JsonConverter(typeof(global::Newtonsoft.Json.Converters.StringEnumConverter))]{{/if}}
+    {{#if model.isString}}[global::Newtonsoft.Json.JsonConverter(typeof(global::Newtonsoft.Json.Converters.StringEnumConverter))]{{/if}}
     public enum {{className}}
     {
         {{#each enumVars as |enumVar|}}
         /// <summary>
         /// Enum {{enumVar.name}} for {{{enumVar.value}}}
         /// </summary>{{#if model.isString}}
-        [global::Newtonsoft.Json.Converters.EnumMember(Value = "{{{enumVar.value}}}")]{{/if}}
+        [global::System.Runtime.Serialization.EnumMember(Value = "{{{enumVar.value}}}")]{{/if}}
         {{enumVar.name}} = {{#if model.isString}}{{@index}}{{else}}{{{enumVar.value}}}{{/if}},
 
         {{/each}}
