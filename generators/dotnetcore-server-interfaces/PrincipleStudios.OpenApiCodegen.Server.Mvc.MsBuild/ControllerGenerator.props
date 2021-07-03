@@ -10,7 +10,7 @@
     <Watch Include="@(OpenApiSchemaMvcServer);@(OpenApiSchemaCSharpOptions)" Condition=" '@(OpenApiSchemaMvcServer)' != '' " />
 
     <PSOpenApiControllerGeneratorInputs Include="$(MSBuildProjectFile)" Visible="false" />
-    <PSOpenApiControllerGeneratorInputs Include="$(MSBuildThisFileDirectory)**/*" Visible="false" />
+    <PSOpenApiControllerGeneratorInputs Include="$(MSBuildThisFileFullPath)**/*.dll" Visible="false" />
   </ItemGroup>
 
   <Target Name="CompileServerOpenApiCodeGen" BeforeTargets="GenerateMSBuildEditorConfigFileShouldRun" DependsOnTargets="_CompileServerOpenApiCodeGen" Condition=" '@(OpenApiSchemaMvcServer)' != '' ">
