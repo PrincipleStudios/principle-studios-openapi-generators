@@ -7,6 +7,8 @@ using PrincipleStudios.OpenApi.TypeScript;
 using static PrincipleStudios.OpenApiCodegen.TestUtils.DocumentHelpers;
 using System.IO;
 using Microsoft.OpenApi.Readers;
+using System.Collections.Generic;
+using System;
 
 namespace PrincipleStudios.OpenApiCodegen.Client.TypeScriptRxJs
 {
@@ -70,6 +72,42 @@ namespace PrincipleStudios.OpenApiCodegen.Client.TypeScriptRxJs
                 return (document, document.Components.Schemas[path.Substring(prefix.Length)]);
             }
         }
+
+        [Theory]
+        [MemberData(nameof(InlineAssertionData))]
+        public void ConvertToInlineTypes(string documentName, Func<OpenApiDocument, OpenApiSchema> findSchema, string expectedInline)
+        {
+            var docContents = GetDocumentString(documentName);
+            var openApiReader = new OpenApiStringReader();
+            var document = openApiReader.Read(docContents, out var docDiagnostic);
+
+            var schema = findSchema(document);
+
+            var target = ConstructTarget(document, LoadOptions());
+            target.EnsureSchemasRegistered(document, OpenApiContext.From(document), new());
+            var inline = target.ToInlineDataType(schema)();
+            
+            Assert.Equal(expectedInline, inline.text);
+        }
+
+        public static IEnumerable<object[]> InlineAssertionData =>
+            new List<(string documentName, Func<OpenApiDocument, OpenApiSchema> findSchema, string expectedInline)>
+            {
+                ("petstore.yaml", (OpenApiDocument doc) => doc.Paths["/pets"].Operations[OperationType.Get].Parameters.First(p => p.Name == "tags").Schema, "Array<string>"),
+                ("petstore.yaml", (OpenApiDocument doc) => doc.Paths["/pets"].Operations[OperationType.Get].Parameters.First(p => p.Name == "limit").Schema, "number"),
+                ("petstore.yaml", (OpenApiDocument doc) => doc.Paths["/pets"].Operations[OperationType.Get].Responses["200"].Content["application/json"].Schema, "Array<Pet>"),
+                ("petstore.yaml", (OpenApiDocument doc) => doc.Paths["/pets"].Operations[OperationType.Get].Responses["200"].Content["application/json"].Schema.Items, "Pet"),
+                ("petstore.yaml", (OpenApiDocument doc) => doc.Paths["/pets"].Operations[OperationType.Get].Responses["default"].Content["application/json"].Schema, "Error"),
+                ("petstore.yaml", (OpenApiDocument doc) => doc.Paths["/pets"].Operations[OperationType.Post].RequestBody.Content["application/json"].Schema, "NewPet"),
+                ("petstore.yaml", (OpenApiDocument doc) => doc.Paths["/pets"].Operations[OperationType.Post].Responses["200"].Content["application/json"].Schema, "Pet"),
+                ("petstore.yaml", (OpenApiDocument doc) => doc.Paths["/pets/{id}"].Operations[OperationType.Get].Parameters.First(p => p.Name == "id").Schema, "BigInt"),
+                ("petstore.yaml", (OpenApiDocument doc) => doc.Paths["/pets/{id}"].Operations[OperationType.Delete].Parameters.First(p => p.Name == "id").Schema, "BigInt"),
+                ("petstore.yaml", (OpenApiDocument doc) => doc.Components.Schemas["Pet"], "Pet"),
+                ("petstore.yaml", (OpenApiDocument doc) => doc.Components.Schemas["NewPet"], "NewPet"),
+                ("petstore.yaml", (OpenApiDocument doc) => doc.Components.Schemas["Error"], "Error"),
+                ("no-refs.yaml", (OpenApiDocument doc) => doc.Paths["/address"].Operations[OperationType.Post].RequestBody.Content["application/json"].Schema, "{ formattedAddress: string; location: { latitude: number; longitude: number } }"),
+                ("no-refs.yaml", (OpenApiDocument doc) => doc.Paths["/address"].Operations[OperationType.Post].RequestBody.Content["application/json"].Schema.Properties["location"], "{ latitude: number; longitude: number }"),
+            }.Select(t => new object[] { t.documentName, t.findSchema, t.expectedInline });
 
         //[Theory]
         //[InlineData("petstore.yaml", "Pet")]

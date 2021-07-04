@@ -270,6 +270,7 @@ namespace PrincipleStudios.OpenApi.TypeScript
                     new(options.ToMapType(ToInlineDataType(dictionaryValueSchema)().text), isEnumerable: true),
                 { Type: "array", Items: OpenApiSchema items } =>
                     new(options.ToArrayType(ToInlineDataType(items)().text), isEnumerable: true),
+                // TODO - better inline types
                 _ when ProduceSourceEntry(schema) =>
                     new(UseReferenceName(schema)),
                 { Type: string type, Format: var format } =>

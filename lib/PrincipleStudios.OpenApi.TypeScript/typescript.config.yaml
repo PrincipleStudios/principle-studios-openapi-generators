@@ -68,28 +68,16 @@ arrayType: Array<{}>
 fallbackType: any
 types:
   boolean:
-    default: bool
+    default: boolean
   string:
     formats:
-      byte: byte[]
-      binary: global::System.IO.Stream
-      date-time: global::System.DateTimeOffset
-      uuid: global::System.Guid
-      guid: global::System.Guid
+      #byte: byte[]
+      #binary: global::System.IO.Stream
     default: string
   number:
-    formats:
-      float: float
-      double: double
-    default: double
+    default: number
   integer:
     formats:
-      int8: byte
-      int16: short
-      int32: int
-      int64: long
-      sint8: sbyte
-      uint16: ushort
-      uint32: uint
-      uint64: ulong
-    default: int
+      int64: BigInt
+      uint64: BigInt
+    default: number
