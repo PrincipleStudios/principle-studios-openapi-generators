@@ -22,11 +22,10 @@ namespace PrincipleStudios.OpenApi.Transformations
         private readonly Dictionary<OpenApiSchema, SchemaSourceEntry> referencedSchemas = new Dictionary<OpenApiSchema, SchemaSourceEntry>();
         private readonly IOpenApiDocumentVisitor<SchemaCallback> schemaVisitor;
 
-        public InlineDataTypeResolver<TInlineDataType> ToInlineDataType(OpenApiSchema schema, OpenApiContext context, OpenApiTransformDiagnostic diagnostic)
+        public InlineDataTypeResolver<TInlineDataType> ToInlineDataType(OpenApiSchema schema)
         {
-            context.AssertLast(schema);
-
-            EnsureSchemasRegistered(schema, context, diagnostic);
+            if (!referencedSchemas.ContainsKey(schema))
+                throw new InvalidOperationException("Attempt to use unregistered schema");
 
             return referencedSchemas[schema].Inline;
         }
@@ -72,15 +71,17 @@ namespace PrincipleStudios.OpenApi.Transformations
                 referencedSchemas[s.Key] = new SchemaSourceEntry
                 {
                     Schema = s.Key,
-                    Inline = () => GetInlineDataType(s.Key, allContext, diagnostic),
+                    Inline = () => GetInlineDataType(s.Key),
                     AllContext = allContext,
                     GetSourceEntry = () => GetSourceEntry(s.Key, allContext, diagnostic),
                 };
             }
         }
 
-        protected abstract TInlineDataType GetInlineDataType(OpenApiSchema schema, IEnumerable<OpenApiContext> allContexts, OpenApiTransformDiagnostic diagnostic);
+        protected abstract TInlineDataType GetInlineDataType(OpenApiSchema schema);
         protected abstract SourceEntry? GetSourceEntry(OpenApiSchema schema, IEnumerable<OpenApiContext> allContexts, OpenApiTransformDiagnostic diagnostic);
+        protected IEnumerable<OpenApiContext> GetApiContexts(OpenApiSchema schema) =>
+            referencedSchemas[schema].AllContext.AsEnumerable();
 
         protected abstract TInlineDataType UnresolvedReferencePlaceholder();
 

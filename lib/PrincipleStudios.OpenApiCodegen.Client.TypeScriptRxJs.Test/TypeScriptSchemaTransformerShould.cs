@@ -15,21 +15,21 @@ namespace PrincipleStudios.OpenApiCodegen.Client.TypeScriptRxJs
     public class TypeScriptSchemaTransformerShould
     {
         [Theory]
-        [InlineData(true, "petstore.yaml", "paths./pets.get.parameters[?(@.name=='tags')].schema")]
-        [InlineData(true, "petstore.yaml", "paths./pets.get.parameters[?(@.name=='limit')].schema")]
-        [InlineData(true, "petstore.yaml", "paths./pets.get.responses.200.content.application/json.schema")]
-        [InlineData(false, "petstore.yaml", "paths./pets.get.responses.200.content.application/json.schema.items")]
-        [InlineData(false, "petstore.yaml", "paths./pets.get.responses.default.content.application/json.schema")]
-        [InlineData(false, "petstore.yaml", "paths./pets.post.requestBody.content.application/json.schema")]
-        [InlineData(false, "petstore.yaml", "paths./pets.post.responses.200.content.application/json.schema")]
-        [InlineData(true, "petstore.yaml", "paths./pets/{id}.get.parameters[?(@.name=='id')].schema")]
-        [InlineData(true, "petstore.yaml", "paths./pets/{id}.delete.parameters[?(@.name=='id')].schema")]
-        [InlineData(false, "petstore.yaml", "components.schemas.Pet")]
-        [InlineData(false, "petstore.yaml", "components.schemas.NewPet")]
-        [InlineData(false, "petstore.yaml", "components.schemas.Error")]
-        [InlineData(true, "no-refs.yaml", "paths./address.post.requestBody.content.application/json.schema")]
-        [InlineData(true, "no-refs.yaml", "paths./address.post.requestBody.content.application/json.schema.properties.location")]
-        public void RecognizeInlinedValues(bool expectedInline, string documentName, string path)
+        [InlineData(false, "petstore.yaml", "paths./pets.get.parameters[?(@.name=='tags')].schema")]
+        [InlineData(false, "petstore.yaml", "paths./pets.get.parameters[?(@.name=='limit')].schema")]
+        [InlineData(false, "petstore.yaml", "paths./pets.get.responses.200.content.application/json.schema")]
+        [InlineData(true, "petstore.yaml", "paths./pets.get.responses.200.content.application/json.schema.items")]
+        [InlineData(true, "petstore.yaml", "paths./pets.get.responses.default.content.application/json.schema")]
+        [InlineData(true, "petstore.yaml", "paths./pets.post.requestBody.content.application/json.schema")]
+        [InlineData(true, "petstore.yaml", "paths./pets.post.responses.200.content.application/json.schema")]
+        [InlineData(false, "petstore.yaml", "paths./pets/{id}.get.parameters[?(@.name=='id')].schema")]
+        [InlineData(false, "petstore.yaml", "paths./pets/{id}.delete.parameters[?(@.name=='id')].schema")]
+        [InlineData(true, "petstore.yaml", "components.schemas.Pet")]
+        [InlineData(true, "petstore.yaml", "components.schemas.NewPet")]
+        [InlineData(true, "petstore.yaml", "components.schemas.Error")]
+        [InlineData(false, "no-refs.yaml", "paths./address.post.requestBody.content.application/json.schema")]
+        [InlineData(false, "no-refs.yaml", "paths./address.post.requestBody.content.application/json.schema.properties.location")]
+        public void KnowWhenToGenerateSource(bool expectedInline, string documentName, string path)
         {
             var docContents = GetDocumentString(documentName);
 
@@ -38,7 +38,7 @@ namespace PrincipleStudios.OpenApiCodegen.Client.TypeScriptRxJs
             Assert.NotNull(schema);
 
             var target = ConstructTarget(document!, LoadOptions());
-            var actual = target.UseInline(schema!, document!);
+            var actual = target.ProduceSourceEntry(schema!);
 
             Assert.Equal(expectedInline, actual);
         }
@@ -61,6 +61,8 @@ namespace PrincipleStudios.OpenApiCodegen.Client.TypeScriptRxJs
                 }
 
                 var schema = openApiReader.ReadFragment<OpenApiSchema>(token.ToString(), ToSpecVersion((documentJObject["openapi"] ?? documentJObject["swagger"])?.ToObject<string>()), out var openApiDiagnostic);
+                if (schema.UnresolvedReference)
+                    schema = (OpenApiSchema)document.ResolveReference(schema.Reference);
                 return (document, schema);
             }
             else

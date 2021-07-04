@@ -51,22 +51,22 @@ namespace PrincipleStudios.OpenApi.CSharp
             };
         }
 
-        public bool UseInline(OpenApiSchema schema, OpenApiDocument documentContext)
+        public bool ProduceSourceEntry(OpenApiSchema schema)
         {
             // C# can't inline things that must be referenced, and vice versa.
             // (Except with tuples, but those don't serialize/deserialize reliably yet.)
             return schema switch
             {
-                { Type: "object", Properties: { Count: 0 }, AdditionalProperties: OpenApiSchema _ } => true,
-                { UnresolvedReference: true, Reference: { IsExternal: false } } => UseInline((OpenApiSchema)documentContext.ResolveReference(schema.Reference), documentContext),
+                { Type: "object", Properties: { Count: 0 }, AdditionalProperties: OpenApiSchema _ } => false,
+                { UnresolvedReference: true, Reference: { IsExternal: false } } => ProduceSourceEntry((OpenApiSchema)GetApiContexts(schema).First().Reverse().Select(e => e.Element).OfType<OpenApiDocument>().Last().ResolveReference(schema.Reference)),
                 { UnresolvedReference: true } => throw new ArgumentException("Unable to resolve reference"),
-                { AllOf: { Count: > 1 } } => false,
-                { AnyOf: { Count: > 1 } } => false,
-                { Type: "string", Enum: { Count: > 1 } } => false,
-                { Type: "object" } => false,
-                { Properties: { Count: > 1 } } => false,
-                { Type: "string" or "number" or "integer" or "boolean" } => true,
-                { Type: "array", Items: OpenApiSchema inner } => UseInline(inner, documentContext),
+                { AllOf: { Count: > 1 } } => true,
+                { AnyOf: { Count: > 1 } } => true,
+                { Type: "string", Enum: { Count: > 1 } } => true,
+                { Type: "object" } => true,
+                { Properties: { Count: > 1 } } => true,
+                { Type: "string" or "number" or "integer" or "boolean" } => false,
+                { Type: "array", Items: OpenApiSchema inner } => false,
                 _ => throw new NotSupportedException("Unknown schema"),
             };
         }
@@ -76,12 +76,13 @@ namespace PrincipleStudios.OpenApi.CSharp
             return CSharpNaming.ToClassName(schema.Reference.Id, options.ReservedIdentifiers());
         }
 
-        public SourceEntry? TransformSchema(OpenApiSchema schema, OpenApiContext context, OpenApiTransformDiagnostic diagnostic)
+        public SourceEntry? TransformSchema(OpenApiSchema schema, OpenApiTransformDiagnostic diagnostic)
         {
             var targetNamespace = baseNamespace;
+            var context = GetBestContext(GetApiContexts(schema));
             var info = context.Select(v => v.Element).OfType<OpenApiDocument>().Last().Info;
-            var className = CSharpNaming.ToClassName(schema.Reference?.Id ?? ContextToIdentifier(context), options.ReservedIdentifiers());
-
+            var className = GetClassName(schema);
+            
             var header = new templates.PartialHeader(
                 appName: info.Title,
                 appDescription: info.Description,
@@ -111,6 +112,12 @@ namespace PrincipleStudios.OpenApi.CSharp
                 Key = $"{targetNamespace}.{className}.cs",
                 SourceText = entry,
             };
+        }
+
+        private string GetClassName(OpenApiSchema schema)
+        {
+            var context = GetBestContext(GetApiContexts(schema));
+            return CSharpNaming.ToClassName(schema.Reference?.Id ?? ContextToIdentifier(context), options.ReservedIdentifiers());
         }
 
         protected readonly Regex _2xxRegex = new Regex("2[0-9]{2}");
@@ -205,7 +212,7 @@ namespace PrincipleStudios.OpenApi.CSharp
 
             Func<templates.ModelVar>[] vars = (from entry in properties
                         let req = required.Contains(entry.Key)
-                        let dataTypeBase = ToInlineDataType(entry.Value, context.Append(nameof(schema.Properties), entry.Key, entry.Value), diagnostic)
+                        let dataTypeBase = ToInlineDataType(entry.Value)
                         let dataType = req ? dataTypeBase : () => dataTypeBase().MakeNullable()
                         select (Func<templates.ModelVar>)(() => new templates.ModelVar(
                             baseName: entry.Key,
@@ -257,37 +264,30 @@ namespace PrincipleStudios.OpenApi.CSharp
                 _ => null,
             };
 
-        protected override InlineDataType GetInlineDataType(OpenApiSchema schema, IEnumerable<OpenApiContext> allContexts, OpenApiTransformDiagnostic diagnostic)
-        {
-            var inline = CreateInlineDataType(schema, GetBestContext(allContexts), diagnostic);
-            return inline;
-        }
-
         protected override SourceEntry? GetSourceEntry(OpenApiSchema schema, IEnumerable<OpenApiContext> allContexts, OpenApiTransformDiagnostic diagnostic)
         {
             var bestContext = GetBestContext(allContexts);
             if (bestContext.Any(c => c.Property is "AllOf"))
                 return null;
-            return !UseInline(schema, allContexts.First().Reverse().Select(e => e.Element).OfType<OpenApiDocument>().Last())
-                    ? TransformSchema(schema, GetBestContext(allContexts), diagnostic)
+            return ProduceSourceEntry(schema)
+                    ? TransformSchema(schema, diagnostic)
                     : null;
         }
 
-        protected InlineDataType CreateInlineDataType(OpenApiSchema schema, OpenApiContext context, OpenApiTransformDiagnostic diagnostic)
+        protected override InlineDataType GetInlineDataType(OpenApiSchema schema)
         {
-            var documentContext = context.Reverse().Select(e => e.Element).OfType<OpenApiDocument>().Last();
             InlineDataType result = schema switch
             {
                 { Type: "object", Properties: { Count: 0 }, AdditionalProperties: OpenApiSchema dictionaryValueSchema } =>
-                    new(options.ToMapType(ToInlineDataType(dictionaryValueSchema, context.Append(nameof(schema.AdditionalProperties), null, dictionaryValueSchema), diagnostic)().text), isEnumerable: true),
+                    new(options.ToMapType(ToInlineDataType(dictionaryValueSchema)().text), isEnumerable: true),
                 { Type: "array", Items: OpenApiSchema items } =>
-                    new(options.ToArrayType(ToInlineDataType(items, context.Append(nameof(schema.Items), null, items), diagnostic)().text), isEnumerable: true),
-                { Type: string type, Format: var format } when UseInline(schema, documentContext) && options.Find(type, format) != "object" =>
+                    new(options.ToArrayType(ToInlineDataType(items)().text), isEnumerable: true),
+                { Type: string type, Format: var format } when !ProduceSourceEntry(schema) && options.Find(type, format) != "object" =>
                     new(options.Find(type, format)),
                 { Reference: not null } =>
                     new(UseReferenceName(schema)),
-                _ when !UseInline(schema, documentContext) =>
-                    new(CSharpNaming.ToClassName(ContextToIdentifier(context), options.ReservedIdentifiers())),
+                _ when ProduceSourceEntry(schema) =>
+                    new(GetClassName(schema)),
                 { Type: string type, Format: var format } =>
                     new(options.Find(type, format)),
                 _ => throw new NotSupportedException("Unknown schema"),
