@@ -111,14 +111,14 @@ namespace PrincipleStudios.OpenApiCodegen.Client.TypeScriptRxJs
 
         [Theory]
         [InlineData("petstore.yaml", "Pet")]
-        //[InlineData("petstore.yaml", "NewPet")]
-        //[InlineData("petstore.yaml", "Error")]
-        //[InlineData("petstore3.json", "Order")]
-        //[InlineData("petstore3.json", "Category")]
-        //[InlineData("petstore3.json", "User")]
-        //[InlineData("petstore3.json", "Tag")]
+        [InlineData("petstore.yaml", "NewPet")]
+        [InlineData("petstore.yaml", "Error")]
+        [InlineData("petstore3.json", "Order")]
+        [InlineData("petstore3.json", "Category")]
+        [InlineData("petstore3.json", "User")]
+        [InlineData("petstore3.json", "Tag")]
         //[InlineData("petstore3.json", "Pet")]
-        //[InlineData("petstore3.json", "ApiResponse")]
+        [InlineData("petstore3.json", "ApiResponse")]
         public void TransformModel(string documentName, string model)
         {
             var document = GetDocument(documentName);
