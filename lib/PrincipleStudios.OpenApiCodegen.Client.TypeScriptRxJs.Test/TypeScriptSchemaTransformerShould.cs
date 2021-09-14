@@ -109,8 +109,8 @@ namespace PrincipleStudios.OpenApiCodegen.Client.TypeScriptRxJs
                 ("no-refs.yaml", (OpenApiDocument doc) => doc.Paths["/address"].Operations[OperationType.Post].RequestBody.Content["application/json"].Schema.Properties["location"], "{ \"latitude\": number; \"longitude\": number }"),
             }.Select(t => new object[] { t.documentName, t.findSchema, t.expectedInline });
 
-        //[Theory]
-        //[InlineData("petstore.yaml", "Pet")]
+        [Theory]
+        [InlineData("petstore.yaml", "Pet")]
         //[InlineData("petstore.yaml", "NewPet")]
         //[InlineData("petstore.yaml", "Error")]
         //[InlineData("petstore3.json", "Order")]
@@ -119,20 +119,21 @@ namespace PrincipleStudios.OpenApiCodegen.Client.TypeScriptRxJs
         //[InlineData("petstore3.json", "Tag")]
         //[InlineData("petstore3.json", "Pet")]
         //[InlineData("petstore3.json", "ApiResponse")]
-        //public void TransformModel(string documentName, string model)
-        //{
-        //    var document = GetDocument(documentName);
-        //    var options = LoadOptions();
+        public void TransformModel(string documentName, string model)
+        {
+            var document = GetDocument(documentName);
+            var options = LoadOptions();
 
-        //    var target = ConstructTarget(document, options);
-        //    OpenApiTransformDiagnostic diagnostic = new();
+            var target = ConstructTarget(document, options);
+            OpenApiTransformDiagnostic diagnostic = new();
+            target.EnsureSchemasRegistered(document, OpenApiContext.From(document), diagnostic);
 
-        //    var context = OpenApiContext.From(document).Append(nameof(document.Components), null, document.Components).Append(nameof(document.Components.Schemas), model, document.Components.Schemas[model]);
+            var context = OpenApiContext.From(document).Append(nameof(document.Components), null, document.Components).Append(nameof(document.Components.Schemas), model, document.Components.Schemas[model]);
 
-        //    var result = target.TransformSchema(document.Components.Schemas[model], context, diagnostic);
+            var result = target.TransformSchema(document.Components.Schemas[model], context, diagnostic);
 
-        //    Snapshot.Match(result?.SourceText, $"Full-{nameof(TransformModel)}.{TypeScriptNaming.ToTitleCaseIdentifier(documentName, options.ReservedIdentifiers())}.{TypeScriptNaming.ToTitleCaseIdentifier(model, options.ReservedIdentifiers())}");
-        //}
+            Snapshot.Match(result?.SourceText, $"Full-{nameof(TransformModel)}.{TypeScriptNaming.ToTitleCaseIdentifier(documentName, options.ReservedIdentifiers())}.{TypeScriptNaming.ToTitleCaseIdentifier(model, options.ReservedIdentifiers())}");
+        }
 
         private static TypeScriptSchemaSourceResolver ConstructTarget(OpenApiDocument document, TypeScriptSchemaOptions options, string baseNamespace = "PrincipleStudios.Test")
         {

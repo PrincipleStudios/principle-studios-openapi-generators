@@ -10,9 +10,8 @@ namespace PrincipleStudios.OpenApi.TypeScript
 {
     public record InlineDataType(string text, bool nullable = false, bool isEnumerable = false)
     {
-        // Assumes C#8, since it's standard in VS2019+, which is when nullable reference types were introduced
         public InlineDataType MakeNullable() =>
-            nullable ? this : new(text + "?", nullable: true, isEnumerable: isEnumerable);
+            nullable ? this : new(text + " | null", nullable: true, isEnumerable: isEnumerable);
     }
 
     public class TypeScriptSchemaSourceResolver : SchemaSourceResolver<InlineDataType>

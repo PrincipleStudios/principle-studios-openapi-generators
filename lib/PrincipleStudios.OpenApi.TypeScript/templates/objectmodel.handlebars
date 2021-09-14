@@ -1,28 +1,30 @@
 /* eslint-disable */
 {{>partial_header header}}
-{{#if imports}}
+{{!-- {{#if imports}}
 import {
 {{#each imports}}
 {{{.}}},
 {{/each}}
 } from './';
 
-{{/if}}
+{{/if}} --}}
+
+{{#with model}}
 /**{{#if description}}
  * {{{description}}}{{/if}}
  * @export
- * @interface {{classname}}
+ * @interface {{className}}
  */
-export interface {{classname}} {{#if parent}}extends {{{parent}}} {{/if}}{
+export interface {{className}} {{#if parent}}extends {{{parent}}} {{/if}}{
 {{!-- {{#if additionalPropertiesType}}
     [key: string]: {{{additionalPropertiesType}}}{{#if vars.Length}} | any{{/if}}; {{! TODO - we really don't want `| any` here... see if TypeScript has an update for us. }}
 {{/if}} --}}
 {{#each vars}}
     /**{{#if description}}
      * {{{description}}}{{/if}}
-     * @type {{{datatype}}}
-     * @memberof {{classname}}
+     * @type {{{dataType}}}
      */
-{{#if isReadOnly}}readonly {{/if}}{{name}}{{#unless required}}?{{/unless}}: {{{datatype}}}{{#if isNullable}} | null{{/if}};
+    {{#if isReadOnly}}readonly {{/if}}{{name}}{{#unless required}}?{{/unless}}: {{{dataType}}};
 {{/each}}
 }
+{{/with}}
