@@ -105,8 +105,8 @@ namespace PrincipleStudios.OpenApiCodegen.Client.TypeScriptRxJs
                 ("petstore.yaml", (OpenApiDocument doc) => doc.Components.Schemas["Pet"], "Pet"),
                 ("petstore.yaml", (OpenApiDocument doc) => doc.Components.Schemas["NewPet"], "NewPet"),
                 ("petstore.yaml", (OpenApiDocument doc) => doc.Components.Schemas["Error"], "Error"),
-                ("no-refs.yaml", (OpenApiDocument doc) => doc.Paths["/address"].Operations[OperationType.Post].RequestBody.Content["application/json"].Schema, "{ formattedAddress: string; location: { latitude: number; longitude: number } }"),
-                ("no-refs.yaml", (OpenApiDocument doc) => doc.Paths["/address"].Operations[OperationType.Post].RequestBody.Content["application/json"].Schema.Properties["location"], "{ latitude: number; longitude: number }"),
+                ("no-refs.yaml", (OpenApiDocument doc) => doc.Paths["/address"].Operations[OperationType.Post].RequestBody.Content["application/json"].Schema, "{ \"formattedAddress\": string; \"location\": { \"latitude\": number; \"longitude\": number } }"),
+                ("no-refs.yaml", (OpenApiDocument doc) => doc.Paths["/address"].Operations[OperationType.Post].RequestBody.Content["application/json"].Schema.Properties["location"], "{ \"latitude\": number; \"longitude\": number }"),
             }.Select(t => new object[] { t.documentName, t.findSchema, t.expectedInline });
 
         //[Theory]

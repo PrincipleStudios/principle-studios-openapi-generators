@@ -205,7 +205,7 @@ namespace PrincipleStudios.OpenApi.TypeScript
                             dataType: dataType().text,
                             nullable: dataType().nullable,
                             isContainer: dataType().isEnumerable,
-                            name: TypeScriptNaming.ToPropertyName(entry.Key, options.ReservedIdentifiers("object", className)),
+                            name: entry.Key,
                             required: req
                          ))).ToArray();
 
@@ -273,6 +273,8 @@ namespace PrincipleStudios.OpenApi.TypeScript
                 // TODO - better inline types
                 _ when ProduceSourceEntry(schema) =>
                     new(UseReferenceName(schema)),
+                { Type: "object", Properties: IDictionary<string, OpenApiSchema> properties, AdditionalProperties: null } =>
+                    new($"{{ { string.Join("; ", properties.Select(p => $"\"{p.Key}\": {ToInlineDataType(p.Value)().text}"))} }}"),
                 { Type: string type, Format: var format } =>
                     new(options.Find(type, format)),
                 _ => throw new NotSupportedException("Unknown schema"),
