@@ -1,4 +1,3 @@
-/* eslint-disable */
 {{>partial_header header}}
 {{#with model}}
 {{#each imports}}
@@ -14,7 +13,7 @@ import {
  * @export
  * @interface {{className}}
  */
-export interface {{className}} {{#if parent}}extends {{{parent}}} {{/if}}{
+export type {{className}} = {{#if parent}}{{{parent}}} &amp; {{/if}}{
 {{!-- {{#if additionalPropertiesType}}
     [key: string]: {{{additionalPropertiesType}}}{{#if vars.Length}} | any{{/if}}; {{! TODO - we really don't want `| any` here... see if TypeScript has an update for us. }}
 {{/if}} --}}
@@ -25,5 +24,5 @@ export interface {{className}} {{#if parent}}extends {{{parent}}} {{/if}}{
      */
     {{#if isReadOnly}}readonly {{/if}}{{name}}{{#unless required}}?{{/unless}}: {{{dataType}}};
 {{/each}}
-}
+};
 {{/with}}

@@ -1,5 +1,4 @@
-﻿/* eslint-disable */
-/*
+﻿/*
  * Swagger Petstore
  *
  * A sample API that uses a petstore as an example to demonstrate features in the OpenAPI 3.0 specification
@@ -13,7 +12,7 @@
  * @export
  * @interface Pet
  */
-export interface Pet {
+export type Pet = {
     /**
      * @type string
      */
@@ -26,4 +25,4 @@ export interface Pet {
      * @type BigInt
      */
     id: BigInt;
-}
+};
