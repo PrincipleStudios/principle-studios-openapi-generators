@@ -68,6 +68,12 @@ namespace PrincipleStudios.OpenApi.TypeScript
             return TypeScriptNaming.ToClassName(schema.Reference.Id, options.ReservedIdentifiers());
         }
 
+        public string ToSourceEntryKey(OpenApiSchema schema)
+        {
+            var className = UseReferenceName(schema);
+            return $"{className}.ts";
+        }
+
         public SourceEntry? TransformSchema(OpenApiSchema schema, OpenApiContext context, OpenApiTransformDiagnostic diagnostic)
         {
             var targetNamespace = baseNamespace;
@@ -100,7 +106,7 @@ namespace PrincipleStudios.OpenApi.TypeScript
             );
             return new SourceEntry
             {
-                Key = $"{targetNamespace}.{className}.cs",
+                Key = ToSourceEntryKey(schema),
                 SourceText = entry,
             };
         }
@@ -209,6 +215,12 @@ namespace PrincipleStudios.OpenApi.TypeScript
                          ))).ToArray();
 
             return () => new templates.ObjectModel(
+                imports: (from entry in properties.Values
+                          where ProduceSourceEntry(entry)
+                          let refName = UseReferenceName(entry)
+                          let fileName = ToSourceEntryKey(entry)
+                          group refName by fileName into imports
+                          select new templates.ImportStatement(imports.ToArray(), imports.Key.EndsWith(".ts") ? imports.Key.Substring(0, imports.Key.Length - 3) : imports.Key)).ToArray(),
                 description: schema.Description,
                 className: className,
                 parent: null, // TODO - if "all of" and only one was a reference, we should be able to use inheritance.

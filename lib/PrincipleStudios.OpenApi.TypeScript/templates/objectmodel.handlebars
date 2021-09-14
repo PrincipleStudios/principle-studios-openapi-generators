@@ -1,15 +1,14 @@
 /* eslint-disable */
 {{>partial_header header}}
-{{!-- {{#if imports}}
-import {
-{{#each imports}}
-{{{.}}},
-{{/each}}
-} from './';
-
-{{/if}} --}}
-
 {{#with model}}
+{{#each imports}}
+import {
+{{#each members}}
+    {{{.}}},
+{{/each}}
+} from './{{path}}';
+{{/each}}
+
 /**{{#if description}}
  * {{{description}}}{{/if}}
  * @export

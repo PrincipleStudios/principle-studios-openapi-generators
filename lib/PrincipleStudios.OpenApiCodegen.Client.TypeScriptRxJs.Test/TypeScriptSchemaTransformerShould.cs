@@ -117,7 +117,7 @@ namespace PrincipleStudios.OpenApiCodegen.Client.TypeScriptRxJs
         [InlineData("petstore3.json", "Category")]
         [InlineData("petstore3.json", "User")]
         [InlineData("petstore3.json", "Tag")]
-        //[InlineData("petstore3.json", "Pet")]
+        [InlineData("petstore3.json", "Pet")]
         [InlineData("petstore3.json", "ApiResponse")]
         public void TransformModel(string documentName, string model)
         {

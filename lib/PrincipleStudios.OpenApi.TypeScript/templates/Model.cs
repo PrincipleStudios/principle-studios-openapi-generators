@@ -14,6 +14,11 @@ namespace PrincipleStudios.OpenApi.TypeScript.templates
         TModel model
     ) where TModel : Model;
 
+    public record ImportStatement(
+        string[] members,
+        string path
+    );
+
     public record Model(
         string description,
         string className
@@ -32,6 +37,7 @@ namespace PrincipleStudios.OpenApi.TypeScript.templates
     );
 
     public record ObjectModel(
+        ImportStatement[] imports,
         string description,
         string className,
         string? parent,
