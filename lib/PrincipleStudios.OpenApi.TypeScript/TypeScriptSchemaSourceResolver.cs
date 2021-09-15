@@ -18,15 +18,13 @@ namespace PrincipleStudios.OpenApi.TypeScript
 
     public class TypeScriptSchemaSourceResolver : SchemaSourceResolver<InlineDataType>
     {
-        private readonly string baseNamespace;
         private readonly TypeScriptSchemaOptions options;
         private readonly HandlebarsFactory handlebarsFactory;
         private readonly string versionInfo;
 
 
-        public TypeScriptSchemaSourceResolver(string baseNamespace, TypeScriptSchemaOptions options, HandlebarsFactory handlebarsFactory, string versionInfo)
+        public TypeScriptSchemaSourceResolver(TypeScriptSchemaOptions options, HandlebarsFactory handlebarsFactory, string versionInfo)
         {
-            this.baseNamespace = baseNamespace;
             this.options = options;
             this.handlebarsFactory = handlebarsFactory;
             this.versionInfo = versionInfo;
@@ -83,7 +81,6 @@ namespace PrincipleStudios.OpenApi.TypeScript
 
         public SourceEntry? TransformSchema(OpenApiSchema schema, OpenApiContext context, OpenApiTransformDiagnostic diagnostic)
         {
-            var targetNamespace = baseNamespace;
             var info = context.Select(v => v.Element).OfType<OpenApiDocument>().Last().Info;
             var className = UseReferenceName(schema);
 
@@ -107,7 +104,7 @@ namespace PrincipleStudios.OpenApi.TypeScript
                 return null;
             var entry = HandlebarsTemplateProcess.ProcessModel(
                 header: header,
-                packageName: targetNamespace,
+                packageName: "",
                 model: model,
                 handlebarsFactory.Handlebars
             );

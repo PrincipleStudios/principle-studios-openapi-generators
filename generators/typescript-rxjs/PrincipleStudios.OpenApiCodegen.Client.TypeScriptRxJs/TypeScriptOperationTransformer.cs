@@ -27,11 +27,16 @@ namespace PrincipleStudios.OpenApiCodegen.Client.TypeScriptRxJs
             this.handlebarsFactory = handlebarsFactory;
         }
 
+        public string OperationFileName(OpenApiOperation operation)
+        {
+            var operationName = TypeScriptNaming.ToMethodName(operation.OperationId, options.ReservedIdentifiers());
+            return $"operations/{operationName}.ts";
+        }
+
         public SourceEntry TransformOperation(OpenApiOperation operation, OpenApiContext context, OpenApiTransformDiagnostic diagnostic)
         {
             typeScriptSchemaResolver.EnsureSchemasRegistered(document, OpenApiContext.From(document), diagnostic);
 
-            var operationName = TypeScriptNaming.ToMethodName(operation.OperationId, options.ReservedIdentifiers());
 
             var template = new templates.OperationTemplate(
                 header: new PartialHeader(
@@ -48,7 +53,7 @@ namespace PrincipleStudios.OpenApiCodegen.Client.TypeScriptRxJs
             var entry = handlebarsFactory.Handlebars.ProcessOperation(template);
             return new SourceEntry
             {
-                Key = $"operation/{operationName}.ts",
+                Key = OperationFileName(operation),
                 SourceText = entry,
             };
         }
@@ -69,29 +74,26 @@ namespace PrincipleStudios.OpenApiCodegen.Client.TypeScriptRxJs
             return visitor.ToOperationTemplate(operation, httpMethod.ToUpper(), path, builder);
         }
 
-        //internal SourceEntry TransformBarrelFileHelper(IEnumerable<string> groups, OpenApiTransformDiagnostic diagnostic)
-        //{
-        //    return new SourceEntry
-        //    {
-        //        Key = $"index.ts",
-        //        SourceText = handlebarsFactory.Handlebars.ProcessBarrelFile(new templates.AddServicesModel(
-        //            header: new templates.PartialHeader(
-        //                appName: document.Info.Title,
-        //                appDescription: document.Info.Description,
-        //                version: document.Info.Version,
-        //                infoEmail: document.Info.Contact?.Email,
-        //                codeGeneratorVersionInfo: versionInfo
-        //            ),
-        //            methodName: TypeScriptNaming.ToMethodName(document.Info.Title, options.ReservedIdentifiers()),
-        //            packageName: baseNamespace,
-        //            controllers: (from p in groups
-        //                          let genericTypeName = TypeScriptNaming.ToClassName($"T {p}", options.ReservedIdentifiers())
-        //                          let className = TypeScriptNaming.ToClassName(p + " base", options.ReservedIdentifiers())
-        //                          select new templates.ControllerReference(genericTypeName, className)
-        //                          ).ToArray()
-        //        )),
-        //    };
-        //}
+        internal SourceEntry TransformBarrelFileHelper(IEnumerable<OpenApiOperation> operations, OpenApiTransformDiagnostic diagnostic)
+        {
+            var thisPath = $"operations/index.ts";
+            return new SourceEntry
+            {
+                Key = thisPath,
+                SourceText = handlebarsFactory.Handlebars.ProcessBarrelFile(new templates.OperationBarrelFileModel(
+                    header: new PartialHeader(
+                        appName: document.Info.Title,
+                        appDescription: document.Info.Description,
+                        version: document.Info.Version,
+                        infoEmail: document.Info.Contact?.Email,
+                        codeGeneratorVersionInfo: versionInfo
+                    ),
+                    operations: (from op in operations
+                                 select new templates.OperationReference(OperationFileName(op).ToNodePath(thisPath), TypeScriptNaming.ToMethodName(op.OperationId, options.ReservedIdentifiers()))
+                                 ).ToArray()
+                )),
+            };
+        }
 
     }
 }

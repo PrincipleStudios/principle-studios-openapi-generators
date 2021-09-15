@@ -13,6 +13,7 @@ globalReservedIdentifiers:
   - "else"
   - "enum"
   - "export"
+  - "exports"
   - "extends"
   - "false"
   - "finally"
@@ -62,6 +63,21 @@ globalReservedIdentifiers:
   - "of"
   - "Record"
   - "Array"
+  # The following are reserved for @principlestudios/openapi-codegen-typescript
+  - HttpHeaders
+  - HttpQuery
+  - throwIfNullOrUndefined
+  - encodeURI
+  - RequestConversions
+  - RequestOpts
+  - ResponseArgs
+  - StandardResponse
+  # The following are reserved for operation mapping
+  - RequestParams
+  - RequestBodies
+  - Responses
+  - responseConversion
+  - index
 contextualReservedIdentifiers: {}
 mapType: Record<string, {}>
 arrayType: Array<{}>

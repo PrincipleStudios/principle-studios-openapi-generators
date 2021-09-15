@@ -135,9 +135,9 @@ namespace PrincipleStudios.OpenApiCodegen.Client.TypeScriptRxJs
             Snapshot.Match(result?.SourceText, $"Full-{nameof(TransformModel)}.{TypeScriptNaming.ToTitleCaseIdentifier(documentName, options.ReservedIdentifiers())}.{TypeScriptNaming.ToTitleCaseIdentifier(model, options.ReservedIdentifiers())}");
         }
 
-        private static TypeScriptSchemaSourceResolver ConstructTarget(OpenApiDocument document, TypeScriptSchemaOptions options, string baseNamespace = "PrincipleStudios.Test")
+        private static TypeScriptSchemaSourceResolver ConstructTarget(OpenApiDocument document, TypeScriptSchemaOptions options)
         {
-            return new TypeScriptSchemaSourceResolver(baseNamespace, options, new HandlebarsFactory(HandlebarsTemplateProcess.CreateHandlebars), "");
+            return new TypeScriptSchemaSourceResolver(options, new HandlebarsFactory(HandlebarsTemplateProcess.CreateHandlebars), "");
         }
 
     }

@@ -27,5 +27,15 @@ namespace PrincipleStudios.OpenApiCodegen.Client.TypeScriptRxJs
             return sr.ToString();
         }
 
+        public static string ProcessBarrelFile(this IHandlebars handlebars, templates.OperationBarrelFileModel barrelFileModel)
+        {
+            var template = handlebars.Configuration.RegisteredTemplates["operationBarrelFile"];
+
+            using var sr = new StringWriter();
+            var dict = HandlebarsTemplateProcess.ToDictionary<templates.OperationBarrelFileModel>(barrelFileModel);
+            template(sr, dict);
+            return sr.ToString();
+        }
+
     }
 }

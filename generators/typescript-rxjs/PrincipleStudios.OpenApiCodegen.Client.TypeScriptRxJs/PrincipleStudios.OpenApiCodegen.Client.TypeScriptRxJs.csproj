@@ -7,10 +7,12 @@
 
   <ItemGroup>
     <None Remove="templates\operation.handlebars" />
+    <None Remove="templates\operationBarrelFile.handlebars" />
   </ItemGroup>
 
   <ItemGroup>
     <EmbeddedResource Include="templates\operation.handlebars" />
+    <EmbeddedResource Include="templates\operationBarrelFile.handlebars" />
   </ItemGroup>
 
   <ItemGroup>

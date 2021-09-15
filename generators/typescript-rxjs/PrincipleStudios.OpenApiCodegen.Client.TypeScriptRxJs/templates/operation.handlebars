@@ -78,7 +78,7 @@ export function {{{name}}}(params: RequestParams{{#if requestBodies.length}}, bo
     };
 
     {{#if hasQueryParams}}
-    const query: HttpQuery = { // required parameters are used directly since they are already checked by throwIfNullOrUndefined
+    const query: HttpQuery = { {{!-- required parameters are used directly since they are already checked by throwIfNullOrUndefined  --}}
         {{#each sharedParams}}
         {{#if isQueryParam}}
         {{#if required}}

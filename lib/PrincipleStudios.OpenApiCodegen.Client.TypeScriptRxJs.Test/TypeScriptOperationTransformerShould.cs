@@ -47,7 +47,7 @@ namespace PrincipleStudios.OpenApiCodegen.Client.TypeScriptRxJs
         private static TypeScriptOperationTransformer ConstructTarget(OpenApiDocument document, TypeScriptSchemaOptions options)
         {
             var handlebarsFactory = new HandlebarsFactory(OperationHandlebarsTemplateProcess.CreateHandlebars);
-            var resolver = new TypeScriptSchemaSourceResolver("PS.Controller", options, handlebarsFactory, "");
+            var resolver = new TypeScriptSchemaSourceResolver(options, handlebarsFactory, "");
             return new TypeScriptOperationTransformer(resolver, document, options, "", handlebarsFactory);
         }
 

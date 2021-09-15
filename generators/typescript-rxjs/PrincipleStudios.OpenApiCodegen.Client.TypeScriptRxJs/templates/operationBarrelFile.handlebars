@@ -1,0 +1,10 @@
+{{>partial_header header}}
+{{#each operations}}
+import { conversion as {{methodName}} } from '{{path}}';
+{{/each}}
+
+export default {
+{{#each operations}}
+    {{methodName}},
+{{/each}}
+} as const;
