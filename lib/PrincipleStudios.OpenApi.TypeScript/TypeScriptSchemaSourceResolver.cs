@@ -14,7 +14,7 @@ namespace PrincipleStudios.OpenApi.TypeScript
             nullable ? this : new(text + " | null", nullable: true, isEnumerable: isEnumerable);
     }
 
-    public class TypeScriptSchemaSourceResolver : SchemaSourceResolver<InlineDataType>
+    public class TypeScriptSchemaSourceResolver : SchemaSourceResolver<InlineDataType>, IImportableSchemaSourceResolver<InlineDataType>
     {
         private readonly string baseNamespace;
         private readonly TypeScriptSchemaOptions options;
@@ -71,7 +71,7 @@ namespace PrincipleStudios.OpenApi.TypeScript
         public string ToSourceEntryKey(OpenApiSchema schema)
         {
             var className = UseReferenceName(schema);
-            return $"{className}.ts";
+            return $"models/{className}.ts";
         }
 
         public SourceEntry? TransformSchema(OpenApiSchema schema, OpenApiContext context, OpenApiTransformDiagnostic diagnostic)
@@ -202,30 +202,58 @@ namespace PrincipleStudios.OpenApi.TypeScript
             var required = new HashSet<string>(objectModel.required());
 
             Func<templates.ModelVar>[] vars = (from entry in properties
-                        let req = required.Contains(entry.Key)
-                        let dataTypeBase = ToInlineDataType(entry.Value)
-                        let dataType = req ? dataTypeBase : () => dataTypeBase().MakeNullable()
-                        select (Func<templates.ModelVar>)(() => new templates.ModelVar(
-                            baseName: entry.Key,
-                            dataType: dataType().text,
-                            nullable: dataType().nullable,
-                            isContainer: dataType().isEnumerable,
-                            name: entry.Key,
-                            required: req
-                         ))).ToArray();
+                                               let req = required.Contains(entry.Key)
+                                               let dataTypeBase = ToInlineDataType(entry.Value)
+                                               let dataType = req ? dataTypeBase : () => dataTypeBase().MakeNullable()
+                                               select (Func<templates.ModelVar>)(() => new templates.ModelVar(
+                                                   baseName: entry.Key,
+                                                   dataType: dataType().text,
+                                                   nullable: dataType().nullable,
+                                                   isContainer: dataType().isEnumerable,
+                                                   name: entry.Key,
+                                                   required: req
+                                                ))).ToArray();
+
 
             return () => new templates.ObjectModel(
-                imports: (from entry in properties.Values
-                          where ProduceSourceEntry(entry)
-                          let refName = UseReferenceName(entry)
-                          let fileName = ToSourceEntryKey(entry)
-                          group refName by fileName into imports
-                          select new templates.ImportStatement(imports.ToArray(), imports.Key.EndsWith(".ts") ? imports.Key.Substring(0, imports.Key.Length - 3) : imports.Key)).ToArray(),
+                imports: GetImportStatements(properties.Values, "./models/").ToArray(),
                 description: schema.Description,
                 className: className,
                 parent: null, // TODO - if "all of" and only one was a reference, we should be able to use inheritance.
                 vars: vars.Select(v => v()).ToArray()
             );
+        }
+
+        public IEnumerable<templates.ImportStatement> GetImportStatements(IEnumerable<OpenApiSchema> schemasReferenced, string path)
+        {
+            return (from entry in schemasReferenced
+                    where ProduceSourceEntry(entry)
+                    let refName = UseReferenceName(entry)
+                    let fileName = ToSourceEntryKey(entry)
+                    group refName by fileName into imports
+                    select new templates.ImportStatement(imports.ToArray(), ToNodePath(imports.Key, path)));
+        }
+
+        private string ToNodePath(string path, string fromPath)
+        {
+            if (path.StartsWith("..")) throw new ArgumentException("Cannot start with ..", nameof(path));
+            if (fromPath.StartsWith("..")) throw new ArgumentException("Cannot start with ..", nameof(fromPath));
+            path = Normalize(path);
+            fromPath = Normalize(fromPath);
+            var pathParts = path.Split('/');
+            pathParts[pathParts.Length - 1] = System.IO.Path.GetFileNameWithoutExtension(pathParts[pathParts.Length - 1]);
+            var fromPathParts = System.IO.Path.GetDirectoryName(fromPath).Split('/');
+            var ignored = pathParts.TakeWhile((p, i) => i < fromPathParts.Length && p == fromPathParts[i]).Count();
+            pathParts = pathParts.Skip(ignored).ToArray();
+            fromPathParts = fromPathParts.Skip(ignored).ToArray();
+            return string.Join("/", Enumerable.Repeat(".", 1).Concat(Enumerable.Repeat("..", fromPathParts.Length).Concat(pathParts)));
+
+            string Normalize(string p)
+            {
+                p = p.Replace('\\', '/');
+                if (p.StartsWith("./")) p = p.Substring(2);
+                return p;
+            }
         }
 
         private templates.EnumModel ToEnumModel(string className, OpenApiSchema schema)

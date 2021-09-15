@@ -21,6 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\generators\typescript-rxjs\PrincipleStudios.OpenApiCodegen.Client.TypeScriptRxJs\PrincipleStudios.OpenApiCodegen.Client.TypeScriptRxJs.csproj" />
     <ProjectReference Include="..\PrincipleStudios.OpenApi.TypeScript\PrincipleStudios.OpenApi.TypeScript.csproj" />
     <ProjectReference Include="..\PrincipleStudios.OpenApiCodegen.TestUtils\PrincipleStudios.OpenApiCodegen.TestUtils.csproj" />
   </ItemGroup>
