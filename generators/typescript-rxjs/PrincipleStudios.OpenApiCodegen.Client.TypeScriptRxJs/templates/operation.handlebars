@@ -55,21 +55,24 @@ export function {{{name}}}(params: RequestParams): RequestOpts;
 export function {{{name}}}<K extends Exclude<keyof Requests, ''>>(params: RequestParams, body: RequestBodies[K], mimeType: K): RequestOpts;
 {{/if}}
 export function {{{name}}}(params: RequestParams{{#if requestBodies.length}}, body?: RequestBodies[keyof Requests], mimeType?: keyof RequestBodies{{/if}}): RequestOpts {
-    {{#if sharedParams.length}}
+    throwIfNullOrUndefined(params, 'params');
+    {{#if requestBodies.length}}
+    if (mimeType) throwIfNullOrUndefined(body, 'body');
+    if (body) throwIfNullOrUndefined(mimeType, 'mimeType');
+    {{/if}}
     {{#each sharedParams}}
     {{#if required}}
-    throwIfNullOrUndefined({{> paramNamePartial}}, '{{nickname}}');
+    throwIfNullOrUndefined(params.{{{paramName}}}, '{{rawName}}');
     {{/if}}
     {{/each}}
 
-    {{/if}}
     const headers: HttpHeaders = {
         {{#if requestBodies.length}}
         'Content-Type': mimeType,
         {{/if}}
-        {{#each sharedParams as |param|}}
-        {{#if param.isHeaderParam}}
-        '{{{param.rawName}}}': param.{{{param.paramName}}}, {{!-- TODO - openapi style/explode combo --}}
+        {{#each sharedParams}}
+        {{#if isHeaderParam}}
+        '{{{rawName}}}': params.{{{paramName}}}, {{!-- TODO - openapi style/explode combo --}}
         {{/if}}
         {{/each}}
     };
@@ -123,7 +126,7 @@ export function {{{name}}}(params: RequestParams{{#if requestBodies.length}}, bo
 
     {{/hasFormParams}} --}}
     return {
-        path: '{{{path}}}'{{!--{{#pathParams}}.replace({{=<% %>=}}'{<%baseName%>}'<%={{ }}=%>, encodeURI({{> paramNamePartial}})){{/pathParams}}--}},
+        path: '{{{path}}}'{{#each sharedParams}}{{#if isPathParam}}.replace('{{{rawNameWithCurly}}}', encodeURI(params.{{{paramName}}})){{/if}}{{/each}},
         method: '{{httpMethod}}',
         headers,
         {{#if hasQueryParams}}

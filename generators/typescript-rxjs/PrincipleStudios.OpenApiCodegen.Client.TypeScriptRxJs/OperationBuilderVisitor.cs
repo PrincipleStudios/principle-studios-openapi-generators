@@ -59,6 +59,7 @@ namespace PrincipleStudios.OpenApiCodegen.Client.TypeScriptRxJs
             var dataType = param.Required ? dataTypeBase : dataTypeBase.MakeNullable();
             argument.Builder?.SharedParameters.Add(new templates.OperationParameter(
                 rawName: param.Name,
+                rawNameWithCurly: $"{{{param.Name}}}",
                 paramName: TypeScriptNaming.ToParameterName(param.Name, options.ReservedIdentifiers()),
                 description: param.Description,
                 dataType: dataType.text,
@@ -185,6 +186,7 @@ namespace PrincipleStudios.OpenApiCodegen.Client.TypeScriptRxJs
                 let dataType = required ? dataTypeBase : dataTypeBase.MakeNullable()
                 select new templates.OperationParameter(
                     rawName: param.Key,
+                    rawNameWithCurly: $"{{{param.Key}}}",
                     paramName: TypeScriptNaming.ToParameterName(param.Key, options.ReservedIdentifiers()),
                     description: null,
                     dataType: dataType.text,
@@ -208,6 +210,7 @@ namespace PrincipleStudios.OpenApiCodegen.Client.TypeScriptRxJs
                 let dataType = typeScriptSchemaResolver.ToInlineDataType(ct.Schema)()
                 select new templates.OperationParameter(
                    rawName: null,
+                   rawNameWithCurly: null,
                    paramName: TypeScriptNaming.ToParameterName("body", options.ReservedIdentifiers()),
                    description: null,
                    dataType: dataType.text,

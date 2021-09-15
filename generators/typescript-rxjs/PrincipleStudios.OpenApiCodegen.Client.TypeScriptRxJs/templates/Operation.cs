@@ -28,6 +28,7 @@ namespace PrincipleStudios.OpenApiCodegen.Client.TypeScriptRxJs.templates
 
     public record OperationParameter(
         string? rawName,
+        string? rawNameWithCurly,
         string paramName,
         string? description,
         string dataType,

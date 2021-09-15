@@ -19,7 +19,7 @@ namespace PrincipleStudios.OpenApiCodegen.Client.TypeScriptRxJs
     {
         [Theory]
         [InlineData("petstore.yaml", "findPets")]
-        //[InlineData("petstore.yaml", "/pets/{id}")]
+        [InlineData("petstore.yaml", "find pet by id")]
         //[InlineData("petstore3.json", "/pet")]
         //[InlineData("petstore3.json", "/pet/findByStatus")]
         //[InlineData("petstore3.json", "/pet/findByTags")]
