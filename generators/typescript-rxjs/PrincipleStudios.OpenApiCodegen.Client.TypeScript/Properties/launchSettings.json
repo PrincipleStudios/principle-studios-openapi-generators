@@ -2,7 +2,7 @@
   "profiles": {
     "PrincipleStudios.OpenApiCodegen.Client.TypeScript": {
       "commandName": "Project",
-      "commandLineArgs": "\"$(ProjectDir)../../../schemas/petstore.yaml\" \"$(ProjectDir)/demo/\" -c"
+      "commandLineArgs": "\"$(ProjectDir)../../../schemas/petstore.yaml\" \"$(ProjectDir)demo/\" -c"
     }
   }
 }

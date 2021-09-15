@@ -14,7 +14,7 @@ namespace PrincipleStudios.OpenApiCodegen.Client.TypeScript
         static void Main(string[] args)
         {
             var commandLineApplication = new CommandLineApplication(true);
-            commandLineApplication.Name = GetVersionInfo();
+            commandLineApplication.Description = GetVersionInfo();
             commandLineApplication.HelpOption("-? | -h | --help");
             commandLineApplication.Option("-o | --options", "Path to the options file", CommandOptionType.SingleValue);
             commandLineApplication.Option("-x | --exclude-gitignore", "Do not emit gitignore file", CommandOptionType.NoValue);
@@ -53,7 +53,9 @@ namespace PrincipleStudios.OpenApiCodegen.Client.TypeScript
                 }
                 if (clean && System.IO.Directory.Exists(outputPath))
                 {
-                    foreach (var entry in System.IO.Directory.GetFiles(outputPath).Concat(System.IO.Directory.GetDirectories(outputPath)))
+                    foreach (var entry in System.IO.Directory.GetFiles(outputPath))
+                        System.IO.File.Delete(entry);
+                    foreach (var entry in System.IO.Directory.GetDirectories(outputPath))
                         System.IO.Directory.Delete(entry, true);
                 }
                 foreach (var entry in entries)
