@@ -2,14 +2,14 @@
 using PrincipleStudios.OpenApi.Transformations;
 using PrincipleStudios.OpenApi.TypeScript;
 using PrincipleStudios.OpenApi.TypeScript.templates;
-using PrincipleStudios.OpenApiCodegen.Client.TypeScriptRxJs.templates;
+using PrincipleStudios.OpenApiCodegen.Client.TypeScript.templates;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PrincipleStudios.OpenApiCodegen.Client.TypeScriptRxJs
+namespace PrincipleStudios.OpenApiCodegen.Client.TypeScript
 {
 
     class OperationBuilderVisitor : OpenApiDocumentVisitor<OperationBuilderVisitor.Argument>

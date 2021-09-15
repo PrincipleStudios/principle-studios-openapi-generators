@@ -10,7 +10,7 @@ using Microsoft.OpenApi.Readers;
 using System.Collections.Generic;
 using System;
 
-namespace PrincipleStudios.OpenApiCodegen.Client.TypeScriptRxJs
+namespace PrincipleStudios.OpenApiCodegen.Client.TypeScript
 {
     using static OptionsHelpers;
 

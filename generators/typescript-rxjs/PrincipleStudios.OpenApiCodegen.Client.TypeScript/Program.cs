@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace PrincipleStudios.OpenApiCodegen.Client.TypeScriptRxJs
+namespace PrincipleStudios.OpenApiCodegen.Client.TypeScript
 {
     class Program
     {

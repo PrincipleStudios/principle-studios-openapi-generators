@@ -3,7 +3,7 @@ using PrincipleStudios.OpenApi.TypeScript;
 using System.IO;
 using System.Linq;
 
-namespace PrincipleStudios.OpenApiCodegen.Client.TypeScriptRxJs
+namespace PrincipleStudios.OpenApiCodegen.Client.TypeScript
 {
     public static class OperationHandlebarsTemplateProcess
     {

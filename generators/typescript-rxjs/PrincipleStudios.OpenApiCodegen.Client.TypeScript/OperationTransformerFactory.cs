@@ -4,7 +4,7 @@ using PrincipleStudios.OpenApi.TypeScript;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace PrincipleStudios.OpenApiCodegen.Client.TypeScriptRxJs
+namespace PrincipleStudios.OpenApiCodegen.Client.TypeScript
 {
     public static class OperationTransformerFactory
     {

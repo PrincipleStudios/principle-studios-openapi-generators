@@ -1,11 +1,11 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
 
     <IsPackable>false</IsPackable>
 
-    <RootNamespace>PrincipleStudios.OpenApiCodegen.Client.TypeScriptRxJs</RootNamespace>
+    <RootNamespace>PrincipleStudios.OpenApiCodegen.Client.TypeScript</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
@@ -21,7 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\generators\typescript-rxjs\PrincipleStudios.OpenApiCodegen.Client.TypeScriptRxJs\PrincipleStudios.OpenApiCodegen.Client.TypeScriptRxJs.csproj" />
+    <ProjectReference Include="..\..\generators\typescript-rxjs\PrincipleStudios.OpenApiCodegen.Client.TypeScript\PrincipleStudios.OpenApiCodegen.Client.TypeScript.csproj" />
     <ProjectReference Include="..\PrincipleStudios.OpenApi.TypeScript\PrincipleStudios.OpenApi.TypeScript.csproj" />
     <ProjectReference Include="..\PrincipleStudios.OpenApiCodegen.TestUtils\PrincipleStudios.OpenApiCodegen.TestUtils.csproj" />
   </ItemGroup>

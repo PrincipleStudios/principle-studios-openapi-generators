@@ -11,7 +11,7 @@ using Xunit;
 
 using static PrincipleStudios.OpenApiCodegen.TestUtils.DocumentHelpers;
 
-namespace PrincipleStudios.OpenApiCodegen.Client.TypeScriptRxJs
+namespace PrincipleStudios.OpenApiCodegen.Client.TypeScript
 {
     using static OptionsHelpers;
 

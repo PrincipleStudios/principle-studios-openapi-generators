@@ -24,11 +24,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Server.Mvc", "Server.Mvc", 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Client.TypeScriptRxJs", "Client.TypeScriptRxJs", "{6425AC08-57C0-4453-A78A-537E9514CE7B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PrincipleStudios.OpenApiCodegen.Client.TypeScriptRxJs", "generators\typescript-rxjs\PrincipleStudios.OpenApiCodegen.Client.TypeScriptRxJs\PrincipleStudios.OpenApiCodegen.Client.TypeScriptRxJs.csproj", "{C0E47301-8CB1-44F6-8321-BCB9C09219BB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PrincipleStudios.OpenApiCodegen.Client.TypeScript", "generators\typescript-rxjs\PrincipleStudios.OpenApiCodegen.Client.TypeScript\PrincipleStudios.OpenApiCodegen.Client.TypeScript.csproj", "{C0E47301-8CB1-44F6-8321-BCB9C09219BB}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PrincipleStudios.OpenApi.TypeScript", "lib\PrincipleStudios.OpenApi.TypeScript\PrincipleStudios.OpenApi.TypeScript.csproj", "{121D9AE4-3E50-43E2-838D-72020D2E241E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PrincipleStudios.OpenApiCodegen.Client.TypeScriptRxJs.Test", "lib\PrincipleStudios.OpenApiCodegen.Client.TypeScriptRxJs.Test\PrincipleStudios.OpenApiCodegen.Client.TypeScriptRxJs.Test.csproj", "{7F4E8BD3-E0B2-44B0-B175-40852137E928}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PrincipleStudios.OpenApiCodegen.Client.TypeScript.Test", "lib\PrincipleStudios.OpenApiCodegen.Client.TypeScript.Test\PrincipleStudios.OpenApiCodegen.Client.TypeScript.Test.csproj", "{7F4E8BD3-E0B2-44B0-B175-40852137E928}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PrincipleStudios.OpenApiCodegen.TestUtils", "lib\PrincipleStudios.OpenApiCodegen.TestUtils\PrincipleStudios.OpenApiCodegen.TestUtils.csproj", "{9712F952-7205-4B55-B261-D2845980BC64}"
 EndProject

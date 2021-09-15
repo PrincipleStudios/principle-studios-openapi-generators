@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace PrincipleStudios.OpenApiCodegen.Client.TypeScriptRxJs.templates
+namespace PrincipleStudios.OpenApiCodegen.Client.TypeScript.templates
 {
     public record OperationBarrelFileModel(PartialHeader header, OperationReference[] operations);
 
