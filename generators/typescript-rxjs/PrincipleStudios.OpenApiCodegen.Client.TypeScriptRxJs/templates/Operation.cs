@@ -18,6 +18,7 @@ namespace PrincipleStudios.OpenApiCodegen.Client.TypeScriptRxJs.templates
         string name,
         string path,
         bool allowNoBody,
+        bool hasFormRequest,
         bool hasQueryParams,
         IEnumerable<OperationParameter> sharedParams,
         ImportStatement[] imports,

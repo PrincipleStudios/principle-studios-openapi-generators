@@ -14,6 +14,7 @@ namespace PrincipleStudios.OpenApiCodegen.Client.TypeScriptRxJs
 
     class OperationBuilderVisitor : OpenApiDocumentVisitor<OperationBuilderVisitor.Argument>
     {
+        private const string formMimeType = "application/x-www-form-urlencoded";
         private readonly ISchemaSourceResolver<InlineDataType> typeScriptSchemaResolver;
         private readonly TypeScriptSchemaOptions options;
 
@@ -91,6 +92,7 @@ namespace PrincipleStudios.OpenApiCodegen.Client.TypeScriptRxJs
                     name: TypeScriptNaming.ToMethodName(operation.OperationId, options.ReservedIdentifiers()),
                     path: path,
                     allowNoBody: operation.RequestBody == null || !operation.RequestBody.Required || !operation.RequestBody.Content.Any(),
+                    hasFormRequest: operation.RequestBody?.Content.Any(kvp => kvp.Key == formMimeType) ?? false,
                     imports: typeScriptSchemaResolver.GetImportStatements(GetSchemas(), "./operation/").ToArray(),
                     sharedParams: sharedParameters,
                     requestBodies: builder.RequestBodies.ToArray(),
@@ -173,7 +175,7 @@ namespace PrincipleStudios.OpenApiCodegen.Client.TypeScriptRxJs
             // All media type visitations should be for request bodies
             var mimeType = context.GetLastKeyFor(mediaType);
 
-            var isForm = mimeType == "application/x-www-form-urlencoded";
+            var isForm = mimeType == formMimeType;
 
             var singleContentType = argument.Builder?.Operation.RequestBody.Content.Count <= 1;
 

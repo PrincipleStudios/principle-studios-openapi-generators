@@ -22,18 +22,7 @@ namespace PrincipleStudios.OpenApiCodegen.Client.TypeScriptRxJs
         [InlineData("petstore.yaml", "find pet by id")]
         [InlineData("petstore3.json", "addPet")]
         [InlineData("petstore3.json", "updatePet")]
-        //[InlineData("petstore3.json", "/pet/findByStatus")]
-        //[InlineData("petstore3.json", "/pet/findByTags")]
-        //[InlineData("petstore3.json", "/pet/{petId}/uploadImage")]
-        //[InlineData("petstore3.json", "/store/inventory")]
-        //[InlineData("petstore3.json", "/store/order")]
-        //[InlineData("petstore3.json", "/store/order/{orderId}")]
-        //[InlineData("petstore3.json", "/user")]
-        //[InlineData("petstore3.json", "/user/createWithArray")]
-        //[InlineData("petstore3.json", "/user/createWithList")]
-        //[InlineData("petstore3.json", "/user/login")]
-        //[InlineData("petstore3.json", "/user/logout")]
-        //[InlineData("petstore3.json", "/user/{username}")]
+        [InlineData("petstore3.json", "updatePetWithForm")]
         public void TransformController(string documentName, string operationId)
         {
             var document = GetDocument(documentName);

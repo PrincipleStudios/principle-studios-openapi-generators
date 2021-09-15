@@ -105,26 +105,30 @@ export function {{{name}}}(params: RequestParams{{#if requestBodies.length}}, bo
     {{/each}}
 
     {{/if}}
-    {{!-- {{#hasFormParams}}
-    const formData = new FormData();
-    {{#formParams}}
-    {{#isListContainer}}
-    if ({{> paramNamePartial}} !== undefined) {
-        {{#isCollectionFormatMulti}}
-        {{> paramNamePartial}}.forEach((element) => formData.append('{{baseName}}', element as any))
-        {{/isCollectionFormatMulti}}
-        {{^isCollectionFormatMulti}}
-        formData.append('{{baseName}}', {{> paramNamePartial}}.join(COLLECTION_FORMATS['{{collectionFormat}}']));
-        {{/isCollectionFormatMulti}}
+    {{#if hasFormRequest}}
+    let actualBody: RequestBodies[keyof RequestBodies] | FormData = body;
+    if (mimeType === 'application/x-www-form-urlencoded')
+    {
+        let formData = new FormData();
+        {{#each requestBodies}}
+        {{#each allParams}}
+        {{#if isFormParam}}
+        {{#if dataTypeEnumerable}}
+        if (body!.{{{paramName}}} !== undefined) {
+            {{!-- TODO - openapi style/explode combo --}}
+            body!.{{{paramName}}}.forEach((element) => formData.append('{{rawName}}', element as any))
+            {{!-- formData.append('{{rawName}}', body!.{{{paramName}}}.join(COLLECTION_FORMATS['{{collectionFormat}}'])); --}}
+        }
+        {{else}}
+        if (body!.{{{paramName}}} !== undefined) { formData.append('{{rawName}}', body!.{{{paramName}}} as any); }
+        {{/if}}
+        {{/if}}
+        {{/each}}
+        {{/each}}
+        actualBody = formData;
     }
 
-    {{/isListContainer}}
-    {{^isListContainer}}
-    if ({{> paramNamePartial}} !== undefined) { formData.append('{{baseName}}', {{> paramNamePartial}} as any); }
-    {{/isListContainer}}
-    {{/formParams}}
-
-    {{/hasFormParams}} --}}
+    {{/if}}
     return {
         path: '{{{path}}}'{{#each sharedParams}}{{#if isPathParam}}.replace('{{{rawNameWithCurly}}}', encodeURI(params.{{{paramName}}})){{/if}}{{/each}},
         method: '{{httpMethod}}',
@@ -133,11 +137,12 @@ export function {{{name}}}(params: RequestParams{{#if requestBodies.length}}, bo
         query,
         {{/if}}
         {{#if requestBodies.length}}
+        {{#if hasFormRequest}}
+        body: actualBody,
+        {{else}}
         body,
         {{/if}}
-        {{!-- {{#hasFormParams}}
-        body: formData,
-        {{/hasFormParams}} --}}
+        {{/if}}
 {{!-- {{#isResponseFile}}
         responseType: 'blob'
 {{/isResponseFile}} --}}
