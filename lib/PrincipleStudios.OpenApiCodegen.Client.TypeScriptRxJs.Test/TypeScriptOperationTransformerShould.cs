@@ -17,8 +17,8 @@ namespace PrincipleStudios.OpenApiCodegen.Client.TypeScriptRxJs
 
     public class TypeScriptOperationTransformerShould
     {
-        //[Theory]
-        //[InlineData("petstore.yaml", "findPets")]
+        [Theory]
+        [InlineData("petstore.yaml", "findPets")]
         //[InlineData("petstore.yaml", "/pets/{id}")]
         //[InlineData("petstore3.json", "/pet")]
         //[InlineData("petstore3.json", "/pet/findByStatus")]

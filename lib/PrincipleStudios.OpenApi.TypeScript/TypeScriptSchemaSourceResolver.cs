@@ -3,18 +3,20 @@ using Microsoft.OpenApi.Models;
 using PrincipleStudios.OpenApi.Transformations;
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace PrincipleStudios.OpenApi.TypeScript
 {
-    public record InlineDataType(string text, bool nullable = false, bool isEnumerable = false)
+    public record ImportReference(string Member, string File);
+    public record InlineDataType(string text, ImmutableList<ImportReference> Imports, bool nullable = false, bool isEnumerable = false)
     {
         public InlineDataType MakeNullable() =>
-            nullable ? this : new(text + " | null", nullable: true, isEnumerable: isEnumerable);
+            nullable ? this : new(text + " | null", Imports, nullable: true, isEnumerable: isEnumerable);
     }
 
-    public class TypeScriptSchemaSourceResolver : SchemaSourceResolver<InlineDataType>, IImportableSchemaSourceResolver<InlineDataType>
+    public class TypeScriptSchemaSourceResolver : SchemaSourceResolver<InlineDataType>
     {
         private readonly string baseNamespace;
         private readonly TypeScriptSchemaOptions options;
@@ -72,6 +74,11 @@ namespace PrincipleStudios.OpenApi.TypeScript
         {
             var className = UseReferenceName(schema);
             return $"models/{className}.ts";
+        }
+
+        public ImportReference ToImportReference(OpenApiSchema schema)
+        {
+            return new ImportReference(UseReferenceName(schema), ToSourceEntryKey(schema));
         }
 
         public SourceEntry? TransformSchema(OpenApiSchema schema, OpenApiContext context, OpenApiTransformDiagnostic diagnostic)
@@ -216,44 +223,12 @@ namespace PrincipleStudios.OpenApi.TypeScript
 
 
             return () => new templates.ObjectModel(
-                imports: GetImportStatements(properties.Values, "./models/").ToArray(),
+                imports: this.GetImportStatements(properties.Values, "./models/").ToArray(),
                 description: schema.Description,
                 className: className,
                 parent: null, // TODO - if "all of" and only one was a reference, we should be able to use inheritance.
                 vars: vars.Select(v => v()).ToArray()
             );
-        }
-
-        public IEnumerable<templates.ImportStatement> GetImportStatements(IEnumerable<OpenApiSchema> schemasReferenced, string path)
-        {
-            return (from entry in schemasReferenced
-                    where ProduceSourceEntry(entry)
-                    let refName = UseReferenceName(entry)
-                    let fileName = ToSourceEntryKey(entry)
-                    group refName by fileName into imports
-                    select new templates.ImportStatement(imports.ToArray(), ToNodePath(imports.Key, path)));
-        }
-
-        private string ToNodePath(string path, string fromPath)
-        {
-            if (path.StartsWith("..")) throw new ArgumentException("Cannot start with ..", nameof(path));
-            if (fromPath.StartsWith("..")) throw new ArgumentException("Cannot start with ..", nameof(fromPath));
-            path = Normalize(path);
-            fromPath = Normalize(fromPath);
-            var pathParts = path.Split('/');
-            pathParts[pathParts.Length - 1] = System.IO.Path.GetFileNameWithoutExtension(pathParts[pathParts.Length - 1]);
-            var fromPathParts = System.IO.Path.GetDirectoryName(fromPath).Split('/');
-            var ignored = pathParts.TakeWhile((p, i) => i < fromPathParts.Length && p == fromPathParts[i]).Count();
-            pathParts = pathParts.Skip(ignored).ToArray();
-            fromPathParts = fromPathParts.Skip(ignored).ToArray();
-            return string.Join("/", Enumerable.Repeat(".", 1).Concat(Enumerable.Repeat("..", fromPathParts.Length).Concat(pathParts)));
-
-            string Normalize(string p)
-            {
-                p = p.Replace('\\', '/');
-                if (p.StartsWith("./")) p = p.Substring(2);
-                return p;
-            }
         }
 
         private templates.EnumModel ToEnumModel(string className, OpenApiSchema schema)
@@ -304,28 +279,53 @@ namespace PrincipleStudios.OpenApi.TypeScript
             InlineDataType result = schema switch
             {
                 { Reference: not null } =>
-                    new(UseReferenceName(schema)),
+                    new(UseReferenceName(schema), ImmutableList<ImportReference>.Empty.Add(ToImportReference(schema))),
                 { Type: "object", Properties: { Count: 0 }, AdditionalProperties: OpenApiSchema dictionaryValueSchema } =>
-                    new(options.ToMapType(ToInlineDataType(dictionaryValueSchema)().text), isEnumerable: true),
+                    DictionaryToInline(dictionaryValueSchema),
                 { Type: "array", Items: OpenApiSchema items } =>
-                    new(options.ToArrayType(ToInlineDataType(items)().text), isEnumerable: true),
+                    ArrayToInline(items),
                 // TODO - better inline types
                 _ when ProduceSourceEntry(schema) =>
-                    new(UseReferenceName(schema)),
+                    new(UseReferenceName(schema), ImmutableList<ImportReference>.Empty.Add(ToImportReference(schema))),
                 { Type: "object", Properties: IDictionary<string, OpenApiSchema> properties, AdditionalProperties: null } =>
-                    new($"{{ { string.Join("; ", properties.Select(p => $"\"{p.Key}\": {ToInlineDataType(p.Value)().text}"))} }}"),
+                    ObjectToInline(properties),
                 { Type: string type, Format: var format } =>
-                    new(options.Find(type, format)),
+                    TypeWithFormatToInline(type, format),
                 _ => throw new NotSupportedException("Unknown schema"),
             };
             return schema is { Nullable: true }
                 ? result.MakeNullable()
                 : result;
+
+            InlineDataType DictionaryToInline(OpenApiSchema dictionaryValueSchema)
+            {
+                var inline = ToInlineDataType(dictionaryValueSchema)();
+                return new(options.ToMapType(inline.text), inline.Imports, isEnumerable: true);
+            }
+            InlineDataType ArrayToInline(OpenApiSchema items)
+            {
+                var inline = ToInlineDataType(items)();
+                return new(options.ToArrayType(inline.text), inline.Imports, isEnumerable: true);
+            }
+            InlineDataType ObjectToInline(IDictionary<string, OpenApiSchema> properties)
+            {
+                var props = (from prop in properties
+                             let inline = ToInlineDataType(prop.Value)()
+                             select (
+                                 text: $"\"{prop.Key}\": {inline.text}",
+                                 imports: inline.Imports
+                             )).ToArray();
+                return new($"{{ { string.Join("; ", props.Select(p => p.text))} }}", props.SelectMany(p => p.imports).ToImmutableList());
+            }
+            InlineDataType TypeWithFormatToInline(string type, string format)
+            {
+                return new(options.Find(type, format), ImmutableList<ImportReference>.Empty);
+            }
         }
 
         protected override InlineDataType UnresolvedReferencePlaceholder()
         {
-            return new InlineDataType("object", false, false);
+            return new InlineDataType("unknown", ImmutableList<ImportReference>.Empty, false, false);
         }
 
         protected virtual OpenApiContext GetBestContext(IEnumerable<OpenApiContext> allContexts)

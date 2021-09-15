@@ -17,6 +17,9 @@ namespace PrincipleStudios.OpenApiCodegen.Client.TypeScriptRxJs.templates
         string description,
         string name,
         string path,
+        bool allowNoBody,
+        bool hasQueryParams,
+        IEnumerable<OperationParameter> sharedParams,
         ImportStatement[] imports,
         OperationRequestBody[] requestBodies,
         OperationResponses responses,
@@ -28,6 +31,7 @@ namespace PrincipleStudios.OpenApiCodegen.Client.TypeScriptRxJs.templates
         string paramName,
         string? description,
         string dataType,
+        bool dataTypeEnumerable,
         bool dataTypeNullable,
         bool isPathParam,
         bool isQueryParam,
@@ -60,7 +64,7 @@ namespace PrincipleStudios.OpenApiCodegen.Client.TypeScriptRxJs.templates
         string? dataType
     );
 
-    public record OperationRequestBody(string name, string? requestBodyType, IEnumerable<OperationParameter> allParams);
+    public record OperationRequestBody(string? requestBodyType, IEnumerable<OperationParameter> allParams);
 
     public record OperationSecurityRequirement(
         OperationSecuritySchemeRequirement[] schemes

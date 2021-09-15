@@ -12,13 +12,13 @@ namespace PrincipleStudios.OpenApiCodegen.Client.TypeScriptRxJs
 {
     public class TypeScriptOperationTransformer : IOpenApiOperationTransformer
     {
-        private readonly IImportableSchemaSourceResolver<InlineDataType> typeScriptSchemaResolver;
+        private readonly ISchemaSourceResolver<InlineDataType> typeScriptSchemaResolver;
         private readonly OpenApiDocument document;
         private readonly TypeScriptSchemaOptions options;
         private readonly string versionInfo;
         private readonly HandlebarsFactory handlebarsFactory;
 
-        public TypeScriptOperationTransformer(IImportableSchemaSourceResolver<InlineDataType> typeScriptSchemaResolver, OpenApiDocument document, TypeScriptSchemaOptions options, string versionInfo, HandlebarsFactory handlebarsFactory)
+        public TypeScriptOperationTransformer(ISchemaSourceResolver<InlineDataType> typeScriptSchemaResolver, OpenApiDocument document, TypeScriptSchemaOptions options, string versionInfo, HandlebarsFactory handlebarsFactory)
         {
             this.typeScriptSchemaResolver = typeScriptSchemaResolver;
             this.document = document;
@@ -66,48 +66,7 @@ namespace PrincipleStudios.OpenApiCodegen.Client.TypeScriptRxJs
             var visitor = new OperationBuilderVisitor(typeScriptSchemaResolver, options);
             visitor.Visit(operation, context, new OperationBuilderVisitor.Argument(diagnostic, builder));
 
-            var sharedParameters = builder.SharedParameters.ToArray();
-            return (
-                new templates.Operation(
-                 httpMethod: httpMethod,
-                 summary: operation.Summary,
-                 description: operation.Description,
-                 name: TypeScriptNaming.ToMethodName(operation.OperationId, options.ReservedIdentifiers()),
-                 path: path,
-                 imports: typeScriptSchemaResolver.GetImportStatements(GetSchemas(), "./operation/").ToArray(),
-                 requestBodies: builder.RequestBodies.DefaultIfEmpty(OperationRequestBodyFactory(operation.OperationId, null, Enumerable.Empty<templates.OperationParameter>())).Select(transform => transform(sharedParameters)).ToArray(),
-                 responses: new templates.OperationResponses(
-                     defaultResponse: builder.DefaultResponse,
-                     statusResponse: new(builder.StatusResponses)
-                 ),
-                 securityRequirements: builder.SecurityRequirements.ToArray()
-             ));
-
-            IEnumerable<OpenApiSchema> GetSchemas()
-            {
-                return from set in new[]
-                       {
-                           from resp in operation.Responses.Values
-                           from body in resp.Content.Values
-                           select body.Schema,
-                           from p in operation.Parameters
-                           select p.Schema,
-                           from mediaType in operation.RequestBody?.Content.Values ?? Enumerable.Empty<OpenApiMediaType>()
-                           select mediaType.Schema
-                       }
-                       from schema in set
-                       select schema;
-
-            }
-        }
-
-        private Func<templates.OperationParameter[], templates.OperationRequestBody> OperationRequestBodyFactory(string operationName, string? requestBodyMimeType, IEnumerable<templates.OperationParameter> parameters)
-        {
-            return sharedParams => new templates.OperationRequestBody(
-                 name: TypeScriptNaming.ToTitleCaseIdentifier(operationName, options.ReservedIdentifiers()),
-                 requestBodyType: requestBodyMimeType,
-                 allParams: sharedParams.Concat(parameters)
-             );
+            return visitor.ToOperationTemplate(operation, httpMethod.ToUpper(), path, builder);
         }
 
         //internal SourceEntry TransformBarrelFileHelper(IEnumerable<string> groups, OpenApiTransformDiagnostic diagnostic)

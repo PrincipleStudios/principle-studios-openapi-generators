@@ -10,6 +10,9 @@
 import {
     Category,
 } from './Category';
+import {
+    Tag,
+} from './Tag';
 
 /**
  * @export

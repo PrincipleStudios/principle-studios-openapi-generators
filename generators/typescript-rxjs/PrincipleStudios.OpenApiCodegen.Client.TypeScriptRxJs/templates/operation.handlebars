@@ -1,5 +1,6 @@
 {{>partial_header header}}
 {{#with operation}}
+import { HttpHeaders, HttpQuery, throwIfNullOrUndefined, encodeURI, COLLECTION_FORMATS, RequestConversions, RequestOpts, ResponseArgs, ProgressResponse, StandardResponse } from '../runtime';
 {{#each imports}}
 import {
 {{#each members}}
@@ -8,134 +9,150 @@ import {
 } from '{{path}}';
 {{/each}}
 
+export type RequestParams = {
+    {{#sharedParams}}
+    {{paramName}}{{^required}}?{{/required}}: {{#isEnum}}{{{datatypeWithEnum}}}{{/isEnum}}{{^isEnum}}{{{dataType}}}{{#isNullable}} | null{{/isNullable}}{{/isEnum}};
+    {{/sharedParams}}
+};
+export type RequestBodies = {
+    {{#each requestBodies}}
+    '{{requestBodyType}}': {
+        {{#allParams}}
+        {{paramName}}{{^required}}?{{/required}}: {{#isEnum}}{{{datatypeWithEnum}}}{{/isEnum}}{{^isEnum}}{{{dataType}}}{{#isNullable}} | null{{/isNullable}}{{/isEnum}};
+        {{/allParams}}
+    };
+    {{/each}}
+};
+
+export type Responses = {
+    {{#if responses.defaultResponse}}
+    {{#if responses.defaultResponse.description}}
+    /** {{responses.defaultResponse.description}} */
+    {{/if}}
+    'other': {
+        {{#each responses.defaultResponse.content}}
+        '{{mediaType}}': {{#if dataType}}{{{dataType}}}{{else}}undefined{{/if}};
+        {{/each}}
+    };
+    {{/if}}
+    {{#each responses.statusResponse as |response statusCode|}}
+    {{#if response.description}}
+    /** {{response.description}} */
+    {{/if}}
+    {{statusCode}}: {
+        {{#each response.content}}
+        '{{mediaType}}': {{#if dataType}}{{{dataType}}}{{else}}undefined{{/if}};
+        {{/each}}
+    };
+    {{/each}}
+};
+{{!-- I'm not sure if this is useful, but the response mime types (for an accept header?) are `keyof Responses[keyof Responses]` --}}
+
+{{#if allowNoBody}}
+export function {{{name}}}(params: RequestParams): RequestOpts;
+{{/if}}
+{{#if requestBodies.length}}
+export function {{{name}}}<K extends Exclude<keyof Requests, ''>>(params: RequestParams, body: RequestBodies[K], mimeType: K): RequestOpts;
+{{/if}}
+export function {{{name}}}(params: RequestParams{{#if requestBodies.length}}, body?: RequestBodies[keyof Requests], mimeType?: keyof RequestBodies{{/if}}): RequestOpts {
+    {{#if sharedParams.length}}
+    {{#each sharedParams}}
+    {{#if required}}
+    throwIfNullOrUndefined({{> paramNamePartial}}, '{{nickname}}');
+    {{/if}}
+    {{/each}}
+
+    {{/if}}
+    const headers: HttpHeaders = {
+        {{#if requestBodies.length}}
+        'Content-Type': mimeType,
+        {{/if}}
+        {{#each sharedParams as |param|}}
+        {{#if param.isHeaderParam}}
+        '{{{param.rawName}}}': param.{{{param.paramName}}}, {{!-- TODO - openapi style/explode combo --}}
+        {{/if}}
+        {{/each}}
+    };
+
+    {{#if hasQueryParams}}
+    const query: HttpQuery = { // required parameters are used directly since they are already checked by throwIfNullOrUndefined
+        {{#each sharedParams}}
+        {{#if isQueryParam}}
+        {{#if required}}
+        {{#if dataTypeEnumerable}}
+        '{{rawName}}': params.{{{paramName}}},
+        {{else}}
+        '{{rawName}}': params.{{{paramName}}},
+        {{/if}}
+        {{/if}}
+        {{/if}}
+        {{/each}}
+    };
+    {{#each sharedParams}}
+    {{#if isQueryParam}}
+    {{#unless required}}
+    {{#if dataTypeEnumerable}}
+    {{!-- TODO - openapi style/explode combo --}}
+    if (params.{{{paramName}}} != null) { query['{{rawName}}'] = params.{{{paramName}}}; }
+    {{else}}
+    if (params.{{{paramName}}} != null) { query['{{rawName}}'] = params.{{{paramName}}}; }
+    {{/if}}
+    {{/unless}}
+    {{/if}}
+    {{/each}}
+
+    {{/if}}
+    {{!-- {{#hasFormParams}}
+    const formData = new FormData();
+    {{#formParams}}
+    {{#isListContainer}}
+    if ({{> paramNamePartial}} !== undefined) {
+        {{#isCollectionFormatMulti}}
+        {{> paramNamePartial}}.forEach((element) => formData.append('{{baseName}}', element as any))
+        {{/isCollectionFormatMulti}}
+        {{^isCollectionFormatMulti}}
+        formData.append('{{baseName}}', {{> paramNamePartial}}.join(COLLECTION_FORMATS['{{collectionFormat}}']));
+        {{/isCollectionFormatMulti}}
+    }
+
+    {{/isListContainer}}
+    {{^isListContainer}}
+    if ({{> paramNamePartial}} !== undefined) { formData.append('{{baseName}}', {{> paramNamePartial}} as any); }
+    {{/isListContainer}}
+    {{/formParams}}
+
+    {{/hasFormParams}} --}}
+    return {
+        path: '{{{path}}}'{{!--{{#pathParams}}.replace({{=<% %>=}}'{<%baseName%>}'<%={{ }}=%>, encodeURI({{> paramNamePartial}})){{/pathParams}}--}},
+        method: '{{httpMethod}}',
+        headers,
+        {{#if hasQueryParams}}
+        query,
+        {{/if}}
+        {{#if requestBodies.length}}
+        body,
+        {{/if}}
+        {{!-- {{#hasFormParams}}
+        body: formData,
+        {{/hasFormParams}} --}}
+{{!-- {{#isResponseFile}}
+        responseType: 'blob'
+{{/isResponseFile}} --}}
+    };
+}
+
+export const responseConversion = (res: ResponseArgs) => ({
+        statusCode: [{{#each responses.statusResponse as |response statusCode|}}
+            {{statusCode}},{{/each}}
+        ].indexOf(res.status) === -1 ? 'other' : res.status,
+        mimeType: res.xhr.getResponseHeader("Content-Type"),
+        data: res.response,
+        response: res,
+    }) as StandardResponse<Responses>;
+
+export const conversion: RequestConversions<RequestParams, {{#if requestBodies.length}}| RequestBodies{{/if}}{{#if allowNoBody}} | undefined{{/if}}, Responses> = {
+    request: {{{name}}},
+    response: responseConversion,
+};
 
 {{/with}}
-{{!--
-namespace {{packageName}}
-{ {{#if operations}}{{#if summary}}
-    /// <summary>
-    /// {{linewrap summary "
-    /// "}}
-    /// </summary>{{/if}}{{#if description}}
-    /// <remarks>
-    /// {{linewrap description "
-    /// "}}
-    /// </remarks>{{/if}}{{#if description}}
-    [Description("{{description}}")]{{/if}}
-    public abstract class {{className}} : global::Microsoft.AspNetCore.Mvc.ControllerBase
-    {
-        {{#each operations as |operation|}}{{#each requestBodies as |requestBody|}}{{#if operation.summary}}
-        /// <summary>
-        /// {{linewrap operation.summary "
-        /// "}}
-        /// </summary>{{/if}}{{#if operation.description}}
-        /// <remarks>
-        /// {{linewrap operation.description "
-        /// "}}
-        /// </remarks>{{/if}}{{#each requestBody.allParams}}
-        /// <param name="{{paramName}}">{{description}}</param>{{/each}}
-        [global::Microsoft.AspNetCore.Mvc.Http{{operation.httpMethod}}]
-        [global::Microsoft.AspNetCore.Mvc.Route("{{{operation.basePathWithoutHost}}}{{{operation.path}}}")]{{#if requestBody.requestBodyType}}
-        [global::Microsoft.AspNetCore.Mvc.Consumes("{{{requestBody.requestBodyType}}}")]{{/if}}{{!
-        }}{{#if operation.responses.defaultResponse}}
-        // {{operation.responses.defaultResponse.description}}
-        {{#each operation.responses.defaultResponse.content}}
-        [global::Microsoft.AspNetCore.Mvc.ProducesDefaultResponseType({{#if dataType}}typeof({{{dataType}}}){{/if}})] // {{mediaType}}{{/each}}{{/if}}{{!
-        }}{{#each operation.responses.statusResponse as |response statusCode|}}
-        // {{response.description}}
-        {{#each response.content}}
-        [global::Microsoft.AspNetCore.Mvc.ProducesResponseType({{statusCode}}{{#if dataType}}, Type = typeof({{{dataType}}}){{/if}})] // {{mediaType}}{{/each}}{{/each}}{{!
-        }}{{#each operation.securityRequirements}}{{#if schemes.Length}}
-        [global::Microsoft.AspNetCore.Authorization.Authorize(AuthenticationSchemes = "{{#each schemes}}{{schemeName}}{{#unless @last}},{{/unless}}{{/each}}")]{{else}}
-        [global::Microsoft.AspNetCore.Authorization.AllowAnonymous]{{/if}}{{/each}}
-        public async global::System.Threading.Tasks.Task<global::Microsoft.AspNetCore.Mvc.IActionResult> {{operation.name}}(
-            {{#each requestBody.allParams}}{{#unless isCookieParam}}[{{!
-            }}{{#if isPathParam}}global::Microsoft.AspNetCore.Mvc.FromRoute(Name = "{{rawName}}"){{/if}}{{!
-            }}{{#if isQueryParam}}global::Microsoft.AspNetCore.Mvc.FromQuery(Name = "{{rawName}}"){{/if}}{{!
-            }}{{#if isBodyParam}}global::Microsoft.AspNetCore.Mvc.FromBody{{/if}}{{!
-            }}{{#if isFormParam}}global::Microsoft.AspNetCore.Mvc.FromForm(Name = "{{rawName}}"){{/if}}{{!
-            }}{{#if isHeaderParam}}global::Microsoft.AspNetCore.Mvc.FromHeader(Name = "{{rawName}}"){{/if}}{{!
-            }}{{#if required}}, global::System.ComponentModel.DataAnnotations.Required{{/if}}{{!
-            }}{{#if pattern}}, global::System.ComponentModel.DataAnnotations.RegularExpression("{{{pattern}}}"){{/if}}{{!
-            }}{{#if minLength.HasValue}}, global::System.ComponentModel.DataAnnotations.MinLength({{minLength}}){{/if}}{{!
-            }}{{#if maxLength.HasValue}}, global::System.ComponentModel.DataAnnotations.MaxLength({{maxLength}}){{/if}}{{!
-            }}{{#if minimum.HasValue}}{{#if maximum.HasValue}}, global::System.ComponentModel.DataAnnotations.Range({{minimum}}, {{maximum}}){{/if}}{{/if}}{{!
-            }}] {{{dataType}}} {{paramName}}{{#unless @last}},
-            {{/unless}}{{/unless}}{{/each}}
-        ) => (await {{requestBody.name}}TypeSafe({{#each requestBody.allParams}}{{paramName}}{{#unless @last}},{{/unless}}{{/each}})).ActionResult;
-
-        protected abstract global::System.Threading.Tasks.Task<TypeSafe{{operation.name}}Result> {{requestBody.name}}TypeSafe({{#each requestBody.allParams}}
-            {{{dataType}}} {{paramName}}{{#unless @last}}, {{/unless}}{{/each}});
-        {{/each}}
-
-        public readonly struct TypeSafe{{name}}Result
-        {
-            public readonly global::Microsoft.AspNetCore.Mvc.IActionResult ActionResult;
-
-            private class HeaderActionResult : global::Microsoft.AspNetCore.Mvc.IActionResult
-            {
-                private readonly global::Microsoft.AspNetCore.Mvc.IActionResult original;
-                private readonly global::System.Collections.Generic.IEnumerable<global::System.Collections.Generic.KeyValuePair<string, string>> headers;
-
-                public HeaderActionResult(global::Microsoft.AspNetCore.Mvc.IActionResult original, global::System.Collections.Generic.IEnumerable<global::System.Collections.Generic.KeyValuePair<string, string>> headers)
-                {
-                    this.original = original;
-                    this.headers = headers;
-                }
-
-                public global::System.Threading.Tasks.Task ExecuteResultAsync(global::Microsoft.AspNetCore.Mvc.ActionContext context)
-                {
-                    foreach (var header in headers)
-                        context.HttpContext.Response.Headers[header.Key] = global::Microsoft.Extensions.Primitives.StringValues.Concat(context.HttpContext.Response.Headers[header.Key], header.Value);
-                    return original.ExecuteResultAsync(context);
-                }
-            }
-
-            private TypeSafe{{name}}Result(global::Microsoft.AspNetCore.Mvc.IActionResult ActionResult, global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
-            {
-                this.ActionResult = new HeaderActionResult(ActionResult, headers);
-            }
-
-            private TypeSafe{{name}}Result(int statusCode, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
-                : this(new global::Microsoft.AspNetCore.Mvc.StatusCodeResult(statusCode), headers)
-            {
-            }
-
-            private TypeSafe{{name}}Result(int statusCode, string mediaType, global::System.Type declaredType, object? resultObject, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
-                : this(new global::Microsoft.AspNetCore.Mvc.ObjectResult(resultObject)
-                {
-                    ContentTypes = new global::Microsoft.AspNetCore.Mvc.Formatters.MediaTypeCollection { { new global::Microsoft.Net.Http.Headers.MediaTypeHeaderValue(mediaType) } },
-                    DeclaredType = declaredType,
-                    StatusCode = statusCode
-                }, headers)
-            {
-            }
-            {{#each responses.statusResponse as |response code|}}{{#each content}}
-            {{#if response.description}}/// <summary>
-            /// {{linewrap response.description "
-            /// "}}
-            /// </summary>{{/if}}
-            public static TypeSafe{{../../name}}Result {{responseMethodName}}({{#if dataType}}{{{dataType}}} result{{#if ../headers.Length}},
-                {{/if}}{{/if}}{{#each ../headers}}{{#unless @first}},
-                {{/unless}}string {{paramName}}{{/each}}) =>
-                new TypeSafe{{../../name}}Result({{code}}{{#if dataType}}, "{{mediaType}}", typeof({{{dataType}}}), result{{/if}}{{#each ../headers}},
-                    new global::System.Collections.Generic.KeyValuePair<string, string>("{{rawName}}", {{paramName}}){{/each}});
-            {{/each}}{{/each}}{{#if responses.defaultResponse}}{{#each responses.defaultResponse.content}}
-            {{#if responses.defaultResponse.description}}/// <summary>
-            /// {{linewrap responses.defaultResponse.description "
-            /// "}}
-            /// </summary>{{/if}}
-            public static TypeSafe{{../name}}Result {{responseMethodName}}(int statusCode{{#if dataType}}, {{{dataType}}} result{{/if}}{{#each ../responses.defaultResponse.headers}},
-                string {{paramName}}{{/each}}) =>
-                new TypeSafe{{../name}}Result(statusCode{{#if dataType}}, "{{mediaType}}", typeof({{{dataType}}}), result{{/if}}{{#each ../responses.defaultResponse.headers}},
-                    new global::System.Collections.Generic.KeyValuePair<string, string>("{{rawName}}", {{paramName}}){{/each}});
-            {{/each}}{{/if}}
-
-            /// <summary>Allows for action results not specified in the API</summary>
-            public static TypeSafe{{name}}Result Unsafe(global::Microsoft.AspNetCore.Mvc.IActionResult actionResult, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers) =>
-                new TypeSafe{{name}}Result(actionResult, headers);
-        }
-        {{/each}}
-    }
-{{/if}}
-} --}}

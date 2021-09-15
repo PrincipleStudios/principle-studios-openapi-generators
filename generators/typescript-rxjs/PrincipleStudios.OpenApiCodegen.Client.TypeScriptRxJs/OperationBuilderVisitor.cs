@@ -14,7 +14,7 @@ namespace PrincipleStudios.OpenApiCodegen.Client.TypeScriptRxJs
 
     class OperationBuilderVisitor : OpenApiDocumentVisitor<OperationBuilderVisitor.Argument>
     {
-        private readonly ISchemaSourceResolver<InlineDataType> csharpSchemaResolver;
+        private readonly ISchemaSourceResolver<InlineDataType> typeScriptSchemaResolver;
         private readonly TypeScriptSchemaOptions options;
 
         public record Argument(OpenApiTransformDiagnostic Diagnostic, OperationBuilder Builder);
@@ -26,7 +26,7 @@ namespace PrincipleStudios.OpenApiCodegen.Client.TypeScriptRxJs
                 Operation = operation;
             }
 
-            public List<Func<OperationParameter[], OperationRequestBody>> RequestBodies { get; } = new();
+            public List<OperationRequestBody> RequestBodies { get; } = new();
 
             public OperationResponse? DefaultResponse { get; set; }
             public Dictionary<int, OperationResponse> StatusResponses { get; } = new();
@@ -35,9 +35,9 @@ namespace PrincipleStudios.OpenApiCodegen.Client.TypeScriptRxJs
             public OpenApiOperation Operation { get; }
         }
 
-        public OperationBuilderVisitor(ISchemaSourceResolver<InlineDataType> csharpSchemaResolver, TypeScriptSchemaOptions options)
+        public OperationBuilderVisitor(ISchemaSourceResolver<InlineDataType> typeScriptSchemaResolver, TypeScriptSchemaOptions options)
         {
-            this.csharpSchemaResolver = csharpSchemaResolver;
+            this.typeScriptSchemaResolver = typeScriptSchemaResolver;
             this.options = options;
         }
 
@@ -55,13 +55,14 @@ namespace PrincipleStudios.OpenApiCodegen.Client.TypeScriptRxJs
 
         public override void Visit(OpenApiParameter param, OpenApiContext context, Argument argument)
         {
-            var dataTypeBase = csharpSchemaResolver.ToInlineDataType(param.Schema)();
+            var dataTypeBase = typeScriptSchemaResolver.ToInlineDataType(param.Schema)();
             var dataType = param.Required ? dataTypeBase : dataTypeBase.MakeNullable();
             argument.Builder?.SharedParameters.Add(new templates.OperationParameter(
                 rawName: param.Name,
                 paramName: TypeScriptNaming.ToParameterName(param.Name, options.ReservedIdentifiers()),
                 description: param.Description,
                 dataType: dataType.text,
+                dataTypeEnumerable: dataType.isEnumerable,
                 dataTypeNullable: dataType.nullable,
                 isPathParam: param.In == ParameterLocation.Path,
                 isQueryParam: param.In == ParameterLocation.Query,
@@ -77,6 +78,47 @@ namespace PrincipleStudios.OpenApiCodegen.Client.TypeScriptRxJs
                 maximum: param.Schema.Maximum
             ));
         }
+
+        internal Operation ToOperationTemplate(OpenApiOperation operation, string httpMethod, string path, OperationBuilder builder)
+        {
+            var sharedParameters = builder.SharedParameters.ToArray();
+            return (
+                new templates.Operation(
+                    httpMethod: httpMethod,
+                    summary: operation.Summary,
+                    description: operation.Description,
+                    name: TypeScriptNaming.ToMethodName(operation.OperationId, options.ReservedIdentifiers()),
+                    path: path,
+                    allowNoBody: operation.RequestBody == null || !operation.RequestBody.Required || !operation.RequestBody.Content.Any(),
+                    imports: typeScriptSchemaResolver.GetImportStatements(GetSchemas(), "./operation/").ToArray(),
+                    sharedParams: sharedParameters,
+                    requestBodies: builder.RequestBodies.ToArray(),
+                    responses: new templates.OperationResponses(
+                        defaultResponse: builder.DefaultResponse,
+                        statusResponse: new(builder.StatusResponses)
+                    ),
+                    securityRequirements: builder.SecurityRequirements.ToArray(),
+                    hasQueryParams: operation.Parameters.Any(p => p.In == ParameterLocation.Query)
+                ));
+
+            IEnumerable<OpenApiSchema> GetSchemas()
+            {
+                return from set in new[]
+                        {
+                        from resp in operation.Responses.Values
+                        from body in resp.Content.Values
+                        select body.Schema,
+                        from p in operation.Parameters
+                        select p.Schema,
+                        from mediaType in operation.RequestBody?.Content.Values ?? Enumerable.Empty<OpenApiMediaType>()
+                        select mediaType.Schema
+                    }
+                        from schema in set
+                        select schema;
+
+            }
+        }
+
         public override void Visit(OpenApiResponse response, OpenApiContext context, Argument argument)
         {
             var responseKey = context.GetLastKeyFor(response);
@@ -89,7 +131,7 @@ namespace PrincipleStudios.OpenApiCodegen.Client.TypeScriptRxJs
                 description: response.Description,
                 content: (from entry in response.Content.DefaultIfEmpty(new("", new OpenApiMediaType()))
                           let entryContext = context.Append(nameof(response.Content), entry.Key, entry.Value)
-                          let dataType = entry.Value.Schema != null ? csharpSchemaResolver.ToInlineDataType(entry.Value.Schema)() : null
+                          let dataType = entry.Value.Schema != null ? typeScriptSchemaResolver.ToInlineDataType(entry.Value.Schema)() : null
                           select new OperationResponseContentOption(
                               mediaType: entry.Key,
                               responseMethodName: TypeScriptNaming.ToTitleCaseIdentifier($"{(response.Content.Count > 1 ? entry.Key : "")} {statusCodeName}", options.ReservedIdentifiers()),
@@ -98,7 +140,7 @@ namespace PrincipleStudios.OpenApiCodegen.Client.TypeScriptRxJs
                 headers: (from entry in response.Headers
                           let entryContext = context.Append(nameof(response.Headers), entry.Key, entry.Value)
                           let required = entry.Value.Required
-                          let dataTypeBase = csharpSchemaResolver.ToInlineDataType(entry.Value.Schema)()
+                          let dataTypeBase = typeScriptSchemaResolver.ToInlineDataType(entry.Value.Schema)()
                           let dataType = required ? dataTypeBase : dataTypeBase.MakeNullable()
                           select new templates.OperationResponseHeader(
                               rawName: entry.Key,
@@ -134,18 +176,19 @@ namespace PrincipleStudios.OpenApiCodegen.Client.TypeScriptRxJs
 
             var singleContentType = argument.Builder?.Operation.RequestBody.Content.Count <= 1;
 
-            argument.Builder?.RequestBodies.Add(OperationRequestBodyFactory(argument.Builder?.Operation.OperationId + (singleContentType ? "" : mimeType), mimeType, isForm ? GetFormParams() : GetStandardParams()));
+            argument.Builder?.RequestBodies.Add(OperationRequestBody(mimeType, isForm ? GetFormParams() : GetStandardParams()));
 
             IEnumerable<OperationParameter> GetFormParams() =>
                 from param in mediaType.Schema.Properties
                 let required = mediaType.Schema.Required.Contains(param.Key)
-                let dataTypeBase = csharpSchemaResolver.ToInlineDataType(param.Value)()
+                let dataTypeBase = typeScriptSchemaResolver.ToInlineDataType(param.Value)()
                 let dataType = required ? dataTypeBase : dataTypeBase.MakeNullable()
                 select new templates.OperationParameter(
                     rawName: param.Key,
                     paramName: TypeScriptNaming.ToParameterName(param.Key, options.ReservedIdentifiers()),
                     description: null,
                     dataType: dataType.text,
+                    dataTypeEnumerable: dataType.isEnumerable,
                     dataTypeNullable: dataType.nullable,
                     isPathParam: false,
                     isQueryParam: false,
@@ -162,12 +205,13 @@ namespace PrincipleStudios.OpenApiCodegen.Client.TypeScriptRxJs
                 );
             IEnumerable<OperationParameter> GetStandardParams() =>
                 from ct in new[] { mediaType }
-                let dataType = csharpSchemaResolver.ToInlineDataType(ct.Schema)()
+                let dataType = typeScriptSchemaResolver.ToInlineDataType(ct.Schema)()
                 select new templates.OperationParameter(
                    rawName: null,
-                   paramName: TypeScriptNaming.ToParameterName(argument.Builder?.Operation.OperationId + " body", options.ReservedIdentifiers()),
+                   paramName: TypeScriptNaming.ToParameterName("body", options.ReservedIdentifiers()),
                    description: null,
                    dataType: dataType.text,
+                   dataTypeEnumerable: dataType.isEnumerable,
                    dataTypeNullable: dataType.nullable,
                    isPathParam: false,
                    isQueryParam: false,
@@ -184,12 +228,11 @@ namespace PrincipleStudios.OpenApiCodegen.Client.TypeScriptRxJs
                );
         }
 
-        private Func<OperationParameter[], OperationRequestBody> OperationRequestBodyFactory(string operationName, string? requestBodyMimeType, IEnumerable<OperationParameter> parameters)
+        public static OperationRequestBody OperationRequestBody(string? requestBodyMimeType, IEnumerable<OperationParameter> parameters)
         {
-            return sharedParams => new templates.OperationRequestBody(
-                 name: TypeScriptNaming.ToTitleCaseIdentifier(operationName, options.ReservedIdentifiers()),
+            return new templates.OperationRequestBody(
                  requestBodyType: requestBodyMimeType,
-                 allParams: sharedParams.Concat(parameters)
+                 allParams: parameters
              );
         }
 
