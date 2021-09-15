@@ -10,9 +10,9 @@
 
 /**
  * @export
- * @interface Error
+ * @interface _Error
  */
-export type Error = {
+export type _Error = {
     /**
      * @type number
      */

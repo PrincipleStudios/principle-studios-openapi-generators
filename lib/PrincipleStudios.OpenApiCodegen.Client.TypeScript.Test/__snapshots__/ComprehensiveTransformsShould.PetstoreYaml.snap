@@ -9,8 +9,8 @@
  */
 import { HttpHeaders, HttpQuery, throwIfNullOrUndefined, encodeURI, RequestConversions, RequestOpts, ResponseArgs, StandardResponse } from '@principlestudios/openapi-codegen-typescript';
 import {
-    Error,
-} from './../models/Error';
+    _Error,
+} from './../models/_Error';
 import {
     Pet,
 } from './../models/Pet';
@@ -25,7 +25,7 @@ export type RequestBodies = {
 export type Responses = {
     /** unexpected error */
     'other': {
-        'application/json': Error;
+        'application/json': _Error;
     };
     /** pet response */
     200: {
@@ -80,8 +80,8 @@ exports[`operations/addPet.ts`] = `/*
  */
 import { HttpHeaders, HttpQuery, throwIfNullOrUndefined, encodeURI, RequestConversions, RequestOpts, ResponseArgs, StandardResponse } from '@principlestudios/openapi-codegen-typescript';
 import {
-    Error,
-} from './../models/Error';
+    _Error,
+} from './../models/_Error';
 import {
     NewPet,
 } from './../models/NewPet';
@@ -100,7 +100,7 @@ export type RequestBodies = {
 export type Responses = {
     /** unexpected error */
     'other': {
-        'application/json': Error;
+        'application/json': _Error;
     };
     /** pet response */
     200: {
@@ -153,8 +153,8 @@ exports[`operations/findPetById.ts`] = `/*
  */
 import { HttpHeaders, HttpQuery, throwIfNullOrUndefined, encodeURI, RequestConversions, RequestOpts, ResponseArgs, StandardResponse } from '@principlestudios/openapi-codegen-typescript';
 import {
-    Error,
-} from './../models/Error';
+    _Error,
+} from './../models/_Error';
 import {
     Pet,
 } from './../models/Pet';
@@ -168,7 +168,7 @@ export type RequestBodies = {
 export type Responses = {
     /** unexpected error */
     'other': {
-        'application/json': Error;
+        'application/json': _Error;
     };
     /** pet response */
     200: {
@@ -218,8 +218,8 @@ exports[`operations/deletePet.ts`] = `/*
  */
 import { HttpHeaders, HttpQuery, throwIfNullOrUndefined, encodeURI, RequestConversions, RequestOpts, ResponseArgs, StandardResponse } from '@principlestudios/openapi-codegen-typescript';
 import {
-    Error,
-} from './../models/Error';
+    _Error,
+} from './../models/_Error';
 
 export type RequestParams = {
     id: BigInt;
@@ -230,7 +230,7 @@ export type RequestBodies = {
 export type Responses = {
     /** unexpected error */
     'other': {
-        'application/json': Error;
+        'application/json': _Error;
     };
     /** pet deleted */
     204: {
@@ -347,7 +347,7 @@ export type NewPet = {
 };
 `;
 
-exports[`models/Error.ts`] = `/*
+exports[`models/_Error.ts`] = `/*
  * Swagger Petstore
  *
  * A sample API that uses a petstore as an example to demonstrate features in the OpenAPI 3.0 specification
@@ -359,9 +359,9 @@ exports[`models/Error.ts`] = `/*
 
 /**
  * @export
- * @interface Error
+ * @interface _Error
  */
-export type Error = {
+export type _Error = {
     /**
      * @type number
      */
