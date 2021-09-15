@@ -12,13 +12,15 @@ namespace PrincipleStudios.OpenApi.TypeScript
 
         public static IEnumerable<templates.ImportStatement> GetImportStatements(this ISchemaSourceResolver<InlineDataType> sourceResolver, IEnumerable<OpenApiSchema> schemasReferenced, string path)
         {
-            return (from entry in schemasReferenced
-                    let t = sourceResolver.ToInlineDataType(entry)()
-                    from import in t.Imports
-                    let refName = import.Member
-                    let fileName = import.File
-                    group refName by fileName into imports
-                    select new templates.ImportStatement(imports.ToArray(), ToNodePath(imports.Key, path)));
+            return from entry in schemasReferenced
+                   let t = sourceResolver.ToInlineDataType(entry)()
+                   from import in t.Imports
+                   let refName = import.Member
+                   let fileName = import.File
+                   group refName by fileName into imports
+                   let nodePath = ToNodePath(imports.Key, path)
+                   orderby nodePath
+                   select new templates.ImportStatement(imports.Distinct().OrderBy(a => a).ToArray(), nodePath);
         }
 
         public static string ToNodePath(string path, string fromPath)

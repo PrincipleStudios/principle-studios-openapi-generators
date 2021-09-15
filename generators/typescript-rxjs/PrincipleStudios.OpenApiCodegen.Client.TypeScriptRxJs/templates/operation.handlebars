@@ -1,6 +1,6 @@
 {{>partial_header header}}
 {{#with operation}}
-import { HttpHeaders, HttpQuery, throwIfNullOrUndefined, encodeURI, COLLECTION_FORMATS, RequestConversions, RequestOpts, ResponseArgs, ProgressResponse, StandardResponse } from '../runtime';
+import { HttpHeaders, HttpQuery, throwIfNullOrUndefined, encodeURI, RequestConversions, RequestOpts, ResponseArgs, StandardResponse } from '@principlestudios/openapi-codegen-typescript';
 {{#each imports}}
 import {
 {{#each members}}
@@ -52,9 +52,9 @@ export type Responses = {
 export function {{{name}}}(params: RequestParams): RequestOpts;
 {{/if}}
 {{#if requestBodies.length}}
-export function {{{name}}}<K extends Exclude<keyof Requests, ''>>(params: RequestParams, body: RequestBodies[K], mimeType: K): RequestOpts;
+export function {{{name}}}<K extends keyof RequestBodies>(params: RequestParams, body: RequestBodies[K], mimeType: K): RequestOpts;
 {{/if}}
-export function {{{name}}}(params: RequestParams{{#if requestBodies.length}}, body?: RequestBodies[keyof Requests], mimeType?: keyof RequestBodies{{/if}}): RequestOpts {
+export function {{{name}}}(params: RequestParams{{#if requestBodies.length}}, body?: RequestBodies[keyof RequestBodies], mimeType?: keyof RequestBodies{{/if}}): RequestOpts {
     throwIfNullOrUndefined(params, 'params');
     {{#if requestBodies.length}}
     if (mimeType) throwIfNullOrUndefined(body, 'body');
