@@ -17,10 +17,7 @@
       "types": ["node", "jest"],
       "outDir": "./lib",
       "declaration": false,
-      "rootDirs": [
-        "./src",
-        "./tests"
-      ],
+      "rootDir": ".",
       "paths": {
         "~/*": ["./*"],
         "@principlestudios/openapi-codegen-typescript": ["./src"],
