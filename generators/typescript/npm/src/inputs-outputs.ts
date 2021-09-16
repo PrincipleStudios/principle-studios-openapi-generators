@@ -13,6 +13,6 @@ export interface RequestOpts {
 
 export type ResponseArgs = {
     status: number;
-    xhr: XMLHttpRequest;
+    getResponseHeader(header: string): string | null;
     response: unknown;
 };

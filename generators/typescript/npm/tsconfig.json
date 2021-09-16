@@ -15,7 +15,6 @@
       "isolatedModules": true,
       "noEmit": true,
       "types": ["node", "jest"],
-      "outDir": "./lib",
       "declaration": false,
       "rootDir": ".",
       "paths": {

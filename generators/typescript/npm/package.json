@@ -5,12 +5,10 @@
     "scripts": {
         "test": "jest",
         "pretest": "npm run build",
-        "build": "pwsh build.ps1 && node bin/index.js ../../../schemas/no-refs.yaml tests/no-refs/ && node bin/index.js ../../../schemas/petstore.yaml tests/petstore/",
-        "prebuild": "",
+        "build": "node bin/index.js ../../../schemas/no-refs.yaml tests/no-refs/ && node bin/index.js ../../../schemas/petstore.yaml tests/petstore/ && node bin/index.js ../../../schemas/headers.yaml tests/headers/",
         "tsc": "tsc --project tsconfig.build.json",
         "tsc:check": "tsc",
-        "pretsc:check": "npm run build",
-        "prepack": "npm run build"
+        "pretsc:check": "npm run build"
     },
     "author": "Matt DeKrey & Principle Studios",
     "license": "BSD-2-Clause",
@@ -24,7 +22,8 @@
     "bin": {
         "openapi-codegen-typescript": "./bin/index.js"
     },
-    "main": "./lib",
+    "main": "lib/index.js",
+    "typings": "lib/index.d.ts",
     "repository": {
         "type": "git",
         "url": "https://github.com/mdekrey/principle-studios-openapi-generators.git",

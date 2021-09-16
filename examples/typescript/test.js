@@ -1,0 +1,1 @@
+console.log(Object.keys(require('@principlestudios/openapi-codegen-typescript')));

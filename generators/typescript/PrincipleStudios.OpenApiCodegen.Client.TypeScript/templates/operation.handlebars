@@ -155,9 +155,10 @@ export const responseConversion = (res: ResponseArgs) => ({
         statusCode: [{{#each responses.statusResponse as |response statusCode|}}
             {{statusCode}},{{/each}}
         ].indexOf(res.status) === -1 ? 'other' : res.status,
-        mimeType: res.xhr.getResponseHeader("Content-Type"),
+        mimeType: res.getResponseHeader("Content-Type"),
         data: res.response,
         response: res,
+        {{!-- TODO - we need response headers in this, etc. --}}
     }) as Responses;
 
 export const conversion: RequestConversion<RequestParams, {{#if requestBodies.length}}RequestBodies{{else}}{}{{/if}}, Responses, {{#if requestBodies.length}}{{#unless allowNoBody}}'body'{{else}}'optional'{{/unless}}{{else}}'no-body'{{/if}}> = {
