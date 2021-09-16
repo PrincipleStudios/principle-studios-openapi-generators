@@ -1,6 +1,6 @@
 {{>partial_header header}}
 {{#with operation}}
-import { HttpHeaders, HttpQuery, throwIfNullOrUndefined, encodeURI, RequestConversions, RequestOpts, ResponseArgs, StandardResponse } from '@principlestudios/openapi-codegen-typescript';
+import { HttpHeaders, HttpQuery, RequestOpts, ResponseArgs, throwIfNullOrUndefined, encodeURI, RequestConversion, StandardResponse } from '@principlestudios/openapi-codegen-typescript';
 {{#each imports}}
 import {
 {{#each members}}
@@ -24,7 +24,7 @@ export type RequestBodies = {
     {{/each}}
 };
 
-export type Responses = {
+export type StructuredResponses = {
     {{#if responses.defaultResponse}}
     {{#if responses.defaultResponse.description}}
     /** {{responses.defaultResponse.description}} */
@@ -46,7 +46,17 @@ export type Responses = {
     };
     {{/each}}
 };
-{{!-- I'm not sure if this is useful, but the response mime types (for an accept header?) are `keyof Responses[keyof Responses]` --}}
+export type Responses =
+    {{#if responses.defaultResponse}}
+    {{#each responses.defaultResponse.content}}
+    | StandardResponse<'other', '{{mediaType}}', {{#if dataType}}{{{dataType}}}{{else}}undefined{{/if}}>
+    {{/each}}
+    {{/if}}
+    {{#each responses.statusResponse as |response statusCode|}}
+    {{#each response.content}}
+    | StandardResponse<'{{statusCode}}', '{{mediaType}}', {{#if dataType}}{{{dataType}}}{{else}}undefined{{/if}}>
+    {{/each}}
+    {{/each}};
 
 {{#if allowNoBody}}
 export function {{{name}}}(params: RequestParams): RequestOpts;
@@ -156,9 +166,9 @@ export const responseConversion = (res: ResponseArgs) => ({
         mimeType: res.xhr.getResponseHeader("Content-Type"),
         data: res.response,
         response: res,
-    }) as StandardResponse<Responses>;
+    }) as Responses;
 
-export const conversion: RequestConversions<RequestParams, {{#if requestBodies.length}}| RequestBodies{{/if}}{{#if allowNoBody}} | undefined{{/if}}, Responses> = {
+export const conversion: RequestConversion<RequestParams, {{#if requestBodies.length}}| RequestBodies{{/if}}{{#if allowNoBody}} | undefined{{/if}}, Responses> = {
     request: {{{name}}},
     response: responseConversion,
 };
