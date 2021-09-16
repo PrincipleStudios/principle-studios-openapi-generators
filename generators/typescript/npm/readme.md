@@ -6,6 +6,11 @@ Delivered via an npm package.
 
     npm i -D @principlestudios/openapi-codegen-typescript
 
+You must also have `dotnet` 3.1 or newer installed on your machine. You may
+install this via npm:
+
+    npm i -D dotnet-3.1
+
 This will provide a corresponding bin to generate the typescript files.
 
     openapi-codegen-typescript api.yaml api-generated/ -c

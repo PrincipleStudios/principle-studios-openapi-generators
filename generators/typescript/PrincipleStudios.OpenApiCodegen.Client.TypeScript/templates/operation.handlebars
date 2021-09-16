@@ -1,6 +1,6 @@
 {{>partial_header header}}
 {{#with operation}}
-import { HttpHeaders, HttpQuery, RequestOpts, ResponseArgs, throwIfNullOrUndefined, encodeURI, RequestConversion, StandardResponse } from '@principlestudios/openapi-codegen-typescript';
+import { HttpHeaders, HttpQuery, RequestOpts, ResponseArgs, throwIfNullOrUndefined, encodeURI, RequestConversion, StandardResponse, TransformRequest } from '@principlestudios/openapi-codegen-typescript';
 {{#each imports}}
 import {
 {{#each members}}
@@ -11,16 +11,16 @@ import {
 
 export type RequestParams = {
     {{#sharedParams}}
-    {{paramName}}{{^required}}?{{/required}}: {{#isEnum}}{{{datatypeWithEnum}}}{{/isEnum}}{{^isEnum}}{{{dataType}}}{{#isNullable}} | null{{/isNullable}}{{/isEnum}};
+    {{paramName}}{{^required}}?{{/required}}: {{{dataType}}}{{#isNullable}} | null{{/isNullable}};
     {{/sharedParams}}
 };
 export type RequestBodies = {
     {{#each requestBodies}}
-    '{{requestBodyType}}': {
+    '{{requestBodyType}}': {{#unless isForm}}{{#allParams}}{{{dataType}}}{{#isNullable}} | null{{/isNullable}}{{/allParams}}{{else}}{
         {{#allParams}}
-        {{paramName}}{{^required}}?{{/required}}: {{#isEnum}}{{{datatypeWithEnum}}}{{/isEnum}}{{^isEnum}}{{{dataType}}}{{#isNullable}} | null{{/isNullable}}{{/isEnum}};
+        {{paramName}}{{^required}}?{{/required}}: {{{dataType}}}{{#isNullable}} | null{{/isNullable}};
         {{/allParams}}
-    };
+    }{{/unless}};
     {{/each}}
 };
 
@@ -46,17 +46,10 @@ export type StructuredResponses = {
     };
     {{/each}}
 };
-export type Responses =
-    {{#if responses.defaultResponse}}
-    {{#each responses.defaultResponse.content}}
-    | StandardResponse<'other', '{{mediaType}}', {{#if dataType}}{{{dataType}}}{{else}}undefined{{/if}}>
-    {{/each}}
-    {{/if}}
-    {{#each responses.statusResponse as |response statusCode|}}
-    {{#each response.content}}
-    | StandardResponse<'{{statusCode}}', '{{mediaType}}', {{#if dataType}}{{{dataType}}}{{else}}undefined{{/if}}>
-    {{/each}}
-    {{/each}};
+export type Responses = {{#if responses.defaultResponse}}{{#each responses.defaultResponse.content}}
+    | StandardResponse<'other', '{{mediaType}}', {{#if dataType}}{{{dataType}}}{{else}}undefined{{/if}}>{{/each}}{{/if}}{{!--
+    --}}{{#each responses.statusResponse as |response statusCode|}}{{#each response.content}}
+    | StandardResponse<{{statusCode}}, '{{mediaType}}', {{#if dataType}}{{{dataType}}}{{else}}undefined{{/if}}>{{/each}}{{/each}};
 
 {{#if allowNoBody}}
 export function {{{name}}}(params: RequestParams): RequestOpts;
@@ -64,11 +57,11 @@ export function {{{name}}}(params: RequestParams): RequestOpts;
 {{#if requestBodies.length}}
 export function {{{name}}}<K extends keyof RequestBodies>(params: RequestParams, body: RequestBodies[K], mimeType: K): RequestOpts;
 {{/if}}
-export function {{{name}}}(params: RequestParams{{#if requestBodies.length}}, body?: RequestBodies[keyof RequestBodies], mimeType?: keyof RequestBodies{{/if}}): RequestOpts {
+export function {{{name}}}(params: RequestParams{{#if requestBodies.length}}, body: RequestBodies[keyof RequestBodies] | null = null, mimeType: keyof RequestBodies | null = null{{/if}}): RequestOpts {
     throwIfNullOrUndefined(params, 'params');
     {{#if requestBodies.length}}
-    if (mimeType) throwIfNullOrUndefined(body, 'body');
-    if (body) throwIfNullOrUndefined(mimeType, 'mimeType');
+    {{#if allowNoBody}}if (mimeType) {{/if}}throwIfNullOrUndefined(body, 'body');
+    {{#if allowNoBody}}if (body)  {{/if}}throwIfNullOrUndefined(mimeType, 'mimeType');
     {{/if}}
     {{#each sharedParams}}
     {{#if required}}
@@ -76,16 +69,15 @@ export function {{{name}}}(params: RequestParams{{#if requestBodies.length}}, bo
     {{/if}}
     {{/each}}
 
-    const headers: HttpHeaders = {
-        {{#if requestBodies.length}}
-        'Content-Type': mimeType,
-        {{/if}}
-        {{#each sharedParams}}
-        {{#if isHeaderParam}}
-        '{{{rawName}}}': params.{{{paramName}}}, {{!-- TODO - openapi style/explode combo --}}
-        {{/if}}
-        {{/each}}
-    };
+    const headers: HttpHeaders = {};
+    {{#if requestBodies.length}}
+    if (mimeType) headers['Content-Type'] = mimeType;
+    {{/if}}
+    {{#each sharedParams}}
+    {{#if isHeaderParam}}
+    if (params.{{{paramName}}}) headers['{{{rawName}}}'] = params.{{{paramName}}}; {{!-- TODO - openapi style/explode combo --}}
+    {{/if}}
+    {{/each}}
 
     {{#if hasQueryParams}}
     const query: HttpQuery = { {{!-- required parameters are used directly since they are already checked by throwIfNullOrUndefined  --}}
@@ -168,7 +160,7 @@ export const responseConversion = (res: ResponseArgs) => ({
         response: res,
     }) as Responses;
 
-export const conversion: RequestConversion<RequestParams, {{#if requestBodies.length}}| RequestBodies{{/if}}{{#if allowNoBody}} | undefined{{/if}}, Responses> = {
+export const conversion: RequestConversion<RequestParams, {{#if requestBodies.length}}RequestBodies{{else}}{}{{/if}}, Responses, {{#if requestBodies.length}}{{#unless allowNoBody}}'body'{{else}}'optional'{{/unless}}{{else}}'no-body'{{/if}}> = {
     request: {{{name}}},
     response: responseConversion,
 };

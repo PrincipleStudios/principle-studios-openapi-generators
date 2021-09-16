@@ -66,7 +66,7 @@ namespace PrincipleStudios.OpenApiCodegen.Client.TypeScript.templates
         string? dataType
     );
 
-    public record OperationRequestBody(string? requestBodyType, IEnumerable<OperationParameter> allParams);
+    public record OperationRequestBody(string? requestBodyType, bool isForm, IEnumerable<OperationParameter> allParams);
 
     public record OperationSecurityRequirement(
         OperationSecuritySchemeRequirement[] schemes

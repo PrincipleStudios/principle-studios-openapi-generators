@@ -179,7 +179,7 @@ namespace PrincipleStudios.OpenApiCodegen.Client.TypeScript
 
             var singleContentType = argument.Builder?.Operation.RequestBody.Content.Count <= 1;
 
-            argument.Builder?.RequestBodies.Add(OperationRequestBody(mimeType, isForm ? GetFormParams() : GetStandardParams()));
+            argument.Builder?.RequestBodies.Add(OperationRequestBody(mimeType, isForm, isForm ? GetFormParams() : GetStandardParams()));
 
             IEnumerable<OperationParameter> GetFormParams() =>
                 from param in mediaType.Schema.Properties
@@ -233,10 +233,11 @@ namespace PrincipleStudios.OpenApiCodegen.Client.TypeScript
                );
         }
 
-        public static OperationRequestBody OperationRequestBody(string? requestBodyMimeType, IEnumerable<OperationParameter> parameters)
+        public static OperationRequestBody OperationRequestBody(string? requestBodyMimeType, bool isForm, IEnumerable<OperationParameter> parameters)
         {
             return new templates.OperationRequestBody(
                  requestBodyType: requestBodyMimeType,
+                 isForm: isForm,
                  allParams: parameters
              );
         }
