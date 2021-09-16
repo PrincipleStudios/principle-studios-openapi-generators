@@ -8,7 +8,8 @@
         "build": "node bin/index.js ../../../schemas/no-refs.yaml tests/no-refs/ && node bin/index.js ../../../schemas/petstore.yaml tests/petstore/ && node bin/index.js ../../../schemas/headers.yaml tests/headers/",
         "tsc": "tsc --project tsconfig.build.json",
         "tsc:check": "tsc",
-        "pretsc:check": "npm run build"
+        "pretsc:check": "npm run build",
+        "prepack": "npm run tsc"
     },
     "author": "Matt DeKrey & Principle Studios",
     "license": "BSD-2-Clause",

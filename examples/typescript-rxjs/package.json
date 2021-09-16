@@ -3,25 +3,25 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@testing-library/jest-dom": "^4.2.4",
-    "@testing-library/react": "^9.3.2",
-    "@testing-library/user-event": "^7.1.2",
-    "@types/jest": "^24.0.0",
-    "@types/node": "^12.0.0",
-    "@types/react": "^16.9.0",
-    "@types/react-dom": "^16.9.0",
-    "react": "^16.13.0",
-    "react-dom": "^16.13.0",
-    "react-scripts": "3.4.0",
+    "@testing-library/jest-dom": "^5.14.1",
+    "@testing-library/react": "^12.1.0",
+    "@testing-library/user-event": "^13.2.1",
+    "@types/jest": "^27.0.1",
+    "@types/node": "^16.9.1",
+    "@types/react": "^17.0.21",
+    "@types/react-dom": "^17.0.9",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-scripts": "4.0.3",
     "rxjs": "^6.5.5",
-    "typescript": "~3.7.2"
+    "typescript": "~4.4.3"
   },
   "scripts": {
     "start": "npm run generate-api && react-scripts start",
     "build": "npm run generate-api && react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "generate-api": "rimraf src/api-generated/ && openapi-generator generate -i ../../schemas/petstore.yaml -o src/api-generated/ -g typescript-rxjs -t node_modules/@principlestudios/openapi-codegen-typescript-rxjs/templates"
+    "generate-api": "openapi-codegen-typescript ../../schemas/petstore.yaml src/api-generated/ -c"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -39,7 +39,7 @@
     ]
   },
   "devDependencies": {
-    "@principlestudios/openapi-codegen-typescript-rxjs": "file:../../generators/out/principlestudios-openapi-codegen-typescript-rxjs-0.0.3.tgz",
-    "rimraf": "^3.0.2"
+    "@principlestudios/openapi-codegen-typescript-rxjs": "file:../../generators/out/principlestudios-openapi-codegen-typescript-rxjs-0.1.0.tgz",
+    "@principlestudios/openapi-codegen-typescript": "file:../../generators/out/principlestudios-openapi-codegen-typescript-0.1.0.tgz"
   }
 }

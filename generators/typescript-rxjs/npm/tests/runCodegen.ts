@@ -1,23 +1,13 @@
-import rimraf from 'rimraf';
-import {exec} from 'child_process';
-import * as path from 'path';
+import {spawn} from 'child_process';
 
-const templateFolder = path.join(__dirname, "../templates");
-
-export function runCodegen(outDir: string, args: string) {
-    return new Promise<{ stdout: string; stderr: string }>((resolve, reject) => {
-        rimraf(outDir, err => {
-            if (err) {
-                reject(err);
+export function runCodegen(input: string, outDir: string, ...args: string[]) {
+    return new Promise<{}>((resolve, reject) => {
+        spawn(`dotnet`, [`node_modules/@principlestudios/openapi-codegen-typescript/dotnet/PrincipleStudios.OpenApiCodegen.Client.TypeScript.dll`, input, outDir, ...args], { stdio: 'inherit' }).on('close', code => {
+            if (code !== 0) {
+                reject({ code });
+            } else {
+                resolve({});
             }
-            exec(`node node_modules/@openapitools/openapi-generator-cli/bin/openapi-generator generate ${args} -o ${outDir} -g typescript-rxjs -t "${templateFolder}"`,
-                (error, stdout, stderr) => {
-                    if (error !== null) {
-                        reject({ stdout, stderr, error });
-                    } else {
-                        resolve({ stdout, stderr });
-                    }
-            });
         });
     });
 }

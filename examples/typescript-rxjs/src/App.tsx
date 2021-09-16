@@ -1,13 +1,16 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import './App.css';
-import { DefaultApi, Pet, NewPet } from "./api-generated";
+import operations from "./api-generated/operations";
+import { toRxjsApi } from '@principlestudios/openapi-codegen-typescript-rxjs';
+import { Pet } from './api-generated/models/Pet';
+import { NewPet } from './api-generated/models/NewPet';
 
 function App() {
   const [message, setMessage] = useState(null as (string | null));
   const [results, setResults] = useState([] as Pet[]);
   const updateResultsCallback = useCallback(updateResults, []);
   useEffect(() => { updateResultsCallback(); }, [updateResultsCallback]);
-  const api = useMemo(() => new DefaultApi({ basePath: 'https://localhost:5001/api' }), []);
+  const api = useMemo(() => toRxjsApi(operations, 'https://localhost:5001'), []);
 
   return (
     <div className="App">
@@ -29,7 +32,7 @@ function App() {
         <h1>Results</h1>
         {results.length === 0 ? "None"
           : <ul>
-            {results.map(r => <li key={r.id}>{r.name}</li>)}
+            {results.map(r => <li key={`${r.id}`}>{r.name}</li>)}
           </ul>}
       </header>
     </div>
@@ -44,7 +47,7 @@ function App() {
   }
 
   async function addPet(pet: NewPet) {
-    const result = await api.addPet({ newPet: pet }).toPromise();
+    const result = await api.addPet({}, pet, 'application/json').toPromise();
     if (result.statusCode === 200) {
       setMessage(`Added a ${result.data.tag}`);
       updateResultsCallback();

@@ -4,10 +4,10 @@ import { verifyAllFiles } from './verifyAllFiles';
 
 describe('typescript-rxjs petstore.yaml', () => {
     const outputDir = path.join(__dirname, "../out.local.petstore3");
-    const source = path.join(__dirname, "../../../schemas/petstore3.json");
+    const source = path.join(__dirname, "../../../../schemas/petstore3.json");
 
     beforeAll(async () => {
-        await runCodegen(outputDir, `-i "${source}"`);
+        await runCodegen(source, outputDir, `-c`);
     })
 
     verifyAllFiles(outputDir);
