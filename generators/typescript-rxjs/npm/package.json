@@ -1,9 +1,10 @@
 {
   "name": "@principlestudios/openapi-codegen-typescript-rxjs",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A typescript client code generator for principled development using RxJS",
   "scripts": {
     "test": "jest",
+    "test:update": "jest -u",
     "pretest": "npm run build",
     "build": "openapi-codegen-typescript ../../../schemas/no-refs.yaml tests/no-refs/ && openapi-codegen-typescript ../../../schemas/petstore.yaml tests/petstore/ && openapi-codegen-typescript ../../../schemas/headers.yaml tests/headers/",
     "tsc": "tsc --project tsconfig.build.json",
@@ -24,7 +25,7 @@
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
   "dependencies": {
-    "@principlestudios/openapi-codegen-typescript": "0.1.0",
+    "@principlestudios/openapi-codegen-typescript": "^0.1.1",
     "rxjs": "^6.5.5"
   },
   "devDependencies": {
