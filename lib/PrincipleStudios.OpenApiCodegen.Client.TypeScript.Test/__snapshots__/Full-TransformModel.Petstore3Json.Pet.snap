@@ -40,7 +40,7 @@ export type Pet = {
      */
     tags?: Array<Tag> | null;
     /**
-     * @type string | null
+     * @type "available" | "pending" | "sold" | null
      */
-    status?: string | null;
+    status?: "available" | "pending" | "sold" | null;
 };

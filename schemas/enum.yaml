@@ -1,0 +1,38 @@
+openapi: "3.0.3"
+info:
+  version: 1.0.0
+  title: Rock Paper Scissors
+  description: A sample API that uses enums to play rock-paper-scissors
+components:
+  schemas:
+    Option:
+      type: string
+      enum: [rock,paper,scissors]
+paths:
+  /rock-paper-scissors:
+    post:
+      operationId: playRockPaperScissors
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - player1
+                - player2
+              properties:
+                player1:
+                  $ref: '#/components/schemas/Option'
+                player2:
+                  $ref: '#/components/schemas/Option'
+      responses:
+        '200':
+          description: One player won
+          content:
+            application/json:
+              schema:
+                type: string
+                enum: [player1,player2]
+        '409':
+          description: Tie

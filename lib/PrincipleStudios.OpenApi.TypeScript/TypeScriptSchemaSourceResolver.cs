@@ -234,12 +234,8 @@ namespace PrincipleStudios.OpenApi.TypeScript
                 schema.Description,
                 className,
                 isString: schema.Type == "string",
-                enumVars: (from entry in schema.Enum
-                           select entry switch
-                           {
-                               Microsoft.OpenApi.Any.OpenApiPrimitive<string> { Value: string name } => new templates.EnumVar(TypeScriptNaming.ToPropertyName(name, options.ReservedIdentifiers("enum", className)), name),
-                               _ => throw new NotSupportedException()
-                           }).ToArray()
+                enumVars: (from entry in schema.Enum.OfType<Microsoft.OpenApi.Any.IOpenApiPrimitive>()
+                           select new templates.EnumVar(PrimitiveToJsonValue.GetPrimitiveValue(entry))).ToArray()
             );
         }
 
@@ -286,6 +282,8 @@ namespace PrincipleStudios.OpenApi.TypeScript
                     new(UseReferenceName(schema), ImmutableList<ImportReference>.Empty.Add(ToImportReference(schema))),
                 { Type: "object", Properties: IDictionary<string, OpenApiSchema> properties, AdditionalProperties: null } =>
                     ObjectToInline(properties),
+                { Enum: { Count: > 0 } and IList<Microsoft.OpenApi.Any.IOpenApiAny> enumValues } =>
+                    EnumToInline(enumValues),
                 { Type: string type, Format: var format } =>
                     TypeWithFormatToInline(type, format),
                 _ => throw new NotSupportedException("Unknown schema"),
@@ -317,6 +315,10 @@ namespace PrincipleStudios.OpenApi.TypeScript
             InlineDataType TypeWithFormatToInline(string type, string format)
             {
                 return new(options.Find(type, format), ImmutableList<ImportReference>.Empty);
+            }
+            InlineDataType EnumToInline(IEnumerable<Microsoft.OpenApi.Any.IOpenApiAny> enumValues)
+            {
+                return new(string.Join(" | ", enumValues.Select(PrimitiveToJsonValue.GetPrimitiveValue)), ImmutableList<ImportReference>.Empty);
             }
         }
 

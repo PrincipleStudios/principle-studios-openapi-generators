@@ -107,6 +107,7 @@ namespace PrincipleStudios.OpenApiCodegen.Client.TypeScript
                 ("petstore.yaml", (OpenApiDocument doc) => doc.Components.Schemas["Error"], "_Error"),
                 ("no-refs.yaml", (OpenApiDocument doc) => doc.Paths["/address"].Operations[OperationType.Post].RequestBody.Content["application/json"].Schema, "{ \"formattedAddress\": string; \"location\": { \"latitude\": number; \"longitude\": number } }"),
                 ("no-refs.yaml", (OpenApiDocument doc) => doc.Paths["/address"].Operations[OperationType.Post].RequestBody.Content["application/json"].Schema.Properties["location"], "{ \"latitude\": number; \"longitude\": number }"),
+                ("enum.yaml", (OpenApiDocument doc) => doc.Paths["/rock-paper-scissors"].Operations[OperationType.Post].Responses["200"].Content["application/json"].Schema, "\"player1\" | \"player2\""),
             }.Select(t => new object[] { t.documentName, t.findSchema, t.expectedInline });
 
         [Theory]

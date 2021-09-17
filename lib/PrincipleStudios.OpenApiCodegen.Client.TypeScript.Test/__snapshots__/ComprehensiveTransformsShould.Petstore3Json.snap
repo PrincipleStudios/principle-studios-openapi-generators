@@ -151,7 +151,7 @@ import {
 } from './../models/Pet';
 
 export type RequestParams = {
-    status: Array<string>;
+    status: Array<"available" | "pending" | "sold">;
 };
 export type RequestBodies = {
 };
@@ -1424,9 +1424,9 @@ export type Pet = {
      */
     tags?: Array<Tag> | null;
     /**
-     * @type string | null
+     * @type "available" | "pending" | "sold" | null
      */
-    status?: string | null;
+    status?: "available" | "pending" | "sold" | null;
 };
 `;
 
@@ -1564,9 +1564,9 @@ export type Order = {
      */
     shipDate?: string | null;
     /**
-     * @type string | null
+     * @type "placed" | "approved" | "delivered" | null
      */
-    status?: string | null;
+    status?: "placed" | "approved" | "delivered" | null;
     /**
      * @type boolean | null
      */

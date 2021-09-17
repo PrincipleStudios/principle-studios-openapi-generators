@@ -32,7 +32,6 @@ namespace PrincipleStudios.OpenApi.TypeScript.templates
     ) : Model(description, className);
 
     public record EnumVar(
-        string name,
         string value
     );
 

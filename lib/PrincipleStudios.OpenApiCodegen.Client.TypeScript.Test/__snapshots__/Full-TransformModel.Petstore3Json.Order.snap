@@ -30,9 +30,9 @@ export type Order = {
      */
     shipDate?: string | null;
     /**
-     * @type string | null
+     * @type "placed" | "approved" | "delivered" | null
      */
-    status?: string | null;
+    status?: "placed" | "approved" | "delivered" | null;
     /**
      * @type boolean | null
      */

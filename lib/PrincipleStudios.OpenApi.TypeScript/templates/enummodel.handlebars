@@ -1,0 +1,13 @@
+{{>partial_header header}}
+{{#with model}}
+
+/**{{#if description}}
+ * {{{description}}}{{/if}}
+ * @export
+ * @interface {{className}}
+ */
+export type {{className}} =
+{{#each enumVars}}
+    | {{{value}}}
+{{/each}};
+{{/with}}

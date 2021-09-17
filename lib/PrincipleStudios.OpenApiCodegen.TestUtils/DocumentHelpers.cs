@@ -22,6 +22,7 @@ namespace PrincipleStudios.OpenApiCodegen.TestUtils
             "empty.yaml",
             "controller-extension.yaml",
             "dictionary-ref.yaml",
+            "enum.yaml",
         };
 
         private static readonly string[] InvalidDocumentNames = new[]
