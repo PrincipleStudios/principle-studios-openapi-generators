@@ -59,7 +59,7 @@ export const responseConversion = (res: ResponseArgs) => ({
         statusCode: [
             200,
         ].indexOf(res.status) === -1 ? 'other' : res.status,
-        mimeType: res.xhr.getResponseHeader("Content-Type"),
+        mimeType: res.getResponseHeader("Content-Type"),
         data: res.response,
         response: res,
     }) as Responses;
