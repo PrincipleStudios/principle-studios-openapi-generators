@@ -501,7 +501,7 @@ export type RequestParams = {
     petId: BigInt;
 };
 export type RequestBodies = {
-    'application/octet-stream': string;
+    'application/octet-stream': Blob;
 };
 
 export type StructuredResponses = {

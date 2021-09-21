@@ -4,9 +4,13 @@ import { conversion as getPhoto } from "./no-refs/operations/getPhoto";
 import { RequestConversion, RequestBodies, RequestConversions, TransformRequest, TransformResponse } from "~/src/types";
 import { RequestOpts } from "~/src/inputs-outputs";
 
-lookupRecord.request({}, { formattedAddress: '123 Main St', location: { latitude: 0, longitude: 0 }}, 'application/json');
-// lookupRecord.request({});
-getPhoto.request({ id: 'foo' });
+describe('no-refs', () => {
+    it('has successful typings', () => {
+        lookupRecord.request({}, { formattedAddress: '123 Main St', location: { latitude: 0, longitude: 0 }}, 'application/json');
+        // lookupRecord.request({});
+        getPhoto.request({ id: 'foo' });
+    });
+});
 
 const t: TransformRequest<Object, LookupRecordRequestBodies, 'body', RequestOpts> = lookupRecord.request;
 const t2: RequestConversion<Object, LookupRecordRequestBodies, LookupResponses, 'body'> = lookupRecord;

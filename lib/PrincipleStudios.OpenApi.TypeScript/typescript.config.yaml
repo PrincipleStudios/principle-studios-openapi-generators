@@ -92,7 +92,7 @@ types:
   string:
     formats:
       #byte: byte[]
-      #binary: global::System.IO.Stream
+      binary: Blob
     default: string
   number:
     default: number

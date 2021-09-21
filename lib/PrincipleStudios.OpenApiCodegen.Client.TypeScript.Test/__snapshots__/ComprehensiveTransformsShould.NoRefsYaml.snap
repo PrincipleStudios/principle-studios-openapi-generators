@@ -89,12 +89,12 @@ export type StructuredResponses = {
         'application/json': { "code": string; "message": string };
     };
     200: {
-        'application/octet-stream': string;
+        'application/octet-stream': Blob;
     };
 };
 export type Responses = 
     | StandardResponse<'other', 'application/json', { "code": string; "message": string }>
-    | StandardResponse<200, 'application/octet-stream', string>;
+    | StandardResponse<200, 'application/octet-stream', Blob>;
 
 export function getPhoto(params: RequestParams): RequestOpts;
 export function getPhoto(params: RequestParams): RequestOpts {
