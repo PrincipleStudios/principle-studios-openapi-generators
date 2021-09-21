@@ -16,7 +16,6 @@ export type RequestParams = {
 };
 export type RequestBodies = {
     'application/json': Pet;
-    'application/xml': Pet;
 };
 
 export type StructuredResponses = {

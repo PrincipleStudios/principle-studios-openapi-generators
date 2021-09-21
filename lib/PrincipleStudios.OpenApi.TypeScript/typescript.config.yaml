@@ -1,4 +1,7 @@
-﻿controllerNameExtension: dotnet-mvc-server-controller
+﻿allowedMimeTypes:
+  - application/json
+  - application/x-www-form-urlencoded
+  - application/octet-stream
 globalReservedIdentifiers:
   - "break"
   - "case"

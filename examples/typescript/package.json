@@ -39,6 +39,6 @@
     ]
   },
   "devDependencies": {
-    "@principlestudios/openapi-codegen-typescript": "file:../../generators/out/principlestudios-openapi-codegen-typescript-0.1.2-alpha.1.tgz"
+    "@principlestudios/openapi-codegen-typescript": "file:../../generators/out/principlestudios-openapi-codegen-typescript-0.2.0-alpha.tgz"
   }
 }

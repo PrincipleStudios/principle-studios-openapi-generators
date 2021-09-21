@@ -132,7 +132,8 @@ namespace PrincipleStudios.OpenApiCodegen.Client.TypeScript
 
             var result = new OperationResponse(
                 description: response.Description,
-                content: (from entry in response.Content.DefaultIfEmpty(new("", new OpenApiMediaType()))
+                content: (from entry in response.Content.DefaultIfEmpty(new(string.Empty, new OpenApiMediaType()))
+                          where entry.Key == string.Empty || options.AllowedMimeTypes.Contains(entry.Key)
                           let entryContext = context.Append(nameof(response.Content), entry.Key, entry.Value)
                           let dataType = entry.Value.Schema != null ? typeScriptSchemaResolver.ToInlineDataType(entry.Value.Schema)() : null
                           select new OperationResponseContentOption(
@@ -173,7 +174,9 @@ namespace PrincipleStudios.OpenApiCodegen.Client.TypeScript
         public override void Visit(OpenApiMediaType mediaType, OpenApiContext context, Argument argument)
         {
             // All media type visitations should be for request bodies
-            var mimeType = context.GetLastKeyFor(mediaType);
+            var mimeType = context.GetLastKeyFor(mediaType)!;
+            if (!options.AllowedMimeTypes.Contains(mimeType))
+                return;
 
             var isForm = mimeType == formMimeType;
 
@@ -233,7 +236,7 @@ namespace PrincipleStudios.OpenApiCodegen.Client.TypeScript
                );
         }
 
-        public static OperationRequestBody OperationRequestBody(string? requestBodyMimeType, bool isForm, IEnumerable<OperationParameter> parameters)
+        public static OperationRequestBody OperationRequestBody(string requestBodyMimeType, bool isForm, IEnumerable<OperationParameter> parameters)
         {
             return new templates.OperationRequestBody(
                  requestBodyType: requestBodyMimeType,

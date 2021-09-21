@@ -7,7 +7,7 @@ namespace PrincipleStudios.OpenApi.TypeScript
 {
     public class TypeScriptSchemaOptions
     {
-        public string ControllerNameExtension { get; set; } = "typescript-rxjs-group";
+        public List<string> AllowedMimeTypes { get; set; } = new();
         public List<string> GlobalReservedIdentifiers { get; set; } = new();
         public Dictionary<string, List<string>> ContextualReservedIdentifiers { get; set; } = new();
         public string MapType { get; set; } = "Record<string, {}>";
