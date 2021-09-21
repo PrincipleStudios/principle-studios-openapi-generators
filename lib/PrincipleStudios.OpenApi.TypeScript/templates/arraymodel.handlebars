@@ -1,0 +1,13 @@
+{{>partial_header header}}
+{{#with model}}
+{{#each Imports}}
+import { {{#each members}}{{{.}}}, {{/each}}\} from '{{path}}';
+{{/each}}
+
+/**{{#if Description}}
+ * {{{Description}}}{{/if}}
+ * @export
+ */
+export type {{ClassName}} =
+    Array<{{Item}}>;
+{{/with}}

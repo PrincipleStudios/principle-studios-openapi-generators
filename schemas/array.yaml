@@ -1,0 +1,22 @@
+openapi: "3.0.3"
+info:
+  version: 1.0.0
+  title: Colors
+  description: A sample API that demonstrates arrays as components
+components:
+  schemas:
+    Colors:
+      type: array
+      items:
+        type: string
+paths:
+  /colors:
+    post:
+      operationId: getColors
+      responses:
+        '200':
+          description: The available colors
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Colors'

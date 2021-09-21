@@ -51,6 +51,7 @@ namespace PrincipleStudios.OpenApi.TypeScript
             {
                 ObjectModel m => ("objectmodel", ToTemplate(m)),
                 EnumModel m => ("enummodel", ToTemplate(m)),
+                ArrayModel m => ("arraymodel", ToTemplate(m)),
                 _ => throw new NotImplementedException()
             };
             var template = handlebars.Configuration.RegisteredTemplates[templateName];

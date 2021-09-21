@@ -1,6 +1,6 @@
 {
     "name": "@principlestudios/openapi-codegen-typescript",
-    "version": "0.1.1",
+    "version": "0.1.2",
     "description": "A typescript client code generator for principled development",
     "scripts": {
         "test": "jest",

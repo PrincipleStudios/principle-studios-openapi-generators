@@ -31,9 +31,17 @@ namespace PrincipleStudios.OpenApi.TypeScript.templates
         EnumVar[] enumVars
     ) : Model(description, className);
 
+
     public record EnumVar(
         string value
     );
+
+    public record ArrayModel(
+        string Description,
+        string ClassName,
+        string Item,
+        ImportStatement[] Imports
+    ) : Model(Description, ClassName);
 
     public record ObjectModel(
         ImportStatement[] imports,

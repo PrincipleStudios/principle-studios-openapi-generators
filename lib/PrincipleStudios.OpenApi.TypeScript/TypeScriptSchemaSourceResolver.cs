@@ -93,6 +93,7 @@ namespace PrincipleStudios.OpenApi.TypeScript
             );
             templates.Model? model = schema switch
             {
+                { Items: OpenApiSchema arrayItem, Type: "array" } => ToArrayModel(className, schema),
                 { Enum: { Count: > 0 }, Type: "string" } => ToEnumModel(className, schema),
                 _ => BuildObjectModel(schema) switch
                 {
@@ -225,6 +226,17 @@ namespace PrincipleStudios.OpenApi.TypeScript
                 className: className,
                 parent: null, // TODO - if "all of" and only one was a reference, we should be able to use inheritance.
                 vars: vars.Select(v => v()).ToArray()
+            );
+        }
+
+        private templates.ArrayModel ToArrayModel(string className, OpenApiSchema schema)
+        {
+            var dataType = ToInlineDataType(schema.Items)();
+            return new templates.ArrayModel(
+                schema.Description,
+                className,
+                Item: dataType.text,
+                Imports: this.GetImportStatements(new[] { schema.Items }, "./models/").ToArray()
             );
         }
 
