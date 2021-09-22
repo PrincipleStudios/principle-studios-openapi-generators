@@ -9,6 +9,12 @@ components:
       type: array
       items:
         type: string
+    Palette:
+      $ref: '#/components/schemas/Colors'
+    Palettes:
+      type: array
+      items:
+        $ref: '#/components/schemas/Palette'
 paths:
   /colors:
     post:
@@ -20,3 +26,13 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Colors'
+  /palette:
+    post:
+      operationId: getPalettes
+      responses:
+        '200':
+          description: The available palettes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Palettes'
