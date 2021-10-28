@@ -1,7 +1,8 @@
 Push-Location
 
 cd $PSScriptRoot
-cd nuget
-dotnet pack --output "$PSScriptRoot/../out"
+cd PrincipleStudios.OpenApiCodegen.Client.MsBuild
+dotnet build /p:Configuration=Release
+dotnet pack /p:Configuration=Release --output "$PSScriptRoot/../out"
 
 Pop-Location

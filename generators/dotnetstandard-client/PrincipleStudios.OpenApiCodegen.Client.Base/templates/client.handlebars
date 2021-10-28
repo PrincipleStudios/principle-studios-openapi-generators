@@ -1,0 +1,69 @@
+{{>partial_header header}}
+#nullable enable
+#nullable disable warnings
+#pragma warning disable
+
+namespace {{packageName}}
+{ {{#if operations}}
+    public static class {{className}}
+    {
+        {{#each operations as |operation|}}{{#each requestBodies as |requestBody|}}{{#if operation.summary}}
+        /// <summary>
+        /// {{linewrap operation.summary "
+        /// "}}
+        /// </summary>{{/if}}{{#if operation.description}}
+        /// <remarks>
+        /// {{linewrap operation.description "
+        /// "}}
+        /// </remarks>{{/if}}{{#each requestBody.allParams}}
+        /// <param name="{{paramName}}">{{description}}</param>{{/each}}
+        public static Task<global::System.Net.Http.HttpResponseMessage> Send{{operation.name}}Async(
+            this global::System.Net.Http.HttpClient client,
+            {{#each requestBody.allParams}}{{{dataType}}} {{paramName}},
+            {{/each}}
+            global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken)
+        ) => client.SendAsync({{operation.name}}({{#each requestBody.allParams}}{{paramName}}{{#unless @last}},{{/unless}}{{/each}}));
+
+        public static global::System.Net.Http.HttpRequestMessage {{operation.name}}(
+            {{#each requestBody.allParams}}{{{dataType}}} {{paramName}}{{#unless @last}},{{/unless}}
+            {{/each}})
+        {
+            throw new global::System.NotImplementedException();
+        }
+
+        {{/each}}
+        public static global::System.Threading.Tasks.Task<{{operation.name}}TypeSafeResult> Parse{{operation.name}}TypeSafe(this global::System.Net.Http.HttpResponseMessage response)
+        {
+            throw new global::System.NotImplementedException();
+        }
+
+        public readonly struct {{name}}TypeSafeResult
+        {
+            {{#each responses.statusResponse as |response code|}}{{#each content}}
+            {{#if response.description}}/// <summary>
+            /// {{linewrap response.description "
+            /// "}}
+            /// </summary>{{/if}}
+            public readonly struct {{responseMethodName}} : {{../../name}}TypeSafeResult
+            {
+                {{#if dataType}}public {{{dataType}}} Body { get; set; }
+                {{/if}}{{#each ../headers}}
+                public string {{paramName}} { get; set; }{{/each}}
+            }
+            {{/each}}{{/each}}{{#if responses.defaultResponse}}{{#each responses.defaultResponse.content}}
+            {{#if responses.defaultResponse.description}}/// <summary>
+            /// {{linewrap responses.defaultResponse.description "
+            /// "}}
+            /// </summary>{{/if}}
+            public readonly struct {{responseMethodName}} : {{../name}}TypeSafeResult
+            {
+                {{#if dataType}}public {{{dataType}}} Body { get; set; }
+                {{/if}}{{#each ../responses.defaultResponse.headers}}
+                public string {{paramName}} { get; set; }{{/each}}
+            }
+            {{/each}}{{/if}}
+        }
+        {{/each}}
+    }
+{{/if}}
+}

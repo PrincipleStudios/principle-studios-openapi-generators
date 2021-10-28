@@ -1,0 +1,54 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <AssemblyName>PrincipleStudios.OpenApiCodegen.Client</AssemblyName>
+    <RootNamespace>PrincipleStudios.OpenApi.CSharp</RootNamespace>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <LangVersion>9</LangVersion>
+    <Nullable>enable</Nullable>
+    <Version>$(OpenApiMvcServerVersion)</Version>
+
+    <IsPackable>true</IsPackable>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+
+    <PackageLicenseExpression>BSD-2-Clause</PackageLicenseExpression>
+    <title>Controller source generators from OpenAPI specification for .NET 5</title>
+    <PackageSummary>Adds source generators to generate C# controller base classes from an OpenAPI specification file.</PackageSummary>
+    <description>Adds source generators to generate C# controller base classes from an OpenAPI specification file.</description>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+    <PackageReadmeFile>readme.md</PackageReadmeFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Handlebars.Net" Version="2.0.7" PrivateAssets="all" GeneratePathProperty="true" />
+    <PackageReference Include="Microsoft.OpenApi.Readers" Version="1.2.3" PrivateAssets="all" GeneratePathProperty="true" />
+    <PackageReference Include="Microsoft.OpenApi" Version="1.2.3" PrivateAssets="all" GeneratePathProperty="true" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" PrivateAssets="all" GeneratePathProperty="true" />
+    <PackageReference Include="Microsoft.Build.Utilities.Core" Version="16.9.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Package the generator in the build directory of the nuget package -->
+    <None Include="$(OutputPath)\*.dll" Pack="true" PackagePath="build" Visible="false" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="*.props" Pack="true" PackagePath="build" />
+    <None Include="readme.md" Pack="true" PackagePath="\" Visible="false"/>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\lib\PrincipleStudios.OpenApi.CSharp\PrincipleStudios.OpenApi.CSharp.csproj" PrivateAssets="all" />
+    <ProjectReference Include="..\..\..\lib\PrincipleStudios.OpenApi.Transformations\PrincipleStudios.OpenApi.Transformations.csproj" PrivateAssets="all" />
+    <ProjectReference Include="..\PrincipleStudios.OpenApiCodegen.Client.Base\PrincipleStudios.OpenApiCodegen.Client.Base.csproj" PrivateAssets="all" />
+  </ItemGroup>
+
+  <Target Name="AddBlankFile" BeforeTargets="CoreCompile">
+    <!-- Resolves NU5128 -->
+    <Touch Files="$(OutputPath)\_._" AlwaysCreate="true" />
+    <ItemGroup>
+      <None Include="$(OutputPath)\_._" Pack="true" PackagePath="lib/$(TargetFramework)" Visible="false" />
+    </ItemGroup>
+  </Target>
+</Project>

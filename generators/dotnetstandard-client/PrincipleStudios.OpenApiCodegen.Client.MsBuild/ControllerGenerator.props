@@ -1,0 +1,60 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Project>
+
+  <UsingTask TaskName="PrincipleStudios.OpenApi.CSharp.ClientCodegenTask"
+      AssemblyFile="$(MSBuildThisFileDirectory)/PrincipleStudios.OpenApiCodegen.Client.dll"/>
+
+  <ItemGroup>
+    <AvailableItemName Include="OpenApiSchemaCSharpOptions" DisplayName="C# Options for Open API Code Generation (OpenApiCodeGen)" />
+    <AvailableItemName Include="OpenApiSchemaClient" DisplayName="Open API Schema MVC Server (OpenApiCodeGen)" />
+    <Watch Include="@(OpenApiSchemaClient);@(OpenApiSchemaCSharpOptions)" Condition=" '@(OpenApiSchemaClient)' != '' " />
+
+    <PSOpenApiControllerGeneratorInputs Include="$(MSBuildProjectFile)" Visible="false" />
+    <PSOpenApiControllerGeneratorInputs Include="$(MSBuildThisFileFullPath)**/*.dll" Visible="false" />
+  </ItemGroup>
+
+  <Target Name="CompileServerOpenApiCodeGen" BeforeTargets="GenerateMSBuildEditorConfigFileShouldRun" DependsOnTargets="_CompileServerOpenApiCodeGen" Condition=" '@(OpenApiSchemaClient)' != '' ">
+    <ItemGroup>
+      <Compile Include="%(OpenApiSchemaClient.OutputPath)/**/*.cs" />
+    </ItemGroup>
+  </Target>
+
+  <Target Name="_UpdateServerOpenApiCodeGenMetatdata">
+    <ItemGroup>
+      <OpenApiSchemaClient Condition=" '%(OpenApiSchemaClient.Link)' != '' ">
+        <WorkingOutputPath>$([System.Text.RegularExpressions.Regex]::Replace(%(OpenApiSchemaClient.Link), '(?&lt;=^|\\|/)..(?=$|\\|/)', '__'))</WorkingOutputPath>
+      </OpenApiSchemaClient>
+      <OpenApiSchemaClient Condition=" '%(OpenApiSchemaClient.Link)' == '' ">
+        <WorkingOutputPath>$([System.Text.RegularExpressions.Regex]::Replace(%(OpenApiSchemaClient.Identity), '(?&lt;=^|\\|/)..(?=$|\\|/)', '__'))</WorkingOutputPath>
+      </OpenApiSchemaClient>
+      <OpenApiSchemaClient>
+        <OutputPath>$(IntermediateOutputPath)%(OpenApiSchemaClient.WorkingOutputPath)</OutputPath>
+        <Namespace Condition=" '%(OpenApiSchemaClient.Namespace)' == '' ">$(RootNamespace)$([System.Text.RegularExpressions.Regex]::Replace($([System.Text.RegularExpressions.Regex]::Replace('/$([System.IO.Path]::GetDirectoryName('%(OpenApiSchemaClient.WorkingOutputPath)'))', '[/\\]', '.')), '\.$', ''))</Namespace>
+      </OpenApiSchemaClient>
+    </ItemGroup>
+  </Target>
+
+  <Target Name="CleanServerOpenApiCodeGen" BeforeTargets="Clean" DependsOnTargets="_UpdateServerOpenApiCodeGenMetatdata">
+    <ItemGroup>
+      <CleanServerOpenApiCodeGen Include="%(OpenApiSchemaClient.OutputPath)/**/*" />
+    </ItemGroup>
+
+    <Delete Files="@(CleanServerOpenApiCodeGen)" ContinueOnError="true" />
+  </Target>
+
+  <Target Name="_CompileServerOpenApiCodeGen"
+          DependsOnTargets="_UpdateServerOpenApiCodeGenMetatdata"
+          Inputs="@(PSOpenApiControllerGeneratorInputs);@(OpenApiSchemaClient);@(OpenApiSchemaCSharpOptions)"
+          Outputs="@(OpenApiSchemaClient -> '%(OutputPath)/_._')"
+          >
+    <ClientCodegenTask OutputPath="$(MSBuildProjectDirectory)/%(OpenApiSchemaClient.OutputPath)"
+                          InputPath="%(OpenApiSchemaClient.FullPath)"
+                          Namespace="%(OpenApiSchemaClient.Namespace)"
+                          OptionsPath="@(OpenApiSchemaCSharpOptions -> '%(FullPath)')"
+                          />
+
+    <Touch Files="@(OpenApiSchemaClient -> '%(OutputPath)/_._')" AlwaysCreate="true" />
+
+    <Message Text="OpenAPI: %(OpenApiSchemaClient.Identity) -&gt; %(OpenApiSchemaClient.OutputPath)" />
+  </Target>
+</Project>

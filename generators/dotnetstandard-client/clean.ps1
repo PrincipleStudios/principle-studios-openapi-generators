@@ -1,0 +1,1 @@
+Remove-Item -r ~/.nuget/packages/principlestudios.openapicodegen.Client

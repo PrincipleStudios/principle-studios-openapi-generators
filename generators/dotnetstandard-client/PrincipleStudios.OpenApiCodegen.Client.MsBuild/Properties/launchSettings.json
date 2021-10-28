@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "PrincipleStudios.OpenApiCodegen.Client.Executable": {
+      "commandName": "Project",
+      "commandLineArgs": "-c -i \"$(SolutionDir)schemas/local.yaml\" -n \"TestProject\""
+    }
+  }
+}
