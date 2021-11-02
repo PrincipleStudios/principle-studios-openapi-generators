@@ -14,8 +14,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)DocumentHelpers.cs" />
-    <EmbeddedResource Include="$(MSBuildThisFileDirectory)\..\..\schemas\*.*" Exclude="$(MSBuildThisFileDirectory)\..\..\schemas\local.*">
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)\..\..\schemas\*.*" Exclude="$(MSBuildThisFileDirectory)\..\..\schemas\local.*;$(MSBuildThisFileDirectory)\..\..\schemas\.gitignore">
       <Link>schemas/%(Filename)%(Extension)</Link>
+      <LogicalName>PrincipleStudios.OpenApiCodegen.TestUtils.schemas.%(Filename)%(Extension)</LogicalName>
     </EmbeddedResource>
   </ItemGroup>
 </Project>

@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
@@ -21,7 +21,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\PrincipleStudios.OpenApi.Transformations\PrincipleStudios.OpenApi.Transformations.csproj" />
     <ProjectReference Include="..\..\generators\dotnetcore-server-interfaces\PrincipleStudios.OpenApiCodegen.Server.Mvc.Base\PrincipleStudios.OpenApiCodegen.Server.Mvc.Base.csproj" />
   </ItemGroup>
 

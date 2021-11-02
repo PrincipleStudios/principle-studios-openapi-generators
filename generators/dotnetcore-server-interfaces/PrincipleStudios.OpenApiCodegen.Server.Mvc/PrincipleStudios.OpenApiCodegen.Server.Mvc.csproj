@@ -49,8 +49,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\lib\PrincipleStudios.OpenApi.CSharp\PrincipleStudios.OpenApi.CSharp.csproj" PrivateAssets="all" />
-    <ProjectReference Include="..\..\..\lib\PrincipleStudios.OpenApi.Transformations\PrincipleStudios.OpenApi.Transformations.csproj" PrivateAssets="all" />
     <ProjectReference Include="..\PrincipleStudios.OpenApiCodegen.Server.Mvc.Base\PrincipleStudios.OpenApiCodegen.Server.Mvc.Base.csproj" PrivateAssets="all" />
   </ItemGroup>
 

@@ -35,12 +35,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="*.props" Pack="true" PackagePath="build" />
-    <None Include="readme.md" Pack="true" PackagePath="\" Visible="false"/>
+    <None Include="readme.md" Pack="true" PackagePath="\" Visible="false" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\lib\PrincipleStudios.OpenApi.CSharp\PrincipleStudios.OpenApi.CSharp.csproj" PrivateAssets="all" />
-    <ProjectReference Include="..\..\..\lib\PrincipleStudios.OpenApi.Transformations\PrincipleStudios.OpenApi.Transformations.csproj" PrivateAssets="all" />
     <ProjectReference Include="..\PrincipleStudios.OpenApiCodegen.Client.Base\PrincipleStudios.OpenApiCodegen.Client.Base.csproj" PrivateAssets="all" />
   </ItemGroup>
 

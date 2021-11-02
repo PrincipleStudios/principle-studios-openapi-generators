@@ -1,10 +1,16 @@
-<Project Sdk="Microsoft.NET.Sdk">
-
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
-    <LangVersion>9</LangVersion>
-    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+    <MSBuildAllProjects Condition="'$(MSBuildVersion)' == '' Or '$(MSBuildVersion)' &lt; '16.0'">$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>3477a14b-91d4-4178-bba2-6ac7a4558e64</SharedGUID>
   </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>PrincipleStudios.OpenApi.Transformations</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)**\*.cs" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.OpenApi.Readers" Version="1.2.3" />
@@ -18,7 +24,5 @@
     <PackageReference Include="Microsoft.Extensions.FileProviders.Physical" Version="5.0.0" />
     <PackageReference Include="SharpYaml" Version="1.6.5" />
     <PackageReference Include="System.Collections.Immutable" Version="5.0.0" />
-    <PackageReference Include="IsExternalInit" Version="1.0.0" />
   </ItemGroup>
-
 </Project>
