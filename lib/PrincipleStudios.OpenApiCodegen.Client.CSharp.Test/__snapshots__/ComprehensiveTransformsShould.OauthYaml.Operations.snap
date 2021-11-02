@@ -17,11 +17,12 @@ namespace PS.Controller
     {
         
         /// <param name="data">base-64 encoded data</param>
-        public static global::System.Threading.Tasks.Task<global::System.Net.Http.HttpResponseMessage> SendGetInfoAsync(
+        public static async global::System.Threading.Tasks.Task<GetInfoReturnType> GetInfo(
             this global::System.Net.Http.HttpClient client,
             byte[]? data,
             global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken)
-        ) => client.SendAsync(GetInfo(data));
+        ) => await (await client.SendAsync(GetInfo(data)).ConfigureAwait(false))
+            .ParseGetInfo().ConfigureAwait(false);
 
         public static global::System.Net.Http.HttpRequestMessage GetInfo(
             byte[]? data
@@ -33,29 +34,40 @@ namespace PS.Controller
             return requestMessage;
         }
 
-        public static async global::System.Threading.Tasks.Task<IGetInfoTypeSafeResult?> ParseGetInfoTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
+        public static async global::System.Threading.Tasks.Task<GetInfoReturnType?> ParseGetInfo(this global::System.Net.Http.HttpResponseMessage response)
         {
             switch ((int)response.StatusCode)
             { 
                 case 200:
                      if (response.Content.Headers.ContentType.MediaType == "application/json") 
-                        return new IGetInfoTypeSafeResult.Ok
-                        { 
+                        return new GetInfoReturnType.Ok
+                        {
+                            Response = response,
                             Body = Newtonsoft.Json.JsonConvert.DeserializeObject<string>(await response.Content.ReadAsStringAsync()), 
                         };
                     break;
                 
             }
-            return null;
+            return new GetInfoReturnType
+            {
+                Response = response,
+            };
         }
 
-        public interface IGetInfoTypeSafeResult
+        public class GetInfoReturnType : global::System.IDisposable
         {
+            public global::System.Net.Http.HttpResponseMessage Response { get; set; }
+
+            void global::System.IDisposable.Dispose()
+            {
+                Response?.Dispose();
+            }
+
             
             /// <summary>
             /// Sample Response
             /// </summary>
-            public struct Ok : IGetInfoTypeSafeResult
+            public class Ok : GetInfoReturnType
             {
                 public string Body { get; set; }
                 
@@ -63,10 +75,11 @@ namespace PS.Controller
             
         }
 
-        public static global::System.Threading.Tasks.Task<global::System.Net.Http.HttpResponseMessage> SendGetAddressAsync(
+        public static async global::System.Threading.Tasks.Task<GetAddressReturnType> GetAddress(
             this global::System.Net.Http.HttpClient client,
                         global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken)
-        ) => client.SendAsync(GetAddress());
+        ) => await (await client.SendAsync(GetAddress()).ConfigureAwait(false))
+            .ParseGetAddress().ConfigureAwait(false);
 
         public static global::System.Net.Http.HttpRequestMessage GetAddress(
             )
@@ -77,29 +90,40 @@ namespace PS.Controller
             return requestMessage;
         }
 
-        public static async global::System.Threading.Tasks.Task<IGetAddressTypeSafeResult?> ParseGetAddressTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
+        public static async global::System.Threading.Tasks.Task<GetAddressReturnType?> ParseGetAddress(this global::System.Net.Http.HttpResponseMessage response)
         {
             switch ((int)response.StatusCode)
             { 
                 case 200:
                      if (response.Content.Headers.ContentType.MediaType == "application/json") 
-                        return new IGetAddressTypeSafeResult.Ok
-                        { 
+                        return new GetAddressReturnType.Ok
+                        {
+                            Response = response,
                             Body = Newtonsoft.Json.JsonConvert.DeserializeObject<string>(await response.Content.ReadAsStringAsync()), 
                         };
                     break;
                 
             }
-            return null;
+            return new GetAddressReturnType
+            {
+                Response = response,
+            };
         }
 
-        public interface IGetAddressTypeSafeResult
+        public class GetAddressReturnType : global::System.IDisposable
         {
+            public global::System.Net.Http.HttpResponseMessage Response { get; set; }
+
+            void global::System.IDisposable.Dispose()
+            {
+                Response?.Dispose();
+            }
+
             
             /// <summary>
             /// Sample Response
             /// </summary>
-            public struct Ok : IGetAddressTypeSafeResult
+            public class Ok : GetAddressReturnType
             {
                 public string Body { get; set; }
                 

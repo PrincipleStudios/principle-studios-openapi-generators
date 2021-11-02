@@ -22,13 +22,14 @@ namespace PS.Controller
         /// <param name="houseId"></param>
         /// <param name="start"></param>
         /// <param name="end"></param>
-        public static global::System.Threading.Tasks.Task<global::System.Net.Http.HttpResponseMessage> SendGetPowerFlowsAsync(
+        public static async global::System.Threading.Tasks.Task<GetPowerFlowsReturnType> GetPowerFlows(
             this global::System.Net.Http.HttpClient client,
             global::System.Guid houseId,
 string? start,
 string? end,
             global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken)
-        ) => client.SendAsync(GetPowerFlows(houseId,start,end));
+        ) => await (await client.SendAsync(GetPowerFlows(houseId,start,end)).ConfigureAwait(false))
+            .ParseGetPowerFlows().ConfigureAwait(false);
 
         public static global::System.Net.Http.HttpRequestMessage GetPowerFlows(
             global::System.Guid houseId,
@@ -42,34 +43,46 @@ string? end,
             return requestMessage;
         }
 
-        public static async global::System.Threading.Tasks.Task<IGetPowerFlowsTypeSafeResult?> ParseGetPowerFlowsTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
+        public static async global::System.Threading.Tasks.Task<GetPowerFlowsReturnType?> ParseGetPowerFlows(this global::System.Net.Http.HttpResponseMessage response)
         {
             switch ((int)response.StatusCode)
             { 
                 case 200:
                      if (response.Content.Headers.ContentType.MediaType == "application/json") 
-                        return new IGetPowerFlowsTypeSafeResult.Ok
-                        { 
+                        return new GetPowerFlowsReturnType.Ok
+                        {
+                            Response = response,
                             Body = Newtonsoft.Json.JsonConvert.DeserializeObject<GetPowerFlowsResponse>(await response.Content.ReadAsStringAsync()), 
                         };
                     break;
                 
                 case 400:
                     
-                        return new IGetPowerFlowsTypeSafeResult.BadRequest
-                        { 
+                        return new GetPowerFlowsReturnType.BadRequest
+                        {
+                            Response = response,
                         };
                     break;
                 
             }
-            return null;
+            return new GetPowerFlowsReturnType
+            {
+                Response = response,
+            };
         }
 
-        public interface IGetPowerFlowsTypeSafeResult
+        public class GetPowerFlowsReturnType : global::System.IDisposable
         {
+            public global::System.Net.Http.HttpResponseMessage Response { get; set; }
+
+            void global::System.IDisposable.Dispose()
+            {
+                Response?.Dispose();
+            }
+
             
             
-            public struct Ok : IGetPowerFlowsTypeSafeResult
+            public class Ok : GetPowerFlowsReturnType
             {
                 public GetPowerFlowsResponse Body { get; set; }
                 
@@ -78,7 +91,7 @@ string? end,
             /// <summary>
             /// Request range or house id not valid
             /// </summary>
-            public struct BadRequest : IGetPowerFlowsTypeSafeResult
+            public class BadRequest : GetPowerFlowsReturnType
             {
                 
             }
@@ -89,11 +102,12 @@ string? end,
         /// Get current battery state
         /// </summary>
         /// <param name="houseId"></param>
-        public static global::System.Threading.Tasks.Task<global::System.Net.Http.HttpResponseMessage> SendGetCurrentBatteryStateAsync(
+        public static async global::System.Threading.Tasks.Task<GetCurrentBatteryStateReturnType> GetCurrentBatteryState(
             this global::System.Net.Http.HttpClient client,
             global::System.Guid houseId,
             global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken)
-        ) => client.SendAsync(GetCurrentBatteryState(houseId));
+        ) => await (await client.SendAsync(GetCurrentBatteryState(houseId)).ConfigureAwait(false))
+            .ParseGetCurrentBatteryState().ConfigureAwait(false);
 
         public static global::System.Net.Http.HttpRequestMessage GetCurrentBatteryState(
             global::System.Guid houseId
@@ -105,34 +119,46 @@ string? end,
             return requestMessage;
         }
 
-        public static async global::System.Threading.Tasks.Task<IGetCurrentBatteryStateTypeSafeResult?> ParseGetCurrentBatteryStateTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
+        public static async global::System.Threading.Tasks.Task<GetCurrentBatteryStateReturnType?> ParseGetCurrentBatteryState(this global::System.Net.Http.HttpResponseMessage response)
         {
             switch ((int)response.StatusCode)
             { 
                 case 200:
                      if (response.Content.Headers.ContentType.MediaType == "application/json") 
-                        return new IGetCurrentBatteryStateTypeSafeResult.Ok
-                        { 
+                        return new GetCurrentBatteryStateReturnType.Ok
+                        {
+                            Response = response,
                             Body = Newtonsoft.Json.JsonConvert.DeserializeObject<CurrentBatteryState>(await response.Content.ReadAsStringAsync()), 
                         };
                     break;
                 
                 case 400:
                     
-                        return new IGetCurrentBatteryStateTypeSafeResult.BadRequest
-                        { 
+                        return new GetCurrentBatteryStateReturnType.BadRequest
+                        {
+                            Response = response,
                         };
                     break;
                 
             }
-            return null;
+            return new GetCurrentBatteryStateReturnType
+            {
+                Response = response,
+            };
         }
 
-        public interface IGetCurrentBatteryStateTypeSafeResult
+        public class GetCurrentBatteryStateReturnType : global::System.IDisposable
         {
+            public global::System.Net.Http.HttpResponseMessage Response { get; set; }
+
+            void global::System.IDisposable.Dispose()
+            {
+                Response?.Dispose();
+            }
+
             
             
-            public struct Ok : IGetCurrentBatteryStateTypeSafeResult
+            public class Ok : GetCurrentBatteryStateReturnType
             {
                 public CurrentBatteryState Body { get; set; }
                 
@@ -141,7 +167,7 @@ string? end,
             /// <summary>
             /// Request range or house id not valid
             /// </summary>
-            public struct BadRequest : IGetCurrentBatteryStateTypeSafeResult
+            public class BadRequest : GetCurrentBatteryStateReturnType
             {
                 
             }

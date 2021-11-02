@@ -17,12 +17,13 @@ namespace {{packageName}}
         /// "}}
         /// </remarks>{{/if}}{{#each requestBody.allParams}}
         /// <param name="{{paramName}}">{{description}}</param>{{/each}}
-        public static global::System.Threading.Tasks.Task<global::System.Net.Http.HttpResponseMessage> Send{{operation.name}}Async(
+        public static async global::System.Threading.Tasks.Task<{{operation.name}}ReturnType> {{operation.name}}(
             this global::System.Net.Http.HttpClient client,
             {{#each requestBody.allParams}}{{{dataType}}} {{paramName}},
             {{/each}}
             global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken)
-        ) => client.SendAsync({{operation.name}}({{#each requestBody.allParams}}{{paramName}}{{#unless @last}},{{/unless}}{{/each}}));
+        ) => await (await client.SendAsync({{operation.name}}({{#each requestBody.allParams}}{{paramName}}{{#unless @last}},{{/unless}}{{/each}})).ConfigureAwait(false))
+            .Parse{{operation.name}}().ConfigureAwait(false);
 
         public static global::System.Net.Http.HttpRequestMessage {{operation.name}}(
             {{#each requestBody.allParams}}{{{dataType}}} {{paramName}}{{#unless @last}},{{/unless}}
@@ -48,15 +49,16 @@ namespace {{packageName}}
         }
 
         {{/each}}
-        public static async global::System.Threading.Tasks.Task<I{{operation.name}}TypeSafeResult?> Parse{{operation.name}}TypeSafe(this global::System.Net.Http.HttpResponseMessage response)
+        public static async global::System.Threading.Tasks.Task<{{operation.name}}ReturnType?> Parse{{operation.name}}(this global::System.Net.Http.HttpResponseMessage response)
         {
             switch ((int)response.StatusCode)
             { {{#each responses.statusResponse as |response code|}}
                 case {{code}}:
                     {{#each response.content}}
                     {{#if mediaType}} if (response.Content.Headers.ContentType.MediaType == "{{mediaType}}") {{/if}}
-                        return new I{{operation.name}}TypeSafeResult.{{responseMethodName}}
-                        { {{#if dataType}}
+                        return new {{operation.name}}ReturnType.{{responseMethodName}}
+                        {
+                            Response = response,{{#if dataType}}
                             Body = Newtonsoft.Json.JsonConvert.DeserializeObject<{{{dataType}}}>(await response.Content.ReadAsStringAsync()), {{/if}}
                             {{!-- {{#each ../headers}}
                             {{paramName}} = ,{{/each}} --}}
@@ -66,25 +68,36 @@ namespace {{packageName}}
                 {{/each}}{{#if responses.defaultResponse}}
                 default: {{#each responses.defaultResponse.content}}
                     {{#if mediaType}} if (response.Content.Headers.ContentType.MediaType == "{{mediaType}}") {{/if}}
-                        return new I{{operation.name}}TypeSafeResult.{{responseMethodName}}
-                        { {{#if dataType}}
+                        return new {{operation.name}}ReturnType.{{responseMethodName}}
+                        {
+                            Response = response,{{#if dataType}}
                             Body = Newtonsoft.Json.JsonConvert.DeserializeObject<{{{dataType}}}>(await response.Content.ReadAsStringAsync()), {{/if}}
                             {{!-- {{#each ../headers}}
                             {{paramName}} = ,{{/each}} --}}
                         }; {{/each}}
                     break;{{/if}}
             }
-            return null;
+            return new {{operation.name}}ReturnType
+            {
+                Response = response,
+            };
         }
 
-        public interface I{{name}}TypeSafeResult
+        public class {{name}}ReturnType : global::System.IDisposable
         {
+            public global::System.Net.Http.HttpResponseMessage Response { get; set; }
+
+            void global::System.IDisposable.Dispose()
+            {
+                Response?.Dispose();
+            }
+
             {{#each responses.statusResponse as |response code|}}{{#each content}}
             {{#if response.description}}/// <summary>
             /// {{linewrap response.description "
             /// "}}
             /// </summary>{{/if}}
-            public struct {{responseMethodName}} : I{{../../name}}TypeSafeResult
+            public class {{responseMethodName}} : {{../../name}}ReturnType
             {
                 {{#if dataType}}public {{{dataType}}} Body { get; set; }
                 {{/if}}{{!-- {{#each ../headers}}
@@ -95,7 +108,7 @@ namespace {{packageName}}
             /// {{linewrap responses.defaultResponse.description "
             /// "}}
             /// </summary>{{/if}}
-            public struct {{responseMethodName}} : I{{../name}}TypeSafeResult
+            public class {{responseMethodName}} : {{../name}}ReturnType
             {
                 {{#if dataType}}public {{{dataType}}} Body { get; set; }
                 {{/if}}{{!-- {{#each ../responses.defaultResponse.headers}}

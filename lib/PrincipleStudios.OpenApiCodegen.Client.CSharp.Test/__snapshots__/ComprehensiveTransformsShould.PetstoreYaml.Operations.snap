@@ -25,12 +25,13 @@ namespace PS.Controller
         /// </remarks>
         /// <param name="tags">tags to filter by</param>
         /// <param name="limit">maximum number of results to return</param>
-        public static global::System.Threading.Tasks.Task<global::System.Net.Http.HttpResponseMessage> SendFindPetsAsync(
+        public static async global::System.Threading.Tasks.Task<FindPetsReturnType> FindPets(
             this global::System.Net.Http.HttpClient client,
             global::System.Collections.Generic.IEnumerable<string>? tags,
 int? limit,
             global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken)
-        ) => client.SendAsync(FindPets(tags,limit));
+        ) => await (await client.SendAsync(FindPets(tags,limit)).ConfigureAwait(false))
+            .ParseFindPets().ConfigureAwait(false);
 
         public static global::System.Net.Http.HttpRequestMessage FindPets(
             global::System.Collections.Generic.IEnumerable<string>? tags,
@@ -43,43 +44,55 @@ int? limit,
             return requestMessage;
         }
 
-        public static async global::System.Threading.Tasks.Task<IFindPetsTypeSafeResult?> ParseFindPetsTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
+        public static async global::System.Threading.Tasks.Task<FindPetsReturnType?> ParseFindPets(this global::System.Net.Http.HttpResponseMessage response)
         {
             switch ((int)response.StatusCode)
             { 
                 case 200:
                      if (response.Content.Headers.ContentType.MediaType == "application/json") 
-                        return new IFindPetsTypeSafeResult.Ok
-                        { 
+                        return new FindPetsReturnType.Ok
+                        {
+                            Response = response,
                             Body = Newtonsoft.Json.JsonConvert.DeserializeObject<global::System.Collections.Generic.IEnumerable<Pet>>(await response.Content.ReadAsStringAsync()), 
                         };
                     break;
                 
                 default: 
                      if (response.Content.Headers.ContentType.MediaType == "application/json") 
-                        return new IFindPetsTypeSafeResult.OtherStatusCode
-                        { 
+                        return new FindPetsReturnType.OtherStatusCode
+                        {
+                            Response = response,
                             Body = Newtonsoft.Json.JsonConvert.DeserializeObject<Error>(await response.Content.ReadAsStringAsync()), 
                         }; 
                     break;
             }
-            return null;
+            return new FindPetsReturnType
+            {
+                Response = response,
+            };
         }
 
-        public interface IFindPetsTypeSafeResult
+        public class FindPetsReturnType : global::System.IDisposable
         {
+            public global::System.Net.Http.HttpResponseMessage Response { get; set; }
+
+            void global::System.IDisposable.Dispose()
+            {
+                Response?.Dispose();
+            }
+
             
             /// <summary>
             /// pet response
             /// </summary>
-            public struct Ok : IFindPetsTypeSafeResult
+            public class Ok : FindPetsReturnType
             {
                 public global::System.Collections.Generic.IEnumerable<Pet> Body { get; set; }
                 
             }
             
             
-            public struct OtherStatusCode : IFindPetsTypeSafeResult
+            public class OtherStatusCode : FindPetsReturnType
             {
                 public Error Body { get; set; }
                 
@@ -91,11 +104,12 @@ int? limit,
         /// Creates a new pet in the store. Duplicates are allowed
         /// </remarks>
         /// <param name="addPetBody"></param>
-        public static global::System.Threading.Tasks.Task<global::System.Net.Http.HttpResponseMessage> SendAddPetAsync(
+        public static async global::System.Threading.Tasks.Task<AddPetReturnType> AddPet(
             this global::System.Net.Http.HttpClient client,
             NewPet addPetBody,
             global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken)
-        ) => client.SendAsync(AddPet(addPetBody));
+        ) => await (await client.SendAsync(AddPet(addPetBody)).ConfigureAwait(false))
+            .ParseAddPet().ConfigureAwait(false);
 
         public static global::System.Net.Http.HttpRequestMessage AddPet(
             NewPet addPetBody
@@ -108,43 +122,55 @@ int? limit,
             return requestMessage;
         }
 
-        public static async global::System.Threading.Tasks.Task<IAddPetTypeSafeResult?> ParseAddPetTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
+        public static async global::System.Threading.Tasks.Task<AddPetReturnType?> ParseAddPet(this global::System.Net.Http.HttpResponseMessage response)
         {
             switch ((int)response.StatusCode)
             { 
                 case 200:
                      if (response.Content.Headers.ContentType.MediaType == "application/json") 
-                        return new IAddPetTypeSafeResult.Ok
-                        { 
+                        return new AddPetReturnType.Ok
+                        {
+                            Response = response,
                             Body = Newtonsoft.Json.JsonConvert.DeserializeObject<Pet>(await response.Content.ReadAsStringAsync()), 
                         };
                     break;
                 
                 default: 
                      if (response.Content.Headers.ContentType.MediaType == "application/json") 
-                        return new IAddPetTypeSafeResult.OtherStatusCode
-                        { 
+                        return new AddPetReturnType.OtherStatusCode
+                        {
+                            Response = response,
                             Body = Newtonsoft.Json.JsonConvert.DeserializeObject<Error>(await response.Content.ReadAsStringAsync()), 
                         }; 
                     break;
             }
-            return null;
+            return new AddPetReturnType
+            {
+                Response = response,
+            };
         }
 
-        public interface IAddPetTypeSafeResult
+        public class AddPetReturnType : global::System.IDisposable
         {
+            public global::System.Net.Http.HttpResponseMessage Response { get; set; }
+
+            void global::System.IDisposable.Dispose()
+            {
+                Response?.Dispose();
+            }
+
             
             /// <summary>
             /// pet response
             /// </summary>
-            public struct Ok : IAddPetTypeSafeResult
+            public class Ok : AddPetReturnType
             {
                 public Pet Body { get; set; }
                 
             }
             
             
-            public struct OtherStatusCode : IAddPetTypeSafeResult
+            public class OtherStatusCode : AddPetReturnType
             {
                 public Error Body { get; set; }
                 
@@ -156,11 +182,12 @@ int? limit,
         /// Returns a user based on a single ID, if the user does not have access to the pet
         /// </remarks>
         /// <param name="id">ID of pet to fetch</param>
-        public static global::System.Threading.Tasks.Task<global::System.Net.Http.HttpResponseMessage> SendFindPetByIdAsync(
+        public static async global::System.Threading.Tasks.Task<FindPetByIdReturnType> FindPetById(
             this global::System.Net.Http.HttpClient client,
             long id,
             global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken)
-        ) => client.SendAsync(FindPetById(id));
+        ) => await (await client.SendAsync(FindPetById(id)).ConfigureAwait(false))
+            .ParseFindPetById().ConfigureAwait(false);
 
         public static global::System.Net.Http.HttpRequestMessage FindPetById(
             long id
@@ -173,43 +200,55 @@ int? limit,
             return requestMessage;
         }
 
-        public static async global::System.Threading.Tasks.Task<IFindPetByIdTypeSafeResult?> ParseFindPetByIdTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
+        public static async global::System.Threading.Tasks.Task<FindPetByIdReturnType?> ParseFindPetById(this global::System.Net.Http.HttpResponseMessage response)
         {
             switch ((int)response.StatusCode)
             { 
                 case 200:
                      if (response.Content.Headers.ContentType.MediaType == "application/json") 
-                        return new IFindPetByIdTypeSafeResult.Ok
-                        { 
+                        return new FindPetByIdReturnType.Ok
+                        {
+                            Response = response,
                             Body = Newtonsoft.Json.JsonConvert.DeserializeObject<Pet>(await response.Content.ReadAsStringAsync()), 
                         };
                     break;
                 
                 default: 
                      if (response.Content.Headers.ContentType.MediaType == "application/json") 
-                        return new IFindPetByIdTypeSafeResult.OtherStatusCode
-                        { 
+                        return new FindPetByIdReturnType.OtherStatusCode
+                        {
+                            Response = response,
                             Body = Newtonsoft.Json.JsonConvert.DeserializeObject<Error>(await response.Content.ReadAsStringAsync()), 
                         }; 
                     break;
             }
-            return null;
+            return new FindPetByIdReturnType
+            {
+                Response = response,
+            };
         }
 
-        public interface IFindPetByIdTypeSafeResult
+        public class FindPetByIdReturnType : global::System.IDisposable
         {
+            public global::System.Net.Http.HttpResponseMessage Response { get; set; }
+
+            void global::System.IDisposable.Dispose()
+            {
+                Response?.Dispose();
+            }
+
             
             /// <summary>
             /// pet response
             /// </summary>
-            public struct Ok : IFindPetByIdTypeSafeResult
+            public class Ok : FindPetByIdReturnType
             {
                 public Pet Body { get; set; }
                 
             }
             
             
-            public struct OtherStatusCode : IFindPetByIdTypeSafeResult
+            public class OtherStatusCode : FindPetByIdReturnType
             {
                 public Error Body { get; set; }
                 
@@ -221,11 +260,12 @@ int? limit,
         /// deletes a single pet based on the ID supplied
         /// </remarks>
         /// <param name="id">ID of pet to delete</param>
-        public static global::System.Threading.Tasks.Task<global::System.Net.Http.HttpResponseMessage> SendDeletePetAsync(
+        public static async global::System.Threading.Tasks.Task<DeletePetReturnType> DeletePet(
             this global::System.Net.Http.HttpClient client,
             long id,
             global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken)
-        ) => client.SendAsync(DeletePet(id));
+        ) => await (await client.SendAsync(DeletePet(id)).ConfigureAwait(false))
+            .ParseDeletePet().ConfigureAwait(false);
 
         public static global::System.Net.Http.HttpRequestMessage DeletePet(
             long id
@@ -238,41 +278,53 @@ int? limit,
             return requestMessage;
         }
 
-        public static async global::System.Threading.Tasks.Task<IDeletePetTypeSafeResult?> ParseDeletePetTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
+        public static async global::System.Threading.Tasks.Task<DeletePetReturnType?> ParseDeletePet(this global::System.Net.Http.HttpResponseMessage response)
         {
             switch ((int)response.StatusCode)
             { 
                 case 204:
                     
-                        return new IDeletePetTypeSafeResult.NoContent
-                        { 
+                        return new DeletePetReturnType.NoContent
+                        {
+                            Response = response,
                         };
                     break;
                 
                 default: 
                      if (response.Content.Headers.ContentType.MediaType == "application/json") 
-                        return new IDeletePetTypeSafeResult.OtherStatusCode
-                        { 
+                        return new DeletePetReturnType.OtherStatusCode
+                        {
+                            Response = response,
                             Body = Newtonsoft.Json.JsonConvert.DeserializeObject<Error>(await response.Content.ReadAsStringAsync()), 
                         }; 
                     break;
             }
-            return null;
+            return new DeletePetReturnType
+            {
+                Response = response,
+            };
         }
 
-        public interface IDeletePetTypeSafeResult
+        public class DeletePetReturnType : global::System.IDisposable
         {
+            public global::System.Net.Http.HttpResponseMessage Response { get; set; }
+
+            void global::System.IDisposable.Dispose()
+            {
+                Response?.Dispose();
+            }
+
             
             /// <summary>
             /// pet deleted
             /// </summary>
-            public struct NoContent : IDeletePetTypeSafeResult
+            public class NoContent : DeletePetReturnType
             {
                 
             }
             
             
-            public struct OtherStatusCode : IDeletePetTypeSafeResult
+            public class OtherStatusCode : DeletePetReturnType
             {
                 public Error Body { get; set; }
                 

@@ -17,11 +17,12 @@ namespace PS.Controller
     {
         
         /// <param name="lookupRecordBody"></param>
-        public static global::System.Threading.Tasks.Task<global::System.Net.Http.HttpResponseMessage> SendLookupRecordAsync(
+        public static async global::System.Threading.Tasks.Task<LookupRecordReturnType> LookupRecord(
             this global::System.Net.Http.HttpClient client,
             global::System.Collections.Generic.Dictionary<string, string> lookupRecordBody,
             global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken)
-        ) => client.SendAsync(LookupRecord(lookupRecordBody));
+        ) => await (await client.SendAsync(LookupRecord(lookupRecordBody)).ConfigureAwait(false))
+            .ParseLookupRecord().ConfigureAwait(false);
 
         public static global::System.Net.Http.HttpRequestMessage LookupRecord(
             global::System.Collections.Generic.Dictionary<string, string> lookupRecordBody
@@ -34,27 +35,38 @@ namespace PS.Controller
             return requestMessage;
         }
 
-        public static async global::System.Threading.Tasks.Task<ILookupRecordTypeSafeResult?> ParseLookupRecordTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
+        public static async global::System.Threading.Tasks.Task<LookupRecordReturnType?> ParseLookupRecord(this global::System.Net.Http.HttpResponseMessage response)
         {
             switch ((int)response.StatusCode)
             { 
                 case 200:
                      if (response.Content.Headers.ContentType.MediaType == "application/json") 
-                        return new ILookupRecordTypeSafeResult.Ok
-                        { 
+                        return new LookupRecordReturnType.Ok
+                        {
+                            Response = response,
                             Body = Newtonsoft.Json.JsonConvert.DeserializeObject<global::System.Collections.Generic.Dictionary<string, string>>(await response.Content.ReadAsStringAsync()), 
                         };
                     break;
                 
             }
-            return null;
+            return new LookupRecordReturnType
+            {
+                Response = response,
+            };
         }
 
-        public interface ILookupRecordTypeSafeResult
+        public class LookupRecordReturnType : global::System.IDisposable
         {
+            public global::System.Net.Http.HttpResponseMessage Response { get; set; }
+
+            void global::System.IDisposable.Dispose()
+            {
+                Response?.Dispose();
+            }
+
             
             
-            public struct Ok : ILookupRecordTypeSafeResult
+            public class Ok : LookupRecordReturnType
             {
                 public global::System.Collections.Generic.Dictionary<string, string> Body { get; set; }
                 

@@ -17,11 +17,12 @@ namespace PS.Controller
     {
         
         /// <param name="xData">base-64 encoded data</param>
-        public static global::System.Threading.Tasks.Task<global::System.Net.Http.HttpResponseMessage> SendGetInfoAsync(
+        public static async global::System.Threading.Tasks.Task<GetInfoReturnType> GetInfo(
             this global::System.Net.Http.HttpClient client,
             byte[] xData,
             global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken)
-        ) => client.SendAsync(GetInfo(xData));
+        ) => await (await client.SendAsync(GetInfo(xData)).ConfigureAwait(false))
+            .ParseGetInfo().ConfigureAwait(false);
 
         public static global::System.Net.Http.HttpRequestMessage GetInfo(
             byte[] xData
@@ -34,42 +35,55 @@ namespace PS.Controller
             return requestMessage;
         }
 
-        public static async global::System.Threading.Tasks.Task<IGetInfoTypeSafeResult?> ParseGetInfoTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
+        public static async global::System.Threading.Tasks.Task<GetInfoReturnType?> ParseGetInfo(this global::System.Net.Http.HttpResponseMessage response)
         {
             switch ((int)response.StatusCode)
             { 
                 case 200:
                      if (response.Content.Headers.ContentType.MediaType == "application/json") 
-                        return new IGetInfoTypeSafeResult.Ok
-                        { 
+                        return new GetInfoReturnType.Ok
+                        {
+                            Response = response,
                             Body = Newtonsoft.Json.JsonConvert.DeserializeObject<global::System.Collections.Generic.Dictionary<string, string>>(await response.Content.ReadAsStringAsync()), 
                         };
                     break;
                 
                 case 204:
                     
-                        return new IGetInfoTypeSafeResult.NoContent
-                        { 
+                        return new GetInfoReturnType.NoContent
+                        {
+                            Response = response,
                         };
                     break;
                 
                 default: 
                     
-                        return new IGetInfoTypeSafeResult.OtherStatusCode
-                        { 
+                        return new GetInfoReturnType.OtherStatusCode
+                        {
+                            Response = response,
                         }; 
                     break;
             }
-            return null;
+            return new GetInfoReturnType
+            {
+                Response = response,
+            };
         }
 
-        public interface IGetInfoTypeSafeResult
+        public class GetInfoReturnType : global::System.IDisposable
         {
+            public global::System.Net.Http.HttpResponseMessage Response { get; set; }
+
+            void global::System.IDisposable.Dispose()
+            {
+                Response?.Dispose();
+            }
+
             
             /// <summary>
             /// Sample Response
             /// </summary>
-            public struct Ok : IGetInfoTypeSafeResult
+            public class Ok : GetInfoReturnType
             {
                 public global::System.Collections.Generic.Dictionary<string, string> Body { get; set; }
                 
@@ -78,23 +92,24 @@ namespace PS.Controller
             /// <summary>
             /// Sample Response
             /// </summary>
-            public struct NoContent : IGetInfoTypeSafeResult
+            public class NoContent : GetInfoReturnType
             {
                 
             }
             
             
-            public struct OtherStatusCode : IGetInfoTypeSafeResult
+            public class OtherStatusCode : GetInfoReturnType
             {
                 
             }
             
         }
 
-        public static global::System.Threading.Tasks.Task<global::System.Net.Http.HttpResponseMessage> Send_RedirectAsync(
+        public static async global::System.Threading.Tasks.Task<_RedirectReturnType> _Redirect(
             this global::System.Net.Http.HttpClient client,
                         global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken)
-        ) => client.SendAsync(_Redirect());
+        ) => await (await client.SendAsync(_Redirect()).ConfigureAwait(false))
+            .Parse_Redirect().ConfigureAwait(false);
 
         public static global::System.Net.Http.HttpRequestMessage _Redirect(
             )
@@ -105,28 +120,39 @@ namespace PS.Controller
             return requestMessage;
         }
 
-        public static async global::System.Threading.Tasks.Task<I_RedirectTypeSafeResult?> Parse_RedirectTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
+        public static async global::System.Threading.Tasks.Task<_RedirectReturnType?> Parse_Redirect(this global::System.Net.Http.HttpResponseMessage response)
         {
             switch ((int)response.StatusCode)
             { 
                 case 302:
                     
-                        return new I_RedirectTypeSafeResult.Redirect
-                        { 
+                        return new _RedirectReturnType.Redirect
+                        {
+                            Response = response,
                         };
                     break;
                 
             }
-            return null;
+            return new _RedirectReturnType
+            {
+                Response = response,
+            };
         }
 
-        public interface I_RedirectTypeSafeResult
+        public class _RedirectReturnType : global::System.IDisposable
         {
+            public global::System.Net.Http.HttpResponseMessage Response { get; set; }
+
+            void global::System.IDisposable.Dispose()
+            {
+                Response?.Dispose();
+            }
+
             
             /// <summary>
             /// Redirection Response
             /// </summary>
-            public struct Redirect : I_RedirectTypeSafeResult
+            public class Redirect : _RedirectReturnType
             {
                 
             }

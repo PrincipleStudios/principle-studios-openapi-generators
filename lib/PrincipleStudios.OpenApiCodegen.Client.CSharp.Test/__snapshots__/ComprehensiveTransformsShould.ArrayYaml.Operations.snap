@@ -16,10 +16,11 @@ namespace PS.Controller
     public static class Operations
     {
         
-        public static global::System.Threading.Tasks.Task<global::System.Net.Http.HttpResponseMessage> SendGetColorsAsync(
+        public static async global::System.Threading.Tasks.Task<GetColorsReturnType> GetColors(
             this global::System.Net.Http.HttpClient client,
                         global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken)
-        ) => client.SendAsync(GetColors());
+        ) => await (await client.SendAsync(GetColors()).ConfigureAwait(false))
+            .ParseGetColors().ConfigureAwait(false);
 
         public static global::System.Net.Http.HttpRequestMessage GetColors(
             )
@@ -30,29 +31,40 @@ namespace PS.Controller
             return requestMessage;
         }
 
-        public static async global::System.Threading.Tasks.Task<IGetColorsTypeSafeResult?> ParseGetColorsTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
+        public static async global::System.Threading.Tasks.Task<GetColorsReturnType?> ParseGetColors(this global::System.Net.Http.HttpResponseMessage response)
         {
             switch ((int)response.StatusCode)
             { 
                 case 200:
                      if (response.Content.Headers.ContentType.MediaType == "application/json") 
-                        return new IGetColorsTypeSafeResult.Ok
-                        { 
+                        return new GetColorsReturnType.Ok
+                        {
+                            Response = response,
                             Body = Newtonsoft.Json.JsonConvert.DeserializeObject<global::System.Collections.Generic.IEnumerable<string>>(await response.Content.ReadAsStringAsync()), 
                         };
                     break;
                 
             }
-            return null;
+            return new GetColorsReturnType
+            {
+                Response = response,
+            };
         }
 
-        public interface IGetColorsTypeSafeResult
+        public class GetColorsReturnType : global::System.IDisposable
         {
+            public global::System.Net.Http.HttpResponseMessage Response { get; set; }
+
+            void global::System.IDisposable.Dispose()
+            {
+                Response?.Dispose();
+            }
+
             
             /// <summary>
             /// The available colors
             /// </summary>
-            public struct Ok : IGetColorsTypeSafeResult
+            public class Ok : GetColorsReturnType
             {
                 public global::System.Collections.Generic.IEnumerable<string> Body { get; set; }
                 
@@ -60,10 +72,11 @@ namespace PS.Controller
             
         }
 
-        public static global::System.Threading.Tasks.Task<global::System.Net.Http.HttpResponseMessage> SendGetPalettesAsync(
+        public static async global::System.Threading.Tasks.Task<GetPalettesReturnType> GetPalettes(
             this global::System.Net.Http.HttpClient client,
                         global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken)
-        ) => client.SendAsync(GetPalettes());
+        ) => await (await client.SendAsync(GetPalettes()).ConfigureAwait(false))
+            .ParseGetPalettes().ConfigureAwait(false);
 
         public static global::System.Net.Http.HttpRequestMessage GetPalettes(
             )
@@ -74,29 +87,40 @@ namespace PS.Controller
             return requestMessage;
         }
 
-        public static async global::System.Threading.Tasks.Task<IGetPalettesTypeSafeResult?> ParseGetPalettesTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
+        public static async global::System.Threading.Tasks.Task<GetPalettesReturnType?> ParseGetPalettes(this global::System.Net.Http.HttpResponseMessage response)
         {
             switch ((int)response.StatusCode)
             { 
                 case 200:
                      if (response.Content.Headers.ContentType.MediaType == "application/json") 
-                        return new IGetPalettesTypeSafeResult.Ok
-                        { 
+                        return new GetPalettesReturnType.Ok
+                        {
+                            Response = response,
                             Body = Newtonsoft.Json.JsonConvert.DeserializeObject<global::System.Collections.Generic.IEnumerable<global::System.Collections.Generic.IEnumerable<string>>>(await response.Content.ReadAsStringAsync()), 
                         };
                     break;
                 
             }
-            return null;
+            return new GetPalettesReturnType
+            {
+                Response = response,
+            };
         }
 
-        public interface IGetPalettesTypeSafeResult
+        public class GetPalettesReturnType : global::System.IDisposable
         {
+            public global::System.Net.Http.HttpResponseMessage Response { get; set; }
+
+            void global::System.IDisposable.Dispose()
+            {
+                Response?.Dispose();
+            }
+
             
             /// <summary>
             /// The available palettes
             /// </summary>
-            public struct Ok : IGetPalettesTypeSafeResult
+            public class Ok : GetPalettesReturnType
             {
                 public global::System.Collections.Generic.IEnumerable<global::System.Collections.Generic.IEnumerable<string>> Body { get; set; }
                 

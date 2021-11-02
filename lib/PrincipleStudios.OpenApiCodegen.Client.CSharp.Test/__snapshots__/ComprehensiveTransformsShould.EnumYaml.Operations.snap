@@ -17,11 +17,12 @@ namespace PS.Controller
     {
         
         /// <param name="playRockPaperScissorsBody"></param>
-        public static global::System.Threading.Tasks.Task<global::System.Net.Http.HttpResponseMessage> SendPlayRockPaperScissorsAsync(
+        public static async global::System.Threading.Tasks.Task<PlayRockPaperScissorsReturnType> PlayRockPaperScissors(
             this global::System.Net.Http.HttpClient client,
             PlayRockPaperScissorsRequest playRockPaperScissorsBody,
             global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken)
-        ) => client.SendAsync(PlayRockPaperScissors(playRockPaperScissorsBody));
+        ) => await (await client.SendAsync(PlayRockPaperScissors(playRockPaperScissorsBody)).ConfigureAwait(false))
+            .ParsePlayRockPaperScissors().ConfigureAwait(false);
 
         public static global::System.Net.Http.HttpRequestMessage PlayRockPaperScissors(
             PlayRockPaperScissorsRequest playRockPaperScissorsBody
@@ -34,36 +35,48 @@ namespace PS.Controller
             return requestMessage;
         }
 
-        public static async global::System.Threading.Tasks.Task<IPlayRockPaperScissorsTypeSafeResult?> ParsePlayRockPaperScissorsTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
+        public static async global::System.Threading.Tasks.Task<PlayRockPaperScissorsReturnType?> ParsePlayRockPaperScissors(this global::System.Net.Http.HttpResponseMessage response)
         {
             switch ((int)response.StatusCode)
             { 
                 case 200:
                      if (response.Content.Headers.ContentType.MediaType == "application/json") 
-                        return new IPlayRockPaperScissorsTypeSafeResult.Ok
-                        { 
+                        return new PlayRockPaperScissorsReturnType.Ok
+                        {
+                            Response = response,
                             Body = Newtonsoft.Json.JsonConvert.DeserializeObject<PlayRockPaperScissorsResponse>(await response.Content.ReadAsStringAsync()), 
                         };
                     break;
                 
                 case 409:
                     
-                        return new IPlayRockPaperScissorsTypeSafeResult.Conflict
-                        { 
+                        return new PlayRockPaperScissorsReturnType.Conflict
+                        {
+                            Response = response,
                         };
                     break;
                 
             }
-            return null;
+            return new PlayRockPaperScissorsReturnType
+            {
+                Response = response,
+            };
         }
 
-        public interface IPlayRockPaperScissorsTypeSafeResult
+        public class PlayRockPaperScissorsReturnType : global::System.IDisposable
         {
+            public global::System.Net.Http.HttpResponseMessage Response { get; set; }
+
+            void global::System.IDisposable.Dispose()
+            {
+                Response?.Dispose();
+            }
+
             
             /// <summary>
             /// One player won
             /// </summary>
-            public struct Ok : IPlayRockPaperScissorsTypeSafeResult
+            public class Ok : PlayRockPaperScissorsReturnType
             {
                 public PlayRockPaperScissorsResponse Body { get; set; }
                 
@@ -72,7 +85,7 @@ namespace PS.Controller
             /// <summary>
             /// Tie
             /// </summary>
-            public struct Conflict : IPlayRockPaperScissorsTypeSafeResult
+            public class Conflict : PlayRockPaperScissorsReturnType
             {
                 
             }

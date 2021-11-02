@@ -20,11 +20,12 @@ namespace PS.Controller
         /// Add a new pet to the store
         /// </summary>
         /// <param name="addPetBody"></param>
-        public static global::System.Threading.Tasks.Task<global::System.Net.Http.HttpResponseMessage> SendAddPetAsync(
+        public static async global::System.Threading.Tasks.Task<AddPetReturnType> AddPet(
             this global::System.Net.Http.HttpClient client,
             Pet addPetBody,
             global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken)
-        ) => client.SendAsync(AddPet(addPetBody));
+        ) => await (await client.SendAsync(AddPet(addPetBody)).ConfigureAwait(false))
+            .ParseAddPet().ConfigureAwait(false);
 
         public static global::System.Net.Http.HttpRequestMessage AddPet(
             Pet addPetBody
@@ -37,28 +38,39 @@ namespace PS.Controller
             return requestMessage;
         }
 
-        public static async global::System.Threading.Tasks.Task<IAddPetTypeSafeResult?> ParseAddPetTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
+        public static async global::System.Threading.Tasks.Task<AddPetReturnType?> ParseAddPet(this global::System.Net.Http.HttpResponseMessage response)
         {
             switch ((int)response.StatusCode)
             { 
                 case 405:
                     
-                        return new IAddPetTypeSafeResult.MethodNotAllowed
-                        { 
+                        return new AddPetReturnType.MethodNotAllowed
+                        {
+                            Response = response,
                         };
                     break;
                 
             }
-            return null;
+            return new AddPetReturnType
+            {
+                Response = response,
+            };
         }
 
-        public interface IAddPetTypeSafeResult
+        public class AddPetReturnType : global::System.IDisposable
         {
+            public global::System.Net.Http.HttpResponseMessage Response { get; set; }
+
+            void global::System.IDisposable.Dispose()
+            {
+                Response?.Dispose();
+            }
+
             
             /// <summary>
             /// Invalid input
             /// </summary>
-            public struct MethodNotAllowed : IAddPetTypeSafeResult
+            public class MethodNotAllowed : AddPetReturnType
             {
                 
             }
@@ -69,11 +81,12 @@ namespace PS.Controller
         /// Update an existing pet
         /// </summary>
         /// <param name="updatePetBody"></param>
-        public static global::System.Threading.Tasks.Task<global::System.Net.Http.HttpResponseMessage> SendUpdatePetAsync(
+        public static async global::System.Threading.Tasks.Task<UpdatePetReturnType> UpdatePet(
             this global::System.Net.Http.HttpClient client,
             Pet updatePetBody,
             global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken)
-        ) => client.SendAsync(UpdatePet(updatePetBody));
+        ) => await (await client.SendAsync(UpdatePet(updatePetBody)).ConfigureAwait(false))
+            .ParseUpdatePet().ConfigureAwait(false);
 
         public static global::System.Net.Http.HttpRequestMessage UpdatePet(
             Pet updatePetBody
@@ -86,42 +99,55 @@ namespace PS.Controller
             return requestMessage;
         }
 
-        public static async global::System.Threading.Tasks.Task<IUpdatePetTypeSafeResult?> ParseUpdatePetTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
+        public static async global::System.Threading.Tasks.Task<UpdatePetReturnType?> ParseUpdatePet(this global::System.Net.Http.HttpResponseMessage response)
         {
             switch ((int)response.StatusCode)
             { 
                 case 400:
                     
-                        return new IUpdatePetTypeSafeResult.BadRequest
-                        { 
+                        return new UpdatePetReturnType.BadRequest
+                        {
+                            Response = response,
                         };
                     break;
                 
                 case 404:
                     
-                        return new IUpdatePetTypeSafeResult.NotFound
-                        { 
+                        return new UpdatePetReturnType.NotFound
+                        {
+                            Response = response,
                         };
                     break;
                 
                 case 405:
                     
-                        return new IUpdatePetTypeSafeResult.MethodNotAllowed
-                        { 
+                        return new UpdatePetReturnType.MethodNotAllowed
+                        {
+                            Response = response,
                         };
                     break;
                 
             }
-            return null;
+            return new UpdatePetReturnType
+            {
+                Response = response,
+            };
         }
 
-        public interface IUpdatePetTypeSafeResult
+        public class UpdatePetReturnType : global::System.IDisposable
         {
+            public global::System.Net.Http.HttpResponseMessage Response { get; set; }
+
+            void global::System.IDisposable.Dispose()
+            {
+                Response?.Dispose();
+            }
+
             
             /// <summary>
             /// Invalid ID supplied
             /// </summary>
-            public struct BadRequest : IUpdatePetTypeSafeResult
+            public class BadRequest : UpdatePetReturnType
             {
                 
             }
@@ -129,7 +155,7 @@ namespace PS.Controller
             /// <summary>
             /// Pet not found
             /// </summary>
-            public struct NotFound : IUpdatePetTypeSafeResult
+            public class NotFound : UpdatePetReturnType
             {
                 
             }
@@ -137,7 +163,7 @@ namespace PS.Controller
             /// <summary>
             /// Validation exception
             /// </summary>
-            public struct MethodNotAllowed : IUpdatePetTypeSafeResult
+            public class MethodNotAllowed : UpdatePetReturnType
             {
                 
             }
@@ -151,11 +177,12 @@ namespace PS.Controller
         /// Multiple status values can be provided with comma separated strings
         /// </remarks>
         /// <param name="status">Status values that need to be considered for filter</param>
-        public static global::System.Threading.Tasks.Task<global::System.Net.Http.HttpResponseMessage> SendFindPetsByStatusAsync(
+        public static async global::System.Threading.Tasks.Task<FindPetsByStatusReturnType> FindPetsByStatus(
             this global::System.Net.Http.HttpClient client,
             global::System.Collections.Generic.IEnumerable<FindPetsByStatusStatusItem> status,
             global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken)
-        ) => client.SendAsync(FindPetsByStatus(status));
+        ) => await (await client.SendAsync(FindPetsByStatus(status)).ConfigureAwait(false))
+            .ParseFindPetsByStatus().ConfigureAwait(false);
 
         public static global::System.Net.Http.HttpRequestMessage FindPetsByStatus(
             global::System.Collections.Generic.IEnumerable<FindPetsByStatusStatusItem> status
@@ -167,36 +194,48 @@ namespace PS.Controller
             return requestMessage;
         }
 
-        public static async global::System.Threading.Tasks.Task<IFindPetsByStatusTypeSafeResult?> ParseFindPetsByStatusTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
+        public static async global::System.Threading.Tasks.Task<FindPetsByStatusReturnType?> ParseFindPetsByStatus(this global::System.Net.Http.HttpResponseMessage response)
         {
             switch ((int)response.StatusCode)
             { 
                 case 200:
                      if (response.Content.Headers.ContentType.MediaType == "application/json") 
-                        return new IFindPetsByStatusTypeSafeResult.ApplicationJsonOk
-                        { 
+                        return new FindPetsByStatusReturnType.ApplicationJsonOk
+                        {
+                            Response = response,
                             Body = Newtonsoft.Json.JsonConvert.DeserializeObject<global::System.Collections.Generic.IEnumerable<Pet>>(await response.Content.ReadAsStringAsync()), 
                         };
                     break;
                 
                 case 400:
                     
-                        return new IFindPetsByStatusTypeSafeResult.BadRequest
-                        { 
+                        return new FindPetsByStatusReturnType.BadRequest
+                        {
+                            Response = response,
                         };
                     break;
                 
             }
-            return null;
+            return new FindPetsByStatusReturnType
+            {
+                Response = response,
+            };
         }
 
-        public interface IFindPetsByStatusTypeSafeResult
+        public class FindPetsByStatusReturnType : global::System.IDisposable
         {
+            public global::System.Net.Http.HttpResponseMessage Response { get; set; }
+
+            void global::System.IDisposable.Dispose()
+            {
+                Response?.Dispose();
+            }
+
             
             /// <summary>
             /// successful operation
             /// </summary>
-            public struct ApplicationJsonOk : IFindPetsByStatusTypeSafeResult
+            public class ApplicationJsonOk : FindPetsByStatusReturnType
             {
                 public global::System.Collections.Generic.IEnumerable<Pet> Body { get; set; }
                 
@@ -205,7 +244,7 @@ namespace PS.Controller
             /// <summary>
             /// Invalid status value
             /// </summary>
-            public struct BadRequest : IFindPetsByStatusTypeSafeResult
+            public class BadRequest : FindPetsByStatusReturnType
             {
                 
             }
@@ -219,11 +258,12 @@ namespace PS.Controller
         /// Muliple tags can be provided with comma separated strings. Use tag1, tag2, tag3 for testing.
         /// </remarks>
         /// <param name="tags">Tags to filter by</param>
-        public static global::System.Threading.Tasks.Task<global::System.Net.Http.HttpResponseMessage> SendFindPetsByTagsAsync(
+        public static async global::System.Threading.Tasks.Task<FindPetsByTagsReturnType> FindPetsByTags(
             this global::System.Net.Http.HttpClient client,
             global::System.Collections.Generic.IEnumerable<string> tags,
             global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken)
-        ) => client.SendAsync(FindPetsByTags(tags));
+        ) => await (await client.SendAsync(FindPetsByTags(tags)).ConfigureAwait(false))
+            .ParseFindPetsByTags().ConfigureAwait(false);
 
         public static global::System.Net.Http.HttpRequestMessage FindPetsByTags(
             global::System.Collections.Generic.IEnumerable<string> tags
@@ -235,36 +275,48 @@ namespace PS.Controller
             return requestMessage;
         }
 
-        public static async global::System.Threading.Tasks.Task<IFindPetsByTagsTypeSafeResult?> ParseFindPetsByTagsTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
+        public static async global::System.Threading.Tasks.Task<FindPetsByTagsReturnType?> ParseFindPetsByTags(this global::System.Net.Http.HttpResponseMessage response)
         {
             switch ((int)response.StatusCode)
             { 
                 case 200:
                      if (response.Content.Headers.ContentType.MediaType == "application/json") 
-                        return new IFindPetsByTagsTypeSafeResult.ApplicationJsonOk
-                        { 
+                        return new FindPetsByTagsReturnType.ApplicationJsonOk
+                        {
+                            Response = response,
                             Body = Newtonsoft.Json.JsonConvert.DeserializeObject<global::System.Collections.Generic.IEnumerable<Pet>>(await response.Content.ReadAsStringAsync()), 
                         };
                     break;
                 
                 case 400:
                     
-                        return new IFindPetsByTagsTypeSafeResult.BadRequest
-                        { 
+                        return new FindPetsByTagsReturnType.BadRequest
+                        {
+                            Response = response,
                         };
                     break;
                 
             }
-            return null;
+            return new FindPetsByTagsReturnType
+            {
+                Response = response,
+            };
         }
 
-        public interface IFindPetsByTagsTypeSafeResult
+        public class FindPetsByTagsReturnType : global::System.IDisposable
         {
+            public global::System.Net.Http.HttpResponseMessage Response { get; set; }
+
+            void global::System.IDisposable.Dispose()
+            {
+                Response?.Dispose();
+            }
+
             
             /// <summary>
             /// successful operation
             /// </summary>
-            public struct ApplicationJsonOk : IFindPetsByTagsTypeSafeResult
+            public class ApplicationJsonOk : FindPetsByTagsReturnType
             {
                 public global::System.Collections.Generic.IEnumerable<Pet> Body { get; set; }
                 
@@ -273,7 +325,7 @@ namespace PS.Controller
             /// <summary>
             /// Invalid tag value
             /// </summary>
-            public struct BadRequest : IFindPetsByTagsTypeSafeResult
+            public class BadRequest : FindPetsByTagsReturnType
             {
                 
             }
@@ -287,11 +339,12 @@ namespace PS.Controller
         /// Returns a single pet
         /// </remarks>
         /// <param name="petId">ID of pet to return</param>
-        public static global::System.Threading.Tasks.Task<global::System.Net.Http.HttpResponseMessage> SendGetPetByIdAsync(
+        public static async global::System.Threading.Tasks.Task<GetPetByIdReturnType> GetPetById(
             this global::System.Net.Http.HttpClient client,
             long petId,
             global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken)
-        ) => client.SendAsync(GetPetById(petId));
+        ) => await (await client.SendAsync(GetPetById(petId)).ConfigureAwait(false))
+            .ParseGetPetById().ConfigureAwait(false);
 
         public static global::System.Net.Http.HttpRequestMessage GetPetById(
             long petId
@@ -304,43 +357,56 @@ namespace PS.Controller
             return requestMessage;
         }
 
-        public static async global::System.Threading.Tasks.Task<IGetPetByIdTypeSafeResult?> ParseGetPetByIdTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
+        public static async global::System.Threading.Tasks.Task<GetPetByIdReturnType?> ParseGetPetById(this global::System.Net.Http.HttpResponseMessage response)
         {
             switch ((int)response.StatusCode)
             { 
                 case 200:
                      if (response.Content.Headers.ContentType.MediaType == "application/json") 
-                        return new IGetPetByIdTypeSafeResult.ApplicationJsonOk
-                        { 
+                        return new GetPetByIdReturnType.ApplicationJsonOk
+                        {
+                            Response = response,
                             Body = Newtonsoft.Json.JsonConvert.DeserializeObject<Pet>(await response.Content.ReadAsStringAsync()), 
                         };
                     break;
                 
                 case 400:
                     
-                        return new IGetPetByIdTypeSafeResult.BadRequest
-                        { 
+                        return new GetPetByIdReturnType.BadRequest
+                        {
+                            Response = response,
                         };
                     break;
                 
                 case 404:
                     
-                        return new IGetPetByIdTypeSafeResult.NotFound
-                        { 
+                        return new GetPetByIdReturnType.NotFound
+                        {
+                            Response = response,
                         };
                     break;
                 
             }
-            return null;
+            return new GetPetByIdReturnType
+            {
+                Response = response,
+            };
         }
 
-        public interface IGetPetByIdTypeSafeResult
+        public class GetPetByIdReturnType : global::System.IDisposable
         {
+            public global::System.Net.Http.HttpResponseMessage Response { get; set; }
+
+            void global::System.IDisposable.Dispose()
+            {
+                Response?.Dispose();
+            }
+
             
             /// <summary>
             /// successful operation
             /// </summary>
-            public struct ApplicationJsonOk : IGetPetByIdTypeSafeResult
+            public class ApplicationJsonOk : GetPetByIdReturnType
             {
                 public Pet Body { get; set; }
                 
@@ -349,7 +415,7 @@ namespace PS.Controller
             /// <summary>
             /// Invalid ID supplied
             /// </summary>
-            public struct BadRequest : IGetPetByIdTypeSafeResult
+            public class BadRequest : GetPetByIdReturnType
             {
                 
             }
@@ -357,7 +423,7 @@ namespace PS.Controller
             /// <summary>
             /// Pet not found
             /// </summary>
-            public struct NotFound : IGetPetByIdTypeSafeResult
+            public class NotFound : GetPetByIdReturnType
             {
                 
             }
@@ -368,11 +434,12 @@ namespace PS.Controller
         /// Updates a pet in the store with form data
         /// </summary>
         /// <param name="petId">ID of pet that needs to be updated</param>
-        public static global::System.Threading.Tasks.Task<global::System.Net.Http.HttpResponseMessage> SendUpdatePetWithFormAsync(
+        public static async global::System.Threading.Tasks.Task<UpdatePetWithFormReturnType> UpdatePetWithForm(
             this global::System.Net.Http.HttpClient client,
             long petId,
             global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken)
-        ) => client.SendAsync(UpdatePetWithForm(petId));
+        ) => await (await client.SendAsync(UpdatePetWithForm(petId)).ConfigureAwait(false))
+            .ParseUpdatePetWithForm().ConfigureAwait(false);
 
         public static global::System.Net.Http.HttpRequestMessage UpdatePetWithForm(
             long petId
@@ -392,13 +459,14 @@ namespace PS.Controller
         /// <param name="petId">ID of pet that needs to be updated</param>
         /// <param name="name"></param>
         /// <param name="status"></param>
-        public static global::System.Threading.Tasks.Task<global::System.Net.Http.HttpResponseMessage> SendUpdatePetWithFormAsync(
+        public static async global::System.Threading.Tasks.Task<UpdatePetWithFormReturnType> UpdatePetWithForm(
             this global::System.Net.Http.HttpClient client,
             long petId,
 string? name,
 string? status,
             global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken)
-        ) => client.SendAsync(UpdatePetWithForm(petId,name,status));
+        ) => await (await client.SendAsync(UpdatePetWithForm(petId,name,status)).ConfigureAwait(false))
+            .ParseUpdatePetWithForm().ConfigureAwait(false);
 
         public static global::System.Net.Http.HttpRequestMessage UpdatePetWithForm(
             long petId,
@@ -421,28 +489,39 @@ string? status,
             return requestMessage;
         }
 
-        public static async global::System.Threading.Tasks.Task<IUpdatePetWithFormTypeSafeResult?> ParseUpdatePetWithFormTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
+        public static async global::System.Threading.Tasks.Task<UpdatePetWithFormReturnType?> ParseUpdatePetWithForm(this global::System.Net.Http.HttpResponseMessage response)
         {
             switch ((int)response.StatusCode)
             { 
                 case 405:
                     
-                        return new IUpdatePetWithFormTypeSafeResult.MethodNotAllowed
-                        { 
+                        return new UpdatePetWithFormReturnType.MethodNotAllowed
+                        {
+                            Response = response,
                         };
                     break;
                 
             }
-            return null;
+            return new UpdatePetWithFormReturnType
+            {
+                Response = response,
+            };
         }
 
-        public interface IUpdatePetWithFormTypeSafeResult
+        public class UpdatePetWithFormReturnType : global::System.IDisposable
         {
+            public global::System.Net.Http.HttpResponseMessage Response { get; set; }
+
+            void global::System.IDisposable.Dispose()
+            {
+                Response?.Dispose();
+            }
+
             
             /// <summary>
             /// Invalid input
             /// </summary>
-            public struct MethodNotAllowed : IUpdatePetWithFormTypeSafeResult
+            public class MethodNotAllowed : UpdatePetWithFormReturnType
             {
                 
             }
@@ -454,12 +533,13 @@ string? status,
         /// </summary>
         /// <param name="apiKey"></param>
         /// <param name="petId">Pet id to delete</param>
-        public static global::System.Threading.Tasks.Task<global::System.Net.Http.HttpResponseMessage> SendDeletePetAsync(
+        public static async global::System.Threading.Tasks.Task<DeletePetReturnType> DeletePet(
             this global::System.Net.Http.HttpClient client,
             string? apiKey,
 long petId,
             global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken)
-        ) => client.SendAsync(DeletePet(apiKey,petId));
+        ) => await (await client.SendAsync(DeletePet(apiKey,petId)).ConfigureAwait(false))
+            .ParseDeletePet().ConfigureAwait(false);
 
         public static global::System.Net.Http.HttpRequestMessage DeletePet(
             string? apiKey,
@@ -474,35 +554,47 @@ long petId,
             return requestMessage;
         }
 
-        public static async global::System.Threading.Tasks.Task<IDeletePetTypeSafeResult?> ParseDeletePetTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
+        public static async global::System.Threading.Tasks.Task<DeletePetReturnType?> ParseDeletePet(this global::System.Net.Http.HttpResponseMessage response)
         {
             switch ((int)response.StatusCode)
             { 
                 case 400:
                     
-                        return new IDeletePetTypeSafeResult.BadRequest
-                        { 
+                        return new DeletePetReturnType.BadRequest
+                        {
+                            Response = response,
                         };
                     break;
                 
                 case 404:
                     
-                        return new IDeletePetTypeSafeResult.NotFound
-                        { 
+                        return new DeletePetReturnType.NotFound
+                        {
+                            Response = response,
                         };
                     break;
                 
             }
-            return null;
+            return new DeletePetReturnType
+            {
+                Response = response,
+            };
         }
 
-        public interface IDeletePetTypeSafeResult
+        public class DeletePetReturnType : global::System.IDisposable
         {
+            public global::System.Net.Http.HttpResponseMessage Response { get; set; }
+
+            void global::System.IDisposable.Dispose()
+            {
+                Response?.Dispose();
+            }
+
             
             /// <summary>
             /// Invalid ID supplied
             /// </summary>
-            public struct BadRequest : IDeletePetTypeSafeResult
+            public class BadRequest : DeletePetReturnType
             {
                 
             }
@@ -510,7 +602,7 @@ long petId,
             /// <summary>
             /// Pet not found
             /// </summary>
-            public struct NotFound : IDeletePetTypeSafeResult
+            public class NotFound : DeletePetReturnType
             {
                 
             }
@@ -521,11 +613,12 @@ long petId,
         /// uploads an image
         /// </summary>
         /// <param name="petId">ID of pet to update</param>
-        public static global::System.Threading.Tasks.Task<global::System.Net.Http.HttpResponseMessage> SendUploadFileAsync(
+        public static async global::System.Threading.Tasks.Task<UploadFileReturnType> UploadFile(
             this global::System.Net.Http.HttpClient client,
             long petId,
             global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken)
-        ) => client.SendAsync(UploadFile(petId));
+        ) => await (await client.SendAsync(UploadFile(petId)).ConfigureAwait(false))
+            .ParseUploadFile().ConfigureAwait(false);
 
         public static global::System.Net.Http.HttpRequestMessage UploadFile(
             long petId
@@ -544,12 +637,13 @@ long petId,
         /// </summary>
         /// <param name="petId">ID of pet to update</param>
         /// <param name="uploadFileBody"></param>
-        public static global::System.Threading.Tasks.Task<global::System.Net.Http.HttpResponseMessage> SendUploadFileAsync(
+        public static async global::System.Threading.Tasks.Task<UploadFileReturnType> UploadFile(
             this global::System.Net.Http.HttpClient client,
             long petId,
 global::System.IO.Stream uploadFileBody,
             global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken)
-        ) => client.SendAsync(UploadFile(petId,uploadFileBody));
+        ) => await (await client.SendAsync(UploadFile(petId,uploadFileBody)).ConfigureAwait(false))
+            .ParseUploadFile().ConfigureAwait(false);
 
         public static global::System.Net.Http.HttpRequestMessage UploadFile(
             long petId,
@@ -565,29 +659,40 @@ global::System.IO.Stream uploadFileBody,
             return requestMessage;
         }
 
-        public static async global::System.Threading.Tasks.Task<IUploadFileTypeSafeResult?> ParseUploadFileTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
+        public static async global::System.Threading.Tasks.Task<UploadFileReturnType?> ParseUploadFile(this global::System.Net.Http.HttpResponseMessage response)
         {
             switch ((int)response.StatusCode)
             { 
                 case 200:
                      if (response.Content.Headers.ContentType.MediaType == "application/json") 
-                        return new IUploadFileTypeSafeResult.Ok
-                        { 
+                        return new UploadFileReturnType.Ok
+                        {
+                            Response = response,
                             Body = Newtonsoft.Json.JsonConvert.DeserializeObject<ApiResponse>(await response.Content.ReadAsStringAsync()), 
                         };
                     break;
                 
             }
-            return null;
+            return new UploadFileReturnType
+            {
+                Response = response,
+            };
         }
 
-        public interface IUploadFileTypeSafeResult
+        public class UploadFileReturnType : global::System.IDisposable
         {
+            public global::System.Net.Http.HttpResponseMessage Response { get; set; }
+
+            void global::System.IDisposable.Dispose()
+            {
+                Response?.Dispose();
+            }
+
             
             /// <summary>
             /// successful operation
             /// </summary>
-            public struct Ok : IUploadFileTypeSafeResult
+            public class Ok : UploadFileReturnType
             {
                 public ApiResponse Body { get; set; }
                 
@@ -601,10 +706,11 @@ global::System.IO.Stream uploadFileBody,
         /// <remarks>
         /// Returns a map of status codes to quantities
         /// </remarks>
-        public static global::System.Threading.Tasks.Task<global::System.Net.Http.HttpResponseMessage> SendGetInventoryAsync(
+        public static async global::System.Threading.Tasks.Task<GetInventoryReturnType> GetInventory(
             this global::System.Net.Http.HttpClient client,
                         global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken)
-        ) => client.SendAsync(GetInventory());
+        ) => await (await client.SendAsync(GetInventory()).ConfigureAwait(false))
+            .ParseGetInventory().ConfigureAwait(false);
 
         public static global::System.Net.Http.HttpRequestMessage GetInventory(
             )
@@ -615,29 +721,40 @@ global::System.IO.Stream uploadFileBody,
             return requestMessage;
         }
 
-        public static async global::System.Threading.Tasks.Task<IGetInventoryTypeSafeResult?> ParseGetInventoryTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
+        public static async global::System.Threading.Tasks.Task<GetInventoryReturnType?> ParseGetInventory(this global::System.Net.Http.HttpResponseMessage response)
         {
             switch ((int)response.StatusCode)
             { 
                 case 200:
                      if (response.Content.Headers.ContentType.MediaType == "application/json") 
-                        return new IGetInventoryTypeSafeResult.Ok
-                        { 
+                        return new GetInventoryReturnType.Ok
+                        {
+                            Response = response,
                             Body = Newtonsoft.Json.JsonConvert.DeserializeObject<global::System.Collections.Generic.Dictionary<string, int>>(await response.Content.ReadAsStringAsync()), 
                         };
                     break;
                 
             }
-            return null;
+            return new GetInventoryReturnType
+            {
+                Response = response,
+            };
         }
 
-        public interface IGetInventoryTypeSafeResult
+        public class GetInventoryReturnType : global::System.IDisposable
         {
+            public global::System.Net.Http.HttpResponseMessage Response { get; set; }
+
+            void global::System.IDisposable.Dispose()
+            {
+                Response?.Dispose();
+            }
+
             
             /// <summary>
             /// successful operation
             /// </summary>
-            public struct Ok : IGetInventoryTypeSafeResult
+            public class Ok : GetInventoryReturnType
             {
                 public global::System.Collections.Generic.Dictionary<string, int> Body { get; set; }
                 
@@ -649,11 +766,12 @@ global::System.IO.Stream uploadFileBody,
         /// Place an order for a pet
         /// </summary>
         /// <param name="placeOrderBody"></param>
-        public static global::System.Threading.Tasks.Task<global::System.Net.Http.HttpResponseMessage> SendPlaceOrderAsync(
+        public static async global::System.Threading.Tasks.Task<PlaceOrderReturnType> PlaceOrder(
             this global::System.Net.Http.HttpClient client,
             Order placeOrderBody,
             global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken)
-        ) => client.SendAsync(PlaceOrder(placeOrderBody));
+        ) => await (await client.SendAsync(PlaceOrder(placeOrderBody)).ConfigureAwait(false))
+            .ParsePlaceOrder().ConfigureAwait(false);
 
         public static global::System.Net.Http.HttpRequestMessage PlaceOrder(
             Order placeOrderBody
@@ -666,36 +784,48 @@ global::System.IO.Stream uploadFileBody,
             return requestMessage;
         }
 
-        public static async global::System.Threading.Tasks.Task<IPlaceOrderTypeSafeResult?> ParsePlaceOrderTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
+        public static async global::System.Threading.Tasks.Task<PlaceOrderReturnType?> ParsePlaceOrder(this global::System.Net.Http.HttpResponseMessage response)
         {
             switch ((int)response.StatusCode)
             { 
                 case 200:
                      if (response.Content.Headers.ContentType.MediaType == "application/json") 
-                        return new IPlaceOrderTypeSafeResult.ApplicationJsonOk
-                        { 
+                        return new PlaceOrderReturnType.ApplicationJsonOk
+                        {
+                            Response = response,
                             Body = Newtonsoft.Json.JsonConvert.DeserializeObject<Order>(await response.Content.ReadAsStringAsync()), 
                         };
                     break;
                 
                 case 400:
                     
-                        return new IPlaceOrderTypeSafeResult.BadRequest
-                        { 
+                        return new PlaceOrderReturnType.BadRequest
+                        {
+                            Response = response,
                         };
                     break;
                 
             }
-            return null;
+            return new PlaceOrderReturnType
+            {
+                Response = response,
+            };
         }
 
-        public interface IPlaceOrderTypeSafeResult
+        public class PlaceOrderReturnType : global::System.IDisposable
         {
+            public global::System.Net.Http.HttpResponseMessage Response { get; set; }
+
+            void global::System.IDisposable.Dispose()
+            {
+                Response?.Dispose();
+            }
+
             
             /// <summary>
             /// successful operation
             /// </summary>
-            public struct ApplicationJsonOk : IPlaceOrderTypeSafeResult
+            public class ApplicationJsonOk : PlaceOrderReturnType
             {
                 public Order Body { get; set; }
                 
@@ -704,7 +834,7 @@ global::System.IO.Stream uploadFileBody,
             /// <summary>
             /// Invalid Order
             /// </summary>
-            public struct BadRequest : IPlaceOrderTypeSafeResult
+            public class BadRequest : PlaceOrderReturnType
             {
                 
             }
@@ -718,11 +848,12 @@ global::System.IO.Stream uploadFileBody,
         /// For valid response try integer IDs with value &gt;= 1 and &lt;= 10. Other values will generated exceptions
         /// </remarks>
         /// <param name="orderId">ID of pet that needs to be fetched</param>
-        public static global::System.Threading.Tasks.Task<global::System.Net.Http.HttpResponseMessage> SendGetOrderByIdAsync(
+        public static async global::System.Threading.Tasks.Task<GetOrderByIdReturnType> GetOrderById(
             this global::System.Net.Http.HttpClient client,
             long orderId,
             global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken)
-        ) => client.SendAsync(GetOrderById(orderId));
+        ) => await (await client.SendAsync(GetOrderById(orderId)).ConfigureAwait(false))
+            .ParseGetOrderById().ConfigureAwait(false);
 
         public static global::System.Net.Http.HttpRequestMessage GetOrderById(
             long orderId
@@ -735,43 +866,56 @@ global::System.IO.Stream uploadFileBody,
             return requestMessage;
         }
 
-        public static async global::System.Threading.Tasks.Task<IGetOrderByIdTypeSafeResult?> ParseGetOrderByIdTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
+        public static async global::System.Threading.Tasks.Task<GetOrderByIdReturnType?> ParseGetOrderById(this global::System.Net.Http.HttpResponseMessage response)
         {
             switch ((int)response.StatusCode)
             { 
                 case 200:
                      if (response.Content.Headers.ContentType.MediaType == "application/json") 
-                        return new IGetOrderByIdTypeSafeResult.ApplicationJsonOk
-                        { 
+                        return new GetOrderByIdReturnType.ApplicationJsonOk
+                        {
+                            Response = response,
                             Body = Newtonsoft.Json.JsonConvert.DeserializeObject<Order>(await response.Content.ReadAsStringAsync()), 
                         };
                     break;
                 
                 case 400:
                     
-                        return new IGetOrderByIdTypeSafeResult.BadRequest
-                        { 
+                        return new GetOrderByIdReturnType.BadRequest
+                        {
+                            Response = response,
                         };
                     break;
                 
                 case 404:
                     
-                        return new IGetOrderByIdTypeSafeResult.NotFound
-                        { 
+                        return new GetOrderByIdReturnType.NotFound
+                        {
+                            Response = response,
                         };
                     break;
                 
             }
-            return null;
+            return new GetOrderByIdReturnType
+            {
+                Response = response,
+            };
         }
 
-        public interface IGetOrderByIdTypeSafeResult
+        public class GetOrderByIdReturnType : global::System.IDisposable
         {
+            public global::System.Net.Http.HttpResponseMessage Response { get; set; }
+
+            void global::System.IDisposable.Dispose()
+            {
+                Response?.Dispose();
+            }
+
             
             /// <summary>
             /// successful operation
             /// </summary>
-            public struct ApplicationJsonOk : IGetOrderByIdTypeSafeResult
+            public class ApplicationJsonOk : GetOrderByIdReturnType
             {
                 public Order Body { get; set; }
                 
@@ -780,7 +924,7 @@ global::System.IO.Stream uploadFileBody,
             /// <summary>
             /// Invalid ID supplied
             /// </summary>
-            public struct BadRequest : IGetOrderByIdTypeSafeResult
+            public class BadRequest : GetOrderByIdReturnType
             {
                 
             }
@@ -788,7 +932,7 @@ global::System.IO.Stream uploadFileBody,
             /// <summary>
             /// Order not found
             /// </summary>
-            public struct NotFound : IGetOrderByIdTypeSafeResult
+            public class NotFound : GetOrderByIdReturnType
             {
                 
             }
@@ -802,11 +946,12 @@ global::System.IO.Stream uploadFileBody,
         /// For valid response try integer IDs with positive integer value. Negative or non-integer values will generate API errors
         /// </remarks>
         /// <param name="orderId">ID of the order that needs to be deleted</param>
-        public static global::System.Threading.Tasks.Task<global::System.Net.Http.HttpResponseMessage> SendDeleteOrderAsync(
+        public static async global::System.Threading.Tasks.Task<DeleteOrderReturnType> DeleteOrder(
             this global::System.Net.Http.HttpClient client,
             long orderId,
             global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken)
-        ) => client.SendAsync(DeleteOrder(orderId));
+        ) => await (await client.SendAsync(DeleteOrder(orderId)).ConfigureAwait(false))
+            .ParseDeleteOrder().ConfigureAwait(false);
 
         public static global::System.Net.Http.HttpRequestMessage DeleteOrder(
             long orderId
@@ -819,35 +964,47 @@ global::System.IO.Stream uploadFileBody,
             return requestMessage;
         }
 
-        public static async global::System.Threading.Tasks.Task<IDeleteOrderTypeSafeResult?> ParseDeleteOrderTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
+        public static async global::System.Threading.Tasks.Task<DeleteOrderReturnType?> ParseDeleteOrder(this global::System.Net.Http.HttpResponseMessage response)
         {
             switch ((int)response.StatusCode)
             { 
                 case 400:
                     
-                        return new IDeleteOrderTypeSafeResult.BadRequest
-                        { 
+                        return new DeleteOrderReturnType.BadRequest
+                        {
+                            Response = response,
                         };
                     break;
                 
                 case 404:
                     
-                        return new IDeleteOrderTypeSafeResult.NotFound
-                        { 
+                        return new DeleteOrderReturnType.NotFound
+                        {
+                            Response = response,
                         };
                     break;
                 
             }
-            return null;
+            return new DeleteOrderReturnType
+            {
+                Response = response,
+            };
         }
 
-        public interface IDeleteOrderTypeSafeResult
+        public class DeleteOrderReturnType : global::System.IDisposable
         {
+            public global::System.Net.Http.HttpResponseMessage Response { get; set; }
+
+            void global::System.IDisposable.Dispose()
+            {
+                Response?.Dispose();
+            }
+
             
             /// <summary>
             /// Invalid ID supplied
             /// </summary>
-            public struct BadRequest : IDeleteOrderTypeSafeResult
+            public class BadRequest : DeleteOrderReturnType
             {
                 
             }
@@ -855,7 +1012,7 @@ global::System.IO.Stream uploadFileBody,
             /// <summary>
             /// Order not found
             /// </summary>
-            public struct NotFound : IDeleteOrderTypeSafeResult
+            public class NotFound : DeleteOrderReturnType
             {
                 
             }
@@ -869,11 +1026,12 @@ global::System.IO.Stream uploadFileBody,
         /// This can only be done by the logged in user.
         /// </remarks>
         /// <param name="createUserBody"></param>
-        public static global::System.Threading.Tasks.Task<global::System.Net.Http.HttpResponseMessage> SendCreateUserAsync(
+        public static async global::System.Threading.Tasks.Task<CreateUserReturnType> CreateUser(
             this global::System.Net.Http.HttpClient client,
             User createUserBody,
             global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken)
-        ) => client.SendAsync(CreateUser(createUserBody));
+        ) => await (await client.SendAsync(CreateUser(createUserBody)).ConfigureAwait(false))
+            .ParseCreateUser().ConfigureAwait(false);
 
         public static global::System.Net.Http.HttpRequestMessage CreateUser(
             User createUserBody
@@ -886,25 +1044,36 @@ global::System.IO.Stream uploadFileBody,
             return requestMessage;
         }
 
-        public static async global::System.Threading.Tasks.Task<ICreateUserTypeSafeResult?> ParseCreateUserTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
+        public static async global::System.Threading.Tasks.Task<CreateUserReturnType?> ParseCreateUser(this global::System.Net.Http.HttpResponseMessage response)
         {
             switch ((int)response.StatusCode)
             { 
                 default: 
                     
-                        return new ICreateUserTypeSafeResult.OtherStatusCode
-                        { 
+                        return new CreateUserReturnType.OtherStatusCode
+                        {
+                            Response = response,
                         }; 
                     break;
             }
-            return null;
+            return new CreateUserReturnType
+            {
+                Response = response,
+            };
         }
 
-        public interface ICreateUserTypeSafeResult
+        public class CreateUserReturnType : global::System.IDisposable
         {
+            public global::System.Net.Http.HttpResponseMessage Response { get; set; }
+
+            void global::System.IDisposable.Dispose()
+            {
+                Response?.Dispose();
+            }
+
             
             
-            public struct OtherStatusCode : ICreateUserTypeSafeResult
+            public class OtherStatusCode : CreateUserReturnType
             {
                 
             }
@@ -915,11 +1084,12 @@ global::System.IO.Stream uploadFileBody,
         /// Creates list of users with given input array
         /// </summary>
         /// <param name="createUsersWithArrayInputBody"></param>
-        public static global::System.Threading.Tasks.Task<global::System.Net.Http.HttpResponseMessage> SendCreateUsersWithArrayInputAsync(
+        public static async global::System.Threading.Tasks.Task<CreateUsersWithArrayInputReturnType> CreateUsersWithArrayInput(
             this global::System.Net.Http.HttpClient client,
             global::System.Collections.Generic.IEnumerable<User> createUsersWithArrayInputBody,
             global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken)
-        ) => client.SendAsync(CreateUsersWithArrayInput(createUsersWithArrayInputBody));
+        ) => await (await client.SendAsync(CreateUsersWithArrayInput(createUsersWithArrayInputBody)).ConfigureAwait(false))
+            .ParseCreateUsersWithArrayInput().ConfigureAwait(false);
 
         public static global::System.Net.Http.HttpRequestMessage CreateUsersWithArrayInput(
             global::System.Collections.Generic.IEnumerable<User> createUsersWithArrayInputBody
@@ -932,25 +1102,36 @@ global::System.IO.Stream uploadFileBody,
             return requestMessage;
         }
 
-        public static async global::System.Threading.Tasks.Task<ICreateUsersWithArrayInputTypeSafeResult?> ParseCreateUsersWithArrayInputTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
+        public static async global::System.Threading.Tasks.Task<CreateUsersWithArrayInputReturnType?> ParseCreateUsersWithArrayInput(this global::System.Net.Http.HttpResponseMessage response)
         {
             switch ((int)response.StatusCode)
             { 
                 default: 
                     
-                        return new ICreateUsersWithArrayInputTypeSafeResult.OtherStatusCode
-                        { 
+                        return new CreateUsersWithArrayInputReturnType.OtherStatusCode
+                        {
+                            Response = response,
                         }; 
                     break;
             }
-            return null;
+            return new CreateUsersWithArrayInputReturnType
+            {
+                Response = response,
+            };
         }
 
-        public interface ICreateUsersWithArrayInputTypeSafeResult
+        public class CreateUsersWithArrayInputReturnType : global::System.IDisposable
         {
+            public global::System.Net.Http.HttpResponseMessage Response { get; set; }
+
+            void global::System.IDisposable.Dispose()
+            {
+                Response?.Dispose();
+            }
+
             
             
-            public struct OtherStatusCode : ICreateUsersWithArrayInputTypeSafeResult
+            public class OtherStatusCode : CreateUsersWithArrayInputReturnType
             {
                 
             }
@@ -961,11 +1142,12 @@ global::System.IO.Stream uploadFileBody,
         /// Creates list of users with given input array
         /// </summary>
         /// <param name="createUsersWithListInputBody"></param>
-        public static global::System.Threading.Tasks.Task<global::System.Net.Http.HttpResponseMessage> SendCreateUsersWithListInputAsync(
+        public static async global::System.Threading.Tasks.Task<CreateUsersWithListInputReturnType> CreateUsersWithListInput(
             this global::System.Net.Http.HttpClient client,
             global::System.Collections.Generic.IEnumerable<User> createUsersWithListInputBody,
             global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken)
-        ) => client.SendAsync(CreateUsersWithListInput(createUsersWithListInputBody));
+        ) => await (await client.SendAsync(CreateUsersWithListInput(createUsersWithListInputBody)).ConfigureAwait(false))
+            .ParseCreateUsersWithListInput().ConfigureAwait(false);
 
         public static global::System.Net.Http.HttpRequestMessage CreateUsersWithListInput(
             global::System.Collections.Generic.IEnumerable<User> createUsersWithListInputBody
@@ -978,25 +1160,36 @@ global::System.IO.Stream uploadFileBody,
             return requestMessage;
         }
 
-        public static async global::System.Threading.Tasks.Task<ICreateUsersWithListInputTypeSafeResult?> ParseCreateUsersWithListInputTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
+        public static async global::System.Threading.Tasks.Task<CreateUsersWithListInputReturnType?> ParseCreateUsersWithListInput(this global::System.Net.Http.HttpResponseMessage response)
         {
             switch ((int)response.StatusCode)
             { 
                 default: 
                     
-                        return new ICreateUsersWithListInputTypeSafeResult.OtherStatusCode
-                        { 
+                        return new CreateUsersWithListInputReturnType.OtherStatusCode
+                        {
+                            Response = response,
                         }; 
                     break;
             }
-            return null;
+            return new CreateUsersWithListInputReturnType
+            {
+                Response = response,
+            };
         }
 
-        public interface ICreateUsersWithListInputTypeSafeResult
+        public class CreateUsersWithListInputReturnType : global::System.IDisposable
         {
+            public global::System.Net.Http.HttpResponseMessage Response { get; set; }
+
+            void global::System.IDisposable.Dispose()
+            {
+                Response?.Dispose();
+            }
+
             
             
-            public struct OtherStatusCode : ICreateUsersWithListInputTypeSafeResult
+            public class OtherStatusCode : CreateUsersWithListInputReturnType
             {
                 
             }
@@ -1008,12 +1201,13 @@ global::System.IO.Stream uploadFileBody,
         /// </summary>
         /// <param name="username">The user name for login</param>
         /// <param name="password">The password for login in clear text</param>
-        public static global::System.Threading.Tasks.Task<global::System.Net.Http.HttpResponseMessage> SendLoginUserAsync(
+        public static async global::System.Threading.Tasks.Task<LoginUserReturnType> LoginUser(
             this global::System.Net.Http.HttpClient client,
             string username,
 string password,
             global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken)
-        ) => client.SendAsync(LoginUser(username,password));
+        ) => await (await client.SendAsync(LoginUser(username,password)).ConfigureAwait(false))
+            .ParseLoginUser().ConfigureAwait(false);
 
         public static global::System.Net.Http.HttpRequestMessage LoginUser(
             string username,
@@ -1026,36 +1220,48 @@ string password,
             return requestMessage;
         }
 
-        public static async global::System.Threading.Tasks.Task<ILoginUserTypeSafeResult?> ParseLoginUserTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
+        public static async global::System.Threading.Tasks.Task<LoginUserReturnType?> ParseLoginUser(this global::System.Net.Http.HttpResponseMessage response)
         {
             switch ((int)response.StatusCode)
             { 
                 case 200:
                      if (response.Content.Headers.ContentType.MediaType == "application/json") 
-                        return new ILoginUserTypeSafeResult.ApplicationJsonOk
-                        { 
+                        return new LoginUserReturnType.ApplicationJsonOk
+                        {
+                            Response = response,
                             Body = Newtonsoft.Json.JsonConvert.DeserializeObject<string>(await response.Content.ReadAsStringAsync()), 
                         };
                     break;
                 
                 case 400:
                     
-                        return new ILoginUserTypeSafeResult.BadRequest
-                        { 
+                        return new LoginUserReturnType.BadRequest
+                        {
+                            Response = response,
                         };
                     break;
                 
             }
-            return null;
+            return new LoginUserReturnType
+            {
+                Response = response,
+            };
         }
 
-        public interface ILoginUserTypeSafeResult
+        public class LoginUserReturnType : global::System.IDisposable
         {
+            public global::System.Net.Http.HttpResponseMessage Response { get; set; }
+
+            void global::System.IDisposable.Dispose()
+            {
+                Response?.Dispose();
+            }
+
             
             /// <summary>
             /// successful operation
             /// </summary>
-            public struct ApplicationJsonOk : ILoginUserTypeSafeResult
+            public class ApplicationJsonOk : LoginUserReturnType
             {
                 public string Body { get; set; }
                 
@@ -1064,7 +1270,7 @@ string password,
             /// <summary>
             /// Invalid username/password supplied
             /// </summary>
-            public struct BadRequest : ILoginUserTypeSafeResult
+            public class BadRequest : LoginUserReturnType
             {
                 
             }
@@ -1074,10 +1280,11 @@ string password,
         /// <summary>
         /// Logs out current logged in user session
         /// </summary>
-        public static global::System.Threading.Tasks.Task<global::System.Net.Http.HttpResponseMessage> SendLogoutUserAsync(
+        public static async global::System.Threading.Tasks.Task<LogoutUserReturnType> LogoutUser(
             this global::System.Net.Http.HttpClient client,
                         global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken)
-        ) => client.SendAsync(LogoutUser());
+        ) => await (await client.SendAsync(LogoutUser()).ConfigureAwait(false))
+            .ParseLogoutUser().ConfigureAwait(false);
 
         public static global::System.Net.Http.HttpRequestMessage LogoutUser(
             )
@@ -1088,25 +1295,36 @@ string password,
             return requestMessage;
         }
 
-        public static async global::System.Threading.Tasks.Task<ILogoutUserTypeSafeResult?> ParseLogoutUserTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
+        public static async global::System.Threading.Tasks.Task<LogoutUserReturnType?> ParseLogoutUser(this global::System.Net.Http.HttpResponseMessage response)
         {
             switch ((int)response.StatusCode)
             { 
                 default: 
                     
-                        return new ILogoutUserTypeSafeResult.OtherStatusCode
-                        { 
+                        return new LogoutUserReturnType.OtherStatusCode
+                        {
+                            Response = response,
                         }; 
                     break;
             }
-            return null;
+            return new LogoutUserReturnType
+            {
+                Response = response,
+            };
         }
 
-        public interface ILogoutUserTypeSafeResult
+        public class LogoutUserReturnType : global::System.IDisposable
         {
+            public global::System.Net.Http.HttpResponseMessage Response { get; set; }
+
+            void global::System.IDisposable.Dispose()
+            {
+                Response?.Dispose();
+            }
+
             
             
-            public struct OtherStatusCode : ILogoutUserTypeSafeResult
+            public class OtherStatusCode : LogoutUserReturnType
             {
                 
             }
@@ -1117,11 +1335,12 @@ string password,
         /// Get user by user name
         /// </summary>
         /// <param name="username">The name that needs to be fetched. Use user1 for testing. </param>
-        public static global::System.Threading.Tasks.Task<global::System.Net.Http.HttpResponseMessage> SendGetUserByNameAsync(
+        public static async global::System.Threading.Tasks.Task<GetUserByNameReturnType> GetUserByName(
             this global::System.Net.Http.HttpClient client,
             string username,
             global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken)
-        ) => client.SendAsync(GetUserByName(username));
+        ) => await (await client.SendAsync(GetUserByName(username)).ConfigureAwait(false))
+            .ParseGetUserByName().ConfigureAwait(false);
 
         public static global::System.Net.Http.HttpRequestMessage GetUserByName(
             string username
@@ -1134,43 +1353,56 @@ string password,
             return requestMessage;
         }
 
-        public static async global::System.Threading.Tasks.Task<IGetUserByNameTypeSafeResult?> ParseGetUserByNameTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
+        public static async global::System.Threading.Tasks.Task<GetUserByNameReturnType?> ParseGetUserByName(this global::System.Net.Http.HttpResponseMessage response)
         {
             switch ((int)response.StatusCode)
             { 
                 case 200:
                      if (response.Content.Headers.ContentType.MediaType == "application/json") 
-                        return new IGetUserByNameTypeSafeResult.ApplicationJsonOk
-                        { 
+                        return new GetUserByNameReturnType.ApplicationJsonOk
+                        {
+                            Response = response,
                             Body = Newtonsoft.Json.JsonConvert.DeserializeObject<User>(await response.Content.ReadAsStringAsync()), 
                         };
                     break;
                 
                 case 400:
                     
-                        return new IGetUserByNameTypeSafeResult.BadRequest
-                        { 
+                        return new GetUserByNameReturnType.BadRequest
+                        {
+                            Response = response,
                         };
                     break;
                 
                 case 404:
                     
-                        return new IGetUserByNameTypeSafeResult.NotFound
-                        { 
+                        return new GetUserByNameReturnType.NotFound
+                        {
+                            Response = response,
                         };
                     break;
                 
             }
-            return null;
+            return new GetUserByNameReturnType
+            {
+                Response = response,
+            };
         }
 
-        public interface IGetUserByNameTypeSafeResult
+        public class GetUserByNameReturnType : global::System.IDisposable
         {
+            public global::System.Net.Http.HttpResponseMessage Response { get; set; }
+
+            void global::System.IDisposable.Dispose()
+            {
+                Response?.Dispose();
+            }
+
             
             /// <summary>
             /// successful operation
             /// </summary>
-            public struct ApplicationJsonOk : IGetUserByNameTypeSafeResult
+            public class ApplicationJsonOk : GetUserByNameReturnType
             {
                 public User Body { get; set; }
                 
@@ -1179,7 +1411,7 @@ string password,
             /// <summary>
             /// Invalid username supplied
             /// </summary>
-            public struct BadRequest : IGetUserByNameTypeSafeResult
+            public class BadRequest : GetUserByNameReturnType
             {
                 
             }
@@ -1187,7 +1419,7 @@ string password,
             /// <summary>
             /// User not found
             /// </summary>
-            public struct NotFound : IGetUserByNameTypeSafeResult
+            public class NotFound : GetUserByNameReturnType
             {
                 
             }
@@ -1202,12 +1434,13 @@ string password,
         /// </remarks>
         /// <param name="username">name that need to be updated</param>
         /// <param name="updateUserBody"></param>
-        public static global::System.Threading.Tasks.Task<global::System.Net.Http.HttpResponseMessage> SendUpdateUserAsync(
+        public static async global::System.Threading.Tasks.Task<UpdateUserReturnType> UpdateUser(
             this global::System.Net.Http.HttpClient client,
             string username,
 User updateUserBody,
             global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken)
-        ) => client.SendAsync(UpdateUser(username,updateUserBody));
+        ) => await (await client.SendAsync(UpdateUser(username,updateUserBody)).ConfigureAwait(false))
+            .ParseUpdateUser().ConfigureAwait(false);
 
         public static global::System.Net.Http.HttpRequestMessage UpdateUser(
             string username,
@@ -1222,35 +1455,47 @@ User updateUserBody,
             return requestMessage;
         }
 
-        public static async global::System.Threading.Tasks.Task<IUpdateUserTypeSafeResult?> ParseUpdateUserTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
+        public static async global::System.Threading.Tasks.Task<UpdateUserReturnType?> ParseUpdateUser(this global::System.Net.Http.HttpResponseMessage response)
         {
             switch ((int)response.StatusCode)
             { 
                 case 400:
                     
-                        return new IUpdateUserTypeSafeResult.BadRequest
-                        { 
+                        return new UpdateUserReturnType.BadRequest
+                        {
+                            Response = response,
                         };
                     break;
                 
                 case 404:
                     
-                        return new IUpdateUserTypeSafeResult.NotFound
-                        { 
+                        return new UpdateUserReturnType.NotFound
+                        {
+                            Response = response,
                         };
                     break;
                 
             }
-            return null;
+            return new UpdateUserReturnType
+            {
+                Response = response,
+            };
         }
 
-        public interface IUpdateUserTypeSafeResult
+        public class UpdateUserReturnType : global::System.IDisposable
         {
+            public global::System.Net.Http.HttpResponseMessage Response { get; set; }
+
+            void global::System.IDisposable.Dispose()
+            {
+                Response?.Dispose();
+            }
+
             
             /// <summary>
             /// Invalid user supplied
             /// </summary>
-            public struct BadRequest : IUpdateUserTypeSafeResult
+            public class BadRequest : UpdateUserReturnType
             {
                 
             }
@@ -1258,7 +1503,7 @@ User updateUserBody,
             /// <summary>
             /// User not found
             /// </summary>
-            public struct NotFound : IUpdateUserTypeSafeResult
+            public class NotFound : UpdateUserReturnType
             {
                 
             }
@@ -1272,11 +1517,12 @@ User updateUserBody,
         /// This can only be done by the logged in user.
         /// </remarks>
         /// <param name="username">The name that needs to be deleted</param>
-        public static global::System.Threading.Tasks.Task<global::System.Net.Http.HttpResponseMessage> SendDeleteUserAsync(
+        public static async global::System.Threading.Tasks.Task<DeleteUserReturnType> DeleteUser(
             this global::System.Net.Http.HttpClient client,
             string username,
             global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken)
-        ) => client.SendAsync(DeleteUser(username));
+        ) => await (await client.SendAsync(DeleteUser(username)).ConfigureAwait(false))
+            .ParseDeleteUser().ConfigureAwait(false);
 
         public static global::System.Net.Http.HttpRequestMessage DeleteUser(
             string username
@@ -1289,35 +1535,47 @@ User updateUserBody,
             return requestMessage;
         }
 
-        public static async global::System.Threading.Tasks.Task<IDeleteUserTypeSafeResult?> ParseDeleteUserTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
+        public static async global::System.Threading.Tasks.Task<DeleteUserReturnType?> ParseDeleteUser(this global::System.Net.Http.HttpResponseMessage response)
         {
             switch ((int)response.StatusCode)
             { 
                 case 400:
                     
-                        return new IDeleteUserTypeSafeResult.BadRequest
-                        { 
+                        return new DeleteUserReturnType.BadRequest
+                        {
+                            Response = response,
                         };
                     break;
                 
                 case 404:
                     
-                        return new IDeleteUserTypeSafeResult.NotFound
-                        { 
+                        return new DeleteUserReturnType.NotFound
+                        {
+                            Response = response,
                         };
                     break;
                 
             }
-            return null;
+            return new DeleteUserReturnType
+            {
+                Response = response,
+            };
         }
 
-        public interface IDeleteUserTypeSafeResult
+        public class DeleteUserReturnType : global::System.IDisposable
         {
+            public global::System.Net.Http.HttpResponseMessage Response { get; set; }
+
+            void global::System.IDisposable.Dispose()
+            {
+                Response?.Dispose();
+            }
+
             
             /// <summary>
             /// Invalid username supplied
             /// </summary>
-            public struct BadRequest : IDeleteUserTypeSafeResult
+            public class BadRequest : DeleteUserReturnType
             {
                 
             }
@@ -1325,7 +1583,7 @@ User updateUserBody,
             /// <summary>
             /// User not found
             /// </summary>
-            public struct NotFound : IDeleteUserTypeSafeResult
+            public class NotFound : DeleteUserReturnType
             {
                 
             }
