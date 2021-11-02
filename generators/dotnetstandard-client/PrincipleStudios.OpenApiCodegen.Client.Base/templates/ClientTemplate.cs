@@ -33,6 +33,7 @@ namespace PrincipleStudios.OpenApi.CSharp.templates
         string? description,
         string dataType,
         bool dataTypeNullable,
+        bool dataTypeEnumerable,
         bool isPathParam,
         bool isQueryParam,
         bool isHeaderParam,
@@ -45,7 +46,10 @@ namespace PrincipleStudios.OpenApi.CSharp.templates
         int? maxLength,
         decimal? minimum,
         decimal? maximum
-    );
+    )
+    {
+        public bool isFile => dataType is "global::System.IO.Stream" or "global::System.IO.Stream?";
+    }
 
     public record OperationResponses(
         OperationResponse? defaultResponse,
@@ -64,7 +68,7 @@ namespace PrincipleStudios.OpenApi.CSharp.templates
         string? dataType
     );
 
-    public record OperationRequestBody(string name, string? requestBodyType, IEnumerable<OperationParameter> allParams);
+    public record OperationRequestBody(string name, bool isForm, bool isFile, string? requestBodyType, IEnumerable<OperationParameter> allParams);
 
     public record OperationSecurityRequirement(
         OperationSecuritySchemeRequirement[] schemes

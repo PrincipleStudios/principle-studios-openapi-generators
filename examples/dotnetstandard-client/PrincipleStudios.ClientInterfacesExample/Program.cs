@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using PrincipleStudios.ClientInterfacesExample.Clients.Petstore;
 
 namespace PrincipleStudios.ClientInterfacesExample
 {
@@ -16,24 +17,19 @@ namespace PrincipleStudios.ClientInterfacesExample
         private static async Task Petstore()
         {
             using var httpClient = new HttpClient();
-            var client = new Clients.Petstore.DefaultApiClient(httpClient, new Clients.Petstore.DefaultApiClientConfiguration
-            {
-                BaseUrl = "https://localhost:5001/api",
-                Settings = new Newtonsoft.Json.JsonSerializerSettings()
-            });
-            using var createdPetResponse = await client.AddPetAsync(new Clients.Petstore.NewPet(Name: "Fido", Tag: "Dog"));
-            var pet = await createdPetResponse.StatusCode200Async();
-            using var foundPetResponse = await client.FindPetByIdAsync(pet.Id);
-            var foundPet = await foundPetResponse.StatusCode200Async();
+            using var createdPetResponse = await httpClient.SendAddPetAsync(new Clients.Petstore.NewPet(Name: "Fido", Tag: "Dog"));
+            var pet = await createdPetResponse.ParseAddPetTypeSafe() is Operations.IAddPetTypeSafeResult.Ok r1 ? r1.Body : throw new InvalidOperationException();
+            using var foundPetResponse = await httpClient.SendFindPetByIdAsync(pet.Id);
+            var foundPet = await foundPetResponse.ParseFindPetByIdTypeSafe() is Operations.IFindPetByIdTypeSafeResult.Ok r2 ? r2.Body : throw new InvalidOperationException();
             System.Diagnostics.Debug.Assert(pet.Name == foundPet.Name);
-            using var foundPetsResponse = await client.FindPetsAsync(new[] { "Dog" }, 1);
-            var pets = await foundPetsResponse.StatusCode200Async();
+            using var foundPetsResponse = await httpClient.SendFindPetsAsync(new[] { "Dog" }, 1);
+            var pets = await foundPetsResponse.ParseFindPetsTypeSafe() is Operations.IFindPetsTypeSafeResult.Ok r3 ? r3.Body.ToList() : throw new InvalidOperationException();
             System.Diagnostics.Debug.Assert(pets.Count == 1);
             System.Diagnostics.Debug.Assert(pet.Name == pets[0].Name);
-            using var deletePetResponse = await client.DeletePetAsync(pet.Id);
-            await deletePetResponse.StatusCode204Async();
-            using var finalFindResponse = await client.FindPetsAsync(new[] { "Dog " }, 1);
-            var finalPets = await finalFindResponse.StatusCode200Async();
+            using var deletePetResponse = await httpClient.SendDeletePetAsync(pet.Id);
+            _ = await deletePetResponse.ParseDeletePetTypeSafe() is Operations.IDeletePetTypeSafeResult.NoContent r4 ? r4 : throw new InvalidOperationException();
+            using var finalFindResponse = await httpClient.SendFindPetsAsync(new[] { "Dog " }, 1);
+            var finalPets = await finalFindResponse.ParseFindPetsTypeSafe() is Operations.IFindPetsTypeSafeResult.Ok r5 ? r5.Body.ToList() : throw new InvalidOperationException();
             System.Diagnostics.Debug.Assert(finalPets.Count == 0);
         }
 

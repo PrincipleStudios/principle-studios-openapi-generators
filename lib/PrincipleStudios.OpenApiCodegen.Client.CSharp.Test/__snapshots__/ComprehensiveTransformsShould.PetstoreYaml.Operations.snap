@@ -25,7 +25,7 @@ namespace PS.Controller
         /// </remarks>
         /// <param name="tags">tags to filter by</param>
         /// <param name="limit">maximum number of results to return</param>
-        public static Task<global::System.Net.Http.HttpResponseMessage> SendFindPetsAsync(
+        public static global::System.Threading.Tasks.Task<global::System.Net.Http.HttpResponseMessage> SendFindPetsAsync(
             this global::System.Net.Http.HttpClient client,
             global::System.Collections.Generic.IEnumerable<string>? tags,
 int? limit,
@@ -37,30 +37,33 @@ int? limit,
             int? limit
             )
         {
-            throw new global::System.NotImplementedException();
+            var requestMessage = new global::System.Net.Http.HttpRequestMessage(global::System.Net.Http.HttpMethod.Get, "/pets");
+
+
+            return requestMessage;
         }
 
-        public static global::System.Threading.Tasks.Task<FindPetsTypeSafeResult> ParseFindPetsTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
+        public static global::System.Threading.Tasks.Task<IFindPetsTypeSafeResult> ParseFindPetsTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
         {
             throw new global::System.NotImplementedException();
         }
 
-        public readonly struct FindPetsTypeSafeResult
+        public interface IFindPetsTypeSafeResult
         {
             
             /// <summary>
             /// pet response
             /// </summary>
-            public readonly struct Ok : FindPetsTypeSafeResult
+            public readonly struct Ok : IFindPetsTypeSafeResult
             {
-                public global::System.Collections.Generic.IEnumerable<Pet> Body { get; set; }
+                public global::System.Collections.Generic.IEnumerable<Pet> Body { get; }
                 
             }
             
             
-            public readonly struct OtherStatusCode : FindPetsTypeSafeResult
+            public readonly struct OtherStatusCode : IFindPetsTypeSafeResult
             {
-                public Error Body { get; set; }
+                public Error Body { get; }
                 
             }
             
@@ -70,7 +73,7 @@ int? limit,
         /// Creates a new pet in the store. Duplicates are allowed
         /// </remarks>
         /// <param name="addPetBody"></param>
-        public static Task<global::System.Net.Http.HttpResponseMessage> SendAddPetAsync(
+        public static global::System.Threading.Tasks.Task<global::System.Net.Http.HttpResponseMessage> SendAddPetAsync(
             this global::System.Net.Http.HttpClient client,
             NewPet addPetBody,
             global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken)
@@ -80,30 +83,34 @@ int? limit,
             NewPet addPetBody
             )
         {
-            throw new global::System.NotImplementedException();
+            var requestMessage = new global::System.Net.Http.HttpRequestMessage(global::System.Net.Http.HttpMethod.Post, "/pets");
+            requestMessage.Content = new global::System.Net.Http.StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(addPetBody), System.Text.Encoding.UTF8, "application/json");
+
+
+            return requestMessage;
         }
 
-        public static global::System.Threading.Tasks.Task<AddPetTypeSafeResult> ParseAddPetTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
+        public static global::System.Threading.Tasks.Task<IAddPetTypeSafeResult> ParseAddPetTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
         {
             throw new global::System.NotImplementedException();
         }
 
-        public readonly struct AddPetTypeSafeResult
+        public interface IAddPetTypeSafeResult
         {
             
             /// <summary>
             /// pet response
             /// </summary>
-            public readonly struct Ok : AddPetTypeSafeResult
+            public readonly struct Ok : IAddPetTypeSafeResult
             {
-                public Pet Body { get; set; }
+                public Pet Body { get; }
                 
             }
             
             
-            public readonly struct OtherStatusCode : AddPetTypeSafeResult
+            public readonly struct OtherStatusCode : IAddPetTypeSafeResult
             {
-                public Error Body { get; set; }
+                public Error Body { get; }
                 
             }
             
@@ -113,7 +120,7 @@ int? limit,
         /// Returns a user based on a single ID, if the user does not have access to the pet
         /// </remarks>
         /// <param name="id">ID of pet to fetch</param>
-        public static Task<global::System.Net.Http.HttpResponseMessage> SendFindPetByIdAsync(
+        public static global::System.Threading.Tasks.Task<global::System.Net.Http.HttpResponseMessage> SendFindPetByIdAsync(
             this global::System.Net.Http.HttpClient client,
             long id,
             global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken)
@@ -123,30 +130,34 @@ int? limit,
             long id
             )
         {
-            throw new global::System.NotImplementedException();
+            var requestMessage = new global::System.Net.Http.HttpRequestMessage(global::System.Net.Http.HttpMethod.Get, "/pets/{id}"
+                        .Replace("{" + "id" + "}", global::System.Web.HttpUtility.UrlEncode(id.ToString())));
+
+
+            return requestMessage;
         }
 
-        public static global::System.Threading.Tasks.Task<FindPetByIdTypeSafeResult> ParseFindPetByIdTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
+        public static global::System.Threading.Tasks.Task<IFindPetByIdTypeSafeResult> ParseFindPetByIdTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
         {
             throw new global::System.NotImplementedException();
         }
 
-        public readonly struct FindPetByIdTypeSafeResult
+        public interface IFindPetByIdTypeSafeResult
         {
             
             /// <summary>
             /// pet response
             /// </summary>
-            public readonly struct Ok : FindPetByIdTypeSafeResult
+            public readonly struct Ok : IFindPetByIdTypeSafeResult
             {
-                public Pet Body { get; set; }
+                public Pet Body { get; }
                 
             }
             
             
-            public readonly struct OtherStatusCode : FindPetByIdTypeSafeResult
+            public readonly struct OtherStatusCode : IFindPetByIdTypeSafeResult
             {
-                public Error Body { get; set; }
+                public Error Body { get; }
                 
             }
             
@@ -156,7 +167,7 @@ int? limit,
         /// deletes a single pet based on the ID supplied
         /// </remarks>
         /// <param name="id">ID of pet to delete</param>
-        public static Task<global::System.Net.Http.HttpResponseMessage> SendDeletePetAsync(
+        public static global::System.Threading.Tasks.Task<global::System.Net.Http.HttpResponseMessage> SendDeletePetAsync(
             this global::System.Net.Http.HttpClient client,
             long id,
             global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken)
@@ -166,29 +177,33 @@ int? limit,
             long id
             )
         {
-            throw new global::System.NotImplementedException();
+            var requestMessage = new global::System.Net.Http.HttpRequestMessage(global::System.Net.Http.HttpMethod.Delete, "/pets/{id}"
+                        .Replace("{" + "id" + "}", global::System.Web.HttpUtility.UrlEncode(id.ToString())));
+
+
+            return requestMessage;
         }
 
-        public static global::System.Threading.Tasks.Task<DeletePetTypeSafeResult> ParseDeletePetTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
+        public static global::System.Threading.Tasks.Task<IDeletePetTypeSafeResult> ParseDeletePetTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
         {
             throw new global::System.NotImplementedException();
         }
 
-        public readonly struct DeletePetTypeSafeResult
+        public interface IDeletePetTypeSafeResult
         {
             
             /// <summary>
             /// pet deleted
             /// </summary>
-            public readonly struct NoContent : DeletePetTypeSafeResult
+            public readonly struct NoContent : IDeletePetTypeSafeResult
             {
                 
             }
             
             
-            public readonly struct OtherStatusCode : DeletePetTypeSafeResult
+            public readonly struct OtherStatusCode : IDeletePetTypeSafeResult
             {
-                public Error Body { get; set; }
+                public Error Body { get; }
                 
             }
             

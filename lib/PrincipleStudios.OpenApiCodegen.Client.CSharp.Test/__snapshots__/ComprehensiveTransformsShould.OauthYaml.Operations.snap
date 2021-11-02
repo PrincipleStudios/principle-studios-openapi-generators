@@ -17,7 +17,7 @@ namespace PS.Controller
     {
         
         /// <param name="data">base-64 encoded data</param>
-        public static Task<global::System.Net.Http.HttpResponseMessage> SendGetInfoAsync(
+        public static global::System.Threading.Tasks.Task<global::System.Net.Http.HttpResponseMessage> SendGetInfoAsync(
             this global::System.Net.Http.HttpClient client,
             byte[]? data,
             global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken)
@@ -27,29 +27,32 @@ namespace PS.Controller
             byte[]? data
             )
         {
-            throw new global::System.NotImplementedException();
+            var requestMessage = new global::System.Net.Http.HttpRequestMessage(global::System.Net.Http.HttpMethod.Get, "/info");
+
+
+            return requestMessage;
         }
 
-        public static global::System.Threading.Tasks.Task<GetInfoTypeSafeResult> ParseGetInfoTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
+        public static global::System.Threading.Tasks.Task<IGetInfoTypeSafeResult> ParseGetInfoTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
         {
             throw new global::System.NotImplementedException();
         }
 
-        public readonly struct GetInfoTypeSafeResult
+        public interface IGetInfoTypeSafeResult
         {
             
             /// <summary>
             /// Sample Response
             /// </summary>
-            public readonly struct Ok : GetInfoTypeSafeResult
+            public readonly struct Ok : IGetInfoTypeSafeResult
             {
-                public string Body { get; set; }
+                public string Body { get; }
                 
             }
             
         }
 
-        public static Task<global::System.Net.Http.HttpResponseMessage> SendGetAddressAsync(
+        public static global::System.Threading.Tasks.Task<global::System.Net.Http.HttpResponseMessage> SendGetAddressAsync(
             this global::System.Net.Http.HttpClient client,
                         global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken)
         ) => client.SendAsync(GetAddress());
@@ -57,23 +60,26 @@ namespace PS.Controller
         public static global::System.Net.Http.HttpRequestMessage GetAddress(
             )
         {
-            throw new global::System.NotImplementedException();
+            var requestMessage = new global::System.Net.Http.HttpRequestMessage(global::System.Net.Http.HttpMethod.Get, "/address");
+
+
+            return requestMessage;
         }
 
-        public static global::System.Threading.Tasks.Task<GetAddressTypeSafeResult> ParseGetAddressTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
+        public static global::System.Threading.Tasks.Task<IGetAddressTypeSafeResult> ParseGetAddressTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
         {
             throw new global::System.NotImplementedException();
         }
 
-        public readonly struct GetAddressTypeSafeResult
+        public interface IGetAddressTypeSafeResult
         {
             
             /// <summary>
             /// Sample Response
             /// </summary>
-            public readonly struct Ok : GetAddressTypeSafeResult
+            public readonly struct Ok : IGetAddressTypeSafeResult
             {
-                public string Body { get; set; }
+                public string Body { get; }
                 
             }
             

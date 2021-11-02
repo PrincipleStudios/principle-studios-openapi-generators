@@ -5,7 +5,7 @@
 
     <IsPackable>false</IsPackable>
 
-    <RootNamespace>PrincipleStudios.OpenApiCodegen.Server.Mvc</RootNamespace>
+    <RootNamespace>PrincipleStudios.OpenApiCodegen.Client.CSharp</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

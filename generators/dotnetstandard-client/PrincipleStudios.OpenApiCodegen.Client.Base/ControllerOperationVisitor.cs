@@ -50,6 +50,10 @@ namespace PrincipleStudios.OpenApi.CSharp
 
             var builder = new OperationBuilder(operation);
 
+            var noBody = OperationRequestBodyFactory(operation.OperationId, null, Enumerable.Empty<OperationParameter>(), false);
+            //if (operation.RequestBody == null || !operation.RequestBody.Required)
+            //    builder.RequestBodies.Add(noBody);
+
             base.Visit(operation, context, argument with { Builder = builder });
 
             var sharedParameters = builder.SharedParameters.ToArray();
@@ -60,7 +64,7 @@ namespace PrincipleStudios.OpenApi.CSharp
                  description: operation.Description,
                  name: CSharpNaming.ToTitleCaseIdentifier(operation.OperationId, options.ReservedIdentifiers("ControllerBase", controllerClassName)),
                  path: path,
-                 requestBodies: builder.RequestBodies.DefaultIfEmpty(OperationRequestBodyFactory(operation.OperationId, null, Enumerable.Empty<OperationParameter>())).Select(transform => transform(sharedParameters)).ToArray(),
+                 requestBodies: builder.RequestBodies.DefaultIfEmpty(noBody).Select(transform => transform(sharedParameters)).ToArray(),
                  responses: new templates.OperationResponses(
                      defaultResponse: builder.DefaultResponse,
                      statusResponse: new(builder.StatusResponses)
@@ -79,6 +83,7 @@ namespace PrincipleStudios.OpenApi.CSharp
                 description: param.Description,
                 dataType: dataType.text,
                 dataTypeNullable: dataType.nullable,
+                dataTypeEnumerable: dataType.isEnumerable,
                 isPathParam: param.In == ParameterLocation.Path,
                 isQueryParam: param.In == ParameterLocation.Query,
                 isHeaderParam: param.In == ParameterLocation.Header,
@@ -150,7 +155,7 @@ namespace PrincipleStudios.OpenApi.CSharp
 
             var singleContentType = argument.Builder?.Operation.RequestBody.Content.Count <= 1;
 
-            argument.Builder?.RequestBodies.Add(OperationRequestBodyFactory(argument.Builder?.Operation.OperationId + (singleContentType ? "" : mimeType), mimeType, isForm ? GetFormParams() : GetStandardParams()));
+            argument.Builder?.RequestBodies.Add(OperationRequestBodyFactory(argument.Builder?.Operation.OperationId + (singleContentType ? "" : mimeType), mimeType, isForm ? GetFormParams() : GetStandardParams(), isForm));
 
             IEnumerable<OperationParameter> GetFormParams() =>
                 from param in mediaType.Schema.Properties
@@ -163,6 +168,7 @@ namespace PrincipleStudios.OpenApi.CSharp
                     description: null,
                     dataType: dataType.text,
                     dataTypeNullable: dataType.nullable,
+                    dataTypeEnumerable: dataType.isEnumerable,
                     isPathParam: false,
                     isQueryParam: false,
                     isHeaderParam: false,
@@ -185,6 +191,7 @@ namespace PrincipleStudios.OpenApi.CSharp
                    description: null,
                    dataType: dataType.text,
                    dataTypeNullable: dataType.nullable,
+                   dataTypeEnumerable: dataType.isEnumerable,
                    isPathParam: false,
                    isQueryParam: false,
                    isHeaderParam: false,
@@ -200,10 +207,12 @@ namespace PrincipleStudios.OpenApi.CSharp
                );
         }
 
-        private Func<OperationParameter[], OperationRequestBody> OperationRequestBodyFactory(string operationName, string? requestBodyMimeType, IEnumerable<OperationParameter> parameters)
+        private Func<OperationParameter[], OperationRequestBody> OperationRequestBodyFactory(string operationName, string? requestBodyMimeType, IEnumerable<OperationParameter> parameters, bool isForm)
         {
             return sharedParams => new templates.OperationRequestBody(
                  name: CSharpNaming.ToTitleCaseIdentifier(operationName, options.ReservedIdentifiers()),
+                 isForm: isForm,
+                 isFile: parameters.Any(t => t.isFile),
                  requestBodyType: requestBodyMimeType,
                  allParams: sharedParams.Concat(parameters)
              );

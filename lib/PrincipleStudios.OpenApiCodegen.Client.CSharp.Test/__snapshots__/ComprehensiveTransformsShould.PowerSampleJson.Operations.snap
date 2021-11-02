@@ -22,7 +22,7 @@ namespace PS.Controller
         /// <param name="houseId"></param>
         /// <param name="start"></param>
         /// <param name="end"></param>
-        public static Task<global::System.Net.Http.HttpResponseMessage> SendGetPowerFlowsAsync(
+        public static global::System.Threading.Tasks.Task<global::System.Net.Http.HttpResponseMessage> SendGetPowerFlowsAsync(
             this global::System.Net.Http.HttpClient client,
             global::System.Guid houseId,
 string? start,
@@ -36,28 +36,31 @@ string? end,
             string? end
             )
         {
-            throw new global::System.NotImplementedException();
+            var requestMessage = new global::System.Net.Http.HttpRequestMessage(global::System.Net.Http.HttpMethod.Get, "/power");
+
+
+            return requestMessage;
         }
 
-        public static global::System.Threading.Tasks.Task<GetPowerFlowsTypeSafeResult> ParseGetPowerFlowsTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
+        public static global::System.Threading.Tasks.Task<IGetPowerFlowsTypeSafeResult> ParseGetPowerFlowsTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
         {
             throw new global::System.NotImplementedException();
         }
 
-        public readonly struct GetPowerFlowsTypeSafeResult
+        public interface IGetPowerFlowsTypeSafeResult
         {
             
             
-            public readonly struct Ok : GetPowerFlowsTypeSafeResult
+            public readonly struct Ok : IGetPowerFlowsTypeSafeResult
             {
-                public GetPowerFlowsResponse Body { get; set; }
+                public GetPowerFlowsResponse Body { get; }
                 
             }
             
             /// <summary>
             /// Request range or house id not valid
             /// </summary>
-            public readonly struct BadRequest : GetPowerFlowsTypeSafeResult
+            public readonly struct BadRequest : IGetPowerFlowsTypeSafeResult
             {
                 
             }
@@ -68,7 +71,7 @@ string? end,
         /// Get current battery state
         /// </summary>
         /// <param name="houseId"></param>
-        public static Task<global::System.Net.Http.HttpResponseMessage> SendGetCurrentBatteryStateAsync(
+        public static global::System.Threading.Tasks.Task<global::System.Net.Http.HttpResponseMessage> SendGetCurrentBatteryStateAsync(
             this global::System.Net.Http.HttpClient client,
             global::System.Guid houseId,
             global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken)
@@ -78,28 +81,31 @@ string? end,
             global::System.Guid houseId
             )
         {
-            throw new global::System.NotImplementedException();
+            var requestMessage = new global::System.Net.Http.HttpRequestMessage(global::System.Net.Http.HttpMethod.Get, "/battery/current");
+
+
+            return requestMessage;
         }
 
-        public static global::System.Threading.Tasks.Task<GetCurrentBatteryStateTypeSafeResult> ParseGetCurrentBatteryStateTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
+        public static global::System.Threading.Tasks.Task<IGetCurrentBatteryStateTypeSafeResult> ParseGetCurrentBatteryStateTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
         {
             throw new global::System.NotImplementedException();
         }
 
-        public readonly struct GetCurrentBatteryStateTypeSafeResult
+        public interface IGetCurrentBatteryStateTypeSafeResult
         {
             
             
-            public readonly struct Ok : GetCurrentBatteryStateTypeSafeResult
+            public readonly struct Ok : IGetCurrentBatteryStateTypeSafeResult
             {
-                public CurrentBatteryState Body { get; set; }
+                public CurrentBatteryState Body { get; }
                 
             }
             
             /// <summary>
             /// Request range or house id not valid
             /// </summary>
-            public readonly struct BadRequest : GetCurrentBatteryStateTypeSafeResult
+            public readonly struct BadRequest : IGetCurrentBatteryStateTypeSafeResult
             {
                 
             }

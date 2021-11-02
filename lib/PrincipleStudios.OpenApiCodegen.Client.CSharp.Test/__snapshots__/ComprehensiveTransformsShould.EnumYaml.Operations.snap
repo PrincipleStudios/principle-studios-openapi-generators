@@ -17,7 +17,7 @@ namespace PS.Controller
     {
         
         /// <param name="playRockPaperScissorsBody"></param>
-        public static Task<global::System.Net.Http.HttpResponseMessage> SendPlayRockPaperScissorsAsync(
+        public static global::System.Threading.Tasks.Task<global::System.Net.Http.HttpResponseMessage> SendPlayRockPaperScissorsAsync(
             this global::System.Net.Http.HttpClient client,
             PlayRockPaperScissorsRequest playRockPaperScissorsBody,
             global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken)
@@ -27,30 +27,34 @@ namespace PS.Controller
             PlayRockPaperScissorsRequest playRockPaperScissorsBody
             )
         {
-            throw new global::System.NotImplementedException();
+            var requestMessage = new global::System.Net.Http.HttpRequestMessage(global::System.Net.Http.HttpMethod.Post, "/rock-paper-scissors");
+            requestMessage.Content = new global::System.Net.Http.StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(playRockPaperScissorsBody), System.Text.Encoding.UTF8, "application/json");
+
+
+            return requestMessage;
         }
 
-        public static global::System.Threading.Tasks.Task<PlayRockPaperScissorsTypeSafeResult> ParsePlayRockPaperScissorsTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
+        public static global::System.Threading.Tasks.Task<IPlayRockPaperScissorsTypeSafeResult> ParsePlayRockPaperScissorsTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
         {
             throw new global::System.NotImplementedException();
         }
 
-        public readonly struct PlayRockPaperScissorsTypeSafeResult
+        public interface IPlayRockPaperScissorsTypeSafeResult
         {
             
             /// <summary>
             /// One player won
             /// </summary>
-            public readonly struct Ok : PlayRockPaperScissorsTypeSafeResult
+            public readonly struct Ok : IPlayRockPaperScissorsTypeSafeResult
             {
-                public PlayRockPaperScissorsResponse Body { get; set; }
+                public PlayRockPaperScissorsResponse Body { get; }
                 
             }
             
             /// <summary>
             /// Tie
             /// </summary>
-            public readonly struct Conflict : PlayRockPaperScissorsTypeSafeResult
+            public readonly struct Conflict : IPlayRockPaperScissorsTypeSafeResult
             {
                 
             }

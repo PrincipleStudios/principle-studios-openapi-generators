@@ -10,7 +10,7 @@ using Xunit;
 using static PrincipleStudios.OpenApiCodegen.Server.Mvc.OptionsHelpers;
 using static PrincipleStudios.OpenApiCodegen.TestUtils.DocumentHelpers;
 
-namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
+namespace PrincipleStudios.OpenApiCodegen.Client.CSharp
 {
     public class ComprehensiveTransformsShould
     {

@@ -91,6 +91,9 @@ namespace PrincipleStudios.OpenApi.CSharp
         {
             yield return TransformOperations(diagnostic);
             yield return TransformAddServicesHelper(diagnostic);
+
+            foreach (var source in csharpSchemaResolver.GetSources(diagnostic))
+                yield return source;
         }
     }
 }

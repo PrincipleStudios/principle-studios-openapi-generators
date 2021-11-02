@@ -20,7 +20,7 @@ namespace PrincipleStudios.Test
         /// Add a new pet to the store
         /// </summary>
         /// <param name="addPetBody"></param>
-        public static Task<global::System.Net.Http.HttpResponseMessage> SendAddPetAsync(
+        public static global::System.Threading.Tasks.Task<global::System.Net.Http.HttpResponseMessage> SendAddPetAsync(
             this global::System.Net.Http.HttpClient client,
             Pet addPetBody,
             global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken)
@@ -30,7 +30,11 @@ namespace PrincipleStudios.Test
             Pet addPetBody
             )
         {
-            throw new global::System.NotImplementedException();
+            var requestMessage = new global::System.Net.Http.HttpRequestMessage(global::System.Net.Http.HttpMethod.Post, "/pet");
+            requestMessage.Content = new global::System.Net.Http.StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(addPetBody), System.Text.Encoding.UTF8, "application/json");
+
+
+            return requestMessage;
         }
 
 
@@ -38,7 +42,7 @@ namespace PrincipleStudios.Test
         /// Add a new pet to the store
         /// </summary>
         /// <param name="addPetBody"></param>
-        public static Task<global::System.Net.Http.HttpResponseMessage> SendAddPetAsync(
+        public static global::System.Threading.Tasks.Task<global::System.Net.Http.HttpResponseMessage> SendAddPetAsync(
             this global::System.Net.Http.HttpClient client,
             Pet addPetBody,
             global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken)
@@ -48,21 +52,25 @@ namespace PrincipleStudios.Test
             Pet addPetBody
             )
         {
-            throw new global::System.NotImplementedException();
+            var requestMessage = new global::System.Net.Http.HttpRequestMessage(global::System.Net.Http.HttpMethod.Post, "/pet");
+            requestMessage.Content = new global::System.Net.Http.StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(addPetBody), System.Text.Encoding.UTF8, "application/xml");
+
+
+            return requestMessage;
         }
 
-        public static global::System.Threading.Tasks.Task<AddPetTypeSafeResult> ParseAddPetTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
+        public static global::System.Threading.Tasks.Task<IAddPetTypeSafeResult> ParseAddPetTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
         {
             throw new global::System.NotImplementedException();
         }
 
-        public readonly struct AddPetTypeSafeResult
+        public interface IAddPetTypeSafeResult
         {
             
             /// <summary>
             /// Invalid input
             /// </summary>
-            public readonly struct MethodNotAllowed : AddPetTypeSafeResult
+            public readonly struct MethodNotAllowed : IAddPetTypeSafeResult
             {
                 
             }
@@ -73,7 +81,7 @@ namespace PrincipleStudios.Test
         /// Update an existing pet
         /// </summary>
         /// <param name="updatePetBody"></param>
-        public static Task<global::System.Net.Http.HttpResponseMessage> SendUpdatePetAsync(
+        public static global::System.Threading.Tasks.Task<global::System.Net.Http.HttpResponseMessage> SendUpdatePetAsync(
             this global::System.Net.Http.HttpClient client,
             Pet updatePetBody,
             global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken)
@@ -83,7 +91,11 @@ namespace PrincipleStudios.Test
             Pet updatePetBody
             )
         {
-            throw new global::System.NotImplementedException();
+            var requestMessage = new global::System.Net.Http.HttpRequestMessage(global::System.Net.Http.HttpMethod.Put, "/pet");
+            requestMessage.Content = new global::System.Net.Http.StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(updatePetBody), System.Text.Encoding.UTF8, "application/json");
+
+
+            return requestMessage;
         }
 
 
@@ -91,7 +103,7 @@ namespace PrincipleStudios.Test
         /// Update an existing pet
         /// </summary>
         /// <param name="updatePetBody"></param>
-        public static Task<global::System.Net.Http.HttpResponseMessage> SendUpdatePetAsync(
+        public static global::System.Threading.Tasks.Task<global::System.Net.Http.HttpResponseMessage> SendUpdatePetAsync(
             this global::System.Net.Http.HttpClient client,
             Pet updatePetBody,
             global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken)
@@ -101,21 +113,25 @@ namespace PrincipleStudios.Test
             Pet updatePetBody
             )
         {
-            throw new global::System.NotImplementedException();
+            var requestMessage = new global::System.Net.Http.HttpRequestMessage(global::System.Net.Http.HttpMethod.Put, "/pet");
+            requestMessage.Content = new global::System.Net.Http.StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(updatePetBody), System.Text.Encoding.UTF8, "application/xml");
+
+
+            return requestMessage;
         }
 
-        public static global::System.Threading.Tasks.Task<UpdatePetTypeSafeResult> ParseUpdatePetTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
+        public static global::System.Threading.Tasks.Task<IUpdatePetTypeSafeResult> ParseUpdatePetTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
         {
             throw new global::System.NotImplementedException();
         }
 
-        public readonly struct UpdatePetTypeSafeResult
+        public interface IUpdatePetTypeSafeResult
         {
             
             /// <summary>
             /// Invalid ID supplied
             /// </summary>
-            public readonly struct BadRequest : UpdatePetTypeSafeResult
+            public readonly struct BadRequest : IUpdatePetTypeSafeResult
             {
                 
             }
@@ -123,7 +139,7 @@ namespace PrincipleStudios.Test
             /// <summary>
             /// Pet not found
             /// </summary>
-            public readonly struct NotFound : UpdatePetTypeSafeResult
+            public readonly struct NotFound : IUpdatePetTypeSafeResult
             {
                 
             }
@@ -131,7 +147,7 @@ namespace PrincipleStudios.Test
             /// <summary>
             /// Validation exception
             /// </summary>
-            public readonly struct MethodNotAllowed : UpdatePetTypeSafeResult
+            public readonly struct MethodNotAllowed : IUpdatePetTypeSafeResult
             {
                 
             }
@@ -145,7 +161,7 @@ namespace PrincipleStudios.Test
         /// Multiple status values can be provided with comma separated strings
         /// </remarks>
         /// <param name="status">Status values that need to be considered for filter</param>
-        public static Task<global::System.Net.Http.HttpResponseMessage> SendFindPetsByStatusAsync(
+        public static global::System.Threading.Tasks.Task<global::System.Net.Http.HttpResponseMessage> SendFindPetsByStatusAsync(
             this global::System.Net.Http.HttpClient client,
             global::System.Collections.Generic.IEnumerable<FindPetsByStatusStatusItem> status,
             global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken)
@@ -155,39 +171,42 @@ namespace PrincipleStudios.Test
             global::System.Collections.Generic.IEnumerable<FindPetsByStatusStatusItem> status
             )
         {
-            throw new global::System.NotImplementedException();
+            var requestMessage = new global::System.Net.Http.HttpRequestMessage(global::System.Net.Http.HttpMethod.Get, "/pet/findByStatus");
+
+
+            return requestMessage;
         }
 
-        public static global::System.Threading.Tasks.Task<FindPetsByStatusTypeSafeResult> ParseFindPetsByStatusTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
+        public static global::System.Threading.Tasks.Task<IFindPetsByStatusTypeSafeResult> ParseFindPetsByStatusTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
         {
             throw new global::System.NotImplementedException();
         }
 
-        public readonly struct FindPetsByStatusTypeSafeResult
+        public interface IFindPetsByStatusTypeSafeResult
         {
             
             /// <summary>
             /// successful operation
             /// </summary>
-            public readonly struct ApplicationXmlOk : FindPetsByStatusTypeSafeResult
+            public readonly struct ApplicationXmlOk : IFindPetsByStatusTypeSafeResult
             {
-                public global::System.Collections.Generic.IEnumerable<Pet> Body { get; set; }
+                public global::System.Collections.Generic.IEnumerable<Pet> Body { get; }
                 
             }
             
             /// <summary>
             /// successful operation
             /// </summary>
-            public readonly struct ApplicationJsonOk : FindPetsByStatusTypeSafeResult
+            public readonly struct ApplicationJsonOk : IFindPetsByStatusTypeSafeResult
             {
-                public global::System.Collections.Generic.IEnumerable<Pet> Body { get; set; }
+                public global::System.Collections.Generic.IEnumerable<Pet> Body { get; }
                 
             }
             
             /// <summary>
             /// Invalid status value
             /// </summary>
-            public readonly struct BadRequest : FindPetsByStatusTypeSafeResult
+            public readonly struct BadRequest : IFindPetsByStatusTypeSafeResult
             {
                 
             }
@@ -201,7 +220,7 @@ namespace PrincipleStudios.Test
         /// Muliple tags can be provided with comma separated strings. Use tag1, tag2, tag3 for testing.
         /// </remarks>
         /// <param name="tags">Tags to filter by</param>
-        public static Task<global::System.Net.Http.HttpResponseMessage> SendFindPetsByTagsAsync(
+        public static global::System.Threading.Tasks.Task<global::System.Net.Http.HttpResponseMessage> SendFindPetsByTagsAsync(
             this global::System.Net.Http.HttpClient client,
             global::System.Collections.Generic.IEnumerable<string> tags,
             global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken)
@@ -211,39 +230,42 @@ namespace PrincipleStudios.Test
             global::System.Collections.Generic.IEnumerable<string> tags
             )
         {
-            throw new global::System.NotImplementedException();
+            var requestMessage = new global::System.Net.Http.HttpRequestMessage(global::System.Net.Http.HttpMethod.Get, "/pet/findByTags");
+
+
+            return requestMessage;
         }
 
-        public static global::System.Threading.Tasks.Task<FindPetsByTagsTypeSafeResult> ParseFindPetsByTagsTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
+        public static global::System.Threading.Tasks.Task<IFindPetsByTagsTypeSafeResult> ParseFindPetsByTagsTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
         {
             throw new global::System.NotImplementedException();
         }
 
-        public readonly struct FindPetsByTagsTypeSafeResult
+        public interface IFindPetsByTagsTypeSafeResult
         {
             
             /// <summary>
             /// successful operation
             /// </summary>
-            public readonly struct ApplicationXmlOk : FindPetsByTagsTypeSafeResult
+            public readonly struct ApplicationXmlOk : IFindPetsByTagsTypeSafeResult
             {
-                public global::System.Collections.Generic.IEnumerable<Pet> Body { get; set; }
+                public global::System.Collections.Generic.IEnumerable<Pet> Body { get; }
                 
             }
             
             /// <summary>
             /// successful operation
             /// </summary>
-            public readonly struct ApplicationJsonOk : FindPetsByTagsTypeSafeResult
+            public readonly struct ApplicationJsonOk : IFindPetsByTagsTypeSafeResult
             {
-                public global::System.Collections.Generic.IEnumerable<Pet> Body { get; set; }
+                public global::System.Collections.Generic.IEnumerable<Pet> Body { get; }
                 
             }
             
             /// <summary>
             /// Invalid tag value
             /// </summary>
-            public readonly struct BadRequest : FindPetsByTagsTypeSafeResult
+            public readonly struct BadRequest : IFindPetsByTagsTypeSafeResult
             {
                 
             }
@@ -257,7 +279,7 @@ namespace PrincipleStudios.Test
         /// Returns a single pet
         /// </remarks>
         /// <param name="petId">ID of pet to return</param>
-        public static Task<global::System.Net.Http.HttpResponseMessage> SendGetPetByIdAsync(
+        public static global::System.Threading.Tasks.Task<global::System.Net.Http.HttpResponseMessage> SendGetPetByIdAsync(
             this global::System.Net.Http.HttpClient client,
             long petId,
             global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken)
@@ -267,39 +289,43 @@ namespace PrincipleStudios.Test
             long petId
             )
         {
-            throw new global::System.NotImplementedException();
+            var requestMessage = new global::System.Net.Http.HttpRequestMessage(global::System.Net.Http.HttpMethod.Get, "/pet/{petId}"
+                        .Replace("{" + "petId" + "}", global::System.Web.HttpUtility.UrlEncode(petId.ToString())));
+
+
+            return requestMessage;
         }
 
-        public static global::System.Threading.Tasks.Task<GetPetByIdTypeSafeResult> ParseGetPetByIdTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
+        public static global::System.Threading.Tasks.Task<IGetPetByIdTypeSafeResult> ParseGetPetByIdTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
         {
             throw new global::System.NotImplementedException();
         }
 
-        public readonly struct GetPetByIdTypeSafeResult
+        public interface IGetPetByIdTypeSafeResult
         {
             
             /// <summary>
             /// successful operation
             /// </summary>
-            public readonly struct ApplicationXmlOk : GetPetByIdTypeSafeResult
+            public readonly struct ApplicationXmlOk : IGetPetByIdTypeSafeResult
             {
-                public Pet Body { get; set; }
+                public Pet Body { get; }
                 
             }
             
             /// <summary>
             /// successful operation
             /// </summary>
-            public readonly struct ApplicationJsonOk : GetPetByIdTypeSafeResult
+            public readonly struct ApplicationJsonOk : IGetPetByIdTypeSafeResult
             {
-                public Pet Body { get; set; }
+                public Pet Body { get; }
                 
             }
             
             /// <summary>
             /// Invalid ID supplied
             /// </summary>
-            public readonly struct BadRequest : GetPetByIdTypeSafeResult
+            public readonly struct BadRequest : IGetPetByIdTypeSafeResult
             {
                 
             }
@@ -307,7 +333,7 @@ namespace PrincipleStudios.Test
             /// <summary>
             /// Pet not found
             /// </summary>
-            public readonly struct NotFound : GetPetByIdTypeSafeResult
+            public readonly struct NotFound : IGetPetByIdTypeSafeResult
             {
                 
             }
@@ -320,7 +346,7 @@ namespace PrincipleStudios.Test
         /// <param name="petId">ID of pet that needs to be updated</param>
         /// <param name="name"></param>
         /// <param name="status"></param>
-        public static Task<global::System.Net.Http.HttpResponseMessage> SendUpdatePetWithFormAsync(
+        public static global::System.Threading.Tasks.Task<global::System.Net.Http.HttpResponseMessage> SendUpdatePetWithFormAsync(
             this global::System.Net.Http.HttpClient client,
             long petId,
 string? name,
@@ -334,21 +360,33 @@ string? status,
             string? status
             )
         {
-            throw new global::System.NotImplementedException();
+            var requestMessage = new global::System.Net.Http.HttpRequestMessage(global::System.Net.Http.HttpMethod.Post, "/pet/{petId}"
+                        .Replace("{" + "petId" + "}", global::System.Web.HttpUtility.UrlEncode(petId.ToString())));
+            requestMessage.Content = new global::System.Net.Http.MultipartFormDataContent()
+            {
+
+                { new global::System.Net.Http.StringContent(name.ToString()), "name" },
+
+                { new global::System.Net.Http.StringContent(status.ToString()), "status" },
+
+            };
+
+
+            return requestMessage;
         }
 
-        public static global::System.Threading.Tasks.Task<UpdatePetWithFormTypeSafeResult> ParseUpdatePetWithFormTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
+        public static global::System.Threading.Tasks.Task<IUpdatePetWithFormTypeSafeResult> ParseUpdatePetWithFormTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
         {
             throw new global::System.NotImplementedException();
         }
 
-        public readonly struct UpdatePetWithFormTypeSafeResult
+        public interface IUpdatePetWithFormTypeSafeResult
         {
             
             /// <summary>
             /// Invalid input
             /// </summary>
-            public readonly struct MethodNotAllowed : UpdatePetWithFormTypeSafeResult
+            public readonly struct MethodNotAllowed : IUpdatePetWithFormTypeSafeResult
             {
                 
             }
@@ -360,7 +398,7 @@ string? status,
         /// </summary>
         /// <param name="apiKey"></param>
         /// <param name="petId">Pet id to delete</param>
-        public static Task<global::System.Net.Http.HttpResponseMessage> SendDeletePetAsync(
+        public static global::System.Threading.Tasks.Task<global::System.Net.Http.HttpResponseMessage> SendDeletePetAsync(
             this global::System.Net.Http.HttpClient client,
             string? apiKey,
 long petId,
@@ -372,21 +410,26 @@ long petId,
             long petId
             )
         {
-            throw new global::System.NotImplementedException();
+            var requestMessage = new global::System.Net.Http.HttpRequestMessage(global::System.Net.Http.HttpMethod.Delete, "/pet/{petId}"
+                        .Replace("{" + "petId" + "}", global::System.Web.HttpUtility.UrlEncode(petId.ToString())));
+
+
+            requestMessage.Headers.Add("", apiKey.ToString());
+            return requestMessage;
         }
 
-        public static global::System.Threading.Tasks.Task<DeletePetTypeSafeResult> ParseDeletePetTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
+        public static global::System.Threading.Tasks.Task<IDeletePetTypeSafeResult> ParseDeletePetTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
         {
             throw new global::System.NotImplementedException();
         }
 
-        public readonly struct DeletePetTypeSafeResult
+        public interface IDeletePetTypeSafeResult
         {
             
             /// <summary>
             /// Invalid ID supplied
             /// </summary>
-            public readonly struct BadRequest : DeletePetTypeSafeResult
+            public readonly struct BadRequest : IDeletePetTypeSafeResult
             {
                 
             }
@@ -394,7 +437,7 @@ long petId,
             /// <summary>
             /// Pet not found
             /// </summary>
-            public readonly struct NotFound : DeletePetTypeSafeResult
+            public readonly struct NotFound : IDeletePetTypeSafeResult
             {
                 
             }
@@ -406,7 +449,7 @@ long petId,
         /// </summary>
         /// <param name="petId">ID of pet to update</param>
         /// <param name="uploadFileBody"></param>
-        public static Task<global::System.Net.Http.HttpResponseMessage> SendUploadFileAsync(
+        public static global::System.Threading.Tasks.Task<global::System.Net.Http.HttpResponseMessage> SendUploadFileAsync(
             this global::System.Net.Http.HttpClient client,
             long petId,
 global::System.IO.Stream uploadFileBody,
@@ -418,23 +461,29 @@ global::System.IO.Stream uploadFileBody,
             global::System.IO.Stream uploadFileBody
             )
         {
-            throw new global::System.NotImplementedException();
+            var requestMessage = new global::System.Net.Http.HttpRequestMessage(global::System.Net.Http.HttpMethod.Post, "/pet/{petId}/uploadImage"
+                        .Replace("{" + "petId" + "}", global::System.Web.HttpUtility.UrlEncode(petId.ToString())));
+
+            requestMessage.Content = new global::System.Net.Http.StreamContent(uploadFileBody);
+
+
+            return requestMessage;
         }
 
-        public static global::System.Threading.Tasks.Task<UploadFileTypeSafeResult> ParseUploadFileTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
+        public static global::System.Threading.Tasks.Task<IUploadFileTypeSafeResult> ParseUploadFileTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
         {
             throw new global::System.NotImplementedException();
         }
 
-        public readonly struct UploadFileTypeSafeResult
+        public interface IUploadFileTypeSafeResult
         {
             
             /// <summary>
             /// successful operation
             /// </summary>
-            public readonly struct Ok : UploadFileTypeSafeResult
+            public readonly struct Ok : IUploadFileTypeSafeResult
             {
-                public ApiResponse Body { get; set; }
+                public ApiResponse Body { get; }
                 
             }
             
@@ -446,7 +495,7 @@ global::System.IO.Stream uploadFileBody,
         /// <remarks>
         /// Returns a map of status codes to quantities
         /// </remarks>
-        public static Task<global::System.Net.Http.HttpResponseMessage> SendGetInventoryAsync(
+        public static global::System.Threading.Tasks.Task<global::System.Net.Http.HttpResponseMessage> SendGetInventoryAsync(
             this global::System.Net.Http.HttpClient client,
                         global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken)
         ) => client.SendAsync(GetInventory());
@@ -454,23 +503,26 @@ global::System.IO.Stream uploadFileBody,
         public static global::System.Net.Http.HttpRequestMessage GetInventory(
             )
         {
-            throw new global::System.NotImplementedException();
+            var requestMessage = new global::System.Net.Http.HttpRequestMessage(global::System.Net.Http.HttpMethod.Get, "/store/inventory");
+
+
+            return requestMessage;
         }
 
-        public static global::System.Threading.Tasks.Task<GetInventoryTypeSafeResult> ParseGetInventoryTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
+        public static global::System.Threading.Tasks.Task<IGetInventoryTypeSafeResult> ParseGetInventoryTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
         {
             throw new global::System.NotImplementedException();
         }
 
-        public readonly struct GetInventoryTypeSafeResult
+        public interface IGetInventoryTypeSafeResult
         {
             
             /// <summary>
             /// successful operation
             /// </summary>
-            public readonly struct Ok : GetInventoryTypeSafeResult
+            public readonly struct Ok : IGetInventoryTypeSafeResult
             {
-                public global::System.Collections.Generic.Dictionary<string, int> Body { get; set; }
+                public global::System.Collections.Generic.Dictionary<string, int> Body { get; }
                 
             }
             
@@ -480,7 +532,7 @@ global::System.IO.Stream uploadFileBody,
         /// Place an order for a pet
         /// </summary>
         /// <param name="placeOrderBody"></param>
-        public static Task<global::System.Net.Http.HttpResponseMessage> SendPlaceOrderAsync(
+        public static global::System.Threading.Tasks.Task<global::System.Net.Http.HttpResponseMessage> SendPlaceOrderAsync(
             this global::System.Net.Http.HttpClient client,
             Order placeOrderBody,
             global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken)
@@ -490,39 +542,43 @@ global::System.IO.Stream uploadFileBody,
             Order placeOrderBody
             )
         {
-            throw new global::System.NotImplementedException();
+            var requestMessage = new global::System.Net.Http.HttpRequestMessage(global::System.Net.Http.HttpMethod.Post, "/store/order");
+            requestMessage.Content = new global::System.Net.Http.StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(placeOrderBody), System.Text.Encoding.UTF8, "application/json");
+
+
+            return requestMessage;
         }
 
-        public static global::System.Threading.Tasks.Task<PlaceOrderTypeSafeResult> ParsePlaceOrderTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
+        public static global::System.Threading.Tasks.Task<IPlaceOrderTypeSafeResult> ParsePlaceOrderTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
         {
             throw new global::System.NotImplementedException();
         }
 
-        public readonly struct PlaceOrderTypeSafeResult
+        public interface IPlaceOrderTypeSafeResult
         {
             
             /// <summary>
             /// successful operation
             /// </summary>
-            public readonly struct ApplicationXmlOk : PlaceOrderTypeSafeResult
+            public readonly struct ApplicationXmlOk : IPlaceOrderTypeSafeResult
             {
-                public Order Body { get; set; }
+                public Order Body { get; }
                 
             }
             
             /// <summary>
             /// successful operation
             /// </summary>
-            public readonly struct ApplicationJsonOk : PlaceOrderTypeSafeResult
+            public readonly struct ApplicationJsonOk : IPlaceOrderTypeSafeResult
             {
-                public Order Body { get; set; }
+                public Order Body { get; }
                 
             }
             
             /// <summary>
             /// Invalid Order
             /// </summary>
-            public readonly struct BadRequest : PlaceOrderTypeSafeResult
+            public readonly struct BadRequest : IPlaceOrderTypeSafeResult
             {
                 
             }
@@ -536,7 +592,7 @@ global::System.IO.Stream uploadFileBody,
         /// For valid response try integer IDs with value &gt;= 1 and &lt;= 10. Other values will generated exceptions
         /// </remarks>
         /// <param name="orderId">ID of pet that needs to be fetched</param>
-        public static Task<global::System.Net.Http.HttpResponseMessage> SendGetOrderByIdAsync(
+        public static global::System.Threading.Tasks.Task<global::System.Net.Http.HttpResponseMessage> SendGetOrderByIdAsync(
             this global::System.Net.Http.HttpClient client,
             long orderId,
             global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken)
@@ -546,39 +602,43 @@ global::System.IO.Stream uploadFileBody,
             long orderId
             )
         {
-            throw new global::System.NotImplementedException();
+            var requestMessage = new global::System.Net.Http.HttpRequestMessage(global::System.Net.Http.HttpMethod.Get, "/store/order/{orderId}"
+                        .Replace("{" + "orderId" + "}", global::System.Web.HttpUtility.UrlEncode(orderId.ToString())));
+
+
+            return requestMessage;
         }
 
-        public static global::System.Threading.Tasks.Task<GetOrderByIdTypeSafeResult> ParseGetOrderByIdTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
+        public static global::System.Threading.Tasks.Task<IGetOrderByIdTypeSafeResult> ParseGetOrderByIdTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
         {
             throw new global::System.NotImplementedException();
         }
 
-        public readonly struct GetOrderByIdTypeSafeResult
+        public interface IGetOrderByIdTypeSafeResult
         {
             
             /// <summary>
             /// successful operation
             /// </summary>
-            public readonly struct ApplicationXmlOk : GetOrderByIdTypeSafeResult
+            public readonly struct ApplicationXmlOk : IGetOrderByIdTypeSafeResult
             {
-                public Order Body { get; set; }
+                public Order Body { get; }
                 
             }
             
             /// <summary>
             /// successful operation
             /// </summary>
-            public readonly struct ApplicationJsonOk : GetOrderByIdTypeSafeResult
+            public readonly struct ApplicationJsonOk : IGetOrderByIdTypeSafeResult
             {
-                public Order Body { get; set; }
+                public Order Body { get; }
                 
             }
             
             /// <summary>
             /// Invalid ID supplied
             /// </summary>
-            public readonly struct BadRequest : GetOrderByIdTypeSafeResult
+            public readonly struct BadRequest : IGetOrderByIdTypeSafeResult
             {
                 
             }
@@ -586,7 +646,7 @@ global::System.IO.Stream uploadFileBody,
             /// <summary>
             /// Order not found
             /// </summary>
-            public readonly struct NotFound : GetOrderByIdTypeSafeResult
+            public readonly struct NotFound : IGetOrderByIdTypeSafeResult
             {
                 
             }
@@ -600,7 +660,7 @@ global::System.IO.Stream uploadFileBody,
         /// For valid response try integer IDs with positive integer value. Negative or non-integer values will generate API errors
         /// </remarks>
         /// <param name="orderId">ID of the order that needs to be deleted</param>
-        public static Task<global::System.Net.Http.HttpResponseMessage> SendDeleteOrderAsync(
+        public static global::System.Threading.Tasks.Task<global::System.Net.Http.HttpResponseMessage> SendDeleteOrderAsync(
             this global::System.Net.Http.HttpClient client,
             long orderId,
             global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken)
@@ -610,21 +670,25 @@ global::System.IO.Stream uploadFileBody,
             long orderId
             )
         {
-            throw new global::System.NotImplementedException();
+            var requestMessage = new global::System.Net.Http.HttpRequestMessage(global::System.Net.Http.HttpMethod.Delete, "/store/order/{orderId}"
+                        .Replace("{" + "orderId" + "}", global::System.Web.HttpUtility.UrlEncode(orderId.ToString())));
+
+
+            return requestMessage;
         }
 
-        public static global::System.Threading.Tasks.Task<DeleteOrderTypeSafeResult> ParseDeleteOrderTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
+        public static global::System.Threading.Tasks.Task<IDeleteOrderTypeSafeResult> ParseDeleteOrderTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
         {
             throw new global::System.NotImplementedException();
         }
 
-        public readonly struct DeleteOrderTypeSafeResult
+        public interface IDeleteOrderTypeSafeResult
         {
             
             /// <summary>
             /// Invalid ID supplied
             /// </summary>
-            public readonly struct BadRequest : DeleteOrderTypeSafeResult
+            public readonly struct BadRequest : IDeleteOrderTypeSafeResult
             {
                 
             }
@@ -632,7 +696,7 @@ global::System.IO.Stream uploadFileBody,
             /// <summary>
             /// Order not found
             /// </summary>
-            public readonly struct NotFound : DeleteOrderTypeSafeResult
+            public readonly struct NotFound : IDeleteOrderTypeSafeResult
             {
                 
             }
@@ -646,7 +710,7 @@ global::System.IO.Stream uploadFileBody,
         /// This can only be done by the logged in user.
         /// </remarks>
         /// <param name="createUserBody"></param>
-        public static Task<global::System.Net.Http.HttpResponseMessage> SendCreateUserAsync(
+        public static global::System.Threading.Tasks.Task<global::System.Net.Http.HttpResponseMessage> SendCreateUserAsync(
             this global::System.Net.Http.HttpClient client,
             User createUserBody,
             global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken)
@@ -656,19 +720,23 @@ global::System.IO.Stream uploadFileBody,
             User createUserBody
             )
         {
-            throw new global::System.NotImplementedException();
+            var requestMessage = new global::System.Net.Http.HttpRequestMessage(global::System.Net.Http.HttpMethod.Post, "/user");
+            requestMessage.Content = new global::System.Net.Http.StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(createUserBody), System.Text.Encoding.UTF8, "application/json");
+
+
+            return requestMessage;
         }
 
-        public static global::System.Threading.Tasks.Task<CreateUserTypeSafeResult> ParseCreateUserTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
+        public static global::System.Threading.Tasks.Task<ICreateUserTypeSafeResult> ParseCreateUserTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
         {
             throw new global::System.NotImplementedException();
         }
 
-        public readonly struct CreateUserTypeSafeResult
+        public interface ICreateUserTypeSafeResult
         {
             
             
-            public readonly struct OtherStatusCode : CreateUserTypeSafeResult
+            public readonly struct OtherStatusCode : ICreateUserTypeSafeResult
             {
                 
             }
@@ -679,7 +747,7 @@ global::System.IO.Stream uploadFileBody,
         /// Creates list of users with given input array
         /// </summary>
         /// <param name="createUsersWithArrayInputBody"></param>
-        public static Task<global::System.Net.Http.HttpResponseMessage> SendCreateUsersWithArrayInputAsync(
+        public static global::System.Threading.Tasks.Task<global::System.Net.Http.HttpResponseMessage> SendCreateUsersWithArrayInputAsync(
             this global::System.Net.Http.HttpClient client,
             global::System.Collections.Generic.IEnumerable<User> createUsersWithArrayInputBody,
             global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken)
@@ -689,19 +757,23 @@ global::System.IO.Stream uploadFileBody,
             global::System.Collections.Generic.IEnumerable<User> createUsersWithArrayInputBody
             )
         {
-            throw new global::System.NotImplementedException();
+            var requestMessage = new global::System.Net.Http.HttpRequestMessage(global::System.Net.Http.HttpMethod.Post, "/user/createWithArray");
+            requestMessage.Content = new global::System.Net.Http.StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(createUsersWithArrayInputBody), System.Text.Encoding.UTF8, "application/json");
+
+
+            return requestMessage;
         }
 
-        public static global::System.Threading.Tasks.Task<CreateUsersWithArrayInputTypeSafeResult> ParseCreateUsersWithArrayInputTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
+        public static global::System.Threading.Tasks.Task<ICreateUsersWithArrayInputTypeSafeResult> ParseCreateUsersWithArrayInputTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
         {
             throw new global::System.NotImplementedException();
         }
 
-        public readonly struct CreateUsersWithArrayInputTypeSafeResult
+        public interface ICreateUsersWithArrayInputTypeSafeResult
         {
             
             
-            public readonly struct OtherStatusCode : CreateUsersWithArrayInputTypeSafeResult
+            public readonly struct OtherStatusCode : ICreateUsersWithArrayInputTypeSafeResult
             {
                 
             }
@@ -712,7 +784,7 @@ global::System.IO.Stream uploadFileBody,
         /// Creates list of users with given input array
         /// </summary>
         /// <param name="createUsersWithListInputBody"></param>
-        public static Task<global::System.Net.Http.HttpResponseMessage> SendCreateUsersWithListInputAsync(
+        public static global::System.Threading.Tasks.Task<global::System.Net.Http.HttpResponseMessage> SendCreateUsersWithListInputAsync(
             this global::System.Net.Http.HttpClient client,
             global::System.Collections.Generic.IEnumerable<User> createUsersWithListInputBody,
             global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken)
@@ -722,19 +794,23 @@ global::System.IO.Stream uploadFileBody,
             global::System.Collections.Generic.IEnumerable<User> createUsersWithListInputBody
             )
         {
-            throw new global::System.NotImplementedException();
+            var requestMessage = new global::System.Net.Http.HttpRequestMessage(global::System.Net.Http.HttpMethod.Post, "/user/createWithList");
+            requestMessage.Content = new global::System.Net.Http.StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(createUsersWithListInputBody), System.Text.Encoding.UTF8, "application/json");
+
+
+            return requestMessage;
         }
 
-        public static global::System.Threading.Tasks.Task<CreateUsersWithListInputTypeSafeResult> ParseCreateUsersWithListInputTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
+        public static global::System.Threading.Tasks.Task<ICreateUsersWithListInputTypeSafeResult> ParseCreateUsersWithListInputTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
         {
             throw new global::System.NotImplementedException();
         }
 
-        public readonly struct CreateUsersWithListInputTypeSafeResult
+        public interface ICreateUsersWithListInputTypeSafeResult
         {
             
             
-            public readonly struct OtherStatusCode : CreateUsersWithListInputTypeSafeResult
+            public readonly struct OtherStatusCode : ICreateUsersWithListInputTypeSafeResult
             {
                 
             }
@@ -746,7 +822,7 @@ global::System.IO.Stream uploadFileBody,
         /// </summary>
         /// <param name="username">The user name for login</param>
         /// <param name="password">The password for login in clear text</param>
-        public static Task<global::System.Net.Http.HttpResponseMessage> SendLoginUserAsync(
+        public static global::System.Threading.Tasks.Task<global::System.Net.Http.HttpResponseMessage> SendLoginUserAsync(
             this global::System.Net.Http.HttpClient client,
             string username,
 string password,
@@ -758,43 +834,46 @@ string password,
             string password
             )
         {
-            throw new global::System.NotImplementedException();
+            var requestMessage = new global::System.Net.Http.HttpRequestMessage(global::System.Net.Http.HttpMethod.Get, "/user/login");
+
+
+            return requestMessage;
         }
 
-        public static global::System.Threading.Tasks.Task<LoginUserTypeSafeResult> ParseLoginUserTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
+        public static global::System.Threading.Tasks.Task<ILoginUserTypeSafeResult> ParseLoginUserTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
         {
             throw new global::System.NotImplementedException();
         }
 
-        public readonly struct LoginUserTypeSafeResult
+        public interface ILoginUserTypeSafeResult
         {
             
             /// <summary>
             /// successful operation
             /// </summary>
-            public readonly struct ApplicationXmlOk : LoginUserTypeSafeResult
+            public readonly struct ApplicationXmlOk : ILoginUserTypeSafeResult
             {
-                public string Body { get; set; }
+                public string Body { get; }
                 
-                public string headerXRateLimit { get; set; }
-                public string headerXExpiresAfter { get; set; }
+                public string headerXRateLimit { get; }
+                public string headerXExpiresAfter { get; }
             }
             
             /// <summary>
             /// successful operation
             /// </summary>
-            public readonly struct ApplicationJsonOk : LoginUserTypeSafeResult
+            public readonly struct ApplicationJsonOk : ILoginUserTypeSafeResult
             {
-                public string Body { get; set; }
+                public string Body { get; }
                 
-                public string headerXRateLimit { get; set; }
-                public string headerXExpiresAfter { get; set; }
+                public string headerXRateLimit { get; }
+                public string headerXExpiresAfter { get; }
             }
             
             /// <summary>
             /// Invalid username/password supplied
             /// </summary>
-            public readonly struct BadRequest : LoginUserTypeSafeResult
+            public readonly struct BadRequest : ILoginUserTypeSafeResult
             {
                 
             }
@@ -804,7 +883,7 @@ string password,
         /// <summary>
         /// Logs out current logged in user session
         /// </summary>
-        public static Task<global::System.Net.Http.HttpResponseMessage> SendLogoutUserAsync(
+        public static global::System.Threading.Tasks.Task<global::System.Net.Http.HttpResponseMessage> SendLogoutUserAsync(
             this global::System.Net.Http.HttpClient client,
                         global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken)
         ) => client.SendAsync(LogoutUser());
@@ -812,19 +891,22 @@ string password,
         public static global::System.Net.Http.HttpRequestMessage LogoutUser(
             )
         {
-            throw new global::System.NotImplementedException();
+            var requestMessage = new global::System.Net.Http.HttpRequestMessage(global::System.Net.Http.HttpMethod.Get, "/user/logout");
+
+
+            return requestMessage;
         }
 
-        public static global::System.Threading.Tasks.Task<LogoutUserTypeSafeResult> ParseLogoutUserTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
+        public static global::System.Threading.Tasks.Task<ILogoutUserTypeSafeResult> ParseLogoutUserTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
         {
             throw new global::System.NotImplementedException();
         }
 
-        public readonly struct LogoutUserTypeSafeResult
+        public interface ILogoutUserTypeSafeResult
         {
             
             
-            public readonly struct OtherStatusCode : LogoutUserTypeSafeResult
+            public readonly struct OtherStatusCode : ILogoutUserTypeSafeResult
             {
                 
             }
@@ -835,7 +917,7 @@ string password,
         /// Get user by user name
         /// </summary>
         /// <param name="username">The name that needs to be fetched. Use user1 for testing. </param>
-        public static Task<global::System.Net.Http.HttpResponseMessage> SendGetUserByNameAsync(
+        public static global::System.Threading.Tasks.Task<global::System.Net.Http.HttpResponseMessage> SendGetUserByNameAsync(
             this global::System.Net.Http.HttpClient client,
             string username,
             global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken)
@@ -845,39 +927,43 @@ string password,
             string username
             )
         {
-            throw new global::System.NotImplementedException();
+            var requestMessage = new global::System.Net.Http.HttpRequestMessage(global::System.Net.Http.HttpMethod.Get, "/user/{username}"
+                        .Replace("{" + "username" + "}", global::System.Web.HttpUtility.UrlEncode(username.ToString())));
+
+
+            return requestMessage;
         }
 
-        public static global::System.Threading.Tasks.Task<GetUserByNameTypeSafeResult> ParseGetUserByNameTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
+        public static global::System.Threading.Tasks.Task<IGetUserByNameTypeSafeResult> ParseGetUserByNameTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
         {
             throw new global::System.NotImplementedException();
         }
 
-        public readonly struct GetUserByNameTypeSafeResult
+        public interface IGetUserByNameTypeSafeResult
         {
             
             /// <summary>
             /// successful operation
             /// </summary>
-            public readonly struct ApplicationXmlOk : GetUserByNameTypeSafeResult
+            public readonly struct ApplicationXmlOk : IGetUserByNameTypeSafeResult
             {
-                public User Body { get; set; }
+                public User Body { get; }
                 
             }
             
             /// <summary>
             /// successful operation
             /// </summary>
-            public readonly struct ApplicationJsonOk : GetUserByNameTypeSafeResult
+            public readonly struct ApplicationJsonOk : IGetUserByNameTypeSafeResult
             {
-                public User Body { get; set; }
+                public User Body { get; }
                 
             }
             
             /// <summary>
             /// Invalid username supplied
             /// </summary>
-            public readonly struct BadRequest : GetUserByNameTypeSafeResult
+            public readonly struct BadRequest : IGetUserByNameTypeSafeResult
             {
                 
             }
@@ -885,7 +971,7 @@ string password,
             /// <summary>
             /// User not found
             /// </summary>
-            public readonly struct NotFound : GetUserByNameTypeSafeResult
+            public readonly struct NotFound : IGetUserByNameTypeSafeResult
             {
                 
             }
@@ -900,7 +986,7 @@ string password,
         /// </remarks>
         /// <param name="username">name that need to be updated</param>
         /// <param name="updateUserBody"></param>
-        public static Task<global::System.Net.Http.HttpResponseMessage> SendUpdateUserAsync(
+        public static global::System.Threading.Tasks.Task<global::System.Net.Http.HttpResponseMessage> SendUpdateUserAsync(
             this global::System.Net.Http.HttpClient client,
             string username,
 User updateUserBody,
@@ -912,21 +998,26 @@ User updateUserBody,
             User updateUserBody
             )
         {
-            throw new global::System.NotImplementedException();
+            var requestMessage = new global::System.Net.Http.HttpRequestMessage(global::System.Net.Http.HttpMethod.Put, "/user/{username}"
+                        .Replace("{" + "username" + "}", global::System.Web.HttpUtility.UrlEncode(username.ToString())));
+            requestMessage.Content = new global::System.Net.Http.StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(updateUserBody), System.Text.Encoding.UTF8, "application/json");
+
+
+            return requestMessage;
         }
 
-        public static global::System.Threading.Tasks.Task<UpdateUserTypeSafeResult> ParseUpdateUserTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
+        public static global::System.Threading.Tasks.Task<IUpdateUserTypeSafeResult> ParseUpdateUserTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
         {
             throw new global::System.NotImplementedException();
         }
 
-        public readonly struct UpdateUserTypeSafeResult
+        public interface IUpdateUserTypeSafeResult
         {
             
             /// <summary>
             /// Invalid user supplied
             /// </summary>
-            public readonly struct BadRequest : UpdateUserTypeSafeResult
+            public readonly struct BadRequest : IUpdateUserTypeSafeResult
             {
                 
             }
@@ -934,7 +1025,7 @@ User updateUserBody,
             /// <summary>
             /// User not found
             /// </summary>
-            public readonly struct NotFound : UpdateUserTypeSafeResult
+            public readonly struct NotFound : IUpdateUserTypeSafeResult
             {
                 
             }
@@ -948,7 +1039,7 @@ User updateUserBody,
         /// This can only be done by the logged in user.
         /// </remarks>
         /// <param name="username">The name that needs to be deleted</param>
-        public static Task<global::System.Net.Http.HttpResponseMessage> SendDeleteUserAsync(
+        public static global::System.Threading.Tasks.Task<global::System.Net.Http.HttpResponseMessage> SendDeleteUserAsync(
             this global::System.Net.Http.HttpClient client,
             string username,
             global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken)
@@ -958,21 +1049,25 @@ User updateUserBody,
             string username
             )
         {
-            throw new global::System.NotImplementedException();
+            var requestMessage = new global::System.Net.Http.HttpRequestMessage(global::System.Net.Http.HttpMethod.Delete, "/user/{username}"
+                        .Replace("{" + "username" + "}", global::System.Web.HttpUtility.UrlEncode(username.ToString())));
+
+
+            return requestMessage;
         }
 
-        public static global::System.Threading.Tasks.Task<DeleteUserTypeSafeResult> ParseDeleteUserTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
+        public static global::System.Threading.Tasks.Task<IDeleteUserTypeSafeResult> ParseDeleteUserTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
         {
             throw new global::System.NotImplementedException();
         }
 
-        public readonly struct DeleteUserTypeSafeResult
+        public interface IDeleteUserTypeSafeResult
         {
             
             /// <summary>
             /// Invalid username supplied
             /// </summary>
-            public readonly struct BadRequest : DeleteUserTypeSafeResult
+            public readonly struct BadRequest : IDeleteUserTypeSafeResult
             {
                 
             }
@@ -980,7 +1075,7 @@ User updateUserBody,
             /// <summary>
             /// User not found
             /// </summary>
-            public readonly struct NotFound : DeleteUserTypeSafeResult
+            public readonly struct NotFound : IDeleteUserTypeSafeResult
             {
                 
             }

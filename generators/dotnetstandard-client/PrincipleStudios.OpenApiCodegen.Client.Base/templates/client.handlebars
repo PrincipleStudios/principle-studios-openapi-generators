@@ -17,7 +17,7 @@ namespace {{packageName}}
         /// "}}
         /// </remarks>{{/if}}{{#each requestBody.allParams}}
         /// <param name="{{paramName}}">{{description}}</param>{{/each}}
-        public static Task<global::System.Net.Http.HttpResponseMessage> Send{{operation.name}}Async(
+        public static global::System.Threading.Tasks.Task<global::System.Net.Http.HttpResponseMessage> Send{{operation.name}}Async(
             this global::System.Net.Http.HttpClient client,
             {{#each requestBody.allParams}}{{{dataType}}} {{paramName}},
             {{/each}}
@@ -28,38 +28,54 @@ namespace {{packageName}}
             {{#each requestBody.allParams}}{{{dataType}}} {{paramName}}{{#unless @last}},{{/unless}}
             {{/each}})
         {
-            throw new global::System.NotImplementedException();
+            var requestMessage = new global::System.Net.Http.HttpRequestMessage(global::System.Net.Http.HttpMethod.{{{operation.httpMethod}}}, "{{{operation.path}}}"{{#each requestBody.allParams}}{{#if isPathParam}}
+                        .Replace("{" + "{{rawName}}" + "}", global::System.Web.HttpUtility.UrlEncode({{paramName}}.ToString())){{/if}}{{/each}});
+{{#if requestBody.isForm}}
+            requestMessage.Content = new global::System.Net.Http.MultipartFormDataContent()
+            {
+{{#each requestBody.allParams}}{{#if isFormParam}}
+                { new {{#if isFile}}global::System.Net.Http.StreamContent({{paramName}}){{else}}global::System.Net.Http.StringContent({{paramName}}.ToString()){{/if}}, "{{rawName}}" },
+{{/if}}{{/each}}
+            };
+{{else}}{{#each requestBody.allParams}}{{#if isBodyParam}}{{#if isFile}}
+            requestMessage.Content = new global::System.Net.Http.StreamContent({{paramName}});
+{{else}}
+            requestMessage.Content = new global::System.Net.Http.StringContent(Newtonsoft.Json.JsonConvert.SerializeObject({{paramName}}), System.Text.Encoding.UTF8, "{{{requestBody.requestBodyType}}}");
+{{/if}}{{/if}}{{/each}}{{/if}}
+{{#each requestBody.allParams}}{{#if isHeaderParam}}
+            requestMessage.Headers.Add("{{baseName}}", {{paramName}}{{#if dataTypeEnumerable}}.Select(v => v.ToString()){{else}}.ToString(){{/if}});{{/if}}{{/each}}
+            return requestMessage;
         }
 
         {{/each}}
-        public static global::System.Threading.Tasks.Task<{{operation.name}}TypeSafeResult> Parse{{operation.name}}TypeSafe(this global::System.Net.Http.HttpResponseMessage response)
+        public static global::System.Threading.Tasks.Task<I{{operation.name}}TypeSafeResult> Parse{{operation.name}}TypeSafe(this global::System.Net.Http.HttpResponseMessage response)
         {
             throw new global::System.NotImplementedException();
         }
 
-        public readonly struct {{name}}TypeSafeResult
+        public interface I{{name}}TypeSafeResult
         {
             {{#each responses.statusResponse as |response code|}}{{#each content}}
             {{#if response.description}}/// <summary>
             /// {{linewrap response.description "
             /// "}}
             /// </summary>{{/if}}
-            public readonly struct {{responseMethodName}} : {{../../name}}TypeSafeResult
+            public readonly struct {{responseMethodName}} : I{{../../name}}TypeSafeResult
             {
-                {{#if dataType}}public {{{dataType}}} Body { get; set; }
+                {{#if dataType}}public {{{dataType}}} Body { get; }
                 {{/if}}{{#each ../headers}}
-                public string {{paramName}} { get; set; }{{/each}}
+                public string {{paramName}} { get; }{{/each}}
             }
             {{/each}}{{/each}}{{#if responses.defaultResponse}}{{#each responses.defaultResponse.content}}
             {{#if responses.defaultResponse.description}}/// <summary>
             /// {{linewrap responses.defaultResponse.description "
             /// "}}
             /// </summary>{{/if}}
-            public readonly struct {{responseMethodName}} : {{../name}}TypeSafeResult
+            public readonly struct {{responseMethodName}} : I{{../name}}TypeSafeResult
             {
-                {{#if dataType}}public {{{dataType}}} Body { get; set; }
+                {{#if dataType}}public {{{dataType}}} Body { get; }
                 {{/if}}{{#each ../responses.defaultResponse.headers}}
-                public string {{paramName}} { get; set; }{{/each}}
+                public string {{paramName}} { get; }{{/each}}
             }
             {{/each}}{{/if}}
         }

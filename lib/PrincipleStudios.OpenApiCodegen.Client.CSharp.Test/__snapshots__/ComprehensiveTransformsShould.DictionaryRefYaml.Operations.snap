@@ -17,7 +17,7 @@ namespace PS.Controller
     {
         
         /// <param name="lookupRecordBody"></param>
-        public static Task<global::System.Net.Http.HttpResponseMessage> SendLookupRecordAsync(
+        public static global::System.Threading.Tasks.Task<global::System.Net.Http.HttpResponseMessage> SendLookupRecordAsync(
             this global::System.Net.Http.HttpClient client,
             global::System.Collections.Generic.Dictionary<string, string> lookupRecordBody,
             global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken)
@@ -27,21 +27,25 @@ namespace PS.Controller
             global::System.Collections.Generic.Dictionary<string, string> lookupRecordBody
             )
         {
-            throw new global::System.NotImplementedException();
+            var requestMessage = new global::System.Net.Http.HttpRequestMessage(global::System.Net.Http.HttpMethod.Post, "/address");
+            requestMessage.Content = new global::System.Net.Http.StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(lookupRecordBody), System.Text.Encoding.UTF8, "application/json");
+
+
+            return requestMessage;
         }
 
-        public static global::System.Threading.Tasks.Task<LookupRecordTypeSafeResult> ParseLookupRecordTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
+        public static global::System.Threading.Tasks.Task<ILookupRecordTypeSafeResult> ParseLookupRecordTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
         {
             throw new global::System.NotImplementedException();
         }
 
-        public readonly struct LookupRecordTypeSafeResult
+        public interface ILookupRecordTypeSafeResult
         {
             
             
-            public readonly struct Ok : LookupRecordTypeSafeResult
+            public readonly struct Ok : ILookupRecordTypeSafeResult
             {
-                public global::System.Collections.Generic.Dictionary<string, string> Body { get; set; }
+                public global::System.Collections.Generic.Dictionary<string, string> Body { get; }
                 
             }
             

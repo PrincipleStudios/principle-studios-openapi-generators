@@ -17,7 +17,7 @@ namespace PS.Controller
     {
         
         /// <param name="xData">base-64 encoded data</param>
-        public static Task<global::System.Net.Http.HttpResponseMessage> SendGetInfoAsync(
+        public static global::System.Threading.Tasks.Task<global::System.Net.Http.HttpResponseMessage> SendGetInfoAsync(
             this global::System.Net.Http.HttpClient client,
             byte[] xData,
             global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken)
@@ -27,47 +27,51 @@ namespace PS.Controller
             byte[] xData
             )
         {
-            throw new global::System.NotImplementedException();
+            var requestMessage = new global::System.Net.Http.HttpRequestMessage(global::System.Net.Http.HttpMethod.Get, "/info");
+
+
+            requestMessage.Headers.Add("", xData.ToString());
+            return requestMessage;
         }
 
-        public static global::System.Threading.Tasks.Task<GetInfoTypeSafeResult> ParseGetInfoTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
+        public static global::System.Threading.Tasks.Task<IGetInfoTypeSafeResult> ParseGetInfoTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
         {
             throw new global::System.NotImplementedException();
         }
 
-        public readonly struct GetInfoTypeSafeResult
+        public interface IGetInfoTypeSafeResult
         {
             
             /// <summary>
             /// Sample Response
             /// </summary>
-            public readonly struct Ok : GetInfoTypeSafeResult
+            public readonly struct Ok : IGetInfoTypeSafeResult
             {
-                public global::System.Collections.Generic.Dictionary<string, string> Body { get; set; }
+                public global::System.Collections.Generic.Dictionary<string, string> Body { get; }
                 
-                public string headerXData { get; set; }
+                public string headerXData { get; }
             }
             
             /// <summary>
             /// Sample Response
             /// </summary>
-            public readonly struct NoContent : GetInfoTypeSafeResult
+            public readonly struct NoContent : IGetInfoTypeSafeResult
             {
                 
-                public string headerXData { get; set; }
+                public string headerXData { get; }
             }
             
             
-            public readonly struct OtherStatusCode : GetInfoTypeSafeResult
+            public readonly struct OtherStatusCode : IGetInfoTypeSafeResult
             {
                 
-                public string headerXData { get; set; }
-                public string headerXDiag { get; set; }
+                public string headerXData { get; }
+                public string headerXDiag { get; }
             }
             
         }
 
-        public static Task<global::System.Net.Http.HttpResponseMessage> Send_RedirectAsync(
+        public static global::System.Threading.Tasks.Task<global::System.Net.Http.HttpResponseMessage> Send_RedirectAsync(
             this global::System.Net.Http.HttpClient client,
                         global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken)
         ) => client.SendAsync(_Redirect());
@@ -75,24 +79,27 @@ namespace PS.Controller
         public static global::System.Net.Http.HttpRequestMessage _Redirect(
             )
         {
-            throw new global::System.NotImplementedException();
+            var requestMessage = new global::System.Net.Http.HttpRequestMessage(global::System.Net.Http.HttpMethod.Get, "/redirect");
+
+
+            return requestMessage;
         }
 
-        public static global::System.Threading.Tasks.Task<_RedirectTypeSafeResult> Parse_RedirectTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
+        public static global::System.Threading.Tasks.Task<I_RedirectTypeSafeResult> Parse_RedirectTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
         {
             throw new global::System.NotImplementedException();
         }
 
-        public readonly struct _RedirectTypeSafeResult
+        public interface I_RedirectTypeSafeResult
         {
             
             /// <summary>
             /// Redirection Response
             /// </summary>
-            public readonly struct Redirect : _RedirectTypeSafeResult
+            public readonly struct Redirect : I_RedirectTypeSafeResult
             {
                 
-                public string headerLocation { get; set; }
+                public string headerLocation { get; }
             }
             
         }

@@ -16,7 +16,7 @@ namespace PS.Controller
     public static class Operations
     {
         
-        public static Task<global::System.Net.Http.HttpResponseMessage> SendGetColorsAsync(
+        public static global::System.Threading.Tasks.Task<global::System.Net.Http.HttpResponseMessage> SendGetColorsAsync(
             this global::System.Net.Http.HttpClient client,
                         global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken)
         ) => client.SendAsync(GetColors());
@@ -24,29 +24,32 @@ namespace PS.Controller
         public static global::System.Net.Http.HttpRequestMessage GetColors(
             )
         {
-            throw new global::System.NotImplementedException();
+            var requestMessage = new global::System.Net.Http.HttpRequestMessage(global::System.Net.Http.HttpMethod.Post, "/colors");
+
+
+            return requestMessage;
         }
 
-        public static global::System.Threading.Tasks.Task<GetColorsTypeSafeResult> ParseGetColorsTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
+        public static global::System.Threading.Tasks.Task<IGetColorsTypeSafeResult> ParseGetColorsTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
         {
             throw new global::System.NotImplementedException();
         }
 
-        public readonly struct GetColorsTypeSafeResult
+        public interface IGetColorsTypeSafeResult
         {
             
             /// <summary>
             /// The available colors
             /// </summary>
-            public readonly struct Ok : GetColorsTypeSafeResult
+            public readonly struct Ok : IGetColorsTypeSafeResult
             {
-                public global::System.Collections.Generic.IEnumerable<string> Body { get; set; }
+                public global::System.Collections.Generic.IEnumerable<string> Body { get; }
                 
             }
             
         }
 
-        public static Task<global::System.Net.Http.HttpResponseMessage> SendGetPalettesAsync(
+        public static global::System.Threading.Tasks.Task<global::System.Net.Http.HttpResponseMessage> SendGetPalettesAsync(
             this global::System.Net.Http.HttpClient client,
                         global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken)
         ) => client.SendAsync(GetPalettes());
@@ -54,23 +57,26 @@ namespace PS.Controller
         public static global::System.Net.Http.HttpRequestMessage GetPalettes(
             )
         {
-            throw new global::System.NotImplementedException();
+            var requestMessage = new global::System.Net.Http.HttpRequestMessage(global::System.Net.Http.HttpMethod.Post, "/palette");
+
+
+            return requestMessage;
         }
 
-        public static global::System.Threading.Tasks.Task<GetPalettesTypeSafeResult> ParseGetPalettesTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
+        public static global::System.Threading.Tasks.Task<IGetPalettesTypeSafeResult> ParseGetPalettesTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
         {
             throw new global::System.NotImplementedException();
         }
 
-        public readonly struct GetPalettesTypeSafeResult
+        public interface IGetPalettesTypeSafeResult
         {
             
             /// <summary>
             /// The available palettes
             /// </summary>
-            public readonly struct Ok : GetPalettesTypeSafeResult
+            public readonly struct Ok : IGetPalettesTypeSafeResult
             {
-                public global::System.Collections.Generic.IEnumerable<global::System.Collections.Generic.IEnumerable<string>> Body { get; set; }
+                public global::System.Collections.Generic.IEnumerable<global::System.Collections.Generic.IEnumerable<string>> Body { get; }
                 
             }
             

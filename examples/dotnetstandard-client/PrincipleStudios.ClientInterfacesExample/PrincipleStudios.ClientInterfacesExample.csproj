@@ -9,7 +9,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="PrincipleStudios.OpenApiCodegen.Client" Version="0.1.0-alpha.3" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="3.1.20" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="PrincipleStudios.OpenApiCodegen.Client" Version="$(OpenApiCSharpClientVersion)" />
   </ItemGroup>
 
   <ItemGroup>
