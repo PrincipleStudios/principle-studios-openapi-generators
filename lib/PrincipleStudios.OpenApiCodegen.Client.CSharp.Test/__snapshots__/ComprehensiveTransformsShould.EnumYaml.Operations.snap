@@ -34,9 +34,27 @@ namespace PS.Controller
             return requestMessage;
         }
 
-        public static global::System.Threading.Tasks.Task<IPlayRockPaperScissorsTypeSafeResult> ParsePlayRockPaperScissorsTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
+        public static async global::System.Threading.Tasks.Task<IPlayRockPaperScissorsTypeSafeResult?> ParsePlayRockPaperScissorsTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
         {
-            throw new global::System.NotImplementedException();
+            switch ((int)response.StatusCode)
+            { 
+                case 200:
+                     if (response.Content.Headers.ContentType.MediaType == "application/json") 
+                        return new IPlayRockPaperScissorsTypeSafeResult.Ok
+                        { 
+                            Body = Newtonsoft.Json.JsonConvert.DeserializeObject<PlayRockPaperScissorsResponse>(await response.Content.ReadAsStringAsync()), 
+                        };
+                    break;
+                
+                case 409:
+                    
+                        return new IPlayRockPaperScissorsTypeSafeResult.Conflict
+                        { 
+                        };
+                    break;
+                
+            }
+            return null;
         }
 
         public interface IPlayRockPaperScissorsTypeSafeResult
@@ -45,16 +63,16 @@ namespace PS.Controller
             /// <summary>
             /// One player won
             /// </summary>
-            public readonly struct Ok : IPlayRockPaperScissorsTypeSafeResult
+            public struct Ok : IPlayRockPaperScissorsTypeSafeResult
             {
-                public PlayRockPaperScissorsResponse Body { get; }
+                public PlayRockPaperScissorsResponse Body { get; set; }
                 
             }
             
             /// <summary>
             /// Tie
             /// </summary>
-            public readonly struct Conflict : IPlayRockPaperScissorsTypeSafeResult
+            public struct Conflict : IPlayRockPaperScissorsTypeSafeResult
             {
                 
             }

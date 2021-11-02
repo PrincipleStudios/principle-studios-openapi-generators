@@ -34,9 +34,33 @@ namespace PS.Controller
             return requestMessage;
         }
 
-        public static global::System.Threading.Tasks.Task<IGetInfoTypeSafeResult> ParseGetInfoTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
+        public static async global::System.Threading.Tasks.Task<IGetInfoTypeSafeResult?> ParseGetInfoTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
         {
-            throw new global::System.NotImplementedException();
+            switch ((int)response.StatusCode)
+            { 
+                case 200:
+                     if (response.Content.Headers.ContentType.MediaType == "application/json") 
+                        return new IGetInfoTypeSafeResult.Ok
+                        { 
+                            Body = Newtonsoft.Json.JsonConvert.DeserializeObject<global::System.Collections.Generic.Dictionary<string, string>>(await response.Content.ReadAsStringAsync()), 
+                        };
+                    break;
+                
+                case 204:
+                    
+                        return new IGetInfoTypeSafeResult.NoContent
+                        { 
+                        };
+                    break;
+                
+                default: 
+                    
+                        return new IGetInfoTypeSafeResult.OtherStatusCode
+                        { 
+                        }; 
+                    break;
+            }
+            return null;
         }
 
         public interface IGetInfoTypeSafeResult
@@ -45,28 +69,24 @@ namespace PS.Controller
             /// <summary>
             /// Sample Response
             /// </summary>
-            public readonly struct Ok : IGetInfoTypeSafeResult
+            public struct Ok : IGetInfoTypeSafeResult
             {
-                public global::System.Collections.Generic.Dictionary<string, string> Body { get; }
+                public global::System.Collections.Generic.Dictionary<string, string> Body { get; set; }
                 
-                public string headerXData { get; }
             }
             
             /// <summary>
             /// Sample Response
             /// </summary>
-            public readonly struct NoContent : IGetInfoTypeSafeResult
+            public struct NoContent : IGetInfoTypeSafeResult
             {
                 
-                public string headerXData { get; }
             }
             
             
-            public readonly struct OtherStatusCode : IGetInfoTypeSafeResult
+            public struct OtherStatusCode : IGetInfoTypeSafeResult
             {
                 
-                public string headerXData { get; }
-                public string headerXDiag { get; }
             }
             
         }
@@ -85,9 +105,19 @@ namespace PS.Controller
             return requestMessage;
         }
 
-        public static global::System.Threading.Tasks.Task<I_RedirectTypeSafeResult> Parse_RedirectTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
+        public static async global::System.Threading.Tasks.Task<I_RedirectTypeSafeResult?> Parse_RedirectTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
         {
-            throw new global::System.NotImplementedException();
+            switch ((int)response.StatusCode)
+            { 
+                case 302:
+                    
+                        return new I_RedirectTypeSafeResult.Redirect
+                        { 
+                        };
+                    break;
+                
+            }
+            return null;
         }
 
         public interface I_RedirectTypeSafeResult
@@ -96,10 +126,9 @@ namespace PS.Controller
             /// <summary>
             /// Redirection Response
             /// </summary>
-            public readonly struct Redirect : I_RedirectTypeSafeResult
+            public struct Redirect : I_RedirectTypeSafeResult
             {
                 
-                public string headerLocation { get; }
             }
             
         }

@@ -117,6 +117,7 @@ namespace PrincipleStudios.OpenApi.CSharp
                 content: (from entry in response.Content.DefaultIfEmpty(new("", new OpenApiMediaType()))
                           let entryContext = context.Append(nameof(response.Content), entry.Key, entry.Value)
                           let dataType = entry.Value.Schema != null ? csharpSchemaResolver.ToInlineDataType(entry.Value.Schema)() : null
+                          where entry.Key != "application/xml" // exclude xml, since we don't support it
                           select new OperationResponseContentOption(
                               mediaType: entry.Key,
                               responseMethodName: CSharpNaming.ToTitleCaseIdentifier($"{(response.Content.Count > 1 ? entry.Key : "")} {statusCodeName}", options.ReservedIdentifiers()),

@@ -37,9 +37,19 @@ namespace PS.Controller
             return requestMessage;
         }
 
-        public static global::System.Threading.Tasks.Task<IAddPetTypeSafeResult> ParseAddPetTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
+        public static async global::System.Threading.Tasks.Task<IAddPetTypeSafeResult?> ParseAddPetTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
         {
-            throw new global::System.NotImplementedException();
+            switch ((int)response.StatusCode)
+            { 
+                case 405:
+                    
+                        return new IAddPetTypeSafeResult.MethodNotAllowed
+                        { 
+                        };
+                    break;
+                
+            }
+            return null;
         }
 
         public interface IAddPetTypeSafeResult
@@ -48,7 +58,7 @@ namespace PS.Controller
             /// <summary>
             /// Invalid input
             /// </summary>
-            public readonly struct MethodNotAllowed : IAddPetTypeSafeResult
+            public struct MethodNotAllowed : IAddPetTypeSafeResult
             {
                 
             }
@@ -76,9 +86,33 @@ namespace PS.Controller
             return requestMessage;
         }
 
-        public static global::System.Threading.Tasks.Task<IUpdatePetTypeSafeResult> ParseUpdatePetTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
+        public static async global::System.Threading.Tasks.Task<IUpdatePetTypeSafeResult?> ParseUpdatePetTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
         {
-            throw new global::System.NotImplementedException();
+            switch ((int)response.StatusCode)
+            { 
+                case 400:
+                    
+                        return new IUpdatePetTypeSafeResult.BadRequest
+                        { 
+                        };
+                    break;
+                
+                case 404:
+                    
+                        return new IUpdatePetTypeSafeResult.NotFound
+                        { 
+                        };
+                    break;
+                
+                case 405:
+                    
+                        return new IUpdatePetTypeSafeResult.MethodNotAllowed
+                        { 
+                        };
+                    break;
+                
+            }
+            return null;
         }
 
         public interface IUpdatePetTypeSafeResult
@@ -87,7 +121,7 @@ namespace PS.Controller
             /// <summary>
             /// Invalid ID supplied
             /// </summary>
-            public readonly struct BadRequest : IUpdatePetTypeSafeResult
+            public struct BadRequest : IUpdatePetTypeSafeResult
             {
                 
             }
@@ -95,7 +129,7 @@ namespace PS.Controller
             /// <summary>
             /// Pet not found
             /// </summary>
-            public readonly struct NotFound : IUpdatePetTypeSafeResult
+            public struct NotFound : IUpdatePetTypeSafeResult
             {
                 
             }
@@ -103,7 +137,7 @@ namespace PS.Controller
             /// <summary>
             /// Validation exception
             /// </summary>
-            public readonly struct MethodNotAllowed : IUpdatePetTypeSafeResult
+            public struct MethodNotAllowed : IUpdatePetTypeSafeResult
             {
                 
             }
@@ -133,9 +167,27 @@ namespace PS.Controller
             return requestMessage;
         }
 
-        public static global::System.Threading.Tasks.Task<IFindPetsByStatusTypeSafeResult> ParseFindPetsByStatusTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
+        public static async global::System.Threading.Tasks.Task<IFindPetsByStatusTypeSafeResult?> ParseFindPetsByStatusTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
         {
-            throw new global::System.NotImplementedException();
+            switch ((int)response.StatusCode)
+            { 
+                case 200:
+                     if (response.Content.Headers.ContentType.MediaType == "application/json") 
+                        return new IFindPetsByStatusTypeSafeResult.ApplicationJsonOk
+                        { 
+                            Body = Newtonsoft.Json.JsonConvert.DeserializeObject<global::System.Collections.Generic.IEnumerable<Pet>>(await response.Content.ReadAsStringAsync()), 
+                        };
+                    break;
+                
+                case 400:
+                    
+                        return new IFindPetsByStatusTypeSafeResult.BadRequest
+                        { 
+                        };
+                    break;
+                
+            }
+            return null;
         }
 
         public interface IFindPetsByStatusTypeSafeResult
@@ -144,25 +196,16 @@ namespace PS.Controller
             /// <summary>
             /// successful operation
             /// </summary>
-            public readonly struct ApplicationXmlOk : IFindPetsByStatusTypeSafeResult
+            public struct ApplicationJsonOk : IFindPetsByStatusTypeSafeResult
             {
-                public global::System.Collections.Generic.IEnumerable<Pet> Body { get; }
-                
-            }
-            
-            /// <summary>
-            /// successful operation
-            /// </summary>
-            public readonly struct ApplicationJsonOk : IFindPetsByStatusTypeSafeResult
-            {
-                public global::System.Collections.Generic.IEnumerable<Pet> Body { get; }
+                public global::System.Collections.Generic.IEnumerable<Pet> Body { get; set; }
                 
             }
             
             /// <summary>
             /// Invalid status value
             /// </summary>
-            public readonly struct BadRequest : IFindPetsByStatusTypeSafeResult
+            public struct BadRequest : IFindPetsByStatusTypeSafeResult
             {
                 
             }
@@ -192,9 +235,27 @@ namespace PS.Controller
             return requestMessage;
         }
 
-        public static global::System.Threading.Tasks.Task<IFindPetsByTagsTypeSafeResult> ParseFindPetsByTagsTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
+        public static async global::System.Threading.Tasks.Task<IFindPetsByTagsTypeSafeResult?> ParseFindPetsByTagsTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
         {
-            throw new global::System.NotImplementedException();
+            switch ((int)response.StatusCode)
+            { 
+                case 200:
+                     if (response.Content.Headers.ContentType.MediaType == "application/json") 
+                        return new IFindPetsByTagsTypeSafeResult.ApplicationJsonOk
+                        { 
+                            Body = Newtonsoft.Json.JsonConvert.DeserializeObject<global::System.Collections.Generic.IEnumerable<Pet>>(await response.Content.ReadAsStringAsync()), 
+                        };
+                    break;
+                
+                case 400:
+                    
+                        return new IFindPetsByTagsTypeSafeResult.BadRequest
+                        { 
+                        };
+                    break;
+                
+            }
+            return null;
         }
 
         public interface IFindPetsByTagsTypeSafeResult
@@ -203,25 +264,16 @@ namespace PS.Controller
             /// <summary>
             /// successful operation
             /// </summary>
-            public readonly struct ApplicationXmlOk : IFindPetsByTagsTypeSafeResult
+            public struct ApplicationJsonOk : IFindPetsByTagsTypeSafeResult
             {
-                public global::System.Collections.Generic.IEnumerable<Pet> Body { get; }
-                
-            }
-            
-            /// <summary>
-            /// successful operation
-            /// </summary>
-            public readonly struct ApplicationJsonOk : IFindPetsByTagsTypeSafeResult
-            {
-                public global::System.Collections.Generic.IEnumerable<Pet> Body { get; }
+                public global::System.Collections.Generic.IEnumerable<Pet> Body { get; set; }
                 
             }
             
             /// <summary>
             /// Invalid tag value
             /// </summary>
-            public readonly struct BadRequest : IFindPetsByTagsTypeSafeResult
+            public struct BadRequest : IFindPetsByTagsTypeSafeResult
             {
                 
             }
@@ -252,9 +304,34 @@ namespace PS.Controller
             return requestMessage;
         }
 
-        public static global::System.Threading.Tasks.Task<IGetPetByIdTypeSafeResult> ParseGetPetByIdTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
+        public static async global::System.Threading.Tasks.Task<IGetPetByIdTypeSafeResult?> ParseGetPetByIdTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
         {
-            throw new global::System.NotImplementedException();
+            switch ((int)response.StatusCode)
+            { 
+                case 200:
+                     if (response.Content.Headers.ContentType.MediaType == "application/json") 
+                        return new IGetPetByIdTypeSafeResult.ApplicationJsonOk
+                        { 
+                            Body = Newtonsoft.Json.JsonConvert.DeserializeObject<Pet>(await response.Content.ReadAsStringAsync()), 
+                        };
+                    break;
+                
+                case 400:
+                    
+                        return new IGetPetByIdTypeSafeResult.BadRequest
+                        { 
+                        };
+                    break;
+                
+                case 404:
+                    
+                        return new IGetPetByIdTypeSafeResult.NotFound
+                        { 
+                        };
+                    break;
+                
+            }
+            return null;
         }
 
         public interface IGetPetByIdTypeSafeResult
@@ -263,25 +340,16 @@ namespace PS.Controller
             /// <summary>
             /// successful operation
             /// </summary>
-            public readonly struct ApplicationXmlOk : IGetPetByIdTypeSafeResult
+            public struct ApplicationJsonOk : IGetPetByIdTypeSafeResult
             {
-                public Pet Body { get; }
-                
-            }
-            
-            /// <summary>
-            /// successful operation
-            /// </summary>
-            public readonly struct ApplicationJsonOk : IGetPetByIdTypeSafeResult
-            {
-                public Pet Body { get; }
+                public Pet Body { get; set; }
                 
             }
             
             /// <summary>
             /// Invalid ID supplied
             /// </summary>
-            public readonly struct BadRequest : IGetPetByIdTypeSafeResult
+            public struct BadRequest : IGetPetByIdTypeSafeResult
             {
                 
             }
@@ -289,7 +357,7 @@ namespace PS.Controller
             /// <summary>
             /// Pet not found
             /// </summary>
-            public readonly struct NotFound : IGetPetByIdTypeSafeResult
+            public struct NotFound : IGetPetByIdTypeSafeResult
             {
                 
             }
@@ -353,9 +421,19 @@ string? status,
             return requestMessage;
         }
 
-        public static global::System.Threading.Tasks.Task<IUpdatePetWithFormTypeSafeResult> ParseUpdatePetWithFormTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
+        public static async global::System.Threading.Tasks.Task<IUpdatePetWithFormTypeSafeResult?> ParseUpdatePetWithFormTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
         {
-            throw new global::System.NotImplementedException();
+            switch ((int)response.StatusCode)
+            { 
+                case 405:
+                    
+                        return new IUpdatePetWithFormTypeSafeResult.MethodNotAllowed
+                        { 
+                        };
+                    break;
+                
+            }
+            return null;
         }
 
         public interface IUpdatePetWithFormTypeSafeResult
@@ -364,7 +442,7 @@ string? status,
             /// <summary>
             /// Invalid input
             /// </summary>
-            public readonly struct MethodNotAllowed : IUpdatePetWithFormTypeSafeResult
+            public struct MethodNotAllowed : IUpdatePetWithFormTypeSafeResult
             {
                 
             }
@@ -396,9 +474,26 @@ long petId,
             return requestMessage;
         }
 
-        public static global::System.Threading.Tasks.Task<IDeletePetTypeSafeResult> ParseDeletePetTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
+        public static async global::System.Threading.Tasks.Task<IDeletePetTypeSafeResult?> ParseDeletePetTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
         {
-            throw new global::System.NotImplementedException();
+            switch ((int)response.StatusCode)
+            { 
+                case 400:
+                    
+                        return new IDeletePetTypeSafeResult.BadRequest
+                        { 
+                        };
+                    break;
+                
+                case 404:
+                    
+                        return new IDeletePetTypeSafeResult.NotFound
+                        { 
+                        };
+                    break;
+                
+            }
+            return null;
         }
 
         public interface IDeletePetTypeSafeResult
@@ -407,7 +502,7 @@ long petId,
             /// <summary>
             /// Invalid ID supplied
             /// </summary>
-            public readonly struct BadRequest : IDeletePetTypeSafeResult
+            public struct BadRequest : IDeletePetTypeSafeResult
             {
                 
             }
@@ -415,7 +510,7 @@ long petId,
             /// <summary>
             /// Pet not found
             /// </summary>
-            public readonly struct NotFound : IDeletePetTypeSafeResult
+            public struct NotFound : IDeletePetTypeSafeResult
             {
                 
             }
@@ -470,9 +565,20 @@ global::System.IO.Stream uploadFileBody,
             return requestMessage;
         }
 
-        public static global::System.Threading.Tasks.Task<IUploadFileTypeSafeResult> ParseUploadFileTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
+        public static async global::System.Threading.Tasks.Task<IUploadFileTypeSafeResult?> ParseUploadFileTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
         {
-            throw new global::System.NotImplementedException();
+            switch ((int)response.StatusCode)
+            { 
+                case 200:
+                     if (response.Content.Headers.ContentType.MediaType == "application/json") 
+                        return new IUploadFileTypeSafeResult.Ok
+                        { 
+                            Body = Newtonsoft.Json.JsonConvert.DeserializeObject<ApiResponse>(await response.Content.ReadAsStringAsync()), 
+                        };
+                    break;
+                
+            }
+            return null;
         }
 
         public interface IUploadFileTypeSafeResult
@@ -481,9 +587,9 @@ global::System.IO.Stream uploadFileBody,
             /// <summary>
             /// successful operation
             /// </summary>
-            public readonly struct Ok : IUploadFileTypeSafeResult
+            public struct Ok : IUploadFileTypeSafeResult
             {
-                public ApiResponse Body { get; }
+                public ApiResponse Body { get; set; }
                 
             }
             
@@ -509,9 +615,20 @@ global::System.IO.Stream uploadFileBody,
             return requestMessage;
         }
 
-        public static global::System.Threading.Tasks.Task<IGetInventoryTypeSafeResult> ParseGetInventoryTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
+        public static async global::System.Threading.Tasks.Task<IGetInventoryTypeSafeResult?> ParseGetInventoryTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
         {
-            throw new global::System.NotImplementedException();
+            switch ((int)response.StatusCode)
+            { 
+                case 200:
+                     if (response.Content.Headers.ContentType.MediaType == "application/json") 
+                        return new IGetInventoryTypeSafeResult.Ok
+                        { 
+                            Body = Newtonsoft.Json.JsonConvert.DeserializeObject<global::System.Collections.Generic.Dictionary<string, int>>(await response.Content.ReadAsStringAsync()), 
+                        };
+                    break;
+                
+            }
+            return null;
         }
 
         public interface IGetInventoryTypeSafeResult
@@ -520,9 +637,9 @@ global::System.IO.Stream uploadFileBody,
             /// <summary>
             /// successful operation
             /// </summary>
-            public readonly struct Ok : IGetInventoryTypeSafeResult
+            public struct Ok : IGetInventoryTypeSafeResult
             {
-                public global::System.Collections.Generic.Dictionary<string, int> Body { get; }
+                public global::System.Collections.Generic.Dictionary<string, int> Body { get; set; }
                 
             }
             
@@ -549,9 +666,27 @@ global::System.IO.Stream uploadFileBody,
             return requestMessage;
         }
 
-        public static global::System.Threading.Tasks.Task<IPlaceOrderTypeSafeResult> ParsePlaceOrderTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
+        public static async global::System.Threading.Tasks.Task<IPlaceOrderTypeSafeResult?> ParsePlaceOrderTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
         {
-            throw new global::System.NotImplementedException();
+            switch ((int)response.StatusCode)
+            { 
+                case 200:
+                     if (response.Content.Headers.ContentType.MediaType == "application/json") 
+                        return new IPlaceOrderTypeSafeResult.ApplicationJsonOk
+                        { 
+                            Body = Newtonsoft.Json.JsonConvert.DeserializeObject<Order>(await response.Content.ReadAsStringAsync()), 
+                        };
+                    break;
+                
+                case 400:
+                    
+                        return new IPlaceOrderTypeSafeResult.BadRequest
+                        { 
+                        };
+                    break;
+                
+            }
+            return null;
         }
 
         public interface IPlaceOrderTypeSafeResult
@@ -560,25 +695,16 @@ global::System.IO.Stream uploadFileBody,
             /// <summary>
             /// successful operation
             /// </summary>
-            public readonly struct ApplicationXmlOk : IPlaceOrderTypeSafeResult
+            public struct ApplicationJsonOk : IPlaceOrderTypeSafeResult
             {
-                public Order Body { get; }
-                
-            }
-            
-            /// <summary>
-            /// successful operation
-            /// </summary>
-            public readonly struct ApplicationJsonOk : IPlaceOrderTypeSafeResult
-            {
-                public Order Body { get; }
+                public Order Body { get; set; }
                 
             }
             
             /// <summary>
             /// Invalid Order
             /// </summary>
-            public readonly struct BadRequest : IPlaceOrderTypeSafeResult
+            public struct BadRequest : IPlaceOrderTypeSafeResult
             {
                 
             }
@@ -609,9 +735,34 @@ global::System.IO.Stream uploadFileBody,
             return requestMessage;
         }
 
-        public static global::System.Threading.Tasks.Task<IGetOrderByIdTypeSafeResult> ParseGetOrderByIdTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
+        public static async global::System.Threading.Tasks.Task<IGetOrderByIdTypeSafeResult?> ParseGetOrderByIdTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
         {
-            throw new global::System.NotImplementedException();
+            switch ((int)response.StatusCode)
+            { 
+                case 200:
+                     if (response.Content.Headers.ContentType.MediaType == "application/json") 
+                        return new IGetOrderByIdTypeSafeResult.ApplicationJsonOk
+                        { 
+                            Body = Newtonsoft.Json.JsonConvert.DeserializeObject<Order>(await response.Content.ReadAsStringAsync()), 
+                        };
+                    break;
+                
+                case 400:
+                    
+                        return new IGetOrderByIdTypeSafeResult.BadRequest
+                        { 
+                        };
+                    break;
+                
+                case 404:
+                    
+                        return new IGetOrderByIdTypeSafeResult.NotFound
+                        { 
+                        };
+                    break;
+                
+            }
+            return null;
         }
 
         public interface IGetOrderByIdTypeSafeResult
@@ -620,25 +771,16 @@ global::System.IO.Stream uploadFileBody,
             /// <summary>
             /// successful operation
             /// </summary>
-            public readonly struct ApplicationXmlOk : IGetOrderByIdTypeSafeResult
+            public struct ApplicationJsonOk : IGetOrderByIdTypeSafeResult
             {
-                public Order Body { get; }
-                
-            }
-            
-            /// <summary>
-            /// successful operation
-            /// </summary>
-            public readonly struct ApplicationJsonOk : IGetOrderByIdTypeSafeResult
-            {
-                public Order Body { get; }
+                public Order Body { get; set; }
                 
             }
             
             /// <summary>
             /// Invalid ID supplied
             /// </summary>
-            public readonly struct BadRequest : IGetOrderByIdTypeSafeResult
+            public struct BadRequest : IGetOrderByIdTypeSafeResult
             {
                 
             }
@@ -646,7 +788,7 @@ global::System.IO.Stream uploadFileBody,
             /// <summary>
             /// Order not found
             /// </summary>
-            public readonly struct NotFound : IGetOrderByIdTypeSafeResult
+            public struct NotFound : IGetOrderByIdTypeSafeResult
             {
                 
             }
@@ -677,9 +819,26 @@ global::System.IO.Stream uploadFileBody,
             return requestMessage;
         }
 
-        public static global::System.Threading.Tasks.Task<IDeleteOrderTypeSafeResult> ParseDeleteOrderTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
+        public static async global::System.Threading.Tasks.Task<IDeleteOrderTypeSafeResult?> ParseDeleteOrderTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
         {
-            throw new global::System.NotImplementedException();
+            switch ((int)response.StatusCode)
+            { 
+                case 400:
+                    
+                        return new IDeleteOrderTypeSafeResult.BadRequest
+                        { 
+                        };
+                    break;
+                
+                case 404:
+                    
+                        return new IDeleteOrderTypeSafeResult.NotFound
+                        { 
+                        };
+                    break;
+                
+            }
+            return null;
         }
 
         public interface IDeleteOrderTypeSafeResult
@@ -688,7 +847,7 @@ global::System.IO.Stream uploadFileBody,
             /// <summary>
             /// Invalid ID supplied
             /// </summary>
-            public readonly struct BadRequest : IDeleteOrderTypeSafeResult
+            public struct BadRequest : IDeleteOrderTypeSafeResult
             {
                 
             }
@@ -696,7 +855,7 @@ global::System.IO.Stream uploadFileBody,
             /// <summary>
             /// Order not found
             /// </summary>
-            public readonly struct NotFound : IDeleteOrderTypeSafeResult
+            public struct NotFound : IDeleteOrderTypeSafeResult
             {
                 
             }
@@ -727,16 +886,25 @@ global::System.IO.Stream uploadFileBody,
             return requestMessage;
         }
 
-        public static global::System.Threading.Tasks.Task<ICreateUserTypeSafeResult> ParseCreateUserTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
+        public static async global::System.Threading.Tasks.Task<ICreateUserTypeSafeResult?> ParseCreateUserTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
         {
-            throw new global::System.NotImplementedException();
+            switch ((int)response.StatusCode)
+            { 
+                default: 
+                    
+                        return new ICreateUserTypeSafeResult.OtherStatusCode
+                        { 
+                        }; 
+                    break;
+            }
+            return null;
         }
 
         public interface ICreateUserTypeSafeResult
         {
             
             
-            public readonly struct OtherStatusCode : ICreateUserTypeSafeResult
+            public struct OtherStatusCode : ICreateUserTypeSafeResult
             {
                 
             }
@@ -764,16 +932,25 @@ global::System.IO.Stream uploadFileBody,
             return requestMessage;
         }
 
-        public static global::System.Threading.Tasks.Task<ICreateUsersWithArrayInputTypeSafeResult> ParseCreateUsersWithArrayInputTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
+        public static async global::System.Threading.Tasks.Task<ICreateUsersWithArrayInputTypeSafeResult?> ParseCreateUsersWithArrayInputTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
         {
-            throw new global::System.NotImplementedException();
+            switch ((int)response.StatusCode)
+            { 
+                default: 
+                    
+                        return new ICreateUsersWithArrayInputTypeSafeResult.OtherStatusCode
+                        { 
+                        }; 
+                    break;
+            }
+            return null;
         }
 
         public interface ICreateUsersWithArrayInputTypeSafeResult
         {
             
             
-            public readonly struct OtherStatusCode : ICreateUsersWithArrayInputTypeSafeResult
+            public struct OtherStatusCode : ICreateUsersWithArrayInputTypeSafeResult
             {
                 
             }
@@ -801,16 +978,25 @@ global::System.IO.Stream uploadFileBody,
             return requestMessage;
         }
 
-        public static global::System.Threading.Tasks.Task<ICreateUsersWithListInputTypeSafeResult> ParseCreateUsersWithListInputTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
+        public static async global::System.Threading.Tasks.Task<ICreateUsersWithListInputTypeSafeResult?> ParseCreateUsersWithListInputTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
         {
-            throw new global::System.NotImplementedException();
+            switch ((int)response.StatusCode)
+            { 
+                default: 
+                    
+                        return new ICreateUsersWithListInputTypeSafeResult.OtherStatusCode
+                        { 
+                        }; 
+                    break;
+            }
+            return null;
         }
 
         public interface ICreateUsersWithListInputTypeSafeResult
         {
             
             
-            public readonly struct OtherStatusCode : ICreateUsersWithListInputTypeSafeResult
+            public struct OtherStatusCode : ICreateUsersWithListInputTypeSafeResult
             {
                 
             }
@@ -840,9 +1026,27 @@ string password,
             return requestMessage;
         }
 
-        public static global::System.Threading.Tasks.Task<ILoginUserTypeSafeResult> ParseLoginUserTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
+        public static async global::System.Threading.Tasks.Task<ILoginUserTypeSafeResult?> ParseLoginUserTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
         {
-            throw new global::System.NotImplementedException();
+            switch ((int)response.StatusCode)
+            { 
+                case 200:
+                     if (response.Content.Headers.ContentType.MediaType == "application/json") 
+                        return new ILoginUserTypeSafeResult.ApplicationJsonOk
+                        { 
+                            Body = Newtonsoft.Json.JsonConvert.DeserializeObject<string>(await response.Content.ReadAsStringAsync()), 
+                        };
+                    break;
+                
+                case 400:
+                    
+                        return new ILoginUserTypeSafeResult.BadRequest
+                        { 
+                        };
+                    break;
+                
+            }
+            return null;
         }
 
         public interface ILoginUserTypeSafeResult
@@ -851,29 +1055,16 @@ string password,
             /// <summary>
             /// successful operation
             /// </summary>
-            public readonly struct ApplicationXmlOk : ILoginUserTypeSafeResult
+            public struct ApplicationJsonOk : ILoginUserTypeSafeResult
             {
-                public string Body { get; }
+                public string Body { get; set; }
                 
-                public string headerXRateLimit { get; }
-                public string headerXExpiresAfter { get; }
-            }
-            
-            /// <summary>
-            /// successful operation
-            /// </summary>
-            public readonly struct ApplicationJsonOk : ILoginUserTypeSafeResult
-            {
-                public string Body { get; }
-                
-                public string headerXRateLimit { get; }
-                public string headerXExpiresAfter { get; }
             }
             
             /// <summary>
             /// Invalid username/password supplied
             /// </summary>
-            public readonly struct BadRequest : ILoginUserTypeSafeResult
+            public struct BadRequest : ILoginUserTypeSafeResult
             {
                 
             }
@@ -897,16 +1088,25 @@ string password,
             return requestMessage;
         }
 
-        public static global::System.Threading.Tasks.Task<ILogoutUserTypeSafeResult> ParseLogoutUserTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
+        public static async global::System.Threading.Tasks.Task<ILogoutUserTypeSafeResult?> ParseLogoutUserTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
         {
-            throw new global::System.NotImplementedException();
+            switch ((int)response.StatusCode)
+            { 
+                default: 
+                    
+                        return new ILogoutUserTypeSafeResult.OtherStatusCode
+                        { 
+                        }; 
+                    break;
+            }
+            return null;
         }
 
         public interface ILogoutUserTypeSafeResult
         {
             
             
-            public readonly struct OtherStatusCode : ILogoutUserTypeSafeResult
+            public struct OtherStatusCode : ILogoutUserTypeSafeResult
             {
                 
             }
@@ -934,9 +1134,34 @@ string password,
             return requestMessage;
         }
 
-        public static global::System.Threading.Tasks.Task<IGetUserByNameTypeSafeResult> ParseGetUserByNameTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
+        public static async global::System.Threading.Tasks.Task<IGetUserByNameTypeSafeResult?> ParseGetUserByNameTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
         {
-            throw new global::System.NotImplementedException();
+            switch ((int)response.StatusCode)
+            { 
+                case 200:
+                     if (response.Content.Headers.ContentType.MediaType == "application/json") 
+                        return new IGetUserByNameTypeSafeResult.ApplicationJsonOk
+                        { 
+                            Body = Newtonsoft.Json.JsonConvert.DeserializeObject<User>(await response.Content.ReadAsStringAsync()), 
+                        };
+                    break;
+                
+                case 400:
+                    
+                        return new IGetUserByNameTypeSafeResult.BadRequest
+                        { 
+                        };
+                    break;
+                
+                case 404:
+                    
+                        return new IGetUserByNameTypeSafeResult.NotFound
+                        { 
+                        };
+                    break;
+                
+            }
+            return null;
         }
 
         public interface IGetUserByNameTypeSafeResult
@@ -945,25 +1170,16 @@ string password,
             /// <summary>
             /// successful operation
             /// </summary>
-            public readonly struct ApplicationXmlOk : IGetUserByNameTypeSafeResult
+            public struct ApplicationJsonOk : IGetUserByNameTypeSafeResult
             {
-                public User Body { get; }
-                
-            }
-            
-            /// <summary>
-            /// successful operation
-            /// </summary>
-            public readonly struct ApplicationJsonOk : IGetUserByNameTypeSafeResult
-            {
-                public User Body { get; }
+                public User Body { get; set; }
                 
             }
             
             /// <summary>
             /// Invalid username supplied
             /// </summary>
-            public readonly struct BadRequest : IGetUserByNameTypeSafeResult
+            public struct BadRequest : IGetUserByNameTypeSafeResult
             {
                 
             }
@@ -971,7 +1187,7 @@ string password,
             /// <summary>
             /// User not found
             /// </summary>
-            public readonly struct NotFound : IGetUserByNameTypeSafeResult
+            public struct NotFound : IGetUserByNameTypeSafeResult
             {
                 
             }
@@ -1006,9 +1222,26 @@ User updateUserBody,
             return requestMessage;
         }
 
-        public static global::System.Threading.Tasks.Task<IUpdateUserTypeSafeResult> ParseUpdateUserTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
+        public static async global::System.Threading.Tasks.Task<IUpdateUserTypeSafeResult?> ParseUpdateUserTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
         {
-            throw new global::System.NotImplementedException();
+            switch ((int)response.StatusCode)
+            { 
+                case 400:
+                    
+                        return new IUpdateUserTypeSafeResult.BadRequest
+                        { 
+                        };
+                    break;
+                
+                case 404:
+                    
+                        return new IUpdateUserTypeSafeResult.NotFound
+                        { 
+                        };
+                    break;
+                
+            }
+            return null;
         }
 
         public interface IUpdateUserTypeSafeResult
@@ -1017,7 +1250,7 @@ User updateUserBody,
             /// <summary>
             /// Invalid user supplied
             /// </summary>
-            public readonly struct BadRequest : IUpdateUserTypeSafeResult
+            public struct BadRequest : IUpdateUserTypeSafeResult
             {
                 
             }
@@ -1025,7 +1258,7 @@ User updateUserBody,
             /// <summary>
             /// User not found
             /// </summary>
-            public readonly struct NotFound : IUpdateUserTypeSafeResult
+            public struct NotFound : IUpdateUserTypeSafeResult
             {
                 
             }
@@ -1056,9 +1289,26 @@ User updateUserBody,
             return requestMessage;
         }
 
-        public static global::System.Threading.Tasks.Task<IDeleteUserTypeSafeResult> ParseDeleteUserTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
+        public static async global::System.Threading.Tasks.Task<IDeleteUserTypeSafeResult?> ParseDeleteUserTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
         {
-            throw new global::System.NotImplementedException();
+            switch ((int)response.StatusCode)
+            { 
+                case 400:
+                    
+                        return new IDeleteUserTypeSafeResult.BadRequest
+                        { 
+                        };
+                    break;
+                
+                case 404:
+                    
+                        return new IDeleteUserTypeSafeResult.NotFound
+                        { 
+                        };
+                    break;
+                
+            }
+            return null;
         }
 
         public interface IDeleteUserTypeSafeResult
@@ -1067,7 +1317,7 @@ User updateUserBody,
             /// <summary>
             /// Invalid username supplied
             /// </summary>
-            public readonly struct BadRequest : IDeleteUserTypeSafeResult
+            public struct BadRequest : IDeleteUserTypeSafeResult
             {
                 
             }
@@ -1075,7 +1325,7 @@ User updateUserBody,
             /// <summary>
             /// User not found
             /// </summary>
-            public readonly struct NotFound : IDeleteUserTypeSafeResult
+            public struct NotFound : IDeleteUserTypeSafeResult
             {
                 
             }

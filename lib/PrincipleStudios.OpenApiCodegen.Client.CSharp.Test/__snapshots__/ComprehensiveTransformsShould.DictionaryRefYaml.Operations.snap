@@ -34,18 +34,29 @@ namespace PS.Controller
             return requestMessage;
         }
 
-        public static global::System.Threading.Tasks.Task<ILookupRecordTypeSafeResult> ParseLookupRecordTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
+        public static async global::System.Threading.Tasks.Task<ILookupRecordTypeSafeResult?> ParseLookupRecordTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
         {
-            throw new global::System.NotImplementedException();
+            switch ((int)response.StatusCode)
+            { 
+                case 200:
+                     if (response.Content.Headers.ContentType.MediaType == "application/json") 
+                        return new ILookupRecordTypeSafeResult.Ok
+                        { 
+                            Body = Newtonsoft.Json.JsonConvert.DeserializeObject<global::System.Collections.Generic.Dictionary<string, string>>(await response.Content.ReadAsStringAsync()), 
+                        };
+                    break;
+                
+            }
+            return null;
         }
 
         public interface ILookupRecordTypeSafeResult
         {
             
             
-            public readonly struct Ok : ILookupRecordTypeSafeResult
+            public struct Ok : ILookupRecordTypeSafeResult
             {
-                public global::System.Collections.Generic.Dictionary<string, string> Body { get; }
+                public global::System.Collections.Generic.Dictionary<string, string> Body { get; set; }
                 
             }
             

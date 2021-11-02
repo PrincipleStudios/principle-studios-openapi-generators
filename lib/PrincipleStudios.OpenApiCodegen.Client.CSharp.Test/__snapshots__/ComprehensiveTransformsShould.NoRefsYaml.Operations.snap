@@ -34,32 +34,58 @@ namespace PS.Controller
             return requestMessage;
         }
 
-        public static global::System.Threading.Tasks.Task<ILookupRecordTypeSafeResult> ParseLookupRecordTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
+        public static async global::System.Threading.Tasks.Task<ILookupRecordTypeSafeResult?> ParseLookupRecordTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
         {
-            throw new global::System.NotImplementedException();
+            switch ((int)response.StatusCode)
+            { 
+                case 200:
+                     if (response.Content.Headers.ContentType.MediaType == "application/json") 
+                        return new ILookupRecordTypeSafeResult.Ok
+                        { 
+                            Body = Newtonsoft.Json.JsonConvert.DeserializeObject<LookupRecordResponse>(await response.Content.ReadAsStringAsync()), 
+                        };
+                    break;
+                
+                case 409:
+                     if (response.Content.Headers.ContentType.MediaType == "application/json") 
+                        return new ILookupRecordTypeSafeResult.Conflict
+                        { 
+                            Body = Newtonsoft.Json.JsonConvert.DeserializeObject<LookupRecordConflictResponse>(await response.Content.ReadAsStringAsync()), 
+                        };
+                    break;
+                
+                default: 
+                     if (response.Content.Headers.ContentType.MediaType == "application/json") 
+                        return new ILookupRecordTypeSafeResult.OtherStatusCode
+                        { 
+                            Body = Newtonsoft.Json.JsonConvert.DeserializeObject<LookupRecordOtherResponse>(await response.Content.ReadAsStringAsync()), 
+                        }; 
+                    break;
+            }
+            return null;
         }
 
         public interface ILookupRecordTypeSafeResult
         {
             
             
-            public readonly struct Ok : ILookupRecordTypeSafeResult
+            public struct Ok : ILookupRecordTypeSafeResult
             {
-                public LookupRecordResponse Body { get; }
+                public LookupRecordResponse Body { get; set; }
                 
             }
             
             
-            public readonly struct Conflict : ILookupRecordTypeSafeResult
+            public struct Conflict : ILookupRecordTypeSafeResult
             {
-                public LookupRecordConflictResponse Body { get; }
+                public LookupRecordConflictResponse Body { get; set; }
                 
             }
             
             
-            public readonly struct OtherStatusCode : ILookupRecordTypeSafeResult
+            public struct OtherStatusCode : ILookupRecordTypeSafeResult
             {
-                public LookupRecordOtherResponse Body { get; }
+                public LookupRecordOtherResponse Body { get; set; }
                 
             }
             
@@ -83,25 +109,43 @@ namespace PS.Controller
             return requestMessage;
         }
 
-        public static global::System.Threading.Tasks.Task<IGetPhotoTypeSafeResult> ParseGetPhotoTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
+        public static async global::System.Threading.Tasks.Task<IGetPhotoTypeSafeResult?> ParseGetPhotoTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
         {
-            throw new global::System.NotImplementedException();
+            switch ((int)response.StatusCode)
+            { 
+                case 200:
+                     if (response.Content.Headers.ContentType.MediaType == "application/octet-stream") 
+                        return new IGetPhotoTypeSafeResult.Ok
+                        { 
+                            Body = Newtonsoft.Json.JsonConvert.DeserializeObject<global::System.IO.Stream>(await response.Content.ReadAsStringAsync()), 
+                        };
+                    break;
+                
+                default: 
+                     if (response.Content.Headers.ContentType.MediaType == "application/json") 
+                        return new IGetPhotoTypeSafeResult.OtherStatusCode
+                        { 
+                            Body = Newtonsoft.Json.JsonConvert.DeserializeObject<GetPhotoOtherResponse>(await response.Content.ReadAsStringAsync()), 
+                        }; 
+                    break;
+            }
+            return null;
         }
 
         public interface IGetPhotoTypeSafeResult
         {
             
             
-            public readonly struct Ok : IGetPhotoTypeSafeResult
+            public struct Ok : IGetPhotoTypeSafeResult
             {
-                public global::System.IO.Stream Body { get; }
+                public global::System.IO.Stream Body { get; set; }
                 
             }
             
             
-            public readonly struct OtherStatusCode : IGetPhotoTypeSafeResult
+            public struct OtherStatusCode : IGetPhotoTypeSafeResult
             {
-                public GetPhotoOtherResponse Body { get; }
+                public GetPhotoOtherResponse Body { get; set; }
                 
             }
             

@@ -30,9 +30,20 @@ namespace PS.Controller
             return requestMessage;
         }
 
-        public static global::System.Threading.Tasks.Task<IGetColorsTypeSafeResult> ParseGetColorsTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
+        public static async global::System.Threading.Tasks.Task<IGetColorsTypeSafeResult?> ParseGetColorsTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
         {
-            throw new global::System.NotImplementedException();
+            switch ((int)response.StatusCode)
+            { 
+                case 200:
+                     if (response.Content.Headers.ContentType.MediaType == "application/json") 
+                        return new IGetColorsTypeSafeResult.Ok
+                        { 
+                            Body = Newtonsoft.Json.JsonConvert.DeserializeObject<global::System.Collections.Generic.IEnumerable<string>>(await response.Content.ReadAsStringAsync()), 
+                        };
+                    break;
+                
+            }
+            return null;
         }
 
         public interface IGetColorsTypeSafeResult
@@ -41,9 +52,9 @@ namespace PS.Controller
             /// <summary>
             /// The available colors
             /// </summary>
-            public readonly struct Ok : IGetColorsTypeSafeResult
+            public struct Ok : IGetColorsTypeSafeResult
             {
-                public global::System.Collections.Generic.IEnumerable<string> Body { get; }
+                public global::System.Collections.Generic.IEnumerable<string> Body { get; set; }
                 
             }
             
@@ -63,9 +74,20 @@ namespace PS.Controller
             return requestMessage;
         }
 
-        public static global::System.Threading.Tasks.Task<IGetPalettesTypeSafeResult> ParseGetPalettesTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
+        public static async global::System.Threading.Tasks.Task<IGetPalettesTypeSafeResult?> ParseGetPalettesTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
         {
-            throw new global::System.NotImplementedException();
+            switch ((int)response.StatusCode)
+            { 
+                case 200:
+                     if (response.Content.Headers.ContentType.MediaType == "application/json") 
+                        return new IGetPalettesTypeSafeResult.Ok
+                        { 
+                            Body = Newtonsoft.Json.JsonConvert.DeserializeObject<global::System.Collections.Generic.IEnumerable<global::System.Collections.Generic.IEnumerable<string>>>(await response.Content.ReadAsStringAsync()), 
+                        };
+                    break;
+                
+            }
+            return null;
         }
 
         public interface IGetPalettesTypeSafeResult
@@ -74,9 +96,9 @@ namespace PS.Controller
             /// <summary>
             /// The available palettes
             /// </summary>
-            public readonly struct Ok : IGetPalettesTypeSafeResult
+            public struct Ok : IGetPalettesTypeSafeResult
             {
-                public global::System.Collections.Generic.IEnumerable<global::System.Collections.Generic.IEnumerable<string>> Body { get; }
+                public global::System.Collections.Generic.IEnumerable<global::System.Collections.Generic.IEnumerable<string>> Body { get; set; }
                 
             }
             

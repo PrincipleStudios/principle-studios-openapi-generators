@@ -42,25 +42,43 @@ string? end,
             return requestMessage;
         }
 
-        public static global::System.Threading.Tasks.Task<IGetPowerFlowsTypeSafeResult> ParseGetPowerFlowsTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
+        public static async global::System.Threading.Tasks.Task<IGetPowerFlowsTypeSafeResult?> ParseGetPowerFlowsTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
         {
-            throw new global::System.NotImplementedException();
+            switch ((int)response.StatusCode)
+            { 
+                case 200:
+                     if (response.Content.Headers.ContentType.MediaType == "application/json") 
+                        return new IGetPowerFlowsTypeSafeResult.Ok
+                        { 
+                            Body = Newtonsoft.Json.JsonConvert.DeserializeObject<GetPowerFlowsResponse>(await response.Content.ReadAsStringAsync()), 
+                        };
+                    break;
+                
+                case 400:
+                    
+                        return new IGetPowerFlowsTypeSafeResult.BadRequest
+                        { 
+                        };
+                    break;
+                
+            }
+            return null;
         }
 
         public interface IGetPowerFlowsTypeSafeResult
         {
             
             
-            public readonly struct Ok : IGetPowerFlowsTypeSafeResult
+            public struct Ok : IGetPowerFlowsTypeSafeResult
             {
-                public GetPowerFlowsResponse Body { get; }
+                public GetPowerFlowsResponse Body { get; set; }
                 
             }
             
             /// <summary>
             /// Request range or house id not valid
             /// </summary>
-            public readonly struct BadRequest : IGetPowerFlowsTypeSafeResult
+            public struct BadRequest : IGetPowerFlowsTypeSafeResult
             {
                 
             }
@@ -87,25 +105,43 @@ string? end,
             return requestMessage;
         }
 
-        public static global::System.Threading.Tasks.Task<IGetCurrentBatteryStateTypeSafeResult> ParseGetCurrentBatteryStateTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
+        public static async global::System.Threading.Tasks.Task<IGetCurrentBatteryStateTypeSafeResult?> ParseGetCurrentBatteryStateTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
         {
-            throw new global::System.NotImplementedException();
+            switch ((int)response.StatusCode)
+            { 
+                case 200:
+                     if (response.Content.Headers.ContentType.MediaType == "application/json") 
+                        return new IGetCurrentBatteryStateTypeSafeResult.Ok
+                        { 
+                            Body = Newtonsoft.Json.JsonConvert.DeserializeObject<CurrentBatteryState>(await response.Content.ReadAsStringAsync()), 
+                        };
+                    break;
+                
+                case 400:
+                    
+                        return new IGetCurrentBatteryStateTypeSafeResult.BadRequest
+                        { 
+                        };
+                    break;
+                
+            }
+            return null;
         }
 
         public interface IGetCurrentBatteryStateTypeSafeResult
         {
             
             
-            public readonly struct Ok : IGetCurrentBatteryStateTypeSafeResult
+            public struct Ok : IGetCurrentBatteryStateTypeSafeResult
             {
-                public CurrentBatteryState Body { get; }
+                public CurrentBatteryState Body { get; set; }
                 
             }
             
             /// <summary>
             /// Request range or house id not valid
             /// </summary>
-            public readonly struct BadRequest : IGetCurrentBatteryStateTypeSafeResult
+            public struct BadRequest : IGetCurrentBatteryStateTypeSafeResult
             {
                 
             }

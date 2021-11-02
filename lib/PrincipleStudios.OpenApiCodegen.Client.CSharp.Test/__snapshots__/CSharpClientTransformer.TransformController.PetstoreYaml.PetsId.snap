@@ -43,9 +43,27 @@ int? limit,
             return requestMessage;
         }
 
-        public static global::System.Threading.Tasks.Task<IFindPetsTypeSafeResult> ParseFindPetsTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
+        public static async global::System.Threading.Tasks.Task<IFindPetsTypeSafeResult?> ParseFindPetsTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
         {
-            throw new global::System.NotImplementedException();
+            switch ((int)response.StatusCode)
+            { 
+                case 200:
+                     if (response.Content.Headers.ContentType.MediaType == "application/json") 
+                        return new IFindPetsTypeSafeResult.Ok
+                        { 
+                            Body = Newtonsoft.Json.JsonConvert.DeserializeObject<global::System.Collections.Generic.IEnumerable<Pet>>(await response.Content.ReadAsStringAsync()), 
+                        };
+                    break;
+                
+                default: 
+                     if (response.Content.Headers.ContentType.MediaType == "application/json") 
+                        return new IFindPetsTypeSafeResult.OtherStatusCode
+                        { 
+                            Body = Newtonsoft.Json.JsonConvert.DeserializeObject<Error>(await response.Content.ReadAsStringAsync()), 
+                        }; 
+                    break;
+            }
+            return null;
         }
 
         public interface IFindPetsTypeSafeResult
@@ -54,16 +72,16 @@ int? limit,
             /// <summary>
             /// pet response
             /// </summary>
-            public readonly struct Ok : IFindPetsTypeSafeResult
+            public struct Ok : IFindPetsTypeSafeResult
             {
-                public global::System.Collections.Generic.IEnumerable<Pet> Body { get; }
+                public global::System.Collections.Generic.IEnumerable<Pet> Body { get; set; }
                 
             }
             
             
-            public readonly struct OtherStatusCode : IFindPetsTypeSafeResult
+            public struct OtherStatusCode : IFindPetsTypeSafeResult
             {
-                public Error Body { get; }
+                public Error Body { get; set; }
                 
             }
             
@@ -90,9 +108,27 @@ int? limit,
             return requestMessage;
         }
 
-        public static global::System.Threading.Tasks.Task<IAddPetTypeSafeResult> ParseAddPetTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
+        public static async global::System.Threading.Tasks.Task<IAddPetTypeSafeResult?> ParseAddPetTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
         {
-            throw new global::System.NotImplementedException();
+            switch ((int)response.StatusCode)
+            { 
+                case 200:
+                     if (response.Content.Headers.ContentType.MediaType == "application/json") 
+                        return new IAddPetTypeSafeResult.Ok
+                        { 
+                            Body = Newtonsoft.Json.JsonConvert.DeserializeObject<Pet>(await response.Content.ReadAsStringAsync()), 
+                        };
+                    break;
+                
+                default: 
+                     if (response.Content.Headers.ContentType.MediaType == "application/json") 
+                        return new IAddPetTypeSafeResult.OtherStatusCode
+                        { 
+                            Body = Newtonsoft.Json.JsonConvert.DeserializeObject<Error>(await response.Content.ReadAsStringAsync()), 
+                        }; 
+                    break;
+            }
+            return null;
         }
 
         public interface IAddPetTypeSafeResult
@@ -101,16 +137,16 @@ int? limit,
             /// <summary>
             /// pet response
             /// </summary>
-            public readonly struct Ok : IAddPetTypeSafeResult
+            public struct Ok : IAddPetTypeSafeResult
             {
-                public Pet Body { get; }
+                public Pet Body { get; set; }
                 
             }
             
             
-            public readonly struct OtherStatusCode : IAddPetTypeSafeResult
+            public struct OtherStatusCode : IAddPetTypeSafeResult
             {
-                public Error Body { get; }
+                public Error Body { get; set; }
                 
             }
             
@@ -137,9 +173,27 @@ int? limit,
             return requestMessage;
         }
 
-        public static global::System.Threading.Tasks.Task<IFindPetByIdTypeSafeResult> ParseFindPetByIdTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
+        public static async global::System.Threading.Tasks.Task<IFindPetByIdTypeSafeResult?> ParseFindPetByIdTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
         {
-            throw new global::System.NotImplementedException();
+            switch ((int)response.StatusCode)
+            { 
+                case 200:
+                     if (response.Content.Headers.ContentType.MediaType == "application/json") 
+                        return new IFindPetByIdTypeSafeResult.Ok
+                        { 
+                            Body = Newtonsoft.Json.JsonConvert.DeserializeObject<Pet>(await response.Content.ReadAsStringAsync()), 
+                        };
+                    break;
+                
+                default: 
+                     if (response.Content.Headers.ContentType.MediaType == "application/json") 
+                        return new IFindPetByIdTypeSafeResult.OtherStatusCode
+                        { 
+                            Body = Newtonsoft.Json.JsonConvert.DeserializeObject<Error>(await response.Content.ReadAsStringAsync()), 
+                        }; 
+                    break;
+            }
+            return null;
         }
 
         public interface IFindPetByIdTypeSafeResult
@@ -148,16 +202,16 @@ int? limit,
             /// <summary>
             /// pet response
             /// </summary>
-            public readonly struct Ok : IFindPetByIdTypeSafeResult
+            public struct Ok : IFindPetByIdTypeSafeResult
             {
-                public Pet Body { get; }
+                public Pet Body { get; set; }
                 
             }
             
             
-            public readonly struct OtherStatusCode : IFindPetByIdTypeSafeResult
+            public struct OtherStatusCode : IFindPetByIdTypeSafeResult
             {
-                public Error Body { get; }
+                public Error Body { get; set; }
                 
             }
             
@@ -184,9 +238,26 @@ int? limit,
             return requestMessage;
         }
 
-        public static global::System.Threading.Tasks.Task<IDeletePetTypeSafeResult> ParseDeletePetTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
+        public static async global::System.Threading.Tasks.Task<IDeletePetTypeSafeResult?> ParseDeletePetTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
         {
-            throw new global::System.NotImplementedException();
+            switch ((int)response.StatusCode)
+            { 
+                case 204:
+                    
+                        return new IDeletePetTypeSafeResult.NoContent
+                        { 
+                        };
+                    break;
+                
+                default: 
+                     if (response.Content.Headers.ContentType.MediaType == "application/json") 
+                        return new IDeletePetTypeSafeResult.OtherStatusCode
+                        { 
+                            Body = Newtonsoft.Json.JsonConvert.DeserializeObject<Error>(await response.Content.ReadAsStringAsync()), 
+                        }; 
+                    break;
+            }
+            return null;
         }
 
         public interface IDeletePetTypeSafeResult
@@ -195,15 +266,15 @@ int? limit,
             /// <summary>
             /// pet deleted
             /// </summary>
-            public readonly struct NoContent : IDeletePetTypeSafeResult
+            public struct NoContent : IDeletePetTypeSafeResult
             {
                 
             }
             
             
-            public readonly struct OtherStatusCode : IDeletePetTypeSafeResult
+            public struct OtherStatusCode : IDeletePetTypeSafeResult
             {
-                public Error Body { get; }
+                public Error Body { get; set; }
                 
             }
             
