@@ -22,8 +22,9 @@
 
   <ItemGroup>
     <ProjectReference Include="..\PrincipleStudios.OpenApi.Transformations\PrincipleStudios.OpenApi.Transformations.csproj" />
-    <ProjectReference Include="..\PrincipleStudios.OpenApiCodegen.TestUtils\PrincipleStudios.OpenApiCodegen.TestUtils.csproj" />
     <ProjectReference Include="..\..\generators\dotnetcore-server-interfaces\PrincipleStudios.OpenApiCodegen.Server.Mvc.Base\PrincipleStudios.OpenApiCodegen.Server.Mvc.Base.csproj" />
   </ItemGroup>
+
+  <Import Project="..\PrincipleStudios.OpenApiCodegen.TestUtils\PrincipleStudios.OpenApiCodegen.TestUtils.projitems" Label="Shared" />
 
 </Project>

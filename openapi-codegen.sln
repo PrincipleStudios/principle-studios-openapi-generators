@@ -30,8 +30,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PrincipleStudios.OpenApi.Ty
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PrincipleStudios.OpenApiCodegen.Client.TypeScript.Test", "lib\PrincipleStudios.OpenApiCodegen.Client.TypeScript.Test\PrincipleStudios.OpenApiCodegen.Client.TypeScript.Test.csproj", "{7F4E8BD3-E0B2-44B0-B175-40852137E928}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PrincipleStudios.OpenApiCodegen.TestUtils", "lib\PrincipleStudios.OpenApiCodegen.TestUtils\PrincipleStudios.OpenApiCodegen.TestUtils.csproj", "{9712F952-7205-4B55-B261-D2845980BC64}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Client.CSharp", "Client.CSharp", "{BFF7FB51-DB27-4E46-B575-DDD11430DE8C}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PrincipleStudios.OpenApiCodegen.Client.Base", "generators\dotnetstandard-client\PrincipleStudios.OpenApiCodegen.Client.Base\PrincipleStudios.OpenApiCodegen.Client.Base.csproj", "{6280AE1B-7534-4450-A502-2657D3B1F5D4}"
@@ -40,7 +38,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PrincipleStudios.OpenApiCod
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PrincipleStudios.OpenApiCodegen.Client.CSharp.Test", "lib\PrincipleStudios.OpenApiCodegen.Client.CSharp.Test\PrincipleStudios.OpenApiCodegen.Client.CSharp.Test.csproj", "{ADC3DB9C-888A-483E-A146-00683CDC4698}"
 EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "PrincipleStudios.OpenApiCodegen.TestUtils", "lib\PrincipleStudios.OpenApiCodegen.TestUtils\PrincipleStudios.OpenApiCodegen.TestUtils.shproj", "{FD414F56-B373-4E61-A0DD-D97B207891FA}"
+EndProject
 Global
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		lib\PrincipleStudios.OpenApiCodegen.TestUtils\PrincipleStudios.OpenApiCodegen.TestUtils.projitems*{7f4e8bd3-e0b2-44b0-b175-40852137e928}*SharedItemsImports = 5
+		lib\PrincipleStudios.OpenApiCodegen.TestUtils\PrincipleStudios.OpenApiCodegen.TestUtils.projitems*{adc3db9c-888a-483e-a146-00683cdc4698}*SharedItemsImports = 5
+		lib\PrincipleStudios.OpenApiCodegen.TestUtils\PrincipleStudios.OpenApiCodegen.TestUtils.projitems*{dc8a6ffa-dd3a-4b33-800e-cd8d9166a58d}*SharedItemsImports = 5
+		lib\PrincipleStudios.OpenApiCodegen.TestUtils\PrincipleStudios.OpenApiCodegen.TestUtils.projitems*{fd414f56-b373-4e61-a0dd-d97b207891fa}*SharedItemsImports = 13
+	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Debug|x64 = Debug|x64
@@ -158,18 +164,6 @@ Global
 		{7F4E8BD3-E0B2-44B0-B175-40852137E928}.Release|x64.Build.0 = Release|Any CPU
 		{7F4E8BD3-E0B2-44B0-B175-40852137E928}.Release|x86.ActiveCfg = Release|Any CPU
 		{7F4E8BD3-E0B2-44B0-B175-40852137E928}.Release|x86.Build.0 = Release|Any CPU
-		{9712F952-7205-4B55-B261-D2845980BC64}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9712F952-7205-4B55-B261-D2845980BC64}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9712F952-7205-4B55-B261-D2845980BC64}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{9712F952-7205-4B55-B261-D2845980BC64}.Debug|x64.Build.0 = Debug|Any CPU
-		{9712F952-7205-4B55-B261-D2845980BC64}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{9712F952-7205-4B55-B261-D2845980BC64}.Debug|x86.Build.0 = Debug|Any CPU
-		{9712F952-7205-4B55-B261-D2845980BC64}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9712F952-7205-4B55-B261-D2845980BC64}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9712F952-7205-4B55-B261-D2845980BC64}.Release|x64.ActiveCfg = Release|Any CPU
-		{9712F952-7205-4B55-B261-D2845980BC64}.Release|x64.Build.0 = Release|Any CPU
-		{9712F952-7205-4B55-B261-D2845980BC64}.Release|x86.ActiveCfg = Release|Any CPU
-		{9712F952-7205-4B55-B261-D2845980BC64}.Release|x86.Build.0 = Release|Any CPU
 		{6280AE1B-7534-4450-A502-2657D3B1F5D4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{6280AE1B-7534-4450-A502-2657D3B1F5D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6280AE1B-7534-4450-A502-2657D3B1F5D4}.Debug|x64.ActiveCfg = Debug|Any CPU
