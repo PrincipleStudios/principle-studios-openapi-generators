@@ -6,20 +6,20 @@
 
   <ItemGroup>
     <AvailableItemName Include="OpenApiSchemaCSharpOptions" DisplayName="C# Options for Open API Code Generation (OpenApiCodeGen)" />
-    <AvailableItemName Include="OpenApiSchemaClient" DisplayName="Open API Schema MVC Server (OpenApiCodeGen)" />
+    <AvailableItemName Include="OpenApiSchemaClient" DisplayName="Open API Schema Client (OpenApiCodeGen)" />
     <Watch Include="@(OpenApiSchemaClient);@(OpenApiSchemaCSharpOptions)" Condition=" '@(OpenApiSchemaClient)' != '' " />
 
-    <PSOpenApiControllerGeneratorInputs Include="$(MSBuildProjectFile)" Visible="false" />
-    <PSOpenApiControllerGeneratorInputs Include="$(MSBuildThisFileFullPath)**/*.dll" Visible="false" />
+    <PSOpenApiClientGeneratorInputs Include="$(MSBuildProjectFile)" Visible="false" />
+    <PSOpenApiClientGeneratorInputs Include="$(MSBuildThisFileFullPath)**/*.dll" Visible="false" />
   </ItemGroup>
 
-  <Target Name="CompileServerOpenApiCodeGen" BeforeTargets="GenerateMSBuildEditorConfigFileShouldRun" DependsOnTargets="_CompileServerOpenApiCodeGen" Condition=" '@(OpenApiSchemaClient)' != '' ">
+  <Target Name="CompileClientOpenApiCodeGen" BeforeTargets="GenerateMSBuildEditorConfigFileShouldRun" DependsOnTargets="_CompileClientOpenApiCodeGen" Condition=" '@(OpenApiSchemaClient)' != '' ">
     <ItemGroup>
       <Compile Include="%(OpenApiSchemaClient.OutputPath)/**/*.cs" />
     </ItemGroup>
   </Target>
 
-  <Target Name="_UpdateServerOpenApiCodeGenMetatdata">
+  <Target Name="_UpdateClientOpenApiCodeGenMetatdata">
     <ItemGroup>
       <OpenApiSchemaClient Condition=" '%(OpenApiSchemaClient.Link)' != '' ">
         <WorkingOutputPath>$([System.Text.RegularExpressions.Regex]::Replace(%(OpenApiSchemaClient.Link), '(?&lt;=^|\\|/)..(?=$|\\|/)', '__'))</WorkingOutputPath>
@@ -34,17 +34,17 @@
     </ItemGroup>
   </Target>
 
-  <Target Name="CleanServerOpenApiCodeGen" BeforeTargets="Clean" DependsOnTargets="_UpdateServerOpenApiCodeGenMetatdata">
+  <Target Name="CleanClientOpenApiCodeGen" BeforeTargets="Clean" DependsOnTargets="_UpdateClientOpenApiCodeGenMetatdata">
     <ItemGroup>
-      <CleanServerOpenApiCodeGen Include="%(OpenApiSchemaClient.OutputPath)/**/*" />
+      <CleanClientOpenApiCodeGen Include="%(OpenApiSchemaClient.OutputPath)/**/*" />
     </ItemGroup>
 
-    <Delete Files="@(CleanServerOpenApiCodeGen)" ContinueOnError="true" />
+    <Delete Files="@(CleanClientOpenApiCodeGen)" ContinueOnError="true" />
   </Target>
 
-  <Target Name="_CompileServerOpenApiCodeGen"
-          DependsOnTargets="_UpdateServerOpenApiCodeGenMetatdata"
-          Inputs="@(PSOpenApiControllerGeneratorInputs);@(OpenApiSchemaClient);@(OpenApiSchemaCSharpOptions)"
+  <Target Name="_CompileClientOpenApiCodeGen"
+          DependsOnTargets="_UpdateClientOpenApiCodeGenMetatdata"
+          Inputs="@(PSOpenApiClientGeneratorInputs);@(OpenApiSchemaClient);@(OpenApiSchemaCSharpOptions)"
           Outputs="@(OpenApiSchemaClient -> '%(OutputPath)/_._')"
           >
     <ClientCodegenTask OutputPath="$(MSBuildProjectDirectory)/%(OpenApiSchemaClient.OutputPath)"
