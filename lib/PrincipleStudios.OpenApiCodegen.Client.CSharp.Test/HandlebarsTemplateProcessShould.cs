@@ -2,7 +2,7 @@ using PrincipleStudios.OpenApi.CSharp;
 using System;
 using Xunit;
 
-namespace PrincipleStudios.OpenApiCodegen.Server.Mvc.Test
+namespace PrincipleStudios.OpenApiCodegen.Client.CSharp
 {
     public class HandlebarsTemplateProcessShould
     {

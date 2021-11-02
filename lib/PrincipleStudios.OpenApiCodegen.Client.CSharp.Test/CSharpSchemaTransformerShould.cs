@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 using Xunit;
 using static PrincipleStudios.OpenApiCodegen.TestUtils.DocumentHelpers;
 
-namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
+namespace PrincipleStudios.OpenApiCodegen.Client.CSharp
 {
     using static OptionsHelpers;
 
