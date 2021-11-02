@@ -51,26 +51,32 @@ namespace PrincipleStudios.OpenApi.CSharp
             var builder = new OperationBuilder(operation);
 
             var noBody = OperationRequestBodyFactory(operation.OperationId, null, Enumerable.Empty<OperationParameter>(), false);
-            //if (operation.RequestBody == null || !operation.RequestBody.Required)
-            //    builder.RequestBodies.Add(noBody);
+            if (operation.RequestBody == null || !operation.RequestBody.Required)
+                builder.RequestBodies.Add(noBody);
 
             base.Visit(operation, context, argument with { Builder = builder });
 
             var sharedParameters = builder.SharedParameters.ToArray();
-            argument.RegisterControllerOperation(
-                new templates.Operation(
-                 httpMethod: httpMethod,
-                 summary: operation.Summary,
-                 description: operation.Description,
-                 name: CSharpNaming.ToTitleCaseIdentifier(operation.OperationId, options.ReservedIdentifiers("ControllerBase", controllerClassName)),
-                 path: path,
-                 requestBodies: builder.RequestBodies.DefaultIfEmpty(noBody).Select(transform => transform(sharedParameters)).ToArray(),
-                 responses: new templates.OperationResponses(
-                     defaultResponse: builder.DefaultResponse,
-                     statusResponse: new(builder.StatusResponses)
-                 ),
-                 securityRequirements: builder.SecurityRequirements.ToArray()
-             ));
+            var requestBodies = builder.RequestBodies.DefaultIfEmpty(noBody).Select(transform => transform(sharedParameters))
+                .Where(body => body.requestBodyType != "application/xml") // exclude xml, since we don't support it
+                .ToArray();
+            if (requestBodies.Any())
+            {
+                argument.RegisterControllerOperation(
+                    new templates.Operation(
+                     httpMethod: httpMethod,
+                     summary: operation.Summary,
+                     description: operation.Description,
+                     name: CSharpNaming.ToTitleCaseIdentifier(operation.OperationId, options.ReservedIdentifiers("ControllerBase", controllerClassName)),
+                     path: path,
+                     requestBodies: requestBodies,
+                     responses: new templates.OperationResponses(
+                         defaultResponse: builder.DefaultResponse,
+                         statusResponse: new(builder.StatusResponses)
+                     ),
+                     securityRequirements: builder.SecurityRequirements.ToArray()
+                 ));
+            }
         }
 
         public override void Visit(OpenApiParameter param, OpenApiContext context, Argument argument)

@@ -90,7 +90,7 @@ namespace PrincipleStudios.OpenApi.CSharp
         public IEnumerable<SourceEntry> GetSources(OpenApiTransformDiagnostic diagnostic)
         {
             yield return TransformOperations(diagnostic);
-            yield return TransformAddServicesHelper(diagnostic);
+            //yield return TransformAddServicesHelper(diagnostic);
 
             foreach (var source in csharpSchemaResolver.GetSources(diagnostic))
                 yield return source;

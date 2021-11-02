@@ -37,28 +37,6 @@ namespace PS.Controller
             return requestMessage;
         }
 
-
-        /// <summary>
-        /// Add a new pet to the store
-        /// </summary>
-        /// <param name="addPetBody"></param>
-        public static global::System.Threading.Tasks.Task<global::System.Net.Http.HttpResponseMessage> SendAddPetAsync(
-            this global::System.Net.Http.HttpClient client,
-            Pet addPetBody,
-            global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken)
-        ) => client.SendAsync(AddPet(addPetBody));
-
-        public static global::System.Net.Http.HttpRequestMessage AddPet(
-            Pet addPetBody
-            )
-        {
-            var requestMessage = new global::System.Net.Http.HttpRequestMessage(global::System.Net.Http.HttpMethod.Post, "/pet");
-            requestMessage.Content = new global::System.Net.Http.StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(addPetBody), System.Text.Encoding.UTF8, "application/xml");
-
-
-            return requestMessage;
-        }
-
         public static global::System.Threading.Tasks.Task<IAddPetTypeSafeResult> ParseAddPetTypeSafe(this global::System.Net.Http.HttpResponseMessage response)
         {
             throw new global::System.NotImplementedException();
@@ -93,28 +71,6 @@ namespace PS.Controller
         {
             var requestMessage = new global::System.Net.Http.HttpRequestMessage(global::System.Net.Http.HttpMethod.Put, "/pet");
             requestMessage.Content = new global::System.Net.Http.StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(updatePetBody), System.Text.Encoding.UTF8, "application/json");
-
-
-            return requestMessage;
-        }
-
-
-        /// <summary>
-        /// Update an existing pet
-        /// </summary>
-        /// <param name="updatePetBody"></param>
-        public static global::System.Threading.Tasks.Task<global::System.Net.Http.HttpResponseMessage> SendUpdatePetAsync(
-            this global::System.Net.Http.HttpClient client,
-            Pet updatePetBody,
-            global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken)
-        ) => client.SendAsync(UpdatePet(updatePetBody));
-
-        public static global::System.Net.Http.HttpRequestMessage UpdatePet(
-            Pet updatePetBody
-            )
-        {
-            var requestMessage = new global::System.Net.Http.HttpRequestMessage(global::System.Net.Http.HttpMethod.Put, "/pet");
-            requestMessage.Content = new global::System.Net.Http.StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(updatePetBody), System.Text.Encoding.UTF8, "application/xml");
 
 
             return requestMessage;
@@ -344,6 +300,28 @@ namespace PS.Controller
         /// Updates a pet in the store with form data
         /// </summary>
         /// <param name="petId">ID of pet that needs to be updated</param>
+        public static global::System.Threading.Tasks.Task<global::System.Net.Http.HttpResponseMessage> SendUpdatePetWithFormAsync(
+            this global::System.Net.Http.HttpClient client,
+            long petId,
+            global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken)
+        ) => client.SendAsync(UpdatePetWithForm(petId));
+
+        public static global::System.Net.Http.HttpRequestMessage UpdatePetWithForm(
+            long petId
+            )
+        {
+            var requestMessage = new global::System.Net.Http.HttpRequestMessage(global::System.Net.Http.HttpMethod.Post, "/pet/{petId}"
+                        .Replace("{" + "petId" + "}", global::System.Web.HttpUtility.UrlEncode(petId.ToString())));
+
+
+            return requestMessage;
+        }
+
+
+        /// <summary>
+        /// Updates a pet in the store with form data
+        /// </summary>
+        /// <param name="petId">ID of pet that needs to be updated</param>
         /// <param name="name"></param>
         /// <param name="status"></param>
         public static global::System.Threading.Tasks.Task<global::System.Net.Http.HttpResponseMessage> SendUpdatePetWithFormAsync(
@@ -443,6 +421,28 @@ long petId,
             }
             
         }
+
+        /// <summary>
+        /// uploads an image
+        /// </summary>
+        /// <param name="petId">ID of pet to update</param>
+        public static global::System.Threading.Tasks.Task<global::System.Net.Http.HttpResponseMessage> SendUploadFileAsync(
+            this global::System.Net.Http.HttpClient client,
+            long petId,
+            global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken)
+        ) => client.SendAsync(UploadFile(petId));
+
+        public static global::System.Net.Http.HttpRequestMessage UploadFile(
+            long petId
+            )
+        {
+            var requestMessage = new global::System.Net.Http.HttpRequestMessage(global::System.Net.Http.HttpMethod.Post, "/pet/{petId}/uploadImage"
+                        .Replace("{" + "petId" + "}", global::System.Web.HttpUtility.UrlEncode(petId.ToString())));
+
+
+            return requestMessage;
+        }
+
 
         /// <summary>
         /// uploads an image
