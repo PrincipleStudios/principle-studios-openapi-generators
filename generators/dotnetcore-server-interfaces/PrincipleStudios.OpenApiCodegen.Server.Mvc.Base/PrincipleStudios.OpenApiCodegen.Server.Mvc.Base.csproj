@@ -33,9 +33,6 @@
     <EmbeddedResource Include="templates\*.handlebars" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\lib\PrincipleStudios.OpenApi.CSharp\PrincipleStudios.OpenApi.CSharp.csproj" />
-    <ProjectReference Include="..\..\..\lib\PrincipleStudios.OpenApi.Transformations\PrincipleStudios.OpenApi.Transformations.csproj" />
-  </ItemGroup>
+  <Import Project="..\..\..\lib\PrincipleStudios.OpenApi.CSharp\PrincipleStudios.OpenApi.CSharp.projitems" Label="Shared" />
 
 </Project>

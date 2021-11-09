@@ -147,7 +147,7 @@ namespace PrincipleStudios.OpenApi.CSharp
                 argument.Builder?.StatusResponses.Add(statusCode.Value, result);
             else if (responseKey == "default" && argument.Builder != null)
                 argument.Builder.DefaultResponse = result;
-            else
+            else if (context.Entries[1].Property != "Components")
                 argument.Diagnostic.Errors.Add(new OpenApiTransformError(context, $"Unknown response status: {responseKey}"));
         }
         //public override void Visit(OpenApiRequestBody requestBody, OpenApiContext context, Argument argument)

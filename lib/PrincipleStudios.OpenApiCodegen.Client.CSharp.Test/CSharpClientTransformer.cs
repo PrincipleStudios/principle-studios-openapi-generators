@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 using Xunit;
 using static PrincipleStudios.OpenApiCodegen.TestUtils.DocumentHelpers;
 
-namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
+namespace PrincipleStudios.OpenApiCodegen.Client.CSharp
 {
     using static OptionsHelpers;
 
@@ -43,7 +43,7 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
 
             var result = target.TransformOperations(diagnostic);
 
-            Snapshot.Match(result.SourceText, $"{nameof(Mvc.CSharpClientTransformer)}.{nameof(TransformController)}.{CSharpNaming.ToTitleCaseIdentifier(documentName, options.ReservedIdentifiers())}.{CSharpNaming.ToTitleCaseIdentifier(path, options.ReservedIdentifiers())}");
+            Snapshot.Match(result.SourceText, $"{nameof(CSharpClientTransformer)}.{nameof(TransformController)}.{CSharpNaming.ToTitleCaseIdentifier(documentName, options.ReservedIdentifiers())}.{CSharpNaming.ToTitleCaseIdentifier(path, options.ReservedIdentifiers())}");
         }
 
         private static OpenApi.CSharp.CSharpClientTransformer ConstructTarget(OpenApiDocument document, CSharpSchemaOptions options, string baseNamespace = "PrincipleStudios.Test")

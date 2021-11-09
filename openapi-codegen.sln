@@ -3,16 +3,12 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30717.126
 MinimumVisualStudioVersion = 15.0.26124.0
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PrincipleStudios.OpenApi.Transformations", "lib\PrincipleStudios.OpenApi.Transformations\PrincipleStudios.OpenApi.Transformations.csproj", "{CF19410B-6A84-487D-960B-1535E1A4E915}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PrincipleStudios.OpenApiCodegen.Server.Mvc", "generators\dotnetcore-server-interfaces\PrincipleStudios.OpenApiCodegen.Server.Mvc\PrincipleStudios.OpenApiCodegen.Server.Mvc.csproj", "{62DE31B8-C290-4005-91A5-EC91F276DCC5}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{D2200E3D-74EF-46B0-90B8-A2042FDA416F}"
 	ProjectSection(SolutionItems) = preProject
 		Directory.Build.props = Directory.Build.props
 	EndProjectSection
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PrincipleStudios.OpenApi.CSharp", "lib\PrincipleStudios.OpenApi.CSharp\PrincipleStudios.OpenApi.CSharp.csproj", "{CBC3208B-5B3F-423F-A4A7-4A19127F7075}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PrincipleStudios.OpenApiCodegen.Server.Mvc.Test", "lib\PrincipleStudios.OpenApiCodegen.Server.Mvc.Test\PrincipleStudios.OpenApiCodegen.Server.Mvc.Test.csproj", "{DC8A6FFA-DD3A-4B33-800E-CD8D9166A58D}"
 EndProject
@@ -26,11 +22,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Client.TypeScriptRxJs", "Cl
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PrincipleStudios.OpenApiCodegen.Client.TypeScript", "generators\typescript\PrincipleStudios.OpenApiCodegen.Client.TypeScript\PrincipleStudios.OpenApiCodegen.Client.TypeScript.csproj", "{C0E47301-8CB1-44F6-8321-BCB9C09219BB}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PrincipleStudios.OpenApi.TypeScript", "lib\PrincipleStudios.OpenApi.TypeScript\PrincipleStudios.OpenApi.TypeScript.csproj", "{121D9AE4-3E50-43E2-838D-72020D2E241E}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PrincipleStudios.OpenApiCodegen.Client.TypeScript.Test", "lib\PrincipleStudios.OpenApiCodegen.Client.TypeScript.Test\PrincipleStudios.OpenApiCodegen.Client.TypeScript.Test.csproj", "{7F4E8BD3-E0B2-44B0-B175-40852137E928}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PrincipleStudios.OpenApiCodegen.TestUtils", "lib\PrincipleStudios.OpenApiCodegen.TestUtils\PrincipleStudios.OpenApiCodegen.TestUtils.csproj", "{9712F952-7205-4B55-B261-D2845980BC64}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Client.CSharp", "Client.CSharp", "{BFF7FB51-DB27-4E46-B575-DDD11430DE8C}"
 EndProject
@@ -40,7 +32,27 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PrincipleStudios.OpenApiCod
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PrincipleStudios.OpenApiCodegen.Client.CSharp.Test", "lib\PrincipleStudios.OpenApiCodegen.Client.CSharp.Test\PrincipleStudios.OpenApiCodegen.Client.CSharp.Test.csproj", "{ADC3DB9C-888A-483E-A146-00683CDC4698}"
 EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "PrincipleStudios.OpenApiCodegen.TestUtils", "lib\PrincipleStudios.OpenApiCodegen.TestUtils\PrincipleStudios.OpenApiCodegen.TestUtils.shproj", "{FD414F56-B373-4E61-A0DD-D97B207891FA}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "PrincipleStudios.OpenApi.TypeScript", "lib\PrincipleStudios.OpenApi.TypeScript\PrincipleStudios.OpenApi.TypeScript.shproj", "{352E2375-8A65-44E8-91C3-7D45EC82F9F8}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "PrincipleStudios.OpenApi.Transformations", "lib\PrincipleStudios.OpenApi.Transformations\PrincipleStudios.OpenApi.Transformations.shproj", "{3477A14B-91D4-4178-BBA2-6AC7A4558E64}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "PrincipleStudios.OpenApi.CSharp", "lib\PrincipleStudios.OpenApi.CSharp\PrincipleStudios.OpenApi.CSharp.shproj", "{DF4BDCF9-795F-45A2-AA10-867121D2EB53}"
+EndProject
 Global
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		lib\PrincipleStudios.OpenApi.Transformations\PrincipleStudios.OpenApi.Transformations.projitems*{3477a14b-91d4-4178-bba2-6ac7a4558e64}*SharedItemsImports = 13
+		lib\PrincipleStudios.OpenApi.TypeScript\PrincipleStudios.OpenApi.TypeScript.projitems*{352e2375-8a65-44e8-91c3-7d45ec82f9f8}*SharedItemsImports = 13
+		lib\PrincipleStudios.OpenApi.CSharp\PrincipleStudios.OpenApi.CSharp.projitems*{6280ae1b-7534-4450-a502-2657d3b1f5d4}*SharedItemsImports = 5
+		lib\PrincipleStudios.OpenApiCodegen.TestUtils\PrincipleStudios.OpenApiCodegen.TestUtils.projitems*{7f4e8bd3-e0b2-44b0-b175-40852137e928}*SharedItemsImports = 5
+		lib\PrincipleStudios.OpenApi.CSharp\PrincipleStudios.OpenApi.CSharp.projitems*{9946c7bf-f669-48a1-aaf8-17ed1ec44c6f}*SharedItemsImports = 5
+		lib\PrincipleStudios.OpenApiCodegen.TestUtils\PrincipleStudios.OpenApiCodegen.TestUtils.projitems*{adc3db9c-888a-483e-a146-00683cdc4698}*SharedItemsImports = 5
+		lib\PrincipleStudios.OpenApi.TypeScript\PrincipleStudios.OpenApi.TypeScript.projitems*{c0e47301-8cb1-44f6-8321-bcb9c09219bb}*SharedItemsImports = 5
+		lib\PrincipleStudios.OpenApiCodegen.TestUtils\PrincipleStudios.OpenApiCodegen.TestUtils.projitems*{dc8a6ffa-dd3a-4b33-800e-cd8d9166a58d}*SharedItemsImports = 5
+		lib\PrincipleStudios.OpenApi.CSharp\PrincipleStudios.OpenApi.CSharp.projitems*{df4bdcf9-795f-45a2-aa10-867121d2eb53}*SharedItemsImports = 13
+		lib\PrincipleStudios.OpenApiCodegen.TestUtils\PrincipleStudios.OpenApiCodegen.TestUtils.projitems*{fd414f56-b373-4e61-a0dd-d97b207891fa}*SharedItemsImports = 13
+	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Debug|x64 = Debug|x64
@@ -50,18 +62,6 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{CF19410B-6A84-487D-960B-1535E1A4E915}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CF19410B-6A84-487D-960B-1535E1A4E915}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CF19410B-6A84-487D-960B-1535E1A4E915}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{CF19410B-6A84-487D-960B-1535E1A4E915}.Debug|x64.Build.0 = Debug|Any CPU
-		{CF19410B-6A84-487D-960B-1535E1A4E915}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{CF19410B-6A84-487D-960B-1535E1A4E915}.Debug|x86.Build.0 = Debug|Any CPU
-		{CF19410B-6A84-487D-960B-1535E1A4E915}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CF19410B-6A84-487D-960B-1535E1A4E915}.Release|Any CPU.Build.0 = Release|Any CPU
-		{CF19410B-6A84-487D-960B-1535E1A4E915}.Release|x64.ActiveCfg = Release|Any CPU
-		{CF19410B-6A84-487D-960B-1535E1A4E915}.Release|x64.Build.0 = Release|Any CPU
-		{CF19410B-6A84-487D-960B-1535E1A4E915}.Release|x86.ActiveCfg = Release|Any CPU
-		{CF19410B-6A84-487D-960B-1535E1A4E915}.Release|x86.Build.0 = Release|Any CPU
 		{62DE31B8-C290-4005-91A5-EC91F276DCC5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{62DE31B8-C290-4005-91A5-EC91F276DCC5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{62DE31B8-C290-4005-91A5-EC91F276DCC5}.Debug|x64.ActiveCfg = Debug|Any CPU
@@ -74,18 +74,6 @@ Global
 		{62DE31B8-C290-4005-91A5-EC91F276DCC5}.Release|x64.Build.0 = Release|Any CPU
 		{62DE31B8-C290-4005-91A5-EC91F276DCC5}.Release|x86.ActiveCfg = Release|Any CPU
 		{62DE31B8-C290-4005-91A5-EC91F276DCC5}.Release|x86.Build.0 = Release|Any CPU
-		{CBC3208B-5B3F-423F-A4A7-4A19127F7075}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CBC3208B-5B3F-423F-A4A7-4A19127F7075}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CBC3208B-5B3F-423F-A4A7-4A19127F7075}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{CBC3208B-5B3F-423F-A4A7-4A19127F7075}.Debug|x64.Build.0 = Debug|Any CPU
-		{CBC3208B-5B3F-423F-A4A7-4A19127F7075}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{CBC3208B-5B3F-423F-A4A7-4A19127F7075}.Debug|x86.Build.0 = Debug|Any CPU
-		{CBC3208B-5B3F-423F-A4A7-4A19127F7075}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CBC3208B-5B3F-423F-A4A7-4A19127F7075}.Release|Any CPU.Build.0 = Release|Any CPU
-		{CBC3208B-5B3F-423F-A4A7-4A19127F7075}.Release|x64.ActiveCfg = Release|Any CPU
-		{CBC3208B-5B3F-423F-A4A7-4A19127F7075}.Release|x64.Build.0 = Release|Any CPU
-		{CBC3208B-5B3F-423F-A4A7-4A19127F7075}.Release|x86.ActiveCfg = Release|Any CPU
-		{CBC3208B-5B3F-423F-A4A7-4A19127F7075}.Release|x86.Build.0 = Release|Any CPU
 		{DC8A6FFA-DD3A-4B33-800E-CD8D9166A58D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{DC8A6FFA-DD3A-4B33-800E-CD8D9166A58D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DC8A6FFA-DD3A-4B33-800E-CD8D9166A58D}.Debug|x64.ActiveCfg = Debug|Any CPU
@@ -134,18 +122,6 @@ Global
 		{C0E47301-8CB1-44F6-8321-BCB9C09219BB}.Release|x64.Build.0 = Release|Any CPU
 		{C0E47301-8CB1-44F6-8321-BCB9C09219BB}.Release|x86.ActiveCfg = Release|Any CPU
 		{C0E47301-8CB1-44F6-8321-BCB9C09219BB}.Release|x86.Build.0 = Release|Any CPU
-		{121D9AE4-3E50-43E2-838D-72020D2E241E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{121D9AE4-3E50-43E2-838D-72020D2E241E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{121D9AE4-3E50-43E2-838D-72020D2E241E}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{121D9AE4-3E50-43E2-838D-72020D2E241E}.Debug|x64.Build.0 = Debug|Any CPU
-		{121D9AE4-3E50-43E2-838D-72020D2E241E}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{121D9AE4-3E50-43E2-838D-72020D2E241E}.Debug|x86.Build.0 = Debug|Any CPU
-		{121D9AE4-3E50-43E2-838D-72020D2E241E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{121D9AE4-3E50-43E2-838D-72020D2E241E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{121D9AE4-3E50-43E2-838D-72020D2E241E}.Release|x64.ActiveCfg = Release|Any CPU
-		{121D9AE4-3E50-43E2-838D-72020D2E241E}.Release|x64.Build.0 = Release|Any CPU
-		{121D9AE4-3E50-43E2-838D-72020D2E241E}.Release|x86.ActiveCfg = Release|Any CPU
-		{121D9AE4-3E50-43E2-838D-72020D2E241E}.Release|x86.Build.0 = Release|Any CPU
 		{7F4E8BD3-E0B2-44B0-B175-40852137E928}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{7F4E8BD3-E0B2-44B0-B175-40852137E928}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7F4E8BD3-E0B2-44B0-B175-40852137E928}.Debug|x64.ActiveCfg = Debug|Any CPU
@@ -158,18 +134,6 @@ Global
 		{7F4E8BD3-E0B2-44B0-B175-40852137E928}.Release|x64.Build.0 = Release|Any CPU
 		{7F4E8BD3-E0B2-44B0-B175-40852137E928}.Release|x86.ActiveCfg = Release|Any CPU
 		{7F4E8BD3-E0B2-44B0-B175-40852137E928}.Release|x86.Build.0 = Release|Any CPU
-		{9712F952-7205-4B55-B261-D2845980BC64}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9712F952-7205-4B55-B261-D2845980BC64}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9712F952-7205-4B55-B261-D2845980BC64}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{9712F952-7205-4B55-B261-D2845980BC64}.Debug|x64.Build.0 = Debug|Any CPU
-		{9712F952-7205-4B55-B261-D2845980BC64}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{9712F952-7205-4B55-B261-D2845980BC64}.Debug|x86.Build.0 = Debug|Any CPU
-		{9712F952-7205-4B55-B261-D2845980BC64}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9712F952-7205-4B55-B261-D2845980BC64}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9712F952-7205-4B55-B261-D2845980BC64}.Release|x64.ActiveCfg = Release|Any CPU
-		{9712F952-7205-4B55-B261-D2845980BC64}.Release|x64.Build.0 = Release|Any CPU
-		{9712F952-7205-4B55-B261-D2845980BC64}.Release|x86.ActiveCfg = Release|Any CPU
-		{9712F952-7205-4B55-B261-D2845980BC64}.Release|x86.Build.0 = Release|Any CPU
 		{6280AE1B-7534-4450-A502-2657D3B1F5D4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{6280AE1B-7534-4450-A502-2657D3B1F5D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6280AE1B-7534-4450-A502-2657D3B1F5D4}.Debug|x64.ActiveCfg = Debug|Any CPU

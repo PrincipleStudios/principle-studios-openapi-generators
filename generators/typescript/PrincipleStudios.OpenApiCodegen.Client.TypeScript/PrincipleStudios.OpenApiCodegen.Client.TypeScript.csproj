@@ -19,8 +19,5 @@
     <PackageReference Include="Microsoft.Extensions.CommandLineUtils" Version="1.1.1" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\lib\PrincipleStudios.OpenApi.TypeScript\PrincipleStudios.OpenApi.TypeScript.csproj" />
-  </ItemGroup>
-
+  <Import Project="..\..\..\lib\PrincipleStudios.OpenApi.TypeScript\PrincipleStudios.OpenApi.TypeScript.projitems" Label="Shared" />
 </Project>

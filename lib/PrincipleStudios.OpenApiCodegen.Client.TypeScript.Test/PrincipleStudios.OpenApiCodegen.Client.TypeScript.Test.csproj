@@ -22,8 +22,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\generators\typescript\PrincipleStudios.OpenApiCodegen.Client.TypeScript\PrincipleStudios.OpenApiCodegen.Client.TypeScript.csproj" />
-    <ProjectReference Include="..\PrincipleStudios.OpenApi.TypeScript\PrincipleStudios.OpenApi.TypeScript.csproj" />
-    <ProjectReference Include="..\PrincipleStudios.OpenApiCodegen.TestUtils\PrincipleStudios.OpenApiCodegen.TestUtils.csproj" />
   </ItemGroup>
+
+  <Import Project="..\PrincipleStudios.OpenApiCodegen.TestUtils\PrincipleStudios.OpenApiCodegen.TestUtils.projitems" Label="Shared" />
 
 </Project>
