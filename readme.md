@@ -31,10 +31,15 @@ sides.
 
 Generators currently available:
 
-* [TypeScript-Axios](./generators/typescript-axios), for when you want to check
-  the FrontEnd APIs and use a common AJAX library.
-* [.NET Core Server Interfaces](./generators/dotnetcore-server-interfaces), for
-  the modern C# approach.
+* ![PrincipleStudios.OpenApiCodegen.Server.Mvc NuGet](https://img.shields.io/nuget/v/PrincipleStudios.OpenApiCodegen.Server.Mvc)
+  [.NET Core Server Interfaces](./generators/dotnetcore-server-interfaces), for the modern C# MVC server approach.
+* ![PrincipleStudios.OpenApiCodegen.Client NuGet](https://img.shields.io/nuget/v/PrincipleStudios.OpenApiCodegen.Client)
+  [.NET Standard Client](./generators/dotnetstandard-client), for the modern C# approach for a client.
+* ![@principlestudios/openapi-codegen-typescript at npm](https://img.shields.io/npm/v/@principlestudios/openapi-codegen-typescript)
+  [TypeScript](./generators/typescript), for a TypeScript client that is agnostic about how you fetch data.
+* ![@principlestudios/openapi-codegen-typescript-rxjs at npm](https://img.shields.io/npm/v/@principlestudios/openapi-codegen-typescript-rxjs)
+  [TypeScript RXJS](./generators/typescript-rxjs), for a TypeScript client that leverages RxJS.
+
 
 [1]: https://editor.swagger.io/
 [2]: https://mermade.github.io/openapi-gui/
