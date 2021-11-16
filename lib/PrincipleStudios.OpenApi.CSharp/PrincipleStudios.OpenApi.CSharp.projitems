@@ -8,7 +8,6 @@
   <PropertyGroup Label="Configuration">
     <Import_RootNamespace>PrincipleStudios.OpenApi.CSharp</Import_RootNamespace>
   </PropertyGroup>
-
   <ItemGroup>
     <PackageReference Include="Handlebars.Net" Version="2.0.7" />
     <PackageReference Include="Microsoft.OpenApi.Readers" Version="1.2.3" />
@@ -16,7 +15,6 @@
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="SharpYaml" Version="1.6.5" />
   </ItemGroup>
-
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)**\*.cs" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)templates\*.handlebars">
@@ -27,6 +25,5 @@
       <LogicalName>PrincipleStudios.OpenApi.CSharp.%(Filename)%(Extension)</LogicalName>
     </EmbeddedResource>
   </ItemGroup>
-
   <Import Project="..\PrincipleStudios.OpenApi.Transformations\PrincipleStudios.OpenApi.Transformations.projitems" />
 </Project>
