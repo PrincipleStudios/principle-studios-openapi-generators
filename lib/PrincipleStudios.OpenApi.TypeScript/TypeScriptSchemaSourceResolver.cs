@@ -292,7 +292,7 @@ namespace PrincipleStudios.OpenApi.TypeScript
                 // TODO - better inline types
                 _ when ProduceSourceEntry(schema) =>
                     new(UseReferenceName(schema), ImmutableList<ImportReference>.Empty.Add(ToImportReference(schema))),
-                { Type: "object", Properties: IDictionary<string, OpenApiSchema> properties, AdditionalProperties: null } =>
+                { Type: "object", Format: null, Properties: IDictionary<string, OpenApiSchema> properties, AdditionalProperties: null } =>
                     ObjectToInline(properties),
                 { Enum: { Count: > 0 } and IList<Microsoft.OpenApi.Any.IOpenApiAny> enumValues } =>
                     EnumToInline(enumValues),
@@ -324,7 +324,7 @@ namespace PrincipleStudios.OpenApi.TypeScript
                              )).ToArray();
                 return new($"{{ { string.Join("; ", props.Select(p => p.text))} }}", props.SelectMany(p => p.imports).ToImmutableList());
             }
-            InlineDataType TypeWithFormatToInline(string type, string format)
+            InlineDataType TypeWithFormatToInline(string type, string? format)
             {
                 return new(options.Find(type, format), ImmutableList<ImportReference>.Empty);
             }

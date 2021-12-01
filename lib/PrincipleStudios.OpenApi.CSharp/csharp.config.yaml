@@ -191,3 +191,6 @@ types:
       uint32: uint
       uint64: ulong
     default: int
+  object:
+    formats:
+      any: global::Newtonsoft.Json.Linq.JToken

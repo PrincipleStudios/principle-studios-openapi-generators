@@ -101,3 +101,6 @@ types:
       int64: BigInt
       uint64: BigInt
     default: number
+  object:
+    formats:
+      any: any

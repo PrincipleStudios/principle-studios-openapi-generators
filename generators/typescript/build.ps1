@@ -4,6 +4,7 @@ cd $PSScriptRoot
 dotnet publish ./PrincipleStudios.OpenApiCodegen.Client.TypeScript/PrincipleStudios.OpenApiCodegen.Client.TypeScript.csproj -c Release -p:UseAppHost=false -o ./npm/dotnet
 
 cd npm
+npm ci
 Remove-Item -LiteralPath "lib" -Force -Recurse -ErrorAction SilentlyContinue
 npm pack
 

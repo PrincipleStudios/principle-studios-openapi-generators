@@ -64,10 +64,11 @@ namespace PrincipleStudios.OpenApi.CSharp
                 { AllOf: { Count: > 1 } } => true,
                 { AnyOf: { Count: > 1 } } => true,
                 { Type: "string", Enum: { Count: > 1 } } => true,
-                { Type: "object" } => true,
+                { Type: "array", Items: OpenApiSchema inner } => false,
+                { Type: string type, Format: var format, Properties: { Count: 0 }, Enum: { Count: 0 } } => options.Find(type, format) == "object",
+                { Type: "object", Format: null } => true,
                 { Properties: { Count: > 1 } } => true,
                 { Type: "string" or "number" or "integer" or "boolean" } => false,
-                { Type: "array", Items: OpenApiSchema inner } => false,
                 _ => throw new NotSupportedException("Unknown schema"),
             };
         }
@@ -83,7 +84,7 @@ namespace PrincipleStudios.OpenApi.CSharp
             var context = GetBestContext(GetApiContexts(schema));
             var info = context.Select(v => v.Element).OfType<OpenApiDocument>().Last().Info;
             var className = GetClassName(schema);
-            
+
             var header = new templates.PartialHeader(
                 appName: info.Title,
                 appDescription: info.Description,
@@ -212,17 +213,17 @@ namespace PrincipleStudios.OpenApi.CSharp
             var required = new HashSet<string>(objectModel.required());
 
             Func<templates.ModelVar>[] vars = (from entry in properties
-                        let req = required.Contains(entry.Key)
-                        let dataTypeBase = ToInlineDataType(entry.Value)
-                        let dataType = req ? dataTypeBase : () => dataTypeBase().MakeNullable()
-                        select (Func<templates.ModelVar>)(() => new templates.ModelVar(
-                            baseName: entry.Key,
-                            dataType: dataType().text,
-                            nullable: dataType().nullable,
-                            isContainer: dataType().isEnumerable,
-                            name: CSharpNaming.ToPropertyName(entry.Key, options.ReservedIdentifiers("object", className)),
-                            required: req
-                         ))).ToArray();
+                                               let req = required.Contains(entry.Key)
+                                               let dataTypeBase = ToInlineDataType(entry.Value)
+                                               let dataType = req ? dataTypeBase : () => dataTypeBase().MakeNullable()
+                                               select (Func<templates.ModelVar>)(() => new templates.ModelVar(
+                                                   baseName: entry.Key,
+                                                   dataType: dataType().text,
+                                                   nullable: dataType().nullable,
+                                                   isContainer: dataType().isEnumerable,
+                                                   name: CSharpNaming.ToPropertyName(entry.Key, options.ReservedIdentifiers("object", className)),
+                                                   required: req
+                                                ))).ToArray();
 
             return () => new templates.ObjectModel(
                 description: schema.Description,

@@ -1,0 +1,17 @@
+openapi: "3.0.3"
+info:
+  version: 1.0.0
+  title: Any
+  description: A sample API that demonstrates an "any" object
+paths:
+  /data:
+    post:
+      operationId: getData
+      responses:
+        '200':
+          description: Gets any kind of JSON data
+          content:
+            application/json:
+              schema:
+                type: object
+                format: any
