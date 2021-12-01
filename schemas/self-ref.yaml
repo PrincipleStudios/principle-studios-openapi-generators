@@ -1,0 +1,26 @@
+openapi: "3.0.3"
+info:
+  version: 1.0.0
+  title: Self-ref
+  description: A sample API that demonstrates a self-referencing object
+paths:
+  /data:
+    post:
+      operationId: getData
+      responses:
+        '200':
+          description: Gets any kind of JSON data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Target'
+components:
+  schemas:
+    Target:
+      type: object
+      properties:
+        target:
+          $ref: '#/components/schemas/Target'
+      required:
+        - target
+

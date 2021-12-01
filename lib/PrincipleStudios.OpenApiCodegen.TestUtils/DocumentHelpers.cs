@@ -25,6 +25,7 @@ namespace PrincipleStudios.OpenApiCodegen.TestUtils
             "enum.yaml",
             "array.yaml",
             "any.yaml",
+            "self-ref.yaml",
         };
 
         private static readonly string[] InvalidDocumentNames = new[]

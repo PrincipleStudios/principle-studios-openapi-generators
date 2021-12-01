@@ -221,7 +221,7 @@ namespace PrincipleStudios.OpenApi.TypeScript
 
 
             return () => new templates.ObjectModel(
-                imports: this.GetImportStatements(properties.Values, "./models/").ToArray(),
+                imports: this.GetImportStatements(properties.Values.Except(new[] { schema }), "./models/").ToArray(),
                 description: schema.Description,
                 className: className,
                 parent: null, // TODO - if "all of" and only one was a reference, we should be able to use inheritance.
