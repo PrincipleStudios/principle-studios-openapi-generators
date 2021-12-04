@@ -35,7 +35,7 @@ namespace PrincipleStudios.OpenApi.TypeScript
         }
 
         public static System.IO.Stream GetDefaultOptionsJson() =>
-            typeof(TypeScriptSchemaOptions).Assembly.GetManifestResourceStream($"{typeof(TypeScriptSchemaOptions).Namespace}.typescript.config.yaml");
+            typeof(TypeScriptSchemaOptions).Assembly.GetManifestResourceStream($"{typeof(TypeScriptSchemaOptions).Namespace}.typescript.config.yaml")!;
 
         public IEnumerable<string> ReservedIdentifiers(string? scope = null, params string[] extraReserved) =>
             (

@@ -25,6 +25,7 @@ namespace PrincipleStudios.OpenApiCodegen.TestUtils
             "enum.yaml",
             "array.yaml",
             "any.yaml",
+            "all-of.yaml",
             "self-ref.yaml",
         };
 

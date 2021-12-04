@@ -1,0 +1,41 @@
+openapi: '3.0.2'
+info:
+  title: AllOf Example
+  version: '1.0'
+
+components:
+  schemas:
+    Contact:
+      type: object
+      required:
+        - firstName
+        - lastName
+      properties:
+        firstName:
+          type: string
+        lastName:
+          type: string
+        id:
+          type: string
+    ContactWithId:
+      allOf:
+        - $ref: '#/components/schemas/Contact'
+        - $ref: '#/components/schemas/RequiredId'
+    RequiredId:
+      type: object
+      properties:
+        id:
+          type: string
+      required:
+        - id
+paths:
+  /contact:
+    get:
+      operationId: getContact
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContactWithId'

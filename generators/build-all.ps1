@@ -2,9 +2,9 @@ Push-Location
 & ./dotnetcore-server-interfaces/build.ps1
 Pop-Location
 
-# Push-Location
-# & ./dotnetstandard-client/build.ps1
-# Pop-Location
+Push-Location
+& ./dotnetstandard-client/build.ps1
+Pop-Location
 
 Push-Location
 & ./typescript/build.ps1

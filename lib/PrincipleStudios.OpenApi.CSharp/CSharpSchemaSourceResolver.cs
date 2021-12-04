@@ -257,7 +257,11 @@ namespace PrincipleStudios.OpenApi.CSharp
                 {
                     ObjectModel[] models when models.All(v => v != null) =>
                         new ObjectModel(
-                            properties: () => models.SelectMany(m => m!.properties()).ToDictionary(p => p.Key, p => p.Value),
+                            properties: () => models.SelectMany(m => m!.properties()).Aggregate(new Dictionary<string, OpenApiSchema>(), (prev, kvp) =>
+                            {
+                                prev[kvp.Key] = kvp.Value;
+                                return prev;
+                            }),
                             required: () => models.SelectMany(m => m!.required()).Distinct()
                         ),
                     _ => null
