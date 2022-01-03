@@ -9,7 +9,8 @@ namespace {{this.packageName}}
     /// {{linewrap description "
     /// "}}
     /// </summary>{{/if}}
-    {{#if model.isString}}[global::Newtonsoft.Json.JsonConverter(typeof(global::Newtonsoft.Json.Converters.StringEnumConverter))]{{/if}}
+    {{#if model.isString}}[global::Newtonsoft.Json.JsonConverter(typeof(global::Newtonsoft.Json.Converters.StringEnumConverter))]
+    [global::System.ComponentModel.TypeConverterAttribute(typeof({{className}}EnumConverter<{{className}}>))]{{/if}}
     public enum {{className}}
     {
         {{#each enumVars as |enumVar|}}
@@ -20,6 +21,20 @@ namespace {{this.packageName}}
         {{enumVar.name}} = {{#if model.isString}}{{@index}}{{else}}{{{enumVar.value}}}{{/if}},
 
         {{/each}}
+    }
+
+    public class {{className}}EnumConverter : TypeConverter
+    {
+        public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
+        {
+            var s = value as string;
+            if (string.IsNullOrEmpty(s))
+            {
+                return null;
+            }
+
+            return JsonConvert.DeserializeObject<{{className}}>(@"""" + value.ToString() + @"""");
+        }
     }
 {{/with}}
 }

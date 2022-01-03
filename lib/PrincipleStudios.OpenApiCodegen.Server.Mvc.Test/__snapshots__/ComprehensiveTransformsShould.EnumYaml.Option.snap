@@ -14,6 +14,7 @@
 namespace PS.Controller
 { 
     [global::Newtonsoft.Json.JsonConverter(typeof(global::Newtonsoft.Json.Converters.StringEnumConverter))]
+    [global::System.ComponentModel.TypeConverterAttribute(typeof(OptionEnumConverter<Option>))]
     public enum Option
     {
         /// <summary>
@@ -34,5 +35,19 @@ namespace PS.Controller
         [global::System.Runtime.Serialization.EnumMember(Value = "scissors")]
         Scissors = 2,
 
+    }
+
+    public class OptionEnumConverter : TypeConverter
+    {
+        public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
+        {
+            var s = value as string;
+            if (string.IsNullOrEmpty(s))
+            {
+                return null;
+            }
+
+            return JsonConvert.DeserializeObject<Option>(@"""" + value.ToString() + @"""");
+        }
     }
 }
