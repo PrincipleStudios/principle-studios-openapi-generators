@@ -37,7 +37,7 @@ string? end,
             string? end
             )
         {
-            var requestMessage = new global::System.Net.Http.HttpRequestMessage(global::System.Net.Http.HttpMethod.Get, "/power");
+            var requestMessage = new global::System.Net.Http.HttpRequestMessage(global::System.Net.Http.HttpMethod.Get, "power");
 
 
             return requestMessage;
@@ -113,7 +113,7 @@ string? end,
             global::System.Guid houseId
             )
         {
-            var requestMessage = new global::System.Net.Http.HttpRequestMessage(global::System.Net.Http.HttpMethod.Get, "/battery/current");
+            var requestMessage = new global::System.Net.Http.HttpRequestMessage(global::System.Net.Http.HttpMethod.Get, "battery/current");
 
 
             return requestMessage;

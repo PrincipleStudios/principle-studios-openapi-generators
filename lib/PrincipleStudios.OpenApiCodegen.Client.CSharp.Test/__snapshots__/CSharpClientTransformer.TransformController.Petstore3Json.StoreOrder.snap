@@ -31,7 +31,7 @@ namespace PrincipleStudios.Test
             Pet addPetBody
             )
         {
-            var requestMessage = new global::System.Net.Http.HttpRequestMessage(global::System.Net.Http.HttpMethod.Post, "/pet");
+            var requestMessage = new global::System.Net.Http.HttpRequestMessage(global::System.Net.Http.HttpMethod.Post, "pet");
             requestMessage.Content = new global::System.Net.Http.StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(addPetBody), System.Text.Encoding.UTF8, "application/json");
 
 
@@ -92,7 +92,7 @@ namespace PrincipleStudios.Test
             Pet updatePetBody
             )
         {
-            var requestMessage = new global::System.Net.Http.HttpRequestMessage(global::System.Net.Http.HttpMethod.Put, "/pet");
+            var requestMessage = new global::System.Net.Http.HttpRequestMessage(global::System.Net.Http.HttpMethod.Put, "pet");
             requestMessage.Content = new global::System.Net.Http.StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(updatePetBody), System.Text.Encoding.UTF8, "application/json");
 
 
@@ -188,7 +188,7 @@ namespace PrincipleStudios.Test
             global::System.Collections.Generic.IEnumerable<FindPetsByStatusStatusItem> status
             )
         {
-            var requestMessage = new global::System.Net.Http.HttpRequestMessage(global::System.Net.Http.HttpMethod.Get, "/pet/findByStatus");
+            var requestMessage = new global::System.Net.Http.HttpRequestMessage(global::System.Net.Http.HttpMethod.Get, "pet/findByStatus");
 
 
             return requestMessage;
@@ -269,7 +269,7 @@ namespace PrincipleStudios.Test
             global::System.Collections.Generic.IEnumerable<string> tags
             )
         {
-            var requestMessage = new global::System.Net.Http.HttpRequestMessage(global::System.Net.Http.HttpMethod.Get, "/pet/findByTags");
+            var requestMessage = new global::System.Net.Http.HttpRequestMessage(global::System.Net.Http.HttpMethod.Get, "pet/findByTags");
 
 
             return requestMessage;
@@ -350,7 +350,7 @@ namespace PrincipleStudios.Test
             long petId
             )
         {
-            var requestMessage = new global::System.Net.Http.HttpRequestMessage(global::System.Net.Http.HttpMethod.Get, "/pet/{petId}"
+            var requestMessage = new global::System.Net.Http.HttpRequestMessage(global::System.Net.Http.HttpMethod.Get, "pet/{petId}"
                         .Replace("{" + "petId" + "}", global::System.Web.HttpUtility.UrlEncode(petId.ToString())));
 
 
@@ -445,7 +445,7 @@ namespace PrincipleStudios.Test
             long petId
             )
         {
-            var requestMessage = new global::System.Net.Http.HttpRequestMessage(global::System.Net.Http.HttpMethod.Post, "/pet/{petId}"
+            var requestMessage = new global::System.Net.Http.HttpRequestMessage(global::System.Net.Http.HttpMethod.Post, "pet/{petId}"
                         .Replace("{" + "petId" + "}", global::System.Web.HttpUtility.UrlEncode(petId.ToString())));
 
 
@@ -474,7 +474,7 @@ string? status,
             string? status
             )
         {
-            var requestMessage = new global::System.Net.Http.HttpRequestMessage(global::System.Net.Http.HttpMethod.Post, "/pet/{petId}"
+            var requestMessage = new global::System.Net.Http.HttpRequestMessage(global::System.Net.Http.HttpMethod.Post, "pet/{petId}"
                         .Replace("{" + "petId" + "}", global::System.Web.HttpUtility.UrlEncode(petId.ToString())));
             requestMessage.Content = new global::System.Net.Http.MultipartFormDataContent()
             {
@@ -546,7 +546,7 @@ long petId,
             long petId
             )
         {
-            var requestMessage = new global::System.Net.Http.HttpRequestMessage(global::System.Net.Http.HttpMethod.Delete, "/pet/{petId}"
+            var requestMessage = new global::System.Net.Http.HttpRequestMessage(global::System.Net.Http.HttpMethod.Delete, "pet/{petId}"
                         .Replace("{" + "petId" + "}", global::System.Web.HttpUtility.UrlEncode(petId.ToString())));
 
 
@@ -624,7 +624,7 @@ long petId,
             long petId
             )
         {
-            var requestMessage = new global::System.Net.Http.HttpRequestMessage(global::System.Net.Http.HttpMethod.Post, "/pet/{petId}/uploadImage"
+            var requestMessage = new global::System.Net.Http.HttpRequestMessage(global::System.Net.Http.HttpMethod.Post, "pet/{petId}/uploadImage"
                         .Replace("{" + "petId" + "}", global::System.Web.HttpUtility.UrlEncode(petId.ToString())));
 
 
@@ -650,7 +650,7 @@ global::System.IO.Stream uploadFileBody,
             global::System.IO.Stream uploadFileBody
             )
         {
-            var requestMessage = new global::System.Net.Http.HttpRequestMessage(global::System.Net.Http.HttpMethod.Post, "/pet/{petId}/uploadImage"
+            var requestMessage = new global::System.Net.Http.HttpRequestMessage(global::System.Net.Http.HttpMethod.Post, "pet/{petId}/uploadImage"
                         .Replace("{" + "petId" + "}", global::System.Web.HttpUtility.UrlEncode(petId.ToString())));
 
             requestMessage.Content = new global::System.Net.Http.StreamContent(uploadFileBody);
@@ -715,7 +715,7 @@ global::System.IO.Stream uploadFileBody,
         public static global::System.Net.Http.HttpRequestMessage GetInventory(
             )
         {
-            var requestMessage = new global::System.Net.Http.HttpRequestMessage(global::System.Net.Http.HttpMethod.Get, "/store/inventory");
+            var requestMessage = new global::System.Net.Http.HttpRequestMessage(global::System.Net.Http.HttpMethod.Get, "store/inventory");
 
 
             return requestMessage;
@@ -777,7 +777,7 @@ global::System.IO.Stream uploadFileBody,
             Order placeOrderBody
             )
         {
-            var requestMessage = new global::System.Net.Http.HttpRequestMessage(global::System.Net.Http.HttpMethod.Post, "/store/order");
+            var requestMessage = new global::System.Net.Http.HttpRequestMessage(global::System.Net.Http.HttpMethod.Post, "store/order");
             requestMessage.Content = new global::System.Net.Http.StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(placeOrderBody), System.Text.Encoding.UTF8, "application/json");
 
 
@@ -859,7 +859,7 @@ global::System.IO.Stream uploadFileBody,
             long orderId
             )
         {
-            var requestMessage = new global::System.Net.Http.HttpRequestMessage(global::System.Net.Http.HttpMethod.Get, "/store/order/{orderId}"
+            var requestMessage = new global::System.Net.Http.HttpRequestMessage(global::System.Net.Http.HttpMethod.Get, "store/order/{orderId}"
                         .Replace("{" + "orderId" + "}", global::System.Web.HttpUtility.UrlEncode(orderId.ToString())));
 
 
@@ -957,7 +957,7 @@ global::System.IO.Stream uploadFileBody,
             long orderId
             )
         {
-            var requestMessage = new global::System.Net.Http.HttpRequestMessage(global::System.Net.Http.HttpMethod.Delete, "/store/order/{orderId}"
+            var requestMessage = new global::System.Net.Http.HttpRequestMessage(global::System.Net.Http.HttpMethod.Delete, "store/order/{orderId}"
                         .Replace("{" + "orderId" + "}", global::System.Web.HttpUtility.UrlEncode(orderId.ToString())));
 
 
@@ -1037,7 +1037,7 @@ global::System.IO.Stream uploadFileBody,
             User createUserBody
             )
         {
-            var requestMessage = new global::System.Net.Http.HttpRequestMessage(global::System.Net.Http.HttpMethod.Post, "/user");
+            var requestMessage = new global::System.Net.Http.HttpRequestMessage(global::System.Net.Http.HttpMethod.Post, "user");
             requestMessage.Content = new global::System.Net.Http.StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(createUserBody), System.Text.Encoding.UTF8, "application/json");
 
 
@@ -1095,7 +1095,7 @@ global::System.IO.Stream uploadFileBody,
             global::System.Collections.Generic.IEnumerable<User> createUsersWithArrayInputBody
             )
         {
-            var requestMessage = new global::System.Net.Http.HttpRequestMessage(global::System.Net.Http.HttpMethod.Post, "/user/createWithArray");
+            var requestMessage = new global::System.Net.Http.HttpRequestMessage(global::System.Net.Http.HttpMethod.Post, "user/createWithArray");
             requestMessage.Content = new global::System.Net.Http.StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(createUsersWithArrayInputBody), System.Text.Encoding.UTF8, "application/json");
 
 
@@ -1153,7 +1153,7 @@ global::System.IO.Stream uploadFileBody,
             global::System.Collections.Generic.IEnumerable<User> createUsersWithListInputBody
             )
         {
-            var requestMessage = new global::System.Net.Http.HttpRequestMessage(global::System.Net.Http.HttpMethod.Post, "/user/createWithList");
+            var requestMessage = new global::System.Net.Http.HttpRequestMessage(global::System.Net.Http.HttpMethod.Post, "user/createWithList");
             requestMessage.Content = new global::System.Net.Http.StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(createUsersWithListInputBody), System.Text.Encoding.UTF8, "application/json");
 
 
@@ -1214,7 +1214,7 @@ string password,
             string password
             )
         {
-            var requestMessage = new global::System.Net.Http.HttpRequestMessage(global::System.Net.Http.HttpMethod.Get, "/user/login");
+            var requestMessage = new global::System.Net.Http.HttpRequestMessage(global::System.Net.Http.HttpMethod.Get, "user/login");
 
 
             return requestMessage;
@@ -1289,7 +1289,7 @@ string password,
         public static global::System.Net.Http.HttpRequestMessage LogoutUser(
             )
         {
-            var requestMessage = new global::System.Net.Http.HttpRequestMessage(global::System.Net.Http.HttpMethod.Get, "/user/logout");
+            var requestMessage = new global::System.Net.Http.HttpRequestMessage(global::System.Net.Http.HttpMethod.Get, "user/logout");
 
 
             return requestMessage;
@@ -1346,7 +1346,7 @@ string password,
             string username
             )
         {
-            var requestMessage = new global::System.Net.Http.HttpRequestMessage(global::System.Net.Http.HttpMethod.Get, "/user/{username}"
+            var requestMessage = new global::System.Net.Http.HttpRequestMessage(global::System.Net.Http.HttpMethod.Get, "user/{username}"
                         .Replace("{" + "username" + "}", global::System.Web.HttpUtility.UrlEncode(username.ToString())));
 
 
@@ -1447,7 +1447,7 @@ User updateUserBody,
             User updateUserBody
             )
         {
-            var requestMessage = new global::System.Net.Http.HttpRequestMessage(global::System.Net.Http.HttpMethod.Put, "/user/{username}"
+            var requestMessage = new global::System.Net.Http.HttpRequestMessage(global::System.Net.Http.HttpMethod.Put, "user/{username}"
                         .Replace("{" + "username" + "}", global::System.Web.HttpUtility.UrlEncode(username.ToString())));
             requestMessage.Content = new global::System.Net.Http.StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(updateUserBody), System.Text.Encoding.UTF8, "application/json");
 
@@ -1528,7 +1528,7 @@ User updateUserBody,
             string username
             )
         {
-            var requestMessage = new global::System.Net.Http.HttpRequestMessage(global::System.Net.Http.HttpMethod.Delete, "/user/{username}"
+            var requestMessage = new global::System.Net.Http.HttpRequestMessage(global::System.Net.Http.HttpMethod.Delete, "user/{username}"
                         .Replace("{" + "username" + "}", global::System.Web.HttpUtility.UrlEncode(username.ToString())));
 
 

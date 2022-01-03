@@ -38,7 +38,7 @@ int? limit,
             int? limit
             )
         {
-            var requestMessage = new global::System.Net.Http.HttpRequestMessage(global::System.Net.Http.HttpMethod.Get, "/pets");
+            var requestMessage = new global::System.Net.Http.HttpRequestMessage(global::System.Net.Http.HttpMethod.Get, "pets");
 
 
             return requestMessage;
@@ -115,7 +115,7 @@ int? limit,
             NewPet addPetBody
             )
         {
-            var requestMessage = new global::System.Net.Http.HttpRequestMessage(global::System.Net.Http.HttpMethod.Post, "/pets");
+            var requestMessage = new global::System.Net.Http.HttpRequestMessage(global::System.Net.Http.HttpMethod.Post, "pets");
             requestMessage.Content = new global::System.Net.Http.StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(addPetBody), System.Text.Encoding.UTF8, "application/json");
 
 
@@ -193,7 +193,7 @@ int? limit,
             long id
             )
         {
-            var requestMessage = new global::System.Net.Http.HttpRequestMessage(global::System.Net.Http.HttpMethod.Get, "/pets/{id}"
+            var requestMessage = new global::System.Net.Http.HttpRequestMessage(global::System.Net.Http.HttpMethod.Get, "pets/{id}"
                         .Replace("{" + "id" + "}", global::System.Web.HttpUtility.UrlEncode(id.ToString())));
 
 
@@ -271,7 +271,7 @@ int? limit,
             long id
             )
         {
-            var requestMessage = new global::System.Net.Http.HttpRequestMessage(global::System.Net.Http.HttpMethod.Delete, "/pets/{id}"
+            var requestMessage = new global::System.Net.Http.HttpRequestMessage(global::System.Net.Http.HttpMethod.Delete, "pets/{id}"
                         .Replace("{" + "id" + "}", global::System.Web.HttpUtility.UrlEncode(id.ToString())));
 
 

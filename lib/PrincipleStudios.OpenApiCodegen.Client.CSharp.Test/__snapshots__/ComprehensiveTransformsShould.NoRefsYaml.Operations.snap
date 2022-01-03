@@ -28,7 +28,7 @@ namespace PS.Controller
             LookupRecordRequest lookupRecordBody
             )
         {
-            var requestMessage = new global::System.Net.Http.HttpRequestMessage(global::System.Net.Http.HttpMethod.Post, "/address");
+            var requestMessage = new global::System.Net.Http.HttpRequestMessage(global::System.Net.Http.HttpMethod.Post, "address");
             requestMessage.Content = new global::System.Net.Http.StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(lookupRecordBody), System.Text.Encoding.UTF8, "application/json");
 
 
@@ -117,7 +117,7 @@ namespace PS.Controller
             string id
             )
         {
-            var requestMessage = new global::System.Net.Http.HttpRequestMessage(global::System.Net.Http.HttpMethod.Get, "/photo/{id}"
+            var requestMessage = new global::System.Net.Http.HttpRequestMessage(global::System.Net.Http.HttpMethod.Get, "photo/{id}"
                         .Replace("{" + "id" + "}", global::System.Web.HttpUtility.UrlEncode(id.ToString())));
 
 

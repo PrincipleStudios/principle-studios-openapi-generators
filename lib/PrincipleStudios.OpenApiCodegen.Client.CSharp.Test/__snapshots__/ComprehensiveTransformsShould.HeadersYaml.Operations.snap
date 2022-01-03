@@ -28,7 +28,7 @@ namespace PS.Controller
             byte[] xData
             )
         {
-            var requestMessage = new global::System.Net.Http.HttpRequestMessage(global::System.Net.Http.HttpMethod.Get, "/info");
+            var requestMessage = new global::System.Net.Http.HttpRequestMessage(global::System.Net.Http.HttpMethod.Get, "info");
 
 
             requestMessage.Headers.Add("", xData.ToString());
@@ -114,7 +114,7 @@ namespace PS.Controller
         public static global::System.Net.Http.HttpRequestMessage _Redirect(
             )
         {
-            var requestMessage = new global::System.Net.Http.HttpRequestMessage(global::System.Net.Http.HttpMethod.Get, "/redirect");
+            var requestMessage = new global::System.Net.Http.HttpRequestMessage(global::System.Net.Http.HttpMethod.Get, "redirect");
 
 
             return requestMessage;

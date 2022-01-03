@@ -40,6 +40,9 @@ namespace PrincipleStudios.OpenApi.CSharp
             var visitor = new OperationVisitor(csharpSchemaResolver, options, controllerClassName: className);
             visitor.Visit(document, OpenApiContext.From(document), new OperationVisitor.Argument(diagnostic, resultOperations.Add));
 
+            resultOperations = (from operation in resultOperations
+                                select operation with { path = operation.path.Substring(1) }).ToList();
+
             var template = new templates.FullTemplate(
                 header: new templates.PartialHeader(
                     appName: document.Info.Title,
