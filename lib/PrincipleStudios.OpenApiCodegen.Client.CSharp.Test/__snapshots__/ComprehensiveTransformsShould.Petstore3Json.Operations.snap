@@ -188,7 +188,17 @@ namespace PS.Controller
             global::System.Collections.Generic.IEnumerable<FindPetsByStatusStatusItem> status
             )
         {
-            var requestMessage = new global::System.Net.Http.HttpRequestMessage(global::System.Net.Http.HttpMethod.Get, "pet/findByStatus");
+            var query = global::System.Web.HttpUtility.ParseQueryString(string.Empty); 
+
+            if (status != null)
+                foreach (var entry in status)
+                    query.Add("status", global::System.Convert.ToString(entry));
+
+            var requestMessage = new global::System.Net.Http.HttpRequestMessage(
+                global::System.Net.Http.HttpMethod.Get,
+                new global::System.Uri("pet/findByStatus"
+                    + "?" + query.ToString(),
+                    global::System.UriKind.Relative));
 
 
             return requestMessage;
@@ -269,7 +279,17 @@ namespace PS.Controller
             global::System.Collections.Generic.IEnumerable<string> tags
             )
         {
-            var requestMessage = new global::System.Net.Http.HttpRequestMessage(global::System.Net.Http.HttpMethod.Get, "pet/findByTags");
+            var query = global::System.Web.HttpUtility.ParseQueryString(string.Empty); 
+
+            if (tags != null)
+                foreach (var entry in tags)
+                    query.Add("tags", global::System.Convert.ToString(entry));
+
+            var requestMessage = new global::System.Net.Http.HttpRequestMessage(
+                global::System.Net.Http.HttpMethod.Get,
+                new global::System.Uri("pet/findByTags"
+                    + "?" + query.ToString(),
+                    global::System.UriKind.Relative));
 
 
             return requestMessage;
@@ -1214,7 +1234,17 @@ string password,
             string password
             )
         {
-            var requestMessage = new global::System.Net.Http.HttpRequestMessage(global::System.Net.Http.HttpMethod.Get, "user/login");
+            var query = global::System.Web.HttpUtility.ParseQueryString(string.Empty); 
+            if (username != null)
+                query.Add("username", global::System.Convert.ToString(username));
+            if (password != null)
+                query.Add("password", global::System.Convert.ToString(password));
+
+            var requestMessage = new global::System.Net.Http.HttpRequestMessage(
+                global::System.Net.Http.HttpMethod.Get,
+                new global::System.Uri("user/login"
+                    + "?" + query.ToString(),
+                    global::System.UriKind.Relative));
 
 
             return requestMessage;

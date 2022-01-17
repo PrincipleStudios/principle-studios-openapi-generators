@@ -220,6 +220,7 @@ namespace PrincipleStudios.OpenApi.CSharp
                  name: CSharpNaming.ToTitleCaseIdentifier(operationName, options.ReservedIdentifiers()),
                  isForm: isForm,
                  isFile: parameters.Any(t => t.isFile),
+                 hasQueryParam: sharedParams.Concat(parameters).Any(p => p.isQueryParam),
                  requestBodyType: requestBodyMimeType,
                  allParams: sharedParams.Concat(parameters)
              );

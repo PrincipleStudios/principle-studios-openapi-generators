@@ -37,7 +37,19 @@ string? end,
             string? end
             )
         {
-            var requestMessage = new global::System.Net.Http.HttpRequestMessage(global::System.Net.Http.HttpMethod.Get, "power");
+            var query = global::System.Web.HttpUtility.ParseQueryString(string.Empty); 
+            if (houseId != null)
+                query.Add("houseId", global::System.Convert.ToString(houseId));
+            if (start != null)
+                query.Add("start", global::System.Convert.ToString(start));
+            if (end != null)
+                query.Add("end", global::System.Convert.ToString(end));
+
+            var requestMessage = new global::System.Net.Http.HttpRequestMessage(
+                global::System.Net.Http.HttpMethod.Get,
+                new global::System.Uri("power"
+                    + "?" + query.ToString(),
+                    global::System.UriKind.Relative));
 
 
             return requestMessage;
@@ -113,7 +125,15 @@ string? end,
             global::System.Guid houseId
             )
         {
-            var requestMessage = new global::System.Net.Http.HttpRequestMessage(global::System.Net.Http.HttpMethod.Get, "battery/current");
+            var query = global::System.Web.HttpUtility.ParseQueryString(string.Empty); 
+            if (houseId != null)
+                query.Add("houseId", global::System.Convert.ToString(houseId));
+
+            var requestMessage = new global::System.Net.Http.HttpRequestMessage(
+                global::System.Net.Http.HttpMethod.Get,
+                new global::System.Uri("battery/current"
+                    + "?" + query.ToString(),
+                    global::System.UriKind.Relative));
 
 
             return requestMessage;

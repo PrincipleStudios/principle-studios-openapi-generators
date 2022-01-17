@@ -29,8 +29,26 @@ namespace {{packageName}}
             {{#each requestBody.allParams}}{{{dataType}}} {{paramName}}{{#unless @last}},{{/unless}}
             {{/each}})
         {
+{{#if requestBody.hasQueryParam}}
+            var query = global::System.Web.HttpUtility.ParseQueryString(string.Empty); {{!-- This is a weird way to get the internal NameValueCollection that properly serializes query strings --}}
+{{#each requestBody.allParams}}{{#if isQueryParam}}{{#if dataTypeEnumerable}}
+            if ({{paramName}} != null)
+                foreach (var entry in {{paramName}})
+                    query.Add("{{rawName}}", global::System.Convert.ToString(entry));
+{{else}}
+            if ({{paramName}} != null)
+                query.Add("{{rawName}}", global::System.Convert.ToString({{paramName}}));
+{{/if}}{{/if}}{{/each}}
+            var requestMessage = new global::System.Net.Http.HttpRequestMessage(
+                global::System.Net.Http.HttpMethod.{{{operation.httpMethod}}},
+                new global::System.Uri("{{{operation.path}}}"{{#each requestBody.allParams}}{{#if isPathParam}}
+                    .Replace("{" + "{{rawName}}" + "}", global::System.Web.HttpUtility.UrlEncode({{paramName}}.ToString())){{/if}}{{/each}}
+                    + "?" + query.ToString(),
+                    global::System.UriKind.Relative));
+{{else}}
             var requestMessage = new global::System.Net.Http.HttpRequestMessage(global::System.Net.Http.HttpMethod.{{{operation.httpMethod}}}, "{{{operation.path}}}"{{#each requestBody.allParams}}{{#if isPathParam}}
                         .Replace("{" + "{{rawName}}" + "}", global::System.Web.HttpUtility.UrlEncode({{paramName}}.ToString())){{/if}}{{/each}});
+{{/if}}
 {{#if requestBody.isForm}}
             requestMessage.Content = new global::System.Net.Http.MultipartFormDataContent()
             {

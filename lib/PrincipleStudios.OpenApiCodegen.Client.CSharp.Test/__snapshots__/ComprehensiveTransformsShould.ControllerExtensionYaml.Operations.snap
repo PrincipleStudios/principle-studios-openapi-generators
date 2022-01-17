@@ -28,7 +28,15 @@ namespace PS.Controller
             byte[]? data
             )
         {
-            var requestMessage = new global::System.Net.Http.HttpRequestMessage(global::System.Net.Http.HttpMethod.Get, "api/info");
+            var query = global::System.Web.HttpUtility.ParseQueryString(string.Empty); 
+            if (data != null)
+                query.Add("data", global::System.Convert.ToString(data));
+
+            var requestMessage = new global::System.Net.Http.HttpRequestMessage(
+                global::System.Net.Http.HttpMethod.Get,
+                new global::System.Uri("api/info"
+                    + "?" + query.ToString(),
+                    global::System.UriKind.Relative));
 
 
             return requestMessage;
