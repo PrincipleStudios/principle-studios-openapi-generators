@@ -1,0 +1,19 @@
+openapi: "3.0.3"
+info:
+  version: 1.0.0
+  title: Basic regex escaping
+  description: A sample
+paths:
+  /:
+    post:
+      operationId: testForRegex
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: string
+              pattern: '"foo"'
+      responses:
+        '200':
+          description: OK

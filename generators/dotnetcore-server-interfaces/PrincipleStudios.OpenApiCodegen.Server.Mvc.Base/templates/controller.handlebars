@@ -48,7 +48,7 @@ namespace {{packageName}}
             }}{{#if isFormParam}}global::Microsoft.AspNetCore.Mvc.FromForm(Name = "{{rawName}}"){{/if}}{{!
             }}{{#if isHeaderParam}}global::Microsoft.AspNetCore.Mvc.FromHeader(Name = "{{rawName}}"){{/if}}{{!
             }}{{#if required}}, global::System.ComponentModel.DataAnnotations.Required{{/if}}{{!
-            }}{{#if pattern}}, global::System.ComponentModel.DataAnnotations.RegularExpression("{{{pattern}}}"){{/if}}{{!
+            }}{{#if pattern}}, global::System.ComponentModel.DataAnnotations.RegularExpression(@"{{{escapeverbatimstring pattern}}}"){{/if}}{{!
             }}{{#if minLength.HasValue}}, global::System.ComponentModel.DataAnnotations.MinLength({{minLength}}){{/if}}{{!
             }}{{#if maxLength.HasValue}}, global::System.ComponentModel.DataAnnotations.MaxLength({{maxLength}}){{/if}}{{!
             }}{{#if minimum.HasValue}}{{#if maximum.HasValue}}, global::System.ComponentModel.DataAnnotations.Range({{minimum}}, {{maximum}}){{/if}}{{/if}}{{!

@@ -25,6 +25,14 @@ namespace PrincipleStudios.OpenApi.CSharp
                         : parameters[0]
             );
 
+            result.RegisterHelper(
+                "escapeverbatimstring",
+                (context, parameters) =>
+                    parameters[0] is string s
+                        ? s.ToString().Replace("\"", "\"\"")
+                        : parameters[0]
+            );
+
             foreach (var resourceName in typeof(HandlebarsTemplateProcess).Assembly.GetManifestResourceNames().Where(n => n.EndsWith(".handlebars")))
                 result.AddTemplate(typeof(HandlebarsTemplateProcess).Assembly, resourceName);
 
