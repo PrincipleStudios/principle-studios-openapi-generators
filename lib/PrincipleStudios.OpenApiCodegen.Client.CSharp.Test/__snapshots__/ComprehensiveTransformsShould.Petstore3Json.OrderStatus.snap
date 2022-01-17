@@ -17,6 +17,7 @@ namespace PS.Controller
     /// Order Status
     /// </summary>
     [global::Newtonsoft.Json.JsonConverter(typeof(global::Newtonsoft.Json.Converters.StringEnumConverter))]
+    [global::System.ComponentModel.TypeConverterAttribute(typeof(OrderStatusEnumConverter<OrderStatus>))]
     public enum OrderStatus
     {
         /// <summary>
@@ -37,5 +38,19 @@ namespace PS.Controller
         [global::System.Runtime.Serialization.EnumMember(Value = "delivered")]
         Delivered = 2,
 
+    }
+
+    public class OrderStatusEnumConverter : TypeConverter
+    {
+        public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
+        {
+            var s = value as string;
+            if (string.IsNullOrEmpty(s))
+            {
+                return null;
+            }
+
+            return JsonConvert.DeserializeObject<OrderStatus>(@"""" + value.ToString() + @"""");
+        }
     }
 }
