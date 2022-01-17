@@ -16,7 +16,7 @@ namespace PrincipleStudios.ClientInterfacesExample
 
         private static async Task Petstore()
         {
-            using var httpClient = new HttpClient();
+            using var httpClient = new HttpClient() { BaseAddress = new Uri("https://localhost:44341/api/") };
             using var createdPetResponse = await httpClient.AddPet(new Clients.Petstore.NewPet(Name: "Fido", Tag: "Dog"));
             var pet = createdPetResponse is Operations.AddPetReturnType.Ok r1 ? r1.Body : throw new InvalidOperationException();
             using var foundPetResponse = await httpClient.FindPetById(pet.Id);

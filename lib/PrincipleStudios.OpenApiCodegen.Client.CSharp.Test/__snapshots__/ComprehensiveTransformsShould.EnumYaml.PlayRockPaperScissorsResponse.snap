@@ -14,7 +14,7 @@
 namespace PS.Controller
 { 
     [global::Newtonsoft.Json.JsonConverter(typeof(global::Newtonsoft.Json.Converters.StringEnumConverter))]
-    [global::System.ComponentModel.TypeConverterAttribute(typeof(PlayRockPaperScissorsResponseEnumConverter<PlayRockPaperScissorsResponse>))]
+    [global::System.ComponentModel.TypeConverterAttribute(typeof(PlayRockPaperScissorsResponseEnumConverter))]
     public enum PlayRockPaperScissorsResponse
     {
         /// <summary>
@@ -31,9 +31,9 @@ namespace PS.Controller
 
     }
 
-    public class PlayRockPaperScissorsResponseEnumConverter : TypeConverter
+    public class PlayRockPaperScissorsResponseEnumConverter : global::System.ComponentModel.TypeConverter
     {
-        public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
+        public override object ConvertFrom(global::System.ComponentModel.ITypeDescriptorContext context, global::System.Globalization.CultureInfo culture, object value)
         {
             var s = value as string;
             if (string.IsNullOrEmpty(s))
@@ -41,7 +41,7 @@ namespace PS.Controller
                 return null;
             }
 
-            return JsonConvert.DeserializeObject<PlayRockPaperScissorsResponse>(@"""" + value.ToString() + @"""");
+            return global::Newtonsoft.Json.JsonConvert.DeserializeObject<PlayRockPaperScissorsResponse>(@"""" + value.ToString() + @"""");
         }
     }
 }

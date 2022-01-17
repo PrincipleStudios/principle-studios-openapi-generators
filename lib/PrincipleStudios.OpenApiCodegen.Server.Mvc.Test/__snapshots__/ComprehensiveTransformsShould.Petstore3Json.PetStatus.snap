@@ -17,7 +17,7 @@ namespace PS.Controller
     /// pet status in the store
     /// </summary>
     [global::Newtonsoft.Json.JsonConverter(typeof(global::Newtonsoft.Json.Converters.StringEnumConverter))]
-    [global::System.ComponentModel.TypeConverterAttribute(typeof(PetStatusEnumConverter<PetStatus>))]
+    [global::System.ComponentModel.TypeConverterAttribute(typeof(PetStatusEnumConverter))]
     public enum PetStatus
     {
         /// <summary>
@@ -40,9 +40,9 @@ namespace PS.Controller
 
     }
 
-    public class PetStatusEnumConverter : TypeConverter
+    public class PetStatusEnumConverter : global::System.ComponentModel.TypeConverter
     {
-        public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
+        public override object ConvertFrom(global::System.ComponentModel.ITypeDescriptorContext context, global::System.Globalization.CultureInfo culture, object value)
         {
             var s = value as string;
             if (string.IsNullOrEmpty(s))
@@ -50,7 +50,7 @@ namespace PS.Controller
                 return null;
             }
 
-            return JsonConvert.DeserializeObject<PetStatus>(@"""" + value.ToString() + @"""");
+            return global::Newtonsoft.Json.JsonConvert.DeserializeObject<PetStatus>(@"""" + value.ToString() + @"""");
         }
     }
 }

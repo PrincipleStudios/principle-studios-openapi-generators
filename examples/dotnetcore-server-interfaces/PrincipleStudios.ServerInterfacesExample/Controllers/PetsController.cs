@@ -28,7 +28,7 @@ namespace PrincipleStudios.ServerInterfacesExample.Controllers
         {
             await Task.Yield();
             var result = Data.pets.AsEnumerable();
-            if (tags != null)
+            if (tags != null && tags.Any())
             {
                 result = result.Where(p => tags.Contains(p.Value.tag));
             }
