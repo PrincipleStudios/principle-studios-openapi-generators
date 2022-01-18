@@ -23,13 +23,13 @@ namespace PrincipleStudios.Test
         [global::Microsoft.AspNetCore.Mvc.Route("/user/logout")]
         // successful operation
         [global::Microsoft.AspNetCore.Mvc.ProducesDefaultResponseType()] // 
-        public async global::System.Threading.Tasks.Task<global::Microsoft.AspNetCore.Mvc.IActionResult> LogoutUser(
+        public async global::System.Threading.Tasks.Task<global::Microsoft.AspNetCore.Mvc.IActionResult> LogoutUserTypeSafeEntry(
             
-        ) => (await LogoutUserTypeSafe()).ActionResult;
+        ) => (await LogoutUser()).ActionResult;
 
-        protected abstract global::System.Threading.Tasks.Task<TypeSafeLogoutUserResult> LogoutUserTypeSafe();
+        protected abstract global::System.Threading.Tasks.Task<LogoutUserActionResult> LogoutUser();
 
-        public readonly struct TypeSafeLogoutUserResult
+        public readonly struct LogoutUserActionResult
         {
             public readonly global::Microsoft.AspNetCore.Mvc.IActionResult ActionResult;
 
@@ -52,17 +52,17 @@ namespace PrincipleStudios.Test
                 }
             }
 
-            private TypeSafeLogoutUserResult(global::Microsoft.AspNetCore.Mvc.IActionResult ActionResult, global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
+            private LogoutUserActionResult(global::Microsoft.AspNetCore.Mvc.IActionResult ActionResult, global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
             {
                 this.ActionResult = new HeaderActionResult(ActionResult, headers);
             }
 
-            private TypeSafeLogoutUserResult(int statusCode, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
+            private LogoutUserActionResult(int statusCode, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
                 : this(new global::Microsoft.AspNetCore.Mvc.StatusCodeResult(statusCode), headers)
             {
             }
 
-            private TypeSafeLogoutUserResult(int statusCode, string mediaType, global::System.Type declaredType, object? resultObject, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
+            private LogoutUserActionResult(int statusCode, string mediaType, global::System.Type declaredType, object? resultObject, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
                 : this(new global::Microsoft.AspNetCore.Mvc.ObjectResult(resultObject)
                 {
                     ContentTypes = new global::Microsoft.AspNetCore.Mvc.Formatters.MediaTypeCollection { { new global::Microsoft.Net.Http.Headers.MediaTypeHeaderValue(mediaType) } },
@@ -73,13 +73,13 @@ namespace PrincipleStudios.Test
             }
             
             
-            public static TypeSafeLogoutUserResult OtherStatusCode(int statusCode) =>
-                new TypeSafeLogoutUserResult(statusCode);
+            public static LogoutUserActionResult OtherStatusCode(int statusCode) =>
+                new LogoutUserActionResult(statusCode);
             
 
             /// <summary>Allows for action results not specified in the API</summary>
-            public static TypeSafeLogoutUserResult Unsafe(global::Microsoft.AspNetCore.Mvc.IActionResult actionResult, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers) =>
-                new TypeSafeLogoutUserResult(actionResult, headers);
+            public static LogoutUserActionResult Unsafe(global::Microsoft.AspNetCore.Mvc.IActionResult actionResult, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers) =>
+                new LogoutUserActionResult(actionResult, headers);
         }
     }
 }

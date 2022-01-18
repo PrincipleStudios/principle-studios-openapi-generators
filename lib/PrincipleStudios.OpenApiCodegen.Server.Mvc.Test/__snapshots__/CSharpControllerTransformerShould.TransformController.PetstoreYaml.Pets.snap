@@ -31,16 +31,16 @@ namespace PrincipleStudios.Test
         [global::Microsoft.AspNetCore.Mvc.ProducesDefaultResponseType(typeof(Error))] // application/json
         // pet response
         [global::Microsoft.AspNetCore.Mvc.ProducesResponseType(200, Type = typeof(global::System.Collections.Generic.IEnumerable<Pet>))] // application/json
-        public async global::System.Threading.Tasks.Task<global::Microsoft.AspNetCore.Mvc.IActionResult> FindPets(
+        public async global::System.Threading.Tasks.Task<global::Microsoft.AspNetCore.Mvc.IActionResult> FindPetsTypeSafeEntry(
             [global::Microsoft.AspNetCore.Mvc.FromQuery(Name = "tags")] global::System.Collections.Generic.IEnumerable<string>? tags,
             [global::Microsoft.AspNetCore.Mvc.FromQuery(Name = "limit")] int? limit
-        ) => (await FindPetsTypeSafe(tags,limit)).ActionResult;
+        ) => (await FindPets(tags,limit)).ActionResult;
 
-        protected abstract global::System.Threading.Tasks.Task<TypeSafeFindPetsResult> FindPetsTypeSafe(
+        protected abstract global::System.Threading.Tasks.Task<FindPetsActionResult> FindPets(
             global::System.Collections.Generic.IEnumerable<string>? tags, 
             int? limit);
 
-        public readonly struct TypeSafeFindPetsResult
+        public readonly struct FindPetsActionResult
         {
             public readonly global::Microsoft.AspNetCore.Mvc.IActionResult ActionResult;
 
@@ -63,17 +63,17 @@ namespace PrincipleStudios.Test
                 }
             }
 
-            private TypeSafeFindPetsResult(global::Microsoft.AspNetCore.Mvc.IActionResult ActionResult, global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
+            private FindPetsActionResult(global::Microsoft.AspNetCore.Mvc.IActionResult ActionResult, global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
             {
                 this.ActionResult = new HeaderActionResult(ActionResult, headers);
             }
 
-            private TypeSafeFindPetsResult(int statusCode, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
+            private FindPetsActionResult(int statusCode, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
                 : this(new global::Microsoft.AspNetCore.Mvc.StatusCodeResult(statusCode), headers)
             {
             }
 
-            private TypeSafeFindPetsResult(int statusCode, string mediaType, global::System.Type declaredType, object? resultObject, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
+            private FindPetsActionResult(int statusCode, string mediaType, global::System.Type declaredType, object? resultObject, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
                 : this(new global::Microsoft.AspNetCore.Mvc.ObjectResult(resultObject)
                 {
                     ContentTypes = new global::Microsoft.AspNetCore.Mvc.Formatters.MediaTypeCollection { { new global::Microsoft.Net.Http.Headers.MediaTypeHeaderValue(mediaType) } },
@@ -86,17 +86,17 @@ namespace PrincipleStudios.Test
             /// <summary>
             /// pet response
             /// </summary>
-            public static TypeSafeFindPetsResult Ok(global::System.Collections.Generic.IEnumerable<Pet> result) =>
-                new TypeSafeFindPetsResult(200, "application/json", typeof(global::System.Collections.Generic.IEnumerable<Pet>), result);
+            public static FindPetsActionResult Ok(global::System.Collections.Generic.IEnumerable<Pet> result) =>
+                new FindPetsActionResult(200, "application/json", typeof(global::System.Collections.Generic.IEnumerable<Pet>), result);
             
             
-            public static TypeSafeFindPetsResult OtherStatusCode(int statusCode, Error result) =>
-                new TypeSafeFindPetsResult(statusCode, "application/json", typeof(Error), result);
+            public static FindPetsActionResult OtherStatusCode(int statusCode, Error result) =>
+                new FindPetsActionResult(statusCode, "application/json", typeof(Error), result);
             
 
             /// <summary>Allows for action results not specified in the API</summary>
-            public static TypeSafeFindPetsResult Unsafe(global::Microsoft.AspNetCore.Mvc.IActionResult actionResult, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers) =>
-                new TypeSafeFindPetsResult(actionResult, headers);
+            public static FindPetsActionResult Unsafe(global::Microsoft.AspNetCore.Mvc.IActionResult actionResult, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers) =>
+                new FindPetsActionResult(actionResult, headers);
         }
 
         /// <remarks>
@@ -110,14 +110,14 @@ namespace PrincipleStudios.Test
         [global::Microsoft.AspNetCore.Mvc.ProducesDefaultResponseType(typeof(Error))] // application/json
         // pet response
         [global::Microsoft.AspNetCore.Mvc.ProducesResponseType(200, Type = typeof(Pet))] // application/json
-        public async global::System.Threading.Tasks.Task<global::Microsoft.AspNetCore.Mvc.IActionResult> AddPet(
+        public async global::System.Threading.Tasks.Task<global::Microsoft.AspNetCore.Mvc.IActionResult> AddPetTypeSafeEntry(
             [global::Microsoft.AspNetCore.Mvc.FromBody, global::System.ComponentModel.DataAnnotations.Required] NewPet addPetBody
-        ) => (await AddPetTypeSafe(addPetBody)).ActionResult;
+        ) => (await AddPet(addPetBody)).ActionResult;
 
-        protected abstract global::System.Threading.Tasks.Task<TypeSafeAddPetResult> AddPetTypeSafe(
+        protected abstract global::System.Threading.Tasks.Task<AddPetActionResult> AddPet(
             NewPet addPetBody);
 
-        public readonly struct TypeSafeAddPetResult
+        public readonly struct AddPetActionResult
         {
             public readonly global::Microsoft.AspNetCore.Mvc.IActionResult ActionResult;
 
@@ -140,17 +140,17 @@ namespace PrincipleStudios.Test
                 }
             }
 
-            private TypeSafeAddPetResult(global::Microsoft.AspNetCore.Mvc.IActionResult ActionResult, global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
+            private AddPetActionResult(global::Microsoft.AspNetCore.Mvc.IActionResult ActionResult, global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
             {
                 this.ActionResult = new HeaderActionResult(ActionResult, headers);
             }
 
-            private TypeSafeAddPetResult(int statusCode, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
+            private AddPetActionResult(int statusCode, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
                 : this(new global::Microsoft.AspNetCore.Mvc.StatusCodeResult(statusCode), headers)
             {
             }
 
-            private TypeSafeAddPetResult(int statusCode, string mediaType, global::System.Type declaredType, object? resultObject, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
+            private AddPetActionResult(int statusCode, string mediaType, global::System.Type declaredType, object? resultObject, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
                 : this(new global::Microsoft.AspNetCore.Mvc.ObjectResult(resultObject)
                 {
                     ContentTypes = new global::Microsoft.AspNetCore.Mvc.Formatters.MediaTypeCollection { { new global::Microsoft.Net.Http.Headers.MediaTypeHeaderValue(mediaType) } },
@@ -163,17 +163,17 @@ namespace PrincipleStudios.Test
             /// <summary>
             /// pet response
             /// </summary>
-            public static TypeSafeAddPetResult Ok(Pet result) =>
-                new TypeSafeAddPetResult(200, "application/json", typeof(Pet), result);
+            public static AddPetActionResult Ok(Pet result) =>
+                new AddPetActionResult(200, "application/json", typeof(Pet), result);
             
             
-            public static TypeSafeAddPetResult OtherStatusCode(int statusCode, Error result) =>
-                new TypeSafeAddPetResult(statusCode, "application/json", typeof(Error), result);
+            public static AddPetActionResult OtherStatusCode(int statusCode, Error result) =>
+                new AddPetActionResult(statusCode, "application/json", typeof(Error), result);
             
 
             /// <summary>Allows for action results not specified in the API</summary>
-            public static TypeSafeAddPetResult Unsafe(global::Microsoft.AspNetCore.Mvc.IActionResult actionResult, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers) =>
-                new TypeSafeAddPetResult(actionResult, headers);
+            public static AddPetActionResult Unsafe(global::Microsoft.AspNetCore.Mvc.IActionResult actionResult, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers) =>
+                new AddPetActionResult(actionResult, headers);
         }
     }
 }

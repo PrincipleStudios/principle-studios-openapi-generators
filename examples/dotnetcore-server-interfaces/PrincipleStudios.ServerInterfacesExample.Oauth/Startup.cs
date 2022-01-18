@@ -64,7 +64,7 @@ namespace PrincipleStudios.ServerInterfacesExample.Oauth
                             response.EnsureSuccessStatusCode();
                             var json = System.Text.Json.JsonDocument.Parse(await response.Content.ReadAsStringAsync());
                             context.RunClaimActions(json.RootElement);
-                            context.Identity.AddClaim(new Claim("scope", string.Join(' ', options.Scope)));
+                            context.Identity?.AddClaim(new Claim("scope", string.Join(' ', options.Scope)));
                         },
                     };
                 });

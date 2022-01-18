@@ -20,13 +20,13 @@ namespace PS.Controller
         [global::Microsoft.AspNetCore.Mvc.Route("/colors")]
         // The available colors
         [global::Microsoft.AspNetCore.Mvc.ProducesResponseType(200, Type = typeof(global::System.Collections.Generic.IEnumerable<string>))] // application/json
-        public async global::System.Threading.Tasks.Task<global::Microsoft.AspNetCore.Mvc.IActionResult> GetColors(
+        public async global::System.Threading.Tasks.Task<global::Microsoft.AspNetCore.Mvc.IActionResult> GetColorsTypeSafeEntry(
             
-        ) => (await GetColorsTypeSafe()).ActionResult;
+        ) => (await GetColors()).ActionResult;
 
-        protected abstract global::System.Threading.Tasks.Task<TypeSafeGetColorsResult> GetColorsTypeSafe();
+        protected abstract global::System.Threading.Tasks.Task<GetColorsActionResult> GetColors();
 
-        public readonly struct TypeSafeGetColorsResult
+        public readonly struct GetColorsActionResult
         {
             public readonly global::Microsoft.AspNetCore.Mvc.IActionResult ActionResult;
 
@@ -49,17 +49,17 @@ namespace PS.Controller
                 }
             }
 
-            private TypeSafeGetColorsResult(global::Microsoft.AspNetCore.Mvc.IActionResult ActionResult, global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
+            private GetColorsActionResult(global::Microsoft.AspNetCore.Mvc.IActionResult ActionResult, global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
             {
                 this.ActionResult = new HeaderActionResult(ActionResult, headers);
             }
 
-            private TypeSafeGetColorsResult(int statusCode, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
+            private GetColorsActionResult(int statusCode, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
                 : this(new global::Microsoft.AspNetCore.Mvc.StatusCodeResult(statusCode), headers)
             {
             }
 
-            private TypeSafeGetColorsResult(int statusCode, string mediaType, global::System.Type declaredType, object? resultObject, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
+            private GetColorsActionResult(int statusCode, string mediaType, global::System.Type declaredType, object? resultObject, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
                 : this(new global::Microsoft.AspNetCore.Mvc.ObjectResult(resultObject)
                 {
                     ContentTypes = new global::Microsoft.AspNetCore.Mvc.Formatters.MediaTypeCollection { { new global::Microsoft.Net.Http.Headers.MediaTypeHeaderValue(mediaType) } },
@@ -72,13 +72,13 @@ namespace PS.Controller
             /// <summary>
             /// The available colors
             /// </summary>
-            public static TypeSafeGetColorsResult Ok(global::System.Collections.Generic.IEnumerable<string> result) =>
-                new TypeSafeGetColorsResult(200, "application/json", typeof(global::System.Collections.Generic.IEnumerable<string>), result);
+            public static GetColorsActionResult Ok(global::System.Collections.Generic.IEnumerable<string> result) =>
+                new GetColorsActionResult(200, "application/json", typeof(global::System.Collections.Generic.IEnumerable<string>), result);
             
 
             /// <summary>Allows for action results not specified in the API</summary>
-            public static TypeSafeGetColorsResult Unsafe(global::Microsoft.AspNetCore.Mvc.IActionResult actionResult, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers) =>
-                new TypeSafeGetColorsResult(actionResult, headers);
+            public static GetColorsActionResult Unsafe(global::Microsoft.AspNetCore.Mvc.IActionResult actionResult, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers) =>
+                new GetColorsActionResult(actionResult, headers);
         }
     }
 }

@@ -25,14 +25,14 @@ namespace PS.Controller
         [global::Microsoft.AspNetCore.Mvc.ProducesResponseType(200, Type = typeof(global::System.Collections.Generic.Dictionary<string, string>))] // application/json
         // Sample Response
         [global::Microsoft.AspNetCore.Mvc.ProducesResponseType(204)] // 
-        public async global::System.Threading.Tasks.Task<global::Microsoft.AspNetCore.Mvc.IActionResult> GetInfo(
+        public async global::System.Threading.Tasks.Task<global::Microsoft.AspNetCore.Mvc.IActionResult> GetInfoTypeSafeEntry(
             [global::Microsoft.AspNetCore.Mvc.FromHeader(Name = "X-Data"), global::System.ComponentModel.DataAnnotations.Required] byte[] xData
-        ) => (await GetInfoTypeSafe(xData)).ActionResult;
+        ) => (await GetInfo(xData)).ActionResult;
 
-        protected abstract global::System.Threading.Tasks.Task<TypeSafeGetInfoResult> GetInfoTypeSafe(
+        protected abstract global::System.Threading.Tasks.Task<GetInfoActionResult> GetInfo(
             byte[] xData);
 
-        public readonly struct TypeSafeGetInfoResult
+        public readonly struct GetInfoActionResult
         {
             public readonly global::Microsoft.AspNetCore.Mvc.IActionResult ActionResult;
 
@@ -55,17 +55,17 @@ namespace PS.Controller
                 }
             }
 
-            private TypeSafeGetInfoResult(global::Microsoft.AspNetCore.Mvc.IActionResult ActionResult, global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
+            private GetInfoActionResult(global::Microsoft.AspNetCore.Mvc.IActionResult ActionResult, global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
             {
                 this.ActionResult = new HeaderActionResult(ActionResult, headers);
             }
 
-            private TypeSafeGetInfoResult(int statusCode, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
+            private GetInfoActionResult(int statusCode, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
                 : this(new global::Microsoft.AspNetCore.Mvc.StatusCodeResult(statusCode), headers)
             {
             }
 
-            private TypeSafeGetInfoResult(int statusCode, string mediaType, global::System.Type declaredType, object? resultObject, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
+            private GetInfoActionResult(int statusCode, string mediaType, global::System.Type declaredType, object? resultObject, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
                 : this(new global::Microsoft.AspNetCore.Mvc.ObjectResult(resultObject)
                 {
                     ContentTypes = new global::Microsoft.AspNetCore.Mvc.Formatters.MediaTypeCollection { { new global::Microsoft.Net.Http.Headers.MediaTypeHeaderValue(mediaType) } },
@@ -78,30 +78,30 @@ namespace PS.Controller
             /// <summary>
             /// Sample Response
             /// </summary>
-            public static TypeSafeGetInfoResult Ok(global::System.Collections.Generic.Dictionary<string, string> result,
+            public static GetInfoActionResult Ok(global::System.Collections.Generic.Dictionary<string, string> result,
                 string headerXData) =>
-                new TypeSafeGetInfoResult(200, "application/json", typeof(global::System.Collections.Generic.Dictionary<string, string>), result,
+                new GetInfoActionResult(200, "application/json", typeof(global::System.Collections.Generic.Dictionary<string, string>), result,
                     new global::System.Collections.Generic.KeyValuePair<string, string>("X-Data", headerXData));
             
             /// <summary>
             /// Sample Response
             /// </summary>
-            public static TypeSafeGetInfoResult NoContent(string headerXData) =>
-                new TypeSafeGetInfoResult(204,
+            public static GetInfoActionResult NoContent(string headerXData) =>
+                new GetInfoActionResult(204,
                     new global::System.Collections.Generic.KeyValuePair<string, string>("X-Data", headerXData));
             
             
-            public static TypeSafeGetInfoResult OtherStatusCode(int statusCode,
+            public static GetInfoActionResult OtherStatusCode(int statusCode,
                 string headerXData,
                 string headerXDiag) =>
-                new TypeSafeGetInfoResult(statusCode,
+                new GetInfoActionResult(statusCode,
                     new global::System.Collections.Generic.KeyValuePair<string, string>("X-Data", headerXData),
                     new global::System.Collections.Generic.KeyValuePair<string, string>("X-Diag", headerXDiag));
             
 
             /// <summary>Allows for action results not specified in the API</summary>
-            public static TypeSafeGetInfoResult Unsafe(global::Microsoft.AspNetCore.Mvc.IActionResult actionResult, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers) =>
-                new TypeSafeGetInfoResult(actionResult, headers);
+            public static GetInfoActionResult Unsafe(global::Microsoft.AspNetCore.Mvc.IActionResult actionResult, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers) =>
+                new GetInfoActionResult(actionResult, headers);
         }
     }
 }

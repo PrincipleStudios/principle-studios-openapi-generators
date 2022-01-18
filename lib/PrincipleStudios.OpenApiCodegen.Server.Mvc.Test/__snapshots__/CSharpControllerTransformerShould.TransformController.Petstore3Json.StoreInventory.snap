@@ -27,13 +27,13 @@ namespace PrincipleStudios.Test
         // successful operation
         [global::Microsoft.AspNetCore.Mvc.ProducesResponseType(200, Type = typeof(global::System.Collections.Generic.Dictionary<string, int>))] // application/json
         [global::Microsoft.AspNetCore.Authorization.Authorize(AuthenticationSchemes = "api_key")]
-        public async global::System.Threading.Tasks.Task<global::Microsoft.AspNetCore.Mvc.IActionResult> GetInventory(
+        public async global::System.Threading.Tasks.Task<global::Microsoft.AspNetCore.Mvc.IActionResult> GetInventoryTypeSafeEntry(
             
-        ) => (await GetInventoryTypeSafe()).ActionResult;
+        ) => (await GetInventory()).ActionResult;
 
-        protected abstract global::System.Threading.Tasks.Task<TypeSafeGetInventoryResult> GetInventoryTypeSafe();
+        protected abstract global::System.Threading.Tasks.Task<GetInventoryActionResult> GetInventory();
 
-        public readonly struct TypeSafeGetInventoryResult
+        public readonly struct GetInventoryActionResult
         {
             public readonly global::Microsoft.AspNetCore.Mvc.IActionResult ActionResult;
 
@@ -56,17 +56,17 @@ namespace PrincipleStudios.Test
                 }
             }
 
-            private TypeSafeGetInventoryResult(global::Microsoft.AspNetCore.Mvc.IActionResult ActionResult, global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
+            private GetInventoryActionResult(global::Microsoft.AspNetCore.Mvc.IActionResult ActionResult, global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
             {
                 this.ActionResult = new HeaderActionResult(ActionResult, headers);
             }
 
-            private TypeSafeGetInventoryResult(int statusCode, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
+            private GetInventoryActionResult(int statusCode, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
                 : this(new global::Microsoft.AspNetCore.Mvc.StatusCodeResult(statusCode), headers)
             {
             }
 
-            private TypeSafeGetInventoryResult(int statusCode, string mediaType, global::System.Type declaredType, object? resultObject, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
+            private GetInventoryActionResult(int statusCode, string mediaType, global::System.Type declaredType, object? resultObject, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
                 : this(new global::Microsoft.AspNetCore.Mvc.ObjectResult(resultObject)
                 {
                     ContentTypes = new global::Microsoft.AspNetCore.Mvc.Formatters.MediaTypeCollection { { new global::Microsoft.Net.Http.Headers.MediaTypeHeaderValue(mediaType) } },
@@ -79,13 +79,13 @@ namespace PrincipleStudios.Test
             /// <summary>
             /// successful operation
             /// </summary>
-            public static TypeSafeGetInventoryResult Ok(global::System.Collections.Generic.Dictionary<string, int> result) =>
-                new TypeSafeGetInventoryResult(200, "application/json", typeof(global::System.Collections.Generic.Dictionary<string, int>), result);
+            public static GetInventoryActionResult Ok(global::System.Collections.Generic.Dictionary<string, int> result) =>
+                new GetInventoryActionResult(200, "application/json", typeof(global::System.Collections.Generic.Dictionary<string, int>), result);
             
 
             /// <summary>Allows for action results not specified in the API</summary>
-            public static TypeSafeGetInventoryResult Unsafe(global::Microsoft.AspNetCore.Mvc.IActionResult actionResult, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers) =>
-                new TypeSafeGetInventoryResult(actionResult, headers);
+            public static GetInventoryActionResult Unsafe(global::Microsoft.AspNetCore.Mvc.IActionResult actionResult, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers) =>
+                new GetInventoryActionResult(actionResult, headers);
         }
     }
 }

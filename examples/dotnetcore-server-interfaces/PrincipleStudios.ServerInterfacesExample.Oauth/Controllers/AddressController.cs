@@ -9,7 +9,7 @@ namespace PrincipleStudios.ServerInterfacesExample.Oauth.Controllers
 
         }
 
-        protected override Task<TypeSafeGetAddressResult> GetAddressTypeSafe()
+        protected override Task<GetAddressActionResult> GetAddress()
         {
             // TODO - this should probably move to code generation
             if (User.Identity?.AuthenticationType == "OAuth2" && (User.FindFirst("scope")?.Value ?? User.FindFirst("scp")?.Value ?? "").Split(' ', ',') switch
@@ -18,10 +18,10 @@ namespace PrincipleStudios.ServerInterfacesExample.Oauth.Controllers
                     _ => true
                 })
             {
-                return Task.FromResult(TypeSafeGetAddressResult.Unsafe(Forbid()));
+                return Task.FromResult(GetAddressActionResult.Unsafe(Forbid()));
             }
 
-            return Task.FromResult(TypeSafeGetAddressResult.Ok(User.Identity!.IsAuthenticated ? $"success as {User.Identity.Name}" : "success"));
+            return Task.FromResult(GetAddressActionResult.Ok(User.Identity!.IsAuthenticated ? $"success as {User.Identity.Name}" : "success"));
         }
     }
 }

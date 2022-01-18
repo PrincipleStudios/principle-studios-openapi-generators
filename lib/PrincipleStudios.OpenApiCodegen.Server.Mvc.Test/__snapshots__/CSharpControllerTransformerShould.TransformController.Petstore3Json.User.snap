@@ -28,14 +28,14 @@ namespace PrincipleStudios.Test
         [global::Microsoft.AspNetCore.Mvc.Consumes("application/json")]
         // successful operation
         [global::Microsoft.AspNetCore.Mvc.ProducesDefaultResponseType()] // 
-        public async global::System.Threading.Tasks.Task<global::Microsoft.AspNetCore.Mvc.IActionResult> CreateUser(
+        public async global::System.Threading.Tasks.Task<global::Microsoft.AspNetCore.Mvc.IActionResult> CreateUserTypeSafeEntry(
             [global::Microsoft.AspNetCore.Mvc.FromBody, global::System.ComponentModel.DataAnnotations.Required] User createUserBody
-        ) => (await CreateUserTypeSafe(createUserBody)).ActionResult;
+        ) => (await CreateUser(createUserBody)).ActionResult;
 
-        protected abstract global::System.Threading.Tasks.Task<TypeSafeCreateUserResult> CreateUserTypeSafe(
+        protected abstract global::System.Threading.Tasks.Task<CreateUserActionResult> CreateUser(
             User createUserBody);
 
-        public readonly struct TypeSafeCreateUserResult
+        public readonly struct CreateUserActionResult
         {
             public readonly global::Microsoft.AspNetCore.Mvc.IActionResult ActionResult;
 
@@ -58,17 +58,17 @@ namespace PrincipleStudios.Test
                 }
             }
 
-            private TypeSafeCreateUserResult(global::Microsoft.AspNetCore.Mvc.IActionResult ActionResult, global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
+            private CreateUserActionResult(global::Microsoft.AspNetCore.Mvc.IActionResult ActionResult, global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
             {
                 this.ActionResult = new HeaderActionResult(ActionResult, headers);
             }
 
-            private TypeSafeCreateUserResult(int statusCode, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
+            private CreateUserActionResult(int statusCode, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
                 : this(new global::Microsoft.AspNetCore.Mvc.StatusCodeResult(statusCode), headers)
             {
             }
 
-            private TypeSafeCreateUserResult(int statusCode, string mediaType, global::System.Type declaredType, object? resultObject, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
+            private CreateUserActionResult(int statusCode, string mediaType, global::System.Type declaredType, object? resultObject, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
                 : this(new global::Microsoft.AspNetCore.Mvc.ObjectResult(resultObject)
                 {
                     ContentTypes = new global::Microsoft.AspNetCore.Mvc.Formatters.MediaTypeCollection { { new global::Microsoft.Net.Http.Headers.MediaTypeHeaderValue(mediaType) } },
@@ -79,13 +79,13 @@ namespace PrincipleStudios.Test
             }
             
             
-            public static TypeSafeCreateUserResult OtherStatusCode(int statusCode) =>
-                new TypeSafeCreateUserResult(statusCode);
+            public static CreateUserActionResult OtherStatusCode(int statusCode) =>
+                new CreateUserActionResult(statusCode);
             
 
             /// <summary>Allows for action results not specified in the API</summary>
-            public static TypeSafeCreateUserResult Unsafe(global::Microsoft.AspNetCore.Mvc.IActionResult actionResult, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers) =>
-                new TypeSafeCreateUserResult(actionResult, headers);
+            public static CreateUserActionResult Unsafe(global::Microsoft.AspNetCore.Mvc.IActionResult actionResult, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers) =>
+                new CreateUserActionResult(actionResult, headers);
         }
     }
 }

@@ -27,16 +27,16 @@ namespace PrincipleStudios.Test
         // successful operation
         [global::Microsoft.AspNetCore.Mvc.ProducesResponseType(200, Type = typeof(ApiResponse))] // application/json
         [global::Microsoft.AspNetCore.Authorization.Authorize(AuthenticationSchemes = "petstore_auth")]
-        public async global::System.Threading.Tasks.Task<global::Microsoft.AspNetCore.Mvc.IActionResult> UploadFile(
+        public async global::System.Threading.Tasks.Task<global::Microsoft.AspNetCore.Mvc.IActionResult> UploadFileTypeSafeEntry(
             [global::Microsoft.AspNetCore.Mvc.FromRoute(Name = "petId"), global::System.ComponentModel.DataAnnotations.Required] long petId,
             [global::Microsoft.AspNetCore.Mvc.FromBody, global::System.ComponentModel.DataAnnotations.Required] global::System.IO.Stream uploadFileBody
-        ) => (await UploadFileTypeSafe(petId,uploadFileBody)).ActionResult;
+        ) => (await UploadFile(petId,uploadFileBody)).ActionResult;
 
-        protected abstract global::System.Threading.Tasks.Task<TypeSafeUploadFileResult> UploadFileTypeSafe(
+        protected abstract global::System.Threading.Tasks.Task<UploadFileActionResult> UploadFile(
             long petId, 
             global::System.IO.Stream uploadFileBody);
 
-        public readonly struct TypeSafeUploadFileResult
+        public readonly struct UploadFileActionResult
         {
             public readonly global::Microsoft.AspNetCore.Mvc.IActionResult ActionResult;
 
@@ -59,17 +59,17 @@ namespace PrincipleStudios.Test
                 }
             }
 
-            private TypeSafeUploadFileResult(global::Microsoft.AspNetCore.Mvc.IActionResult ActionResult, global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
+            private UploadFileActionResult(global::Microsoft.AspNetCore.Mvc.IActionResult ActionResult, global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
             {
                 this.ActionResult = new HeaderActionResult(ActionResult, headers);
             }
 
-            private TypeSafeUploadFileResult(int statusCode, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
+            private UploadFileActionResult(int statusCode, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
                 : this(new global::Microsoft.AspNetCore.Mvc.StatusCodeResult(statusCode), headers)
             {
             }
 
-            private TypeSafeUploadFileResult(int statusCode, string mediaType, global::System.Type declaredType, object? resultObject, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
+            private UploadFileActionResult(int statusCode, string mediaType, global::System.Type declaredType, object? resultObject, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
                 : this(new global::Microsoft.AspNetCore.Mvc.ObjectResult(resultObject)
                 {
                     ContentTypes = new global::Microsoft.AspNetCore.Mvc.Formatters.MediaTypeCollection { { new global::Microsoft.Net.Http.Headers.MediaTypeHeaderValue(mediaType) } },
@@ -82,13 +82,13 @@ namespace PrincipleStudios.Test
             /// <summary>
             /// successful operation
             /// </summary>
-            public static TypeSafeUploadFileResult Ok(ApiResponse result) =>
-                new TypeSafeUploadFileResult(200, "application/json", typeof(ApiResponse), result);
+            public static UploadFileActionResult Ok(ApiResponse result) =>
+                new UploadFileActionResult(200, "application/json", typeof(ApiResponse), result);
             
 
             /// <summary>Allows for action results not specified in the API</summary>
-            public static TypeSafeUploadFileResult Unsafe(global::Microsoft.AspNetCore.Mvc.IActionResult actionResult, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers) =>
-                new TypeSafeUploadFileResult(actionResult, headers);
+            public static UploadFileActionResult Unsafe(global::Microsoft.AspNetCore.Mvc.IActionResult actionResult, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers) =>
+                new UploadFileActionResult(actionResult, headers);
         }
     }
 }

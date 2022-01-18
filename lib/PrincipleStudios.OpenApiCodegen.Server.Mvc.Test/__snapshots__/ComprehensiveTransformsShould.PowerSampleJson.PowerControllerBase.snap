@@ -31,18 +31,18 @@ namespace PS.Controller
         [global::Microsoft.AspNetCore.Mvc.ProducesResponseType(200, Type = typeof(GetPowerFlowsResponse))] // application/json
         // Request range or house id not valid
         [global::Microsoft.AspNetCore.Mvc.ProducesResponseType(400)] // 
-        public async global::System.Threading.Tasks.Task<global::Microsoft.AspNetCore.Mvc.IActionResult> GetPowerFlows(
+        public async global::System.Threading.Tasks.Task<global::Microsoft.AspNetCore.Mvc.IActionResult> GetPowerFlowsTypeSafeEntry(
             [global::Microsoft.AspNetCore.Mvc.FromQuery(Name = "houseId"), global::System.ComponentModel.DataAnnotations.Required] global::System.Guid houseId,
             [global::Microsoft.AspNetCore.Mvc.FromQuery(Name = "start")] string? start,
             [global::Microsoft.AspNetCore.Mvc.FromQuery(Name = "end")] string? end
-        ) => (await GetPowerFlowsTypeSafe(houseId,start,end)).ActionResult;
+        ) => (await GetPowerFlows(houseId,start,end)).ActionResult;
 
-        protected abstract global::System.Threading.Tasks.Task<TypeSafeGetPowerFlowsResult> GetPowerFlowsTypeSafe(
+        protected abstract global::System.Threading.Tasks.Task<GetPowerFlowsActionResult> GetPowerFlows(
             global::System.Guid houseId, 
             string? start, 
             string? end);
 
-        public readonly struct TypeSafeGetPowerFlowsResult
+        public readonly struct GetPowerFlowsActionResult
         {
             public readonly global::Microsoft.AspNetCore.Mvc.IActionResult ActionResult;
 
@@ -65,17 +65,17 @@ namespace PS.Controller
                 }
             }
 
-            private TypeSafeGetPowerFlowsResult(global::Microsoft.AspNetCore.Mvc.IActionResult ActionResult, global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
+            private GetPowerFlowsActionResult(global::Microsoft.AspNetCore.Mvc.IActionResult ActionResult, global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
             {
                 this.ActionResult = new HeaderActionResult(ActionResult, headers);
             }
 
-            private TypeSafeGetPowerFlowsResult(int statusCode, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
+            private GetPowerFlowsActionResult(int statusCode, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
                 : this(new global::Microsoft.AspNetCore.Mvc.StatusCodeResult(statusCode), headers)
             {
             }
 
-            private TypeSafeGetPowerFlowsResult(int statusCode, string mediaType, global::System.Type declaredType, object? resultObject, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
+            private GetPowerFlowsActionResult(int statusCode, string mediaType, global::System.Type declaredType, object? resultObject, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
                 : this(new global::Microsoft.AspNetCore.Mvc.ObjectResult(resultObject)
                 {
                     ContentTypes = new global::Microsoft.AspNetCore.Mvc.Formatters.MediaTypeCollection { { new global::Microsoft.Net.Http.Headers.MediaTypeHeaderValue(mediaType) } },
@@ -86,19 +86,19 @@ namespace PS.Controller
             }
             
             
-            public static TypeSafeGetPowerFlowsResult Ok(GetPowerFlowsResponse result) =>
-                new TypeSafeGetPowerFlowsResult(200, "application/json", typeof(GetPowerFlowsResponse), result);
+            public static GetPowerFlowsActionResult Ok(GetPowerFlowsResponse result) =>
+                new GetPowerFlowsActionResult(200, "application/json", typeof(GetPowerFlowsResponse), result);
             
             /// <summary>
             /// Request range or house id not valid
             /// </summary>
-            public static TypeSafeGetPowerFlowsResult BadRequest() =>
-                new TypeSafeGetPowerFlowsResult(400);
+            public static GetPowerFlowsActionResult BadRequest() =>
+                new GetPowerFlowsActionResult(400);
             
 
             /// <summary>Allows for action results not specified in the API</summary>
-            public static TypeSafeGetPowerFlowsResult Unsafe(global::Microsoft.AspNetCore.Mvc.IActionResult actionResult, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers) =>
-                new TypeSafeGetPowerFlowsResult(actionResult, headers);
+            public static GetPowerFlowsActionResult Unsafe(global::Microsoft.AspNetCore.Mvc.IActionResult actionResult, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers) =>
+                new GetPowerFlowsActionResult(actionResult, headers);
         }
     }
 }

@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <OpenApiMvcServerVersion>0.9.4</OpenApiMvcServerVersion>
+    <OpenApiMvcServerVersion>0.10.0</OpenApiMvcServerVersion>
     <OpenApiCSharpClientVersion>0.3.4</OpenApiCSharpClientVersion>
   </PropertyGroup>
 

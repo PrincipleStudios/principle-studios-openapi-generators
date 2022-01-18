@@ -26,14 +26,14 @@ namespace PrincipleStudios.Test
         [global::Microsoft.AspNetCore.Mvc.ProducesDefaultResponseType(typeof(Error))] // application/json
         // pet response
         [global::Microsoft.AspNetCore.Mvc.ProducesResponseType(200, Type = typeof(Pet))] // application/json
-        public async global::System.Threading.Tasks.Task<global::Microsoft.AspNetCore.Mvc.IActionResult> FindPetById(
+        public async global::System.Threading.Tasks.Task<global::Microsoft.AspNetCore.Mvc.IActionResult> FindPetByIdTypeSafeEntry(
             [global::Microsoft.AspNetCore.Mvc.FromRoute(Name = "id"), global::System.ComponentModel.DataAnnotations.Required] long id
-        ) => (await FindPetByIdTypeSafe(id)).ActionResult;
+        ) => (await FindPetById(id)).ActionResult;
 
-        protected abstract global::System.Threading.Tasks.Task<TypeSafeFindPetByIdResult> FindPetByIdTypeSafe(
+        protected abstract global::System.Threading.Tasks.Task<FindPetByIdActionResult> FindPetById(
             long id);
 
-        public readonly struct TypeSafeFindPetByIdResult
+        public readonly struct FindPetByIdActionResult
         {
             public readonly global::Microsoft.AspNetCore.Mvc.IActionResult ActionResult;
 
@@ -56,17 +56,17 @@ namespace PrincipleStudios.Test
                 }
             }
 
-            private TypeSafeFindPetByIdResult(global::Microsoft.AspNetCore.Mvc.IActionResult ActionResult, global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
+            private FindPetByIdActionResult(global::Microsoft.AspNetCore.Mvc.IActionResult ActionResult, global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
             {
                 this.ActionResult = new HeaderActionResult(ActionResult, headers);
             }
 
-            private TypeSafeFindPetByIdResult(int statusCode, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
+            private FindPetByIdActionResult(int statusCode, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
                 : this(new global::Microsoft.AspNetCore.Mvc.StatusCodeResult(statusCode), headers)
             {
             }
 
-            private TypeSafeFindPetByIdResult(int statusCode, string mediaType, global::System.Type declaredType, object? resultObject, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
+            private FindPetByIdActionResult(int statusCode, string mediaType, global::System.Type declaredType, object? resultObject, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
                 : this(new global::Microsoft.AspNetCore.Mvc.ObjectResult(resultObject)
                 {
                     ContentTypes = new global::Microsoft.AspNetCore.Mvc.Formatters.MediaTypeCollection { { new global::Microsoft.Net.Http.Headers.MediaTypeHeaderValue(mediaType) } },
@@ -79,17 +79,17 @@ namespace PrincipleStudios.Test
             /// <summary>
             /// pet response
             /// </summary>
-            public static TypeSafeFindPetByIdResult Ok(Pet result) =>
-                new TypeSafeFindPetByIdResult(200, "application/json", typeof(Pet), result);
+            public static FindPetByIdActionResult Ok(Pet result) =>
+                new FindPetByIdActionResult(200, "application/json", typeof(Pet), result);
             
             
-            public static TypeSafeFindPetByIdResult OtherStatusCode(int statusCode, Error result) =>
-                new TypeSafeFindPetByIdResult(statusCode, "application/json", typeof(Error), result);
+            public static FindPetByIdActionResult OtherStatusCode(int statusCode, Error result) =>
+                new FindPetByIdActionResult(statusCode, "application/json", typeof(Error), result);
             
 
             /// <summary>Allows for action results not specified in the API</summary>
-            public static TypeSafeFindPetByIdResult Unsafe(global::Microsoft.AspNetCore.Mvc.IActionResult actionResult, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers) =>
-                new TypeSafeFindPetByIdResult(actionResult, headers);
+            public static FindPetByIdActionResult Unsafe(global::Microsoft.AspNetCore.Mvc.IActionResult actionResult, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers) =>
+                new FindPetByIdActionResult(actionResult, headers);
         }
 
         /// <remarks>
@@ -102,14 +102,14 @@ namespace PrincipleStudios.Test
         [global::Microsoft.AspNetCore.Mvc.ProducesDefaultResponseType(typeof(Error))] // application/json
         // pet deleted
         [global::Microsoft.AspNetCore.Mvc.ProducesResponseType(204)] // 
-        public async global::System.Threading.Tasks.Task<global::Microsoft.AspNetCore.Mvc.IActionResult> DeletePet(
+        public async global::System.Threading.Tasks.Task<global::Microsoft.AspNetCore.Mvc.IActionResult> DeletePetTypeSafeEntry(
             [global::Microsoft.AspNetCore.Mvc.FromRoute(Name = "id"), global::System.ComponentModel.DataAnnotations.Required] long id
-        ) => (await DeletePetTypeSafe(id)).ActionResult;
+        ) => (await DeletePet(id)).ActionResult;
 
-        protected abstract global::System.Threading.Tasks.Task<TypeSafeDeletePetResult> DeletePetTypeSafe(
+        protected abstract global::System.Threading.Tasks.Task<DeletePetActionResult> DeletePet(
             long id);
 
-        public readonly struct TypeSafeDeletePetResult
+        public readonly struct DeletePetActionResult
         {
             public readonly global::Microsoft.AspNetCore.Mvc.IActionResult ActionResult;
 
@@ -132,17 +132,17 @@ namespace PrincipleStudios.Test
                 }
             }
 
-            private TypeSafeDeletePetResult(global::Microsoft.AspNetCore.Mvc.IActionResult ActionResult, global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
+            private DeletePetActionResult(global::Microsoft.AspNetCore.Mvc.IActionResult ActionResult, global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
             {
                 this.ActionResult = new HeaderActionResult(ActionResult, headers);
             }
 
-            private TypeSafeDeletePetResult(int statusCode, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
+            private DeletePetActionResult(int statusCode, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
                 : this(new global::Microsoft.AspNetCore.Mvc.StatusCodeResult(statusCode), headers)
             {
             }
 
-            private TypeSafeDeletePetResult(int statusCode, string mediaType, global::System.Type declaredType, object? resultObject, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
+            private DeletePetActionResult(int statusCode, string mediaType, global::System.Type declaredType, object? resultObject, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
                 : this(new global::Microsoft.AspNetCore.Mvc.ObjectResult(resultObject)
                 {
                     ContentTypes = new global::Microsoft.AspNetCore.Mvc.Formatters.MediaTypeCollection { { new global::Microsoft.Net.Http.Headers.MediaTypeHeaderValue(mediaType) } },
@@ -155,17 +155,17 @@ namespace PrincipleStudios.Test
             /// <summary>
             /// pet deleted
             /// </summary>
-            public static TypeSafeDeletePetResult NoContent() =>
-                new TypeSafeDeletePetResult(204);
+            public static DeletePetActionResult NoContent() =>
+                new DeletePetActionResult(204);
             
             
-            public static TypeSafeDeletePetResult OtherStatusCode(int statusCode, Error result) =>
-                new TypeSafeDeletePetResult(statusCode, "application/json", typeof(Error), result);
+            public static DeletePetActionResult OtherStatusCode(int statusCode, Error result) =>
+                new DeletePetActionResult(statusCode, "application/json", typeof(Error), result);
             
 
             /// <summary>Allows for action results not specified in the API</summary>
-            public static TypeSafeDeletePetResult Unsafe(global::Microsoft.AspNetCore.Mvc.IActionResult actionResult, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers) =>
-                new TypeSafeDeletePetResult(actionResult, headers);
+            public static DeletePetActionResult Unsafe(global::Microsoft.AspNetCore.Mvc.IActionResult actionResult, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers) =>
+                new DeletePetActionResult(actionResult, headers);
         }
     }
 }

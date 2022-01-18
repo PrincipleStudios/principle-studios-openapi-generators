@@ -26,11 +26,11 @@ namespace PrincipleStudios.Test
         // Invalid input
         [global::Microsoft.AspNetCore.Mvc.ProducesResponseType(405)] // 
         [global::Microsoft.AspNetCore.Authorization.Authorize(AuthenticationSchemes = "petstore_auth")]
-        public async global::System.Threading.Tasks.Task<global::Microsoft.AspNetCore.Mvc.IActionResult> AddPet(
+        public async global::System.Threading.Tasks.Task<global::Microsoft.AspNetCore.Mvc.IActionResult> AddPetTypeSafeEntry(
             [global::Microsoft.AspNetCore.Mvc.FromBody, global::System.ComponentModel.DataAnnotations.Required] Pet addPetBody
-        ) => (await AddPetapplicationJsonTypeSafe(addPetBody)).ActionResult;
+        ) => (await AddPetapplicationJson(addPetBody)).ActionResult;
 
-        protected abstract global::System.Threading.Tasks.Task<TypeSafeAddPetResult> AddPetapplicationJsonTypeSafe(
+        protected abstract global::System.Threading.Tasks.Task<AddPetActionResult> AddPetapplicationJson(
             Pet addPetBody);
 
         /// <summary>
@@ -43,14 +43,14 @@ namespace PrincipleStudios.Test
         // Invalid input
         [global::Microsoft.AspNetCore.Mvc.ProducesResponseType(405)] // 
         [global::Microsoft.AspNetCore.Authorization.Authorize(AuthenticationSchemes = "petstore_auth")]
-        public async global::System.Threading.Tasks.Task<global::Microsoft.AspNetCore.Mvc.IActionResult> AddPet(
+        public async global::System.Threading.Tasks.Task<global::Microsoft.AspNetCore.Mvc.IActionResult> AddPetTypeSafeEntry(
             [global::Microsoft.AspNetCore.Mvc.FromBody, global::System.ComponentModel.DataAnnotations.Required] Pet addPetBody
-        ) => (await AddPetapplicationXmlTypeSafe(addPetBody)).ActionResult;
+        ) => (await AddPetapplicationXml(addPetBody)).ActionResult;
 
-        protected abstract global::System.Threading.Tasks.Task<TypeSafeAddPetResult> AddPetapplicationXmlTypeSafe(
+        protected abstract global::System.Threading.Tasks.Task<AddPetActionResult> AddPetapplicationXml(
             Pet addPetBody);
 
-        public readonly struct TypeSafeAddPetResult
+        public readonly struct AddPetActionResult
         {
             public readonly global::Microsoft.AspNetCore.Mvc.IActionResult ActionResult;
 
@@ -73,17 +73,17 @@ namespace PrincipleStudios.Test
                 }
             }
 
-            private TypeSafeAddPetResult(global::Microsoft.AspNetCore.Mvc.IActionResult ActionResult, global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
+            private AddPetActionResult(global::Microsoft.AspNetCore.Mvc.IActionResult ActionResult, global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
             {
                 this.ActionResult = new HeaderActionResult(ActionResult, headers);
             }
 
-            private TypeSafeAddPetResult(int statusCode, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
+            private AddPetActionResult(int statusCode, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
                 : this(new global::Microsoft.AspNetCore.Mvc.StatusCodeResult(statusCode), headers)
             {
             }
 
-            private TypeSafeAddPetResult(int statusCode, string mediaType, global::System.Type declaredType, object? resultObject, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
+            private AddPetActionResult(int statusCode, string mediaType, global::System.Type declaredType, object? resultObject, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
                 : this(new global::Microsoft.AspNetCore.Mvc.ObjectResult(resultObject)
                 {
                     ContentTypes = new global::Microsoft.AspNetCore.Mvc.Formatters.MediaTypeCollection { { new global::Microsoft.Net.Http.Headers.MediaTypeHeaderValue(mediaType) } },
@@ -96,13 +96,13 @@ namespace PrincipleStudios.Test
             /// <summary>
             /// Invalid input
             /// </summary>
-            public static TypeSafeAddPetResult MethodNotAllowed() =>
-                new TypeSafeAddPetResult(405);
+            public static AddPetActionResult MethodNotAllowed() =>
+                new AddPetActionResult(405);
             
 
             /// <summary>Allows for action results not specified in the API</summary>
-            public static TypeSafeAddPetResult Unsafe(global::Microsoft.AspNetCore.Mvc.IActionResult actionResult, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers) =>
-                new TypeSafeAddPetResult(actionResult, headers);
+            public static AddPetActionResult Unsafe(global::Microsoft.AspNetCore.Mvc.IActionResult actionResult, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers) =>
+                new AddPetActionResult(actionResult, headers);
         }
 
         /// <summary>
@@ -119,11 +119,11 @@ namespace PrincipleStudios.Test
         // Validation exception
         [global::Microsoft.AspNetCore.Mvc.ProducesResponseType(405)] // 
         [global::Microsoft.AspNetCore.Authorization.Authorize(AuthenticationSchemes = "petstore_auth")]
-        public async global::System.Threading.Tasks.Task<global::Microsoft.AspNetCore.Mvc.IActionResult> UpdatePet(
+        public async global::System.Threading.Tasks.Task<global::Microsoft.AspNetCore.Mvc.IActionResult> UpdatePetTypeSafeEntry(
             [global::Microsoft.AspNetCore.Mvc.FromBody, global::System.ComponentModel.DataAnnotations.Required] Pet updatePetBody
-        ) => (await UpdatePetapplicationJsonTypeSafe(updatePetBody)).ActionResult;
+        ) => (await UpdatePetapplicationJson(updatePetBody)).ActionResult;
 
-        protected abstract global::System.Threading.Tasks.Task<TypeSafeUpdatePetResult> UpdatePetapplicationJsonTypeSafe(
+        protected abstract global::System.Threading.Tasks.Task<UpdatePetActionResult> UpdatePetapplicationJson(
             Pet updatePetBody);
 
         /// <summary>
@@ -140,14 +140,14 @@ namespace PrincipleStudios.Test
         // Validation exception
         [global::Microsoft.AspNetCore.Mvc.ProducesResponseType(405)] // 
         [global::Microsoft.AspNetCore.Authorization.Authorize(AuthenticationSchemes = "petstore_auth")]
-        public async global::System.Threading.Tasks.Task<global::Microsoft.AspNetCore.Mvc.IActionResult> UpdatePet(
+        public async global::System.Threading.Tasks.Task<global::Microsoft.AspNetCore.Mvc.IActionResult> UpdatePetTypeSafeEntry(
             [global::Microsoft.AspNetCore.Mvc.FromBody, global::System.ComponentModel.DataAnnotations.Required] Pet updatePetBody
-        ) => (await UpdatePetapplicationXmlTypeSafe(updatePetBody)).ActionResult;
+        ) => (await UpdatePetapplicationXml(updatePetBody)).ActionResult;
 
-        protected abstract global::System.Threading.Tasks.Task<TypeSafeUpdatePetResult> UpdatePetapplicationXmlTypeSafe(
+        protected abstract global::System.Threading.Tasks.Task<UpdatePetActionResult> UpdatePetapplicationXml(
             Pet updatePetBody);
 
-        public readonly struct TypeSafeUpdatePetResult
+        public readonly struct UpdatePetActionResult
         {
             public readonly global::Microsoft.AspNetCore.Mvc.IActionResult ActionResult;
 
@@ -170,17 +170,17 @@ namespace PrincipleStudios.Test
                 }
             }
 
-            private TypeSafeUpdatePetResult(global::Microsoft.AspNetCore.Mvc.IActionResult ActionResult, global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
+            private UpdatePetActionResult(global::Microsoft.AspNetCore.Mvc.IActionResult ActionResult, global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
             {
                 this.ActionResult = new HeaderActionResult(ActionResult, headers);
             }
 
-            private TypeSafeUpdatePetResult(int statusCode, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
+            private UpdatePetActionResult(int statusCode, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
                 : this(new global::Microsoft.AspNetCore.Mvc.StatusCodeResult(statusCode), headers)
             {
             }
 
-            private TypeSafeUpdatePetResult(int statusCode, string mediaType, global::System.Type declaredType, object? resultObject, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
+            private UpdatePetActionResult(int statusCode, string mediaType, global::System.Type declaredType, object? resultObject, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
                 : this(new global::Microsoft.AspNetCore.Mvc.ObjectResult(resultObject)
                 {
                     ContentTypes = new global::Microsoft.AspNetCore.Mvc.Formatters.MediaTypeCollection { { new global::Microsoft.Net.Http.Headers.MediaTypeHeaderValue(mediaType) } },
@@ -193,25 +193,25 @@ namespace PrincipleStudios.Test
             /// <summary>
             /// Invalid ID supplied
             /// </summary>
-            public static TypeSafeUpdatePetResult BadRequest() =>
-                new TypeSafeUpdatePetResult(400);
+            public static UpdatePetActionResult BadRequest() =>
+                new UpdatePetActionResult(400);
             
             /// <summary>
             /// Pet not found
             /// </summary>
-            public static TypeSafeUpdatePetResult NotFound() =>
-                new TypeSafeUpdatePetResult(404);
+            public static UpdatePetActionResult NotFound() =>
+                new UpdatePetActionResult(404);
             
             /// <summary>
             /// Validation exception
             /// </summary>
-            public static TypeSafeUpdatePetResult MethodNotAllowed() =>
-                new TypeSafeUpdatePetResult(405);
+            public static UpdatePetActionResult MethodNotAllowed() =>
+                new UpdatePetActionResult(405);
             
 
             /// <summary>Allows for action results not specified in the API</summary>
-            public static TypeSafeUpdatePetResult Unsafe(global::Microsoft.AspNetCore.Mvc.IActionResult actionResult, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers) =>
-                new TypeSafeUpdatePetResult(actionResult, headers);
+            public static UpdatePetActionResult Unsafe(global::Microsoft.AspNetCore.Mvc.IActionResult actionResult, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers) =>
+                new UpdatePetActionResult(actionResult, headers);
         }
     }
 }

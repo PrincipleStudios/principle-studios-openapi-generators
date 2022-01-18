@@ -18,13 +18,13 @@ namespace PS.Controller
         [global::Microsoft.AspNetCore.Mvc.Route("/contact")]
         // OK
         [global::Microsoft.AspNetCore.Mvc.ProducesResponseType(200, Type = typeof(ContactWithId))] // application/json
-        public async global::System.Threading.Tasks.Task<global::Microsoft.AspNetCore.Mvc.IActionResult> GetContact(
+        public async global::System.Threading.Tasks.Task<global::Microsoft.AspNetCore.Mvc.IActionResult> GetContactTypeSafeEntry(
             
-        ) => (await GetContactTypeSafe()).ActionResult;
+        ) => (await GetContact()).ActionResult;
 
-        protected abstract global::System.Threading.Tasks.Task<TypeSafeGetContactResult> GetContactTypeSafe();
+        protected abstract global::System.Threading.Tasks.Task<GetContactActionResult> GetContact();
 
-        public readonly struct TypeSafeGetContactResult
+        public readonly struct GetContactActionResult
         {
             public readonly global::Microsoft.AspNetCore.Mvc.IActionResult ActionResult;
 
@@ -47,17 +47,17 @@ namespace PS.Controller
                 }
             }
 
-            private TypeSafeGetContactResult(global::Microsoft.AspNetCore.Mvc.IActionResult ActionResult, global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
+            private GetContactActionResult(global::Microsoft.AspNetCore.Mvc.IActionResult ActionResult, global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
             {
                 this.ActionResult = new HeaderActionResult(ActionResult, headers);
             }
 
-            private TypeSafeGetContactResult(int statusCode, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
+            private GetContactActionResult(int statusCode, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
                 : this(new global::Microsoft.AspNetCore.Mvc.StatusCodeResult(statusCode), headers)
             {
             }
 
-            private TypeSafeGetContactResult(int statusCode, string mediaType, global::System.Type declaredType, object? resultObject, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
+            private GetContactActionResult(int statusCode, string mediaType, global::System.Type declaredType, object? resultObject, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
                 : this(new global::Microsoft.AspNetCore.Mvc.ObjectResult(resultObject)
                 {
                     ContentTypes = new global::Microsoft.AspNetCore.Mvc.Formatters.MediaTypeCollection { { new global::Microsoft.Net.Http.Headers.MediaTypeHeaderValue(mediaType) } },
@@ -70,13 +70,13 @@ namespace PS.Controller
             /// <summary>
             /// OK
             /// </summary>
-            public static TypeSafeGetContactResult Ok(ContactWithId result) =>
-                new TypeSafeGetContactResult(200, "application/json", typeof(ContactWithId), result);
+            public static GetContactActionResult Ok(ContactWithId result) =>
+                new GetContactActionResult(200, "application/json", typeof(ContactWithId), result);
             
 
             /// <summary>Allows for action results not specified in the API</summary>
-            public static TypeSafeGetContactResult Unsafe(global::Microsoft.AspNetCore.Mvc.IActionResult actionResult, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers) =>
-                new TypeSafeGetContactResult(actionResult, headers);
+            public static GetContactActionResult Unsafe(global::Microsoft.AspNetCore.Mvc.IActionResult actionResult, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers) =>
+                new GetContactActionResult(actionResult, headers);
         }
     }
 }

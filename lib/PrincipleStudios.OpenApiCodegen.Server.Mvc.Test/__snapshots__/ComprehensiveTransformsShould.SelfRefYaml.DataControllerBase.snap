@@ -20,13 +20,13 @@ namespace PS.Controller
         [global::Microsoft.AspNetCore.Mvc.Route("/data")]
         // Gets any kind of JSON data
         [global::Microsoft.AspNetCore.Mvc.ProducesResponseType(200, Type = typeof(Target))] // application/json
-        public async global::System.Threading.Tasks.Task<global::Microsoft.AspNetCore.Mvc.IActionResult> GetData(
+        public async global::System.Threading.Tasks.Task<global::Microsoft.AspNetCore.Mvc.IActionResult> GetDataTypeSafeEntry(
             
-        ) => (await GetDataTypeSafe()).ActionResult;
+        ) => (await GetData()).ActionResult;
 
-        protected abstract global::System.Threading.Tasks.Task<TypeSafeGetDataResult> GetDataTypeSafe();
+        protected abstract global::System.Threading.Tasks.Task<GetDataActionResult> GetData();
 
-        public readonly struct TypeSafeGetDataResult
+        public readonly struct GetDataActionResult
         {
             public readonly global::Microsoft.AspNetCore.Mvc.IActionResult ActionResult;
 
@@ -49,17 +49,17 @@ namespace PS.Controller
                 }
             }
 
-            private TypeSafeGetDataResult(global::Microsoft.AspNetCore.Mvc.IActionResult ActionResult, global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
+            private GetDataActionResult(global::Microsoft.AspNetCore.Mvc.IActionResult ActionResult, global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
             {
                 this.ActionResult = new HeaderActionResult(ActionResult, headers);
             }
 
-            private TypeSafeGetDataResult(int statusCode, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
+            private GetDataActionResult(int statusCode, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
                 : this(new global::Microsoft.AspNetCore.Mvc.StatusCodeResult(statusCode), headers)
             {
             }
 
-            private TypeSafeGetDataResult(int statusCode, string mediaType, global::System.Type declaredType, object? resultObject, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
+            private GetDataActionResult(int statusCode, string mediaType, global::System.Type declaredType, object? resultObject, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
                 : this(new global::Microsoft.AspNetCore.Mvc.ObjectResult(resultObject)
                 {
                     ContentTypes = new global::Microsoft.AspNetCore.Mvc.Formatters.MediaTypeCollection { { new global::Microsoft.Net.Http.Headers.MediaTypeHeaderValue(mediaType) } },
@@ -72,13 +72,13 @@ namespace PS.Controller
             /// <summary>
             /// Gets any kind of JSON data
             /// </summary>
-            public static TypeSafeGetDataResult Ok(Target result) =>
-                new TypeSafeGetDataResult(200, "application/json", typeof(Target), result);
+            public static GetDataActionResult Ok(Target result) =>
+                new GetDataActionResult(200, "application/json", typeof(Target), result);
             
 
             /// <summary>Allows for action results not specified in the API</summary>
-            public static TypeSafeGetDataResult Unsafe(global::Microsoft.AspNetCore.Mvc.IActionResult actionResult, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers) =>
-                new TypeSafeGetDataResult(actionResult, headers);
+            public static GetDataActionResult Unsafe(global::Microsoft.AspNetCore.Mvc.IActionResult actionResult, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers) =>
+                new GetDataActionResult(actionResult, headers);
         }
     }
 }

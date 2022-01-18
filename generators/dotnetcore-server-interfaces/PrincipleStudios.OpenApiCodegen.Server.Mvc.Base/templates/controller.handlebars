@@ -40,7 +40,7 @@ namespace {{packageName}}
         }}{{#each operation.securityRequirements}}{{#if schemes.Length}}
         [global::Microsoft.AspNetCore.Authorization.Authorize(AuthenticationSchemes = "{{#each schemes}}{{schemeName}}{{#unless @last}},{{/unless}}{{/each}}")]{{else}}
         [global::Microsoft.AspNetCore.Authorization.AllowAnonymous]{{/if}}{{/each}}
-        public async global::System.Threading.Tasks.Task<global::Microsoft.AspNetCore.Mvc.IActionResult> {{operation.name}}(
+        public async global::System.Threading.Tasks.Task<global::Microsoft.AspNetCore.Mvc.IActionResult> {{operation.name}}TypeSafeEntry(
             {{#each requestBody.allParams}}{{#unless isCookieParam}}[{{!
             }}{{#if isPathParam}}global::Microsoft.AspNetCore.Mvc.FromRoute(Name = "{{rawName}}"){{/if}}{{!
             }}{{#if isQueryParam}}global::Microsoft.AspNetCore.Mvc.FromQuery(Name = "{{rawName}}"){{/if}}{{!
@@ -54,7 +54,7 @@ namespace {{packageName}}
             }}{{#if minimum.HasValue}}{{#if maximum.HasValue}}, global::System.ComponentModel.DataAnnotations.Range({{minimum}}, {{maximum}}){{/if}}{{/if}}{{!
             }}] {{{dataType}}} {{paramName}}{{#unless @last}},
             {{/unless}}{{/unless}}{{/each}}
-        ) => (await {{requestBody.name}}TypeSafe({{#each requestBody.allParams}}{{paramName}}{{#unless @last}},{{/unless}}{{/each}})).ActionResult;
+        ) => (await {{requestBody.name}}({{#each requestBody.allParams}}{{paramName}}{{#unless @last}},{{/unless}}{{/each}})).ActionResult;
         {{!--
             TODO - check scopes
             {{#each operation.securityRequirements}}{{#if schemes.Length}}{{#if }}
@@ -62,11 +62,11 @@ namespace {{packageName}}
                 return Forbid();{{/if}}{{/if}}{{/each}}
             return --}}
 
-        protected abstract global::System.Threading.Tasks.Task<TypeSafe{{operation.name}}Result> {{requestBody.name}}TypeSafe({{#each requestBody.allParams}}
+        protected abstract global::System.Threading.Tasks.Task<{{operation.name}}ActionResult> {{requestBody.name}}({{#each requestBody.allParams}}
             {{{dataType}}} {{paramName}}{{#unless @last}}, {{/unless}}{{/each}});
         {{/each}}
 
-        public readonly struct TypeSafe{{name}}Result
+        public readonly struct {{name}}ActionResult
         {
             public readonly global::Microsoft.AspNetCore.Mvc.IActionResult ActionResult;
 
@@ -89,17 +89,17 @@ namespace {{packageName}}
                 }
             }
 
-            private TypeSafe{{name}}Result(global::Microsoft.AspNetCore.Mvc.IActionResult ActionResult, global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
+            private {{name}}ActionResult(global::Microsoft.AspNetCore.Mvc.IActionResult ActionResult, global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
             {
                 this.ActionResult = new HeaderActionResult(ActionResult, headers);
             }
 
-            private TypeSafe{{name}}Result(int statusCode, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
+            private {{name}}ActionResult(int statusCode, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
                 : this(new global::Microsoft.AspNetCore.Mvc.StatusCodeResult(statusCode), headers)
             {
             }
 
-            private TypeSafe{{name}}Result(int statusCode, string mediaType, global::System.Type declaredType, object? resultObject, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
+            private {{name}}ActionResult(int statusCode, string mediaType, global::System.Type declaredType, object? resultObject, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
                 : this(new global::Microsoft.AspNetCore.Mvc.ObjectResult(resultObject)
                 {
                     ContentTypes = new global::Microsoft.AspNetCore.Mvc.Formatters.MediaTypeCollection { { new global::Microsoft.Net.Http.Headers.MediaTypeHeaderValue(mediaType) } },
@@ -113,25 +113,25 @@ namespace {{packageName}}
             /// {{linewrap response.description "
             /// "}}
             /// </summary>{{/if}}
-            public static TypeSafe{{../../name}}Result {{responseMethodName}}({{#if dataType}}{{{dataType}}} result{{#if ../headers.Length}},
+            public static {{../../name}}ActionResult {{responseMethodName}}({{#if dataType}}{{{dataType}}} result{{#if ../headers.Length}},
                 {{/if}}{{/if}}{{#each ../headers}}{{#unless @first}},
                 {{/unless}}string {{paramName}}{{/each}}) =>
-                new TypeSafe{{../../name}}Result({{code}}{{#if dataType}}, "{{mediaType}}", typeof({{{dataType}}}), result{{/if}}{{#each ../headers}},
+                new {{../../name}}ActionResult({{code}}{{#if dataType}}, "{{mediaType}}", typeof({{{dataType}}}), result{{/if}}{{#each ../headers}},
                     new global::System.Collections.Generic.KeyValuePair<string, string>("{{rawName}}", {{paramName}}){{/each}});
             {{/each}}{{/each}}{{#if responses.defaultResponse}}{{#each responses.defaultResponse.content}}
             {{#if responses.defaultResponse.description}}/// <summary>
             /// {{linewrap responses.defaultResponse.description "
             /// "}}
             /// </summary>{{/if}}
-            public static TypeSafe{{../name}}Result {{responseMethodName}}(int statusCode{{#if dataType}}, {{{dataType}}} result{{/if}}{{#each ../responses.defaultResponse.headers}},
+            public static {{../name}}ActionResult {{responseMethodName}}(int statusCode{{#if dataType}}, {{{dataType}}} result{{/if}}{{#each ../responses.defaultResponse.headers}},
                 string {{paramName}}{{/each}}) =>
-                new TypeSafe{{../name}}Result(statusCode{{#if dataType}}, "{{mediaType}}", typeof({{{dataType}}}), result{{/if}}{{#each ../responses.defaultResponse.headers}},
+                new {{../name}}ActionResult(statusCode{{#if dataType}}, "{{mediaType}}", typeof({{{dataType}}}), result{{/if}}{{#each ../responses.defaultResponse.headers}},
                     new global::System.Collections.Generic.KeyValuePair<string, string>("{{rawName}}", {{paramName}}){{/each}});
             {{/each}}{{/if}}
 
             /// <summary>Allows for action results not specified in the API</summary>
-            public static TypeSafe{{name}}Result Unsafe(global::Microsoft.AspNetCore.Mvc.IActionResult actionResult, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers) =>
-                new TypeSafe{{name}}Result(actionResult, headers);
+            public static {{name}}ActionResult Unsafe(global::Microsoft.AspNetCore.Mvc.IActionResult actionResult, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers) =>
+                new {{name}}ActionResult(actionResult, headers);
         }
         {{/each}}
     }

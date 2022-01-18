@@ -22,14 +22,14 @@ namespace PS.Controller
         [global::Microsoft.AspNetCore.Mvc.Consumes("application/json")]
         // 
         [global::Microsoft.AspNetCore.Mvc.ProducesResponseType(200, Type = typeof(global::System.Collections.Generic.Dictionary<string, string>))] // application/json
-        public async global::System.Threading.Tasks.Task<global::Microsoft.AspNetCore.Mvc.IActionResult> LookupRecord(
+        public async global::System.Threading.Tasks.Task<global::Microsoft.AspNetCore.Mvc.IActionResult> LookupRecordTypeSafeEntry(
             [global::Microsoft.AspNetCore.Mvc.FromBody, global::System.ComponentModel.DataAnnotations.Required] global::System.Collections.Generic.Dictionary<string, string> lookupRecordBody
-        ) => (await LookupRecordTypeSafe(lookupRecordBody)).ActionResult;
+        ) => (await LookupRecord(lookupRecordBody)).ActionResult;
 
-        protected abstract global::System.Threading.Tasks.Task<TypeSafeLookupRecordResult> LookupRecordTypeSafe(
+        protected abstract global::System.Threading.Tasks.Task<LookupRecordActionResult> LookupRecord(
             global::System.Collections.Generic.Dictionary<string, string> lookupRecordBody);
 
-        public readonly struct TypeSafeLookupRecordResult
+        public readonly struct LookupRecordActionResult
         {
             public readonly global::Microsoft.AspNetCore.Mvc.IActionResult ActionResult;
 
@@ -52,17 +52,17 @@ namespace PS.Controller
                 }
             }
 
-            private TypeSafeLookupRecordResult(global::Microsoft.AspNetCore.Mvc.IActionResult ActionResult, global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
+            private LookupRecordActionResult(global::Microsoft.AspNetCore.Mvc.IActionResult ActionResult, global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
             {
                 this.ActionResult = new HeaderActionResult(ActionResult, headers);
             }
 
-            private TypeSafeLookupRecordResult(int statusCode, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
+            private LookupRecordActionResult(int statusCode, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
                 : this(new global::Microsoft.AspNetCore.Mvc.StatusCodeResult(statusCode), headers)
             {
             }
 
-            private TypeSafeLookupRecordResult(int statusCode, string mediaType, global::System.Type declaredType, object? resultObject, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
+            private LookupRecordActionResult(int statusCode, string mediaType, global::System.Type declaredType, object? resultObject, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
                 : this(new global::Microsoft.AspNetCore.Mvc.ObjectResult(resultObject)
                 {
                     ContentTypes = new global::Microsoft.AspNetCore.Mvc.Formatters.MediaTypeCollection { { new global::Microsoft.Net.Http.Headers.MediaTypeHeaderValue(mediaType) } },
@@ -73,13 +73,13 @@ namespace PS.Controller
             }
             
             
-            public static TypeSafeLookupRecordResult Ok(global::System.Collections.Generic.Dictionary<string, string> result) =>
-                new TypeSafeLookupRecordResult(200, "application/json", typeof(global::System.Collections.Generic.Dictionary<string, string>), result);
+            public static LookupRecordActionResult Ok(global::System.Collections.Generic.Dictionary<string, string> result) =>
+                new LookupRecordActionResult(200, "application/json", typeof(global::System.Collections.Generic.Dictionary<string, string>), result);
             
 
             /// <summary>Allows for action results not specified in the API</summary>
-            public static TypeSafeLookupRecordResult Unsafe(global::Microsoft.AspNetCore.Mvc.IActionResult actionResult, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers) =>
-                new TypeSafeLookupRecordResult(actionResult, headers);
+            public static LookupRecordActionResult Unsafe(global::Microsoft.AspNetCore.Mvc.IActionResult actionResult, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers) =>
+                new LookupRecordActionResult(actionResult, headers);
         }
     }
 }

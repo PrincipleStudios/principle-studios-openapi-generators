@@ -30,14 +30,14 @@ namespace PrincipleStudios.Test
         // Invalid status value
         [global::Microsoft.AspNetCore.Mvc.ProducesResponseType(400)] // 
         [global::Microsoft.AspNetCore.Authorization.Authorize(AuthenticationSchemes = "petstore_auth")]
-        public async global::System.Threading.Tasks.Task<global::Microsoft.AspNetCore.Mvc.IActionResult> FindPetsByStatus(
+        public async global::System.Threading.Tasks.Task<global::Microsoft.AspNetCore.Mvc.IActionResult> FindPetsByStatusTypeSafeEntry(
             [global::Microsoft.AspNetCore.Mvc.FromQuery(Name = "status"), global::System.ComponentModel.DataAnnotations.Required] global::System.Collections.Generic.IEnumerable<FindPetsByStatusStatusItem> status
-        ) => (await FindPetsByStatusTypeSafe(status)).ActionResult;
+        ) => (await FindPetsByStatus(status)).ActionResult;
 
-        protected abstract global::System.Threading.Tasks.Task<TypeSafeFindPetsByStatusResult> FindPetsByStatusTypeSafe(
+        protected abstract global::System.Threading.Tasks.Task<FindPetsByStatusActionResult> FindPetsByStatus(
             global::System.Collections.Generic.IEnumerable<FindPetsByStatusStatusItem> status);
 
-        public readonly struct TypeSafeFindPetsByStatusResult
+        public readonly struct FindPetsByStatusActionResult
         {
             public readonly global::Microsoft.AspNetCore.Mvc.IActionResult ActionResult;
 
@@ -60,17 +60,17 @@ namespace PrincipleStudios.Test
                 }
             }
 
-            private TypeSafeFindPetsByStatusResult(global::Microsoft.AspNetCore.Mvc.IActionResult ActionResult, global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
+            private FindPetsByStatusActionResult(global::Microsoft.AspNetCore.Mvc.IActionResult ActionResult, global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
             {
                 this.ActionResult = new HeaderActionResult(ActionResult, headers);
             }
 
-            private TypeSafeFindPetsByStatusResult(int statusCode, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
+            private FindPetsByStatusActionResult(int statusCode, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
                 : this(new global::Microsoft.AspNetCore.Mvc.StatusCodeResult(statusCode), headers)
             {
             }
 
-            private TypeSafeFindPetsByStatusResult(int statusCode, string mediaType, global::System.Type declaredType, object? resultObject, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
+            private FindPetsByStatusActionResult(int statusCode, string mediaType, global::System.Type declaredType, object? resultObject, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
                 : this(new global::Microsoft.AspNetCore.Mvc.ObjectResult(resultObject)
                 {
                     ContentTypes = new global::Microsoft.AspNetCore.Mvc.Formatters.MediaTypeCollection { { new global::Microsoft.Net.Http.Headers.MediaTypeHeaderValue(mediaType) } },
@@ -83,25 +83,25 @@ namespace PrincipleStudios.Test
             /// <summary>
             /// successful operation
             /// </summary>
-            public static TypeSafeFindPetsByStatusResult ApplicationXmlOk(global::System.Collections.Generic.IEnumerable<Pet> result) =>
-                new TypeSafeFindPetsByStatusResult(200, "application/xml", typeof(global::System.Collections.Generic.IEnumerable<Pet>), result);
+            public static FindPetsByStatusActionResult ApplicationXmlOk(global::System.Collections.Generic.IEnumerable<Pet> result) =>
+                new FindPetsByStatusActionResult(200, "application/xml", typeof(global::System.Collections.Generic.IEnumerable<Pet>), result);
             
             /// <summary>
             /// successful operation
             /// </summary>
-            public static TypeSafeFindPetsByStatusResult ApplicationJsonOk(global::System.Collections.Generic.IEnumerable<Pet> result) =>
-                new TypeSafeFindPetsByStatusResult(200, "application/json", typeof(global::System.Collections.Generic.IEnumerable<Pet>), result);
+            public static FindPetsByStatusActionResult ApplicationJsonOk(global::System.Collections.Generic.IEnumerable<Pet> result) =>
+                new FindPetsByStatusActionResult(200, "application/json", typeof(global::System.Collections.Generic.IEnumerable<Pet>), result);
             
             /// <summary>
             /// Invalid status value
             /// </summary>
-            public static TypeSafeFindPetsByStatusResult BadRequest() =>
-                new TypeSafeFindPetsByStatusResult(400);
+            public static FindPetsByStatusActionResult BadRequest() =>
+                new FindPetsByStatusActionResult(400);
             
 
             /// <summary>Allows for action results not specified in the API</summary>
-            public static TypeSafeFindPetsByStatusResult Unsafe(global::Microsoft.AspNetCore.Mvc.IActionResult actionResult, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers) =>
-                new TypeSafeFindPetsByStatusResult(actionResult, headers);
+            public static FindPetsByStatusActionResult Unsafe(global::Microsoft.AspNetCore.Mvc.IActionResult actionResult, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers) =>
+                new FindPetsByStatusActionResult(actionResult, headers);
         }
     }
 }
