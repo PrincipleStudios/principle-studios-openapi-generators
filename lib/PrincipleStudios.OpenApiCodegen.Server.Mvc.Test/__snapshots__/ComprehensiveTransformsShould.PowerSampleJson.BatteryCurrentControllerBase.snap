@@ -29,14 +29,14 @@ namespace PS.Controller
         [global::Microsoft.AspNetCore.Mvc.ProducesResponseType(200, Type = typeof(CurrentBatteryState))] // application/json
         // Request range or house id not valid
         [global::Microsoft.AspNetCore.Mvc.ProducesResponseType(400)] // 
-        public async global::System.Threading.Tasks.Task<global::Microsoft.AspNetCore.Mvc.IActionResult> GetCurrentBatteryState(
+        public async global::System.Threading.Tasks.Task<global::Microsoft.AspNetCore.Mvc.IActionResult> GetCurrentBatteryStateTypeSafeEntry(
             [global::Microsoft.AspNetCore.Mvc.FromQuery(Name = "houseId"), global::System.ComponentModel.DataAnnotations.Required] global::System.Guid houseId
-        ) => (await GetCurrentBatteryStateTypeSafe(houseId)).ActionResult;
+        ) => (await GetCurrentBatteryState(houseId)).ActionResult;
 
-        protected abstract global::System.Threading.Tasks.Task<TypeSafeGetCurrentBatteryStateResult> GetCurrentBatteryStateTypeSafe(
+        protected abstract global::System.Threading.Tasks.Task<GetCurrentBatteryStateActionResult> GetCurrentBatteryState(
             global::System.Guid houseId);
 
-        public readonly struct TypeSafeGetCurrentBatteryStateResult
+        public readonly struct GetCurrentBatteryStateActionResult
         {
             public readonly global::Microsoft.AspNetCore.Mvc.IActionResult ActionResult;
 
@@ -59,17 +59,17 @@ namespace PS.Controller
                 }
             }
 
-            private TypeSafeGetCurrentBatteryStateResult(global::Microsoft.AspNetCore.Mvc.IActionResult ActionResult, global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
+            private GetCurrentBatteryStateActionResult(global::Microsoft.AspNetCore.Mvc.IActionResult ActionResult, global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
             {
                 this.ActionResult = new HeaderActionResult(ActionResult, headers);
             }
 
-            private TypeSafeGetCurrentBatteryStateResult(int statusCode, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
+            private GetCurrentBatteryStateActionResult(int statusCode, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
                 : this(new global::Microsoft.AspNetCore.Mvc.StatusCodeResult(statusCode), headers)
             {
             }
 
-            private TypeSafeGetCurrentBatteryStateResult(int statusCode, string mediaType, global::System.Type declaredType, object? resultObject, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
+            private GetCurrentBatteryStateActionResult(int statusCode, string mediaType, global::System.Type declaredType, object? resultObject, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
                 : this(new global::Microsoft.AspNetCore.Mvc.ObjectResult(resultObject)
                 {
                     ContentTypes = new global::Microsoft.AspNetCore.Mvc.Formatters.MediaTypeCollection { { new global::Microsoft.Net.Http.Headers.MediaTypeHeaderValue(mediaType) } },
@@ -80,19 +80,19 @@ namespace PS.Controller
             }
             
             
-            public static TypeSafeGetCurrentBatteryStateResult Ok(CurrentBatteryState result) =>
-                new TypeSafeGetCurrentBatteryStateResult(200, "application/json", typeof(CurrentBatteryState), result);
+            public static GetCurrentBatteryStateActionResult Ok(CurrentBatteryState result) =>
+                new GetCurrentBatteryStateActionResult(200, "application/json", typeof(CurrentBatteryState), result);
             
             /// <summary>
             /// Request range or house id not valid
             /// </summary>
-            public static TypeSafeGetCurrentBatteryStateResult BadRequest() =>
-                new TypeSafeGetCurrentBatteryStateResult(400);
+            public static GetCurrentBatteryStateActionResult BadRequest() =>
+                new GetCurrentBatteryStateActionResult(400);
             
 
             /// <summary>Allows for action results not specified in the API</summary>
-            public static TypeSafeGetCurrentBatteryStateResult Unsafe(global::Microsoft.AspNetCore.Mvc.IActionResult actionResult, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers) =>
-                new TypeSafeGetCurrentBatteryStateResult(actionResult, headers);
+            public static GetCurrentBatteryStateActionResult Unsafe(global::Microsoft.AspNetCore.Mvc.IActionResult actionResult, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers) =>
+                new GetCurrentBatteryStateActionResult(actionResult, headers);
         }
     }
 }

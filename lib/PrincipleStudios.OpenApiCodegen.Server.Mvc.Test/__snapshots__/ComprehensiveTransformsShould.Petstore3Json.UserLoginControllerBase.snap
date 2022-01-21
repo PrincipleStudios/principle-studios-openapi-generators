@@ -27,16 +27,16 @@ namespace PS.Controller
         [global::Microsoft.AspNetCore.Mvc.ProducesResponseType(200, Type = typeof(string))] // application/xml        [global::Microsoft.AspNetCore.Mvc.ProducesResponseType(200, Type = typeof(string))] // application/json
         // Invalid username/password supplied
         [global::Microsoft.AspNetCore.Mvc.ProducesResponseType(400)] // 
-        public async global::System.Threading.Tasks.Task<global::Microsoft.AspNetCore.Mvc.IActionResult> LoginUser(
+        public async global::System.Threading.Tasks.Task<global::Microsoft.AspNetCore.Mvc.IActionResult> LoginUserTypeSafeEntry(
             [global::Microsoft.AspNetCore.Mvc.FromQuery(Name = "username"), global::System.ComponentModel.DataAnnotations.Required] string username,
             [global::Microsoft.AspNetCore.Mvc.FromQuery(Name = "password"), global::System.ComponentModel.DataAnnotations.Required] string password
-        ) => (await LoginUserTypeSafe(username,password)).ActionResult;
+        ) => (await LoginUser(username,password)).ActionResult;
 
-        protected abstract global::System.Threading.Tasks.Task<TypeSafeLoginUserResult> LoginUserTypeSafe(
+        protected abstract global::System.Threading.Tasks.Task<LoginUserActionResult> LoginUser(
             string username, 
             string password);
 
-        public readonly struct TypeSafeLoginUserResult
+        public readonly struct LoginUserActionResult
         {
             public readonly global::Microsoft.AspNetCore.Mvc.IActionResult ActionResult;
 
@@ -59,17 +59,17 @@ namespace PS.Controller
                 }
             }
 
-            private TypeSafeLoginUserResult(global::Microsoft.AspNetCore.Mvc.IActionResult ActionResult, global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
+            private LoginUserActionResult(global::Microsoft.AspNetCore.Mvc.IActionResult ActionResult, global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
             {
                 this.ActionResult = new HeaderActionResult(ActionResult, headers);
             }
 
-            private TypeSafeLoginUserResult(int statusCode, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
+            private LoginUserActionResult(int statusCode, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
                 : this(new global::Microsoft.AspNetCore.Mvc.StatusCodeResult(statusCode), headers)
             {
             }
 
-            private TypeSafeLoginUserResult(int statusCode, string mediaType, global::System.Type declaredType, object? resultObject, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
+            private LoginUserActionResult(int statusCode, string mediaType, global::System.Type declaredType, object? resultObject, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
                 : this(new global::Microsoft.AspNetCore.Mvc.ObjectResult(resultObject)
                 {
                     ContentTypes = new global::Microsoft.AspNetCore.Mvc.Formatters.MediaTypeCollection { { new global::Microsoft.Net.Http.Headers.MediaTypeHeaderValue(mediaType) } },
@@ -82,33 +82,33 @@ namespace PS.Controller
             /// <summary>
             /// successful operation
             /// </summary>
-            public static TypeSafeLoginUserResult ApplicationXmlOk(string result,
+            public static LoginUserActionResult ApplicationXmlOk(string result,
                 string headerXRateLimit,
                 string headerXExpiresAfter) =>
-                new TypeSafeLoginUserResult(200, "application/xml", typeof(string), result,
+                new LoginUserActionResult(200, "application/xml", typeof(string), result,
                     new global::System.Collections.Generic.KeyValuePair<string, string>("X-Rate-Limit", headerXRateLimit),
                     new global::System.Collections.Generic.KeyValuePair<string, string>("X-Expires-After", headerXExpiresAfter));
             
             /// <summary>
             /// successful operation
             /// </summary>
-            public static TypeSafeLoginUserResult ApplicationJsonOk(string result,
+            public static LoginUserActionResult ApplicationJsonOk(string result,
                 string headerXRateLimit,
                 string headerXExpiresAfter) =>
-                new TypeSafeLoginUserResult(200, "application/json", typeof(string), result,
+                new LoginUserActionResult(200, "application/json", typeof(string), result,
                     new global::System.Collections.Generic.KeyValuePair<string, string>("X-Rate-Limit", headerXRateLimit),
                     new global::System.Collections.Generic.KeyValuePair<string, string>("X-Expires-After", headerXExpiresAfter));
             
             /// <summary>
             /// Invalid username/password supplied
             /// </summary>
-            public static TypeSafeLoginUserResult BadRequest() =>
-                new TypeSafeLoginUserResult(400);
+            public static LoginUserActionResult BadRequest() =>
+                new LoginUserActionResult(400);
             
 
             /// <summary>Allows for action results not specified in the API</summary>
-            public static TypeSafeLoginUserResult Unsafe(global::Microsoft.AspNetCore.Mvc.IActionResult actionResult, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers) =>
-                new TypeSafeLoginUserResult(actionResult, headers);
+            public static LoginUserActionResult Unsafe(global::Microsoft.AspNetCore.Mvc.IActionResult actionResult, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers) =>
+                new LoginUserActionResult(actionResult, headers);
         }
     }
 }

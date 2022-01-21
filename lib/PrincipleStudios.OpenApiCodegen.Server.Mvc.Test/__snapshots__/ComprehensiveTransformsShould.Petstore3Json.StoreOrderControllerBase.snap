@@ -27,14 +27,14 @@ namespace PS.Controller
         [global::Microsoft.AspNetCore.Mvc.ProducesResponseType(200, Type = typeof(Order))] // application/xml        [global::Microsoft.AspNetCore.Mvc.ProducesResponseType(200, Type = typeof(Order))] // application/json
         // Invalid Order
         [global::Microsoft.AspNetCore.Mvc.ProducesResponseType(400)] // 
-        public async global::System.Threading.Tasks.Task<global::Microsoft.AspNetCore.Mvc.IActionResult> PlaceOrder(
+        public async global::System.Threading.Tasks.Task<global::Microsoft.AspNetCore.Mvc.IActionResult> PlaceOrderTypeSafeEntry(
             [global::Microsoft.AspNetCore.Mvc.FromBody, global::System.ComponentModel.DataAnnotations.Required] Order placeOrderBody
-        ) => (await PlaceOrderTypeSafe(placeOrderBody)).ActionResult;
+        ) => (await PlaceOrder(placeOrderBody)).ActionResult;
 
-        protected abstract global::System.Threading.Tasks.Task<TypeSafePlaceOrderResult> PlaceOrderTypeSafe(
+        protected abstract global::System.Threading.Tasks.Task<PlaceOrderActionResult> PlaceOrder(
             Order placeOrderBody);
 
-        public readonly struct TypeSafePlaceOrderResult
+        public readonly struct PlaceOrderActionResult
         {
             public readonly global::Microsoft.AspNetCore.Mvc.IActionResult ActionResult;
 
@@ -57,17 +57,17 @@ namespace PS.Controller
                 }
             }
 
-            private TypeSafePlaceOrderResult(global::Microsoft.AspNetCore.Mvc.IActionResult ActionResult, global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
+            private PlaceOrderActionResult(global::Microsoft.AspNetCore.Mvc.IActionResult ActionResult, global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
             {
                 this.ActionResult = new HeaderActionResult(ActionResult, headers);
             }
 
-            private TypeSafePlaceOrderResult(int statusCode, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
+            private PlaceOrderActionResult(int statusCode, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
                 : this(new global::Microsoft.AspNetCore.Mvc.StatusCodeResult(statusCode), headers)
             {
             }
 
-            private TypeSafePlaceOrderResult(int statusCode, string mediaType, global::System.Type declaredType, object? resultObject, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
+            private PlaceOrderActionResult(int statusCode, string mediaType, global::System.Type declaredType, object? resultObject, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
                 : this(new global::Microsoft.AspNetCore.Mvc.ObjectResult(resultObject)
                 {
                     ContentTypes = new global::Microsoft.AspNetCore.Mvc.Formatters.MediaTypeCollection { { new global::Microsoft.Net.Http.Headers.MediaTypeHeaderValue(mediaType) } },
@@ -80,25 +80,25 @@ namespace PS.Controller
             /// <summary>
             /// successful operation
             /// </summary>
-            public static TypeSafePlaceOrderResult ApplicationXmlOk(Order result) =>
-                new TypeSafePlaceOrderResult(200, "application/xml", typeof(Order), result);
+            public static PlaceOrderActionResult ApplicationXmlOk(Order result) =>
+                new PlaceOrderActionResult(200, "application/xml", typeof(Order), result);
             
             /// <summary>
             /// successful operation
             /// </summary>
-            public static TypeSafePlaceOrderResult ApplicationJsonOk(Order result) =>
-                new TypeSafePlaceOrderResult(200, "application/json", typeof(Order), result);
+            public static PlaceOrderActionResult ApplicationJsonOk(Order result) =>
+                new PlaceOrderActionResult(200, "application/json", typeof(Order), result);
             
             /// <summary>
             /// Invalid Order
             /// </summary>
-            public static TypeSafePlaceOrderResult BadRequest() =>
-                new TypeSafePlaceOrderResult(400);
+            public static PlaceOrderActionResult BadRequest() =>
+                new PlaceOrderActionResult(400);
             
 
             /// <summary>Allows for action results not specified in the API</summary>
-            public static TypeSafePlaceOrderResult Unsafe(global::Microsoft.AspNetCore.Mvc.IActionResult actionResult, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers) =>
-                new TypeSafePlaceOrderResult(actionResult, headers);
+            public static PlaceOrderActionResult Unsafe(global::Microsoft.AspNetCore.Mvc.IActionResult actionResult, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers) =>
+                new PlaceOrderActionResult(actionResult, headers);
         }
     }
 }

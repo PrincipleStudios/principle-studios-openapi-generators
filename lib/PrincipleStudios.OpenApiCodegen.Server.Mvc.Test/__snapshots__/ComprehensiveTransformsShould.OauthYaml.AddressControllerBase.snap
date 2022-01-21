@@ -22,13 +22,13 @@ namespace PS.Controller
         [global::Microsoft.AspNetCore.Mvc.ProducesResponseType(200, Type = typeof(string))] // application/json
         [global::Microsoft.AspNetCore.Authorization.Authorize(AuthenticationSchemes = "ApiKeyAuth")]
         [global::Microsoft.AspNetCore.Authorization.Authorize(AuthenticationSchemes = "OAuth2")]
-        public async global::System.Threading.Tasks.Task<global::Microsoft.AspNetCore.Mvc.IActionResult> GetAddress(
+        public async global::System.Threading.Tasks.Task<global::Microsoft.AspNetCore.Mvc.IActionResult> GetAddressTypeSafeEntry(
             
-        ) => (await GetAddressTypeSafe()).ActionResult;
+        ) => (await GetAddress()).ActionResult;
 
-        protected abstract global::System.Threading.Tasks.Task<TypeSafeGetAddressResult> GetAddressTypeSafe();
+        protected abstract global::System.Threading.Tasks.Task<GetAddressActionResult> GetAddress();
 
-        public readonly struct TypeSafeGetAddressResult
+        public readonly struct GetAddressActionResult
         {
             public readonly global::Microsoft.AspNetCore.Mvc.IActionResult ActionResult;
 
@@ -51,17 +51,17 @@ namespace PS.Controller
                 }
             }
 
-            private TypeSafeGetAddressResult(global::Microsoft.AspNetCore.Mvc.IActionResult ActionResult, global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
+            private GetAddressActionResult(global::Microsoft.AspNetCore.Mvc.IActionResult ActionResult, global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
             {
                 this.ActionResult = new HeaderActionResult(ActionResult, headers);
             }
 
-            private TypeSafeGetAddressResult(int statusCode, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
+            private GetAddressActionResult(int statusCode, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
                 : this(new global::Microsoft.AspNetCore.Mvc.StatusCodeResult(statusCode), headers)
             {
             }
 
-            private TypeSafeGetAddressResult(int statusCode, string mediaType, global::System.Type declaredType, object? resultObject, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
+            private GetAddressActionResult(int statusCode, string mediaType, global::System.Type declaredType, object? resultObject, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
                 : this(new global::Microsoft.AspNetCore.Mvc.ObjectResult(resultObject)
                 {
                     ContentTypes = new global::Microsoft.AspNetCore.Mvc.Formatters.MediaTypeCollection { { new global::Microsoft.Net.Http.Headers.MediaTypeHeaderValue(mediaType) } },
@@ -74,13 +74,13 @@ namespace PS.Controller
             /// <summary>
             /// Sample Response
             /// </summary>
-            public static TypeSafeGetAddressResult Ok(string result) =>
-                new TypeSafeGetAddressResult(200, "application/json", typeof(string), result);
+            public static GetAddressActionResult Ok(string result) =>
+                new GetAddressActionResult(200, "application/json", typeof(string), result);
             
 
             /// <summary>Allows for action results not specified in the API</summary>
-            public static TypeSafeGetAddressResult Unsafe(global::Microsoft.AspNetCore.Mvc.IActionResult actionResult, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers) =>
-                new TypeSafeGetAddressResult(actionResult, headers);
+            public static GetAddressActionResult Unsafe(global::Microsoft.AspNetCore.Mvc.IActionResult actionResult, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers) =>
+                new GetAddressActionResult(actionResult, headers);
         }
     }
 }

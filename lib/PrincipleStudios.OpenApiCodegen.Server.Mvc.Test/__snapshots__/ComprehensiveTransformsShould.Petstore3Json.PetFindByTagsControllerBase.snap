@@ -30,14 +30,14 @@ namespace PS.Controller
         // Invalid tag value
         [global::Microsoft.AspNetCore.Mvc.ProducesResponseType(400)] // 
         [global::Microsoft.AspNetCore.Authorization.Authorize(AuthenticationSchemes = "petstore_auth")]
-        public async global::System.Threading.Tasks.Task<global::Microsoft.AspNetCore.Mvc.IActionResult> FindPetsByTags(
+        public async global::System.Threading.Tasks.Task<global::Microsoft.AspNetCore.Mvc.IActionResult> FindPetsByTagsTypeSafeEntry(
             [global::Microsoft.AspNetCore.Mvc.FromQuery(Name = "tags"), global::System.ComponentModel.DataAnnotations.Required] global::System.Collections.Generic.IEnumerable<string> tags
-        ) => (await FindPetsByTagsTypeSafe(tags)).ActionResult;
+        ) => (await FindPetsByTags(tags)).ActionResult;
 
-        protected abstract global::System.Threading.Tasks.Task<TypeSafeFindPetsByTagsResult> FindPetsByTagsTypeSafe(
+        protected abstract global::System.Threading.Tasks.Task<FindPetsByTagsActionResult> FindPetsByTags(
             global::System.Collections.Generic.IEnumerable<string> tags);
 
-        public readonly struct TypeSafeFindPetsByTagsResult
+        public readonly struct FindPetsByTagsActionResult
         {
             public readonly global::Microsoft.AspNetCore.Mvc.IActionResult ActionResult;
 
@@ -60,17 +60,17 @@ namespace PS.Controller
                 }
             }
 
-            private TypeSafeFindPetsByTagsResult(global::Microsoft.AspNetCore.Mvc.IActionResult ActionResult, global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
+            private FindPetsByTagsActionResult(global::Microsoft.AspNetCore.Mvc.IActionResult ActionResult, global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
             {
                 this.ActionResult = new HeaderActionResult(ActionResult, headers);
             }
 
-            private TypeSafeFindPetsByTagsResult(int statusCode, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
+            private FindPetsByTagsActionResult(int statusCode, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
                 : this(new global::Microsoft.AspNetCore.Mvc.StatusCodeResult(statusCode), headers)
             {
             }
 
-            private TypeSafeFindPetsByTagsResult(int statusCode, string mediaType, global::System.Type declaredType, object? resultObject, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
+            private FindPetsByTagsActionResult(int statusCode, string mediaType, global::System.Type declaredType, object? resultObject, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
                 : this(new global::Microsoft.AspNetCore.Mvc.ObjectResult(resultObject)
                 {
                     ContentTypes = new global::Microsoft.AspNetCore.Mvc.Formatters.MediaTypeCollection { { new global::Microsoft.Net.Http.Headers.MediaTypeHeaderValue(mediaType) } },
@@ -83,25 +83,25 @@ namespace PS.Controller
             /// <summary>
             /// successful operation
             /// </summary>
-            public static TypeSafeFindPetsByTagsResult ApplicationXmlOk(global::System.Collections.Generic.IEnumerable<Pet> result) =>
-                new TypeSafeFindPetsByTagsResult(200, "application/xml", typeof(global::System.Collections.Generic.IEnumerable<Pet>), result);
+            public static FindPetsByTagsActionResult ApplicationXmlOk(global::System.Collections.Generic.IEnumerable<Pet> result) =>
+                new FindPetsByTagsActionResult(200, "application/xml", typeof(global::System.Collections.Generic.IEnumerable<Pet>), result);
             
             /// <summary>
             /// successful operation
             /// </summary>
-            public static TypeSafeFindPetsByTagsResult ApplicationJsonOk(global::System.Collections.Generic.IEnumerable<Pet> result) =>
-                new TypeSafeFindPetsByTagsResult(200, "application/json", typeof(global::System.Collections.Generic.IEnumerable<Pet>), result);
+            public static FindPetsByTagsActionResult ApplicationJsonOk(global::System.Collections.Generic.IEnumerable<Pet> result) =>
+                new FindPetsByTagsActionResult(200, "application/json", typeof(global::System.Collections.Generic.IEnumerable<Pet>), result);
             
             /// <summary>
             /// Invalid tag value
             /// </summary>
-            public static TypeSafeFindPetsByTagsResult BadRequest() =>
-                new TypeSafeFindPetsByTagsResult(400);
+            public static FindPetsByTagsActionResult BadRequest() =>
+                new FindPetsByTagsActionResult(400);
             
 
             /// <summary>Allows for action results not specified in the API</summary>
-            public static TypeSafeFindPetsByTagsResult Unsafe(global::Microsoft.AspNetCore.Mvc.IActionResult actionResult, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers) =>
-                new TypeSafeFindPetsByTagsResult(actionResult, headers);
+            public static FindPetsByTagsActionResult Unsafe(global::Microsoft.AspNetCore.Mvc.IActionResult actionResult, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers) =>
+                new FindPetsByTagsActionResult(actionResult, headers);
         }
     }
 }

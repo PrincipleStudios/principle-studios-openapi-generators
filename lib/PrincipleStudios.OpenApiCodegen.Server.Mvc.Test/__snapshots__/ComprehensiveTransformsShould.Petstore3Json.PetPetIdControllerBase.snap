@@ -32,14 +32,14 @@ namespace PS.Controller
         // Pet not found
         [global::Microsoft.AspNetCore.Mvc.ProducesResponseType(404)] // 
         [global::Microsoft.AspNetCore.Authorization.Authorize(AuthenticationSchemes = "api_key")]
-        public async global::System.Threading.Tasks.Task<global::Microsoft.AspNetCore.Mvc.IActionResult> GetPetById(
+        public async global::System.Threading.Tasks.Task<global::Microsoft.AspNetCore.Mvc.IActionResult> GetPetByIdTypeSafeEntry(
             [global::Microsoft.AspNetCore.Mvc.FromRoute(Name = "petId"), global::System.ComponentModel.DataAnnotations.Required] long petId
-        ) => (await GetPetByIdTypeSafe(petId)).ActionResult;
+        ) => (await GetPetById(petId)).ActionResult;
 
-        protected abstract global::System.Threading.Tasks.Task<TypeSafeGetPetByIdResult> GetPetByIdTypeSafe(
+        protected abstract global::System.Threading.Tasks.Task<GetPetByIdActionResult> GetPetById(
             long petId);
 
-        public readonly struct TypeSafeGetPetByIdResult
+        public readonly struct GetPetByIdActionResult
         {
             public readonly global::Microsoft.AspNetCore.Mvc.IActionResult ActionResult;
 
@@ -62,17 +62,17 @@ namespace PS.Controller
                 }
             }
 
-            private TypeSafeGetPetByIdResult(global::Microsoft.AspNetCore.Mvc.IActionResult ActionResult, global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
+            private GetPetByIdActionResult(global::Microsoft.AspNetCore.Mvc.IActionResult ActionResult, global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
             {
                 this.ActionResult = new HeaderActionResult(ActionResult, headers);
             }
 
-            private TypeSafeGetPetByIdResult(int statusCode, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
+            private GetPetByIdActionResult(int statusCode, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
                 : this(new global::Microsoft.AspNetCore.Mvc.StatusCodeResult(statusCode), headers)
             {
             }
 
-            private TypeSafeGetPetByIdResult(int statusCode, string mediaType, global::System.Type declaredType, object? resultObject, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
+            private GetPetByIdActionResult(int statusCode, string mediaType, global::System.Type declaredType, object? resultObject, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
                 : this(new global::Microsoft.AspNetCore.Mvc.ObjectResult(resultObject)
                 {
                     ContentTypes = new global::Microsoft.AspNetCore.Mvc.Formatters.MediaTypeCollection { { new global::Microsoft.Net.Http.Headers.MediaTypeHeaderValue(mediaType) } },
@@ -85,31 +85,31 @@ namespace PS.Controller
             /// <summary>
             /// successful operation
             /// </summary>
-            public static TypeSafeGetPetByIdResult ApplicationXmlOk(Pet result) =>
-                new TypeSafeGetPetByIdResult(200, "application/xml", typeof(Pet), result);
+            public static GetPetByIdActionResult ApplicationXmlOk(Pet result) =>
+                new GetPetByIdActionResult(200, "application/xml", typeof(Pet), result);
             
             /// <summary>
             /// successful operation
             /// </summary>
-            public static TypeSafeGetPetByIdResult ApplicationJsonOk(Pet result) =>
-                new TypeSafeGetPetByIdResult(200, "application/json", typeof(Pet), result);
+            public static GetPetByIdActionResult ApplicationJsonOk(Pet result) =>
+                new GetPetByIdActionResult(200, "application/json", typeof(Pet), result);
             
             /// <summary>
             /// Invalid ID supplied
             /// </summary>
-            public static TypeSafeGetPetByIdResult BadRequest() =>
-                new TypeSafeGetPetByIdResult(400);
+            public static GetPetByIdActionResult BadRequest() =>
+                new GetPetByIdActionResult(400);
             
             /// <summary>
             /// Pet not found
             /// </summary>
-            public static TypeSafeGetPetByIdResult NotFound() =>
-                new TypeSafeGetPetByIdResult(404);
+            public static GetPetByIdActionResult NotFound() =>
+                new GetPetByIdActionResult(404);
             
 
             /// <summary>Allows for action results not specified in the API</summary>
-            public static TypeSafeGetPetByIdResult Unsafe(global::Microsoft.AspNetCore.Mvc.IActionResult actionResult, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers) =>
-                new TypeSafeGetPetByIdResult(actionResult, headers);
+            public static GetPetByIdActionResult Unsafe(global::Microsoft.AspNetCore.Mvc.IActionResult actionResult, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers) =>
+                new GetPetByIdActionResult(actionResult, headers);
         }
 
         /// <summary>
@@ -124,18 +124,18 @@ namespace PS.Controller
         // Invalid input
         [global::Microsoft.AspNetCore.Mvc.ProducesResponseType(405)] // 
         [global::Microsoft.AspNetCore.Authorization.Authorize(AuthenticationSchemes = "petstore_auth")]
-        public async global::System.Threading.Tasks.Task<global::Microsoft.AspNetCore.Mvc.IActionResult> UpdatePetWithForm(
+        public async global::System.Threading.Tasks.Task<global::Microsoft.AspNetCore.Mvc.IActionResult> UpdatePetWithFormTypeSafeEntry(
             [global::Microsoft.AspNetCore.Mvc.FromRoute(Name = "petId"), global::System.ComponentModel.DataAnnotations.Required] long petId,
             [global::Microsoft.AspNetCore.Mvc.FromForm(Name = "name")] string? name,
             [global::Microsoft.AspNetCore.Mvc.FromForm(Name = "status")] string? status
-        ) => (await UpdatePetWithFormTypeSafe(petId,name,status)).ActionResult;
+        ) => (await UpdatePetWithForm(petId,name,status)).ActionResult;
 
-        protected abstract global::System.Threading.Tasks.Task<TypeSafeUpdatePetWithFormResult> UpdatePetWithFormTypeSafe(
+        protected abstract global::System.Threading.Tasks.Task<UpdatePetWithFormActionResult> UpdatePetWithForm(
             long petId, 
             string? name, 
             string? status);
 
-        public readonly struct TypeSafeUpdatePetWithFormResult
+        public readonly struct UpdatePetWithFormActionResult
         {
             public readonly global::Microsoft.AspNetCore.Mvc.IActionResult ActionResult;
 
@@ -158,17 +158,17 @@ namespace PS.Controller
                 }
             }
 
-            private TypeSafeUpdatePetWithFormResult(global::Microsoft.AspNetCore.Mvc.IActionResult ActionResult, global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
+            private UpdatePetWithFormActionResult(global::Microsoft.AspNetCore.Mvc.IActionResult ActionResult, global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
             {
                 this.ActionResult = new HeaderActionResult(ActionResult, headers);
             }
 
-            private TypeSafeUpdatePetWithFormResult(int statusCode, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
+            private UpdatePetWithFormActionResult(int statusCode, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
                 : this(new global::Microsoft.AspNetCore.Mvc.StatusCodeResult(statusCode), headers)
             {
             }
 
-            private TypeSafeUpdatePetWithFormResult(int statusCode, string mediaType, global::System.Type declaredType, object? resultObject, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
+            private UpdatePetWithFormActionResult(int statusCode, string mediaType, global::System.Type declaredType, object? resultObject, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
                 : this(new global::Microsoft.AspNetCore.Mvc.ObjectResult(resultObject)
                 {
                     ContentTypes = new global::Microsoft.AspNetCore.Mvc.Formatters.MediaTypeCollection { { new global::Microsoft.Net.Http.Headers.MediaTypeHeaderValue(mediaType) } },
@@ -181,13 +181,13 @@ namespace PS.Controller
             /// <summary>
             /// Invalid input
             /// </summary>
-            public static TypeSafeUpdatePetWithFormResult MethodNotAllowed() =>
-                new TypeSafeUpdatePetWithFormResult(405);
+            public static UpdatePetWithFormActionResult MethodNotAllowed() =>
+                new UpdatePetWithFormActionResult(405);
             
 
             /// <summary>Allows for action results not specified in the API</summary>
-            public static TypeSafeUpdatePetWithFormResult Unsafe(global::Microsoft.AspNetCore.Mvc.IActionResult actionResult, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers) =>
-                new TypeSafeUpdatePetWithFormResult(actionResult, headers);
+            public static UpdatePetWithFormActionResult Unsafe(global::Microsoft.AspNetCore.Mvc.IActionResult actionResult, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers) =>
+                new UpdatePetWithFormActionResult(actionResult, headers);
         }
 
         /// <summary>
@@ -202,16 +202,16 @@ namespace PS.Controller
         // Pet not found
         [global::Microsoft.AspNetCore.Mvc.ProducesResponseType(404)] // 
         [global::Microsoft.AspNetCore.Authorization.Authorize(AuthenticationSchemes = "petstore_auth")]
-        public async global::System.Threading.Tasks.Task<global::Microsoft.AspNetCore.Mvc.IActionResult> DeletePet(
+        public async global::System.Threading.Tasks.Task<global::Microsoft.AspNetCore.Mvc.IActionResult> DeletePetTypeSafeEntry(
             [global::Microsoft.AspNetCore.Mvc.FromHeader(Name = "api_key")] string? apiKey,
             [global::Microsoft.AspNetCore.Mvc.FromRoute(Name = "petId"), global::System.ComponentModel.DataAnnotations.Required] long petId
-        ) => (await DeletePetTypeSafe(apiKey,petId)).ActionResult;
+        ) => (await DeletePet(apiKey,petId)).ActionResult;
 
-        protected abstract global::System.Threading.Tasks.Task<TypeSafeDeletePetResult> DeletePetTypeSafe(
+        protected abstract global::System.Threading.Tasks.Task<DeletePetActionResult> DeletePet(
             string? apiKey, 
             long petId);
 
-        public readonly struct TypeSafeDeletePetResult
+        public readonly struct DeletePetActionResult
         {
             public readonly global::Microsoft.AspNetCore.Mvc.IActionResult ActionResult;
 
@@ -234,17 +234,17 @@ namespace PS.Controller
                 }
             }
 
-            private TypeSafeDeletePetResult(global::Microsoft.AspNetCore.Mvc.IActionResult ActionResult, global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
+            private DeletePetActionResult(global::Microsoft.AspNetCore.Mvc.IActionResult ActionResult, global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
             {
                 this.ActionResult = new HeaderActionResult(ActionResult, headers);
             }
 
-            private TypeSafeDeletePetResult(int statusCode, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
+            private DeletePetActionResult(int statusCode, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
                 : this(new global::Microsoft.AspNetCore.Mvc.StatusCodeResult(statusCode), headers)
             {
             }
 
-            private TypeSafeDeletePetResult(int statusCode, string mediaType, global::System.Type declaredType, object? resultObject, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
+            private DeletePetActionResult(int statusCode, string mediaType, global::System.Type declaredType, object? resultObject, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
                 : this(new global::Microsoft.AspNetCore.Mvc.ObjectResult(resultObject)
                 {
                     ContentTypes = new global::Microsoft.AspNetCore.Mvc.Formatters.MediaTypeCollection { { new global::Microsoft.Net.Http.Headers.MediaTypeHeaderValue(mediaType) } },
@@ -257,19 +257,19 @@ namespace PS.Controller
             /// <summary>
             /// Invalid ID supplied
             /// </summary>
-            public static TypeSafeDeletePetResult BadRequest() =>
-                new TypeSafeDeletePetResult(400);
+            public static DeletePetActionResult BadRequest() =>
+                new DeletePetActionResult(400);
             
             /// <summary>
             /// Pet not found
             /// </summary>
-            public static TypeSafeDeletePetResult NotFound() =>
-                new TypeSafeDeletePetResult(404);
+            public static DeletePetActionResult NotFound() =>
+                new DeletePetActionResult(404);
             
 
             /// <summary>Allows for action results not specified in the API</summary>
-            public static TypeSafeDeletePetResult Unsafe(global::Microsoft.AspNetCore.Mvc.IActionResult actionResult, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers) =>
-                new TypeSafeDeletePetResult(actionResult, headers);
+            public static DeletePetActionResult Unsafe(global::Microsoft.AspNetCore.Mvc.IActionResult actionResult, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers) =>
+                new DeletePetActionResult(actionResult, headers);
         }
     }
 }

@@ -31,14 +31,14 @@ namespace PS.Controller
         [global::Microsoft.AspNetCore.Mvc.ProducesResponseType(400)] // 
         // Order not found
         [global::Microsoft.AspNetCore.Mvc.ProducesResponseType(404)] // 
-        public async global::System.Threading.Tasks.Task<global::Microsoft.AspNetCore.Mvc.IActionResult> GetOrderById(
+        public async global::System.Threading.Tasks.Task<global::Microsoft.AspNetCore.Mvc.IActionResult> GetOrderByIdTypeSafeEntry(
             [global::Microsoft.AspNetCore.Mvc.FromRoute(Name = "orderId"), global::System.ComponentModel.DataAnnotations.Required] long orderId
-        ) => (await GetOrderByIdTypeSafe(orderId)).ActionResult;
+        ) => (await GetOrderById(orderId)).ActionResult;
 
-        protected abstract global::System.Threading.Tasks.Task<TypeSafeGetOrderByIdResult> GetOrderByIdTypeSafe(
+        protected abstract global::System.Threading.Tasks.Task<GetOrderByIdActionResult> GetOrderById(
             long orderId);
 
-        public readonly struct TypeSafeGetOrderByIdResult
+        public readonly struct GetOrderByIdActionResult
         {
             public readonly global::Microsoft.AspNetCore.Mvc.IActionResult ActionResult;
 
@@ -61,17 +61,17 @@ namespace PS.Controller
                 }
             }
 
-            private TypeSafeGetOrderByIdResult(global::Microsoft.AspNetCore.Mvc.IActionResult ActionResult, global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
+            private GetOrderByIdActionResult(global::Microsoft.AspNetCore.Mvc.IActionResult ActionResult, global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
             {
                 this.ActionResult = new HeaderActionResult(ActionResult, headers);
             }
 
-            private TypeSafeGetOrderByIdResult(int statusCode, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
+            private GetOrderByIdActionResult(int statusCode, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
                 : this(new global::Microsoft.AspNetCore.Mvc.StatusCodeResult(statusCode), headers)
             {
             }
 
-            private TypeSafeGetOrderByIdResult(int statusCode, string mediaType, global::System.Type declaredType, object? resultObject, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
+            private GetOrderByIdActionResult(int statusCode, string mediaType, global::System.Type declaredType, object? resultObject, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
                 : this(new global::Microsoft.AspNetCore.Mvc.ObjectResult(resultObject)
                 {
                     ContentTypes = new global::Microsoft.AspNetCore.Mvc.Formatters.MediaTypeCollection { { new global::Microsoft.Net.Http.Headers.MediaTypeHeaderValue(mediaType) } },
@@ -84,31 +84,31 @@ namespace PS.Controller
             /// <summary>
             /// successful operation
             /// </summary>
-            public static TypeSafeGetOrderByIdResult ApplicationXmlOk(Order result) =>
-                new TypeSafeGetOrderByIdResult(200, "application/xml", typeof(Order), result);
+            public static GetOrderByIdActionResult ApplicationXmlOk(Order result) =>
+                new GetOrderByIdActionResult(200, "application/xml", typeof(Order), result);
             
             /// <summary>
             /// successful operation
             /// </summary>
-            public static TypeSafeGetOrderByIdResult ApplicationJsonOk(Order result) =>
-                new TypeSafeGetOrderByIdResult(200, "application/json", typeof(Order), result);
+            public static GetOrderByIdActionResult ApplicationJsonOk(Order result) =>
+                new GetOrderByIdActionResult(200, "application/json", typeof(Order), result);
             
             /// <summary>
             /// Invalid ID supplied
             /// </summary>
-            public static TypeSafeGetOrderByIdResult BadRequest() =>
-                new TypeSafeGetOrderByIdResult(400);
+            public static GetOrderByIdActionResult BadRequest() =>
+                new GetOrderByIdActionResult(400);
             
             /// <summary>
             /// Order not found
             /// </summary>
-            public static TypeSafeGetOrderByIdResult NotFound() =>
-                new TypeSafeGetOrderByIdResult(404);
+            public static GetOrderByIdActionResult NotFound() =>
+                new GetOrderByIdActionResult(404);
             
 
             /// <summary>Allows for action results not specified in the API</summary>
-            public static TypeSafeGetOrderByIdResult Unsafe(global::Microsoft.AspNetCore.Mvc.IActionResult actionResult, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers) =>
-                new TypeSafeGetOrderByIdResult(actionResult, headers);
+            public static GetOrderByIdActionResult Unsafe(global::Microsoft.AspNetCore.Mvc.IActionResult actionResult, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers) =>
+                new GetOrderByIdActionResult(actionResult, headers);
         }
 
         /// <summary>
@@ -124,14 +124,14 @@ namespace PS.Controller
         [global::Microsoft.AspNetCore.Mvc.ProducesResponseType(400)] // 
         // Order not found
         [global::Microsoft.AspNetCore.Mvc.ProducesResponseType(404)] // 
-        public async global::System.Threading.Tasks.Task<global::Microsoft.AspNetCore.Mvc.IActionResult> DeleteOrder(
+        public async global::System.Threading.Tasks.Task<global::Microsoft.AspNetCore.Mvc.IActionResult> DeleteOrderTypeSafeEntry(
             [global::Microsoft.AspNetCore.Mvc.FromRoute(Name = "orderId"), global::System.ComponentModel.DataAnnotations.Required] long orderId
-        ) => (await DeleteOrderTypeSafe(orderId)).ActionResult;
+        ) => (await DeleteOrder(orderId)).ActionResult;
 
-        protected abstract global::System.Threading.Tasks.Task<TypeSafeDeleteOrderResult> DeleteOrderTypeSafe(
+        protected abstract global::System.Threading.Tasks.Task<DeleteOrderActionResult> DeleteOrder(
             long orderId);
 
-        public readonly struct TypeSafeDeleteOrderResult
+        public readonly struct DeleteOrderActionResult
         {
             public readonly global::Microsoft.AspNetCore.Mvc.IActionResult ActionResult;
 
@@ -154,17 +154,17 @@ namespace PS.Controller
                 }
             }
 
-            private TypeSafeDeleteOrderResult(global::Microsoft.AspNetCore.Mvc.IActionResult ActionResult, global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
+            private DeleteOrderActionResult(global::Microsoft.AspNetCore.Mvc.IActionResult ActionResult, global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
             {
                 this.ActionResult = new HeaderActionResult(ActionResult, headers);
             }
 
-            private TypeSafeDeleteOrderResult(int statusCode, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
+            private DeleteOrderActionResult(int statusCode, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
                 : this(new global::Microsoft.AspNetCore.Mvc.StatusCodeResult(statusCode), headers)
             {
             }
 
-            private TypeSafeDeleteOrderResult(int statusCode, string mediaType, global::System.Type declaredType, object? resultObject, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
+            private DeleteOrderActionResult(int statusCode, string mediaType, global::System.Type declaredType, object? resultObject, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
                 : this(new global::Microsoft.AspNetCore.Mvc.ObjectResult(resultObject)
                 {
                     ContentTypes = new global::Microsoft.AspNetCore.Mvc.Formatters.MediaTypeCollection { { new global::Microsoft.Net.Http.Headers.MediaTypeHeaderValue(mediaType) } },
@@ -177,19 +177,19 @@ namespace PS.Controller
             /// <summary>
             /// Invalid ID supplied
             /// </summary>
-            public static TypeSafeDeleteOrderResult BadRequest() =>
-                new TypeSafeDeleteOrderResult(400);
+            public static DeleteOrderActionResult BadRequest() =>
+                new DeleteOrderActionResult(400);
             
             /// <summary>
             /// Order not found
             /// </summary>
-            public static TypeSafeDeleteOrderResult NotFound() =>
-                new TypeSafeDeleteOrderResult(404);
+            public static DeleteOrderActionResult NotFound() =>
+                new DeleteOrderActionResult(404);
             
 
             /// <summary>Allows for action results not specified in the API</summary>
-            public static TypeSafeDeleteOrderResult Unsafe(global::Microsoft.AspNetCore.Mvc.IActionResult actionResult, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers) =>
-                new TypeSafeDeleteOrderResult(actionResult, headers);
+            public static DeleteOrderActionResult Unsafe(global::Microsoft.AspNetCore.Mvc.IActionResult actionResult, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers) =>
+                new DeleteOrderActionResult(actionResult, headers);
         }
     }
 }

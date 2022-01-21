@@ -23,14 +23,14 @@ namespace PS.Controller
         [global::Microsoft.AspNetCore.Mvc.ProducesDefaultResponseType(typeof(GetPhotoOtherResponse))] // application/json
         // 
         [global::Microsoft.AspNetCore.Mvc.ProducesResponseType(200, Type = typeof(global::System.IO.Stream))] // application/octet-stream
-        public async global::System.Threading.Tasks.Task<global::Microsoft.AspNetCore.Mvc.IActionResult> GetPhoto(
+        public async global::System.Threading.Tasks.Task<global::Microsoft.AspNetCore.Mvc.IActionResult> GetPhotoTypeSafeEntry(
             [global::Microsoft.AspNetCore.Mvc.FromRoute(Name = "id"), global::System.ComponentModel.DataAnnotations.Required] string id
-        ) => (await GetPhotoTypeSafe(id)).ActionResult;
+        ) => (await GetPhoto(id)).ActionResult;
 
-        protected abstract global::System.Threading.Tasks.Task<TypeSafeGetPhotoResult> GetPhotoTypeSafe(
+        protected abstract global::System.Threading.Tasks.Task<GetPhotoActionResult> GetPhoto(
             string id);
 
-        public readonly struct TypeSafeGetPhotoResult
+        public readonly struct GetPhotoActionResult
         {
             public readonly global::Microsoft.AspNetCore.Mvc.IActionResult ActionResult;
 
@@ -53,17 +53,17 @@ namespace PS.Controller
                 }
             }
 
-            private TypeSafeGetPhotoResult(global::Microsoft.AspNetCore.Mvc.IActionResult ActionResult, global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
+            private GetPhotoActionResult(global::Microsoft.AspNetCore.Mvc.IActionResult ActionResult, global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
             {
                 this.ActionResult = new HeaderActionResult(ActionResult, headers);
             }
 
-            private TypeSafeGetPhotoResult(int statusCode, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
+            private GetPhotoActionResult(int statusCode, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
                 : this(new global::Microsoft.AspNetCore.Mvc.StatusCodeResult(statusCode), headers)
             {
             }
 
-            private TypeSafeGetPhotoResult(int statusCode, string mediaType, global::System.Type declaredType, object? resultObject, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
+            private GetPhotoActionResult(int statusCode, string mediaType, global::System.Type declaredType, object? resultObject, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
                 : this(new global::Microsoft.AspNetCore.Mvc.ObjectResult(resultObject)
                 {
                     ContentTypes = new global::Microsoft.AspNetCore.Mvc.Formatters.MediaTypeCollection { { new global::Microsoft.Net.Http.Headers.MediaTypeHeaderValue(mediaType) } },
@@ -74,17 +74,17 @@ namespace PS.Controller
             }
             
             
-            public static TypeSafeGetPhotoResult Ok(global::System.IO.Stream result) =>
-                new TypeSafeGetPhotoResult(200, "application/octet-stream", typeof(global::System.IO.Stream), result);
+            public static GetPhotoActionResult Ok(global::System.IO.Stream result) =>
+                new GetPhotoActionResult(200, "application/octet-stream", typeof(global::System.IO.Stream), result);
             
             
-            public static TypeSafeGetPhotoResult OtherStatusCode(int statusCode, GetPhotoOtherResponse result) =>
-                new TypeSafeGetPhotoResult(statusCode, "application/json", typeof(GetPhotoOtherResponse), result);
+            public static GetPhotoActionResult OtherStatusCode(int statusCode, GetPhotoOtherResponse result) =>
+                new GetPhotoActionResult(statusCode, "application/json", typeof(GetPhotoOtherResponse), result);
             
 
             /// <summary>Allows for action results not specified in the API</summary>
-            public static TypeSafeGetPhotoResult Unsafe(global::Microsoft.AspNetCore.Mvc.IActionResult actionResult, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers) =>
-                new TypeSafeGetPhotoResult(actionResult, headers);
+            public static GetPhotoActionResult Unsafe(global::Microsoft.AspNetCore.Mvc.IActionResult actionResult, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers) =>
+                new GetPhotoActionResult(actionResult, headers);
         }
     }
 }

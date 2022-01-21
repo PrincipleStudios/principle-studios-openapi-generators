@@ -28,14 +28,14 @@ namespace PS.Controller
         [global::Microsoft.AspNetCore.Mvc.ProducesResponseType(400)] // 
         // User not found
         [global::Microsoft.AspNetCore.Mvc.ProducesResponseType(404)] // 
-        public async global::System.Threading.Tasks.Task<global::Microsoft.AspNetCore.Mvc.IActionResult> GetUserByName(
+        public async global::System.Threading.Tasks.Task<global::Microsoft.AspNetCore.Mvc.IActionResult> GetUserByNameTypeSafeEntry(
             [global::Microsoft.AspNetCore.Mvc.FromRoute(Name = "username"), global::System.ComponentModel.DataAnnotations.Required] string username
-        ) => (await GetUserByNameTypeSafe(username)).ActionResult;
+        ) => (await GetUserByName(username)).ActionResult;
 
-        protected abstract global::System.Threading.Tasks.Task<TypeSafeGetUserByNameResult> GetUserByNameTypeSafe(
+        protected abstract global::System.Threading.Tasks.Task<GetUserByNameActionResult> GetUserByName(
             string username);
 
-        public readonly struct TypeSafeGetUserByNameResult
+        public readonly struct GetUserByNameActionResult
         {
             public readonly global::Microsoft.AspNetCore.Mvc.IActionResult ActionResult;
 
@@ -58,17 +58,17 @@ namespace PS.Controller
                 }
             }
 
-            private TypeSafeGetUserByNameResult(global::Microsoft.AspNetCore.Mvc.IActionResult ActionResult, global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
+            private GetUserByNameActionResult(global::Microsoft.AspNetCore.Mvc.IActionResult ActionResult, global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
             {
                 this.ActionResult = new HeaderActionResult(ActionResult, headers);
             }
 
-            private TypeSafeGetUserByNameResult(int statusCode, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
+            private GetUserByNameActionResult(int statusCode, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
                 : this(new global::Microsoft.AspNetCore.Mvc.StatusCodeResult(statusCode), headers)
             {
             }
 
-            private TypeSafeGetUserByNameResult(int statusCode, string mediaType, global::System.Type declaredType, object? resultObject, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
+            private GetUserByNameActionResult(int statusCode, string mediaType, global::System.Type declaredType, object? resultObject, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
                 : this(new global::Microsoft.AspNetCore.Mvc.ObjectResult(resultObject)
                 {
                     ContentTypes = new global::Microsoft.AspNetCore.Mvc.Formatters.MediaTypeCollection { { new global::Microsoft.Net.Http.Headers.MediaTypeHeaderValue(mediaType) } },
@@ -81,31 +81,31 @@ namespace PS.Controller
             /// <summary>
             /// successful operation
             /// </summary>
-            public static TypeSafeGetUserByNameResult ApplicationXmlOk(User result) =>
-                new TypeSafeGetUserByNameResult(200, "application/xml", typeof(User), result);
+            public static GetUserByNameActionResult ApplicationXmlOk(User result) =>
+                new GetUserByNameActionResult(200, "application/xml", typeof(User), result);
             
             /// <summary>
             /// successful operation
             /// </summary>
-            public static TypeSafeGetUserByNameResult ApplicationJsonOk(User result) =>
-                new TypeSafeGetUserByNameResult(200, "application/json", typeof(User), result);
+            public static GetUserByNameActionResult ApplicationJsonOk(User result) =>
+                new GetUserByNameActionResult(200, "application/json", typeof(User), result);
             
             /// <summary>
             /// Invalid username supplied
             /// </summary>
-            public static TypeSafeGetUserByNameResult BadRequest() =>
-                new TypeSafeGetUserByNameResult(400);
+            public static GetUserByNameActionResult BadRequest() =>
+                new GetUserByNameActionResult(400);
             
             /// <summary>
             /// User not found
             /// </summary>
-            public static TypeSafeGetUserByNameResult NotFound() =>
-                new TypeSafeGetUserByNameResult(404);
+            public static GetUserByNameActionResult NotFound() =>
+                new GetUserByNameActionResult(404);
             
 
             /// <summary>Allows for action results not specified in the API</summary>
-            public static TypeSafeGetUserByNameResult Unsafe(global::Microsoft.AspNetCore.Mvc.IActionResult actionResult, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers) =>
-                new TypeSafeGetUserByNameResult(actionResult, headers);
+            public static GetUserByNameActionResult Unsafe(global::Microsoft.AspNetCore.Mvc.IActionResult actionResult, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers) =>
+                new GetUserByNameActionResult(actionResult, headers);
         }
 
         /// <summary>
@@ -123,16 +123,16 @@ namespace PS.Controller
         [global::Microsoft.AspNetCore.Mvc.ProducesResponseType(400)] // 
         // User not found
         [global::Microsoft.AspNetCore.Mvc.ProducesResponseType(404)] // 
-        public async global::System.Threading.Tasks.Task<global::Microsoft.AspNetCore.Mvc.IActionResult> UpdateUser(
+        public async global::System.Threading.Tasks.Task<global::Microsoft.AspNetCore.Mvc.IActionResult> UpdateUserTypeSafeEntry(
             [global::Microsoft.AspNetCore.Mvc.FromRoute(Name = "username"), global::System.ComponentModel.DataAnnotations.Required] string username,
             [global::Microsoft.AspNetCore.Mvc.FromBody, global::System.ComponentModel.DataAnnotations.Required] User updateUserBody
-        ) => (await UpdateUserTypeSafe(username,updateUserBody)).ActionResult;
+        ) => (await UpdateUser(username,updateUserBody)).ActionResult;
 
-        protected abstract global::System.Threading.Tasks.Task<TypeSafeUpdateUserResult> UpdateUserTypeSafe(
+        protected abstract global::System.Threading.Tasks.Task<UpdateUserActionResult> UpdateUser(
             string username, 
             User updateUserBody);
 
-        public readonly struct TypeSafeUpdateUserResult
+        public readonly struct UpdateUserActionResult
         {
             public readonly global::Microsoft.AspNetCore.Mvc.IActionResult ActionResult;
 
@@ -155,17 +155,17 @@ namespace PS.Controller
                 }
             }
 
-            private TypeSafeUpdateUserResult(global::Microsoft.AspNetCore.Mvc.IActionResult ActionResult, global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
+            private UpdateUserActionResult(global::Microsoft.AspNetCore.Mvc.IActionResult ActionResult, global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
             {
                 this.ActionResult = new HeaderActionResult(ActionResult, headers);
             }
 
-            private TypeSafeUpdateUserResult(int statusCode, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
+            private UpdateUserActionResult(int statusCode, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
                 : this(new global::Microsoft.AspNetCore.Mvc.StatusCodeResult(statusCode), headers)
             {
             }
 
-            private TypeSafeUpdateUserResult(int statusCode, string mediaType, global::System.Type declaredType, object? resultObject, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
+            private UpdateUserActionResult(int statusCode, string mediaType, global::System.Type declaredType, object? resultObject, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
                 : this(new global::Microsoft.AspNetCore.Mvc.ObjectResult(resultObject)
                 {
                     ContentTypes = new global::Microsoft.AspNetCore.Mvc.Formatters.MediaTypeCollection { { new global::Microsoft.Net.Http.Headers.MediaTypeHeaderValue(mediaType) } },
@@ -178,19 +178,19 @@ namespace PS.Controller
             /// <summary>
             /// Invalid user supplied
             /// </summary>
-            public static TypeSafeUpdateUserResult BadRequest() =>
-                new TypeSafeUpdateUserResult(400);
+            public static UpdateUserActionResult BadRequest() =>
+                new UpdateUserActionResult(400);
             
             /// <summary>
             /// User not found
             /// </summary>
-            public static TypeSafeUpdateUserResult NotFound() =>
-                new TypeSafeUpdateUserResult(404);
+            public static UpdateUserActionResult NotFound() =>
+                new UpdateUserActionResult(404);
             
 
             /// <summary>Allows for action results not specified in the API</summary>
-            public static TypeSafeUpdateUserResult Unsafe(global::Microsoft.AspNetCore.Mvc.IActionResult actionResult, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers) =>
-                new TypeSafeUpdateUserResult(actionResult, headers);
+            public static UpdateUserActionResult Unsafe(global::Microsoft.AspNetCore.Mvc.IActionResult actionResult, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers) =>
+                new UpdateUserActionResult(actionResult, headers);
         }
 
         /// <summary>
@@ -206,14 +206,14 @@ namespace PS.Controller
         [global::Microsoft.AspNetCore.Mvc.ProducesResponseType(400)] // 
         // User not found
         [global::Microsoft.AspNetCore.Mvc.ProducesResponseType(404)] // 
-        public async global::System.Threading.Tasks.Task<global::Microsoft.AspNetCore.Mvc.IActionResult> DeleteUser(
+        public async global::System.Threading.Tasks.Task<global::Microsoft.AspNetCore.Mvc.IActionResult> DeleteUserTypeSafeEntry(
             [global::Microsoft.AspNetCore.Mvc.FromRoute(Name = "username"), global::System.ComponentModel.DataAnnotations.Required] string username
-        ) => (await DeleteUserTypeSafe(username)).ActionResult;
+        ) => (await DeleteUser(username)).ActionResult;
 
-        protected abstract global::System.Threading.Tasks.Task<TypeSafeDeleteUserResult> DeleteUserTypeSafe(
+        protected abstract global::System.Threading.Tasks.Task<DeleteUserActionResult> DeleteUser(
             string username);
 
-        public readonly struct TypeSafeDeleteUserResult
+        public readonly struct DeleteUserActionResult
         {
             public readonly global::Microsoft.AspNetCore.Mvc.IActionResult ActionResult;
 
@@ -236,17 +236,17 @@ namespace PS.Controller
                 }
             }
 
-            private TypeSafeDeleteUserResult(global::Microsoft.AspNetCore.Mvc.IActionResult ActionResult, global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
+            private DeleteUserActionResult(global::Microsoft.AspNetCore.Mvc.IActionResult ActionResult, global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
             {
                 this.ActionResult = new HeaderActionResult(ActionResult, headers);
             }
 
-            private TypeSafeDeleteUserResult(int statusCode, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
+            private DeleteUserActionResult(int statusCode, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
                 : this(new global::Microsoft.AspNetCore.Mvc.StatusCodeResult(statusCode), headers)
             {
             }
 
-            private TypeSafeDeleteUserResult(int statusCode, string mediaType, global::System.Type declaredType, object? resultObject, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
+            private DeleteUserActionResult(int statusCode, string mediaType, global::System.Type declaredType, object? resultObject, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
                 : this(new global::Microsoft.AspNetCore.Mvc.ObjectResult(resultObject)
                 {
                     ContentTypes = new global::Microsoft.AspNetCore.Mvc.Formatters.MediaTypeCollection { { new global::Microsoft.Net.Http.Headers.MediaTypeHeaderValue(mediaType) } },
@@ -259,19 +259,19 @@ namespace PS.Controller
             /// <summary>
             /// Invalid username supplied
             /// </summary>
-            public static TypeSafeDeleteUserResult BadRequest() =>
-                new TypeSafeDeleteUserResult(400);
+            public static DeleteUserActionResult BadRequest() =>
+                new DeleteUserActionResult(400);
             
             /// <summary>
             /// User not found
             /// </summary>
-            public static TypeSafeDeleteUserResult NotFound() =>
-                new TypeSafeDeleteUserResult(404);
+            public static DeleteUserActionResult NotFound() =>
+                new DeleteUserActionResult(404);
             
 
             /// <summary>Allows for action results not specified in the API</summary>
-            public static TypeSafeDeleteUserResult Unsafe(global::Microsoft.AspNetCore.Mvc.IActionResult actionResult, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers) =>
-                new TypeSafeDeleteUserResult(actionResult, headers);
+            public static DeleteUserActionResult Unsafe(global::Microsoft.AspNetCore.Mvc.IActionResult actionResult, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers) =>
+                new DeleteUserActionResult(actionResult, headers);
         }
     }
 }

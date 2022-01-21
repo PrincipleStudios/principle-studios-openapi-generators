@@ -20,13 +20,13 @@ namespace PS.Controller
         [global::Microsoft.AspNetCore.Mvc.Route("/redirect")]
         // Redirection Response
         [global::Microsoft.AspNetCore.Mvc.ProducesResponseType(302)] // 
-        public async global::System.Threading.Tasks.Task<global::Microsoft.AspNetCore.Mvc.IActionResult> _Redirect(
+        public async global::System.Threading.Tasks.Task<global::Microsoft.AspNetCore.Mvc.IActionResult> _RedirectTypeSafeEntry(
             
-        ) => (await RedirectTypeSafe()).ActionResult;
+        ) => (await Redirect()).ActionResult;
 
-        protected abstract global::System.Threading.Tasks.Task<TypeSafe_RedirectResult> RedirectTypeSafe();
+        protected abstract global::System.Threading.Tasks.Task<_RedirectActionResult> Redirect();
 
-        public readonly struct TypeSafe_RedirectResult
+        public readonly struct _RedirectActionResult
         {
             public readonly global::Microsoft.AspNetCore.Mvc.IActionResult ActionResult;
 
@@ -49,17 +49,17 @@ namespace PS.Controller
                 }
             }
 
-            private TypeSafe_RedirectResult(global::Microsoft.AspNetCore.Mvc.IActionResult ActionResult, global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
+            private _RedirectActionResult(global::Microsoft.AspNetCore.Mvc.IActionResult ActionResult, global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
             {
                 this.ActionResult = new HeaderActionResult(ActionResult, headers);
             }
 
-            private TypeSafe_RedirectResult(int statusCode, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
+            private _RedirectActionResult(int statusCode, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
                 : this(new global::Microsoft.AspNetCore.Mvc.StatusCodeResult(statusCode), headers)
             {
             }
 
-            private TypeSafe_RedirectResult(int statusCode, string mediaType, global::System.Type declaredType, object? resultObject, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
+            private _RedirectActionResult(int statusCode, string mediaType, global::System.Type declaredType, object? resultObject, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
                 : this(new global::Microsoft.AspNetCore.Mvc.ObjectResult(resultObject)
                 {
                     ContentTypes = new global::Microsoft.AspNetCore.Mvc.Formatters.MediaTypeCollection { { new global::Microsoft.Net.Http.Headers.MediaTypeHeaderValue(mediaType) } },
@@ -72,14 +72,14 @@ namespace PS.Controller
             /// <summary>
             /// Redirection Response
             /// </summary>
-            public static TypeSafe_RedirectResult Redirect(string headerLocation) =>
-                new TypeSafe_RedirectResult(302,
+            public static _RedirectActionResult Redirect(string headerLocation) =>
+                new _RedirectActionResult(302,
                     new global::System.Collections.Generic.KeyValuePair<string, string>("Location", headerLocation));
             
 
             /// <summary>Allows for action results not specified in the API</summary>
-            public static TypeSafe_RedirectResult Unsafe(global::Microsoft.AspNetCore.Mvc.IActionResult actionResult, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers) =>
-                new TypeSafe_RedirectResult(actionResult, headers);
+            public static _RedirectActionResult Unsafe(global::Microsoft.AspNetCore.Mvc.IActionResult actionResult, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers) =>
+                new _RedirectActionResult(actionResult, headers);
         }
     }
 }

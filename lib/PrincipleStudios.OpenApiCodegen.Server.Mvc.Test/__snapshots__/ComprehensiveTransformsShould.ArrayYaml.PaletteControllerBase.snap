@@ -20,13 +20,13 @@ namespace PS.Controller
         [global::Microsoft.AspNetCore.Mvc.Route("/palette")]
         // The available palettes
         [global::Microsoft.AspNetCore.Mvc.ProducesResponseType(200, Type = typeof(global::System.Collections.Generic.IEnumerable<global::System.Collections.Generic.IEnumerable<string>>))] // application/json
-        public async global::System.Threading.Tasks.Task<global::Microsoft.AspNetCore.Mvc.IActionResult> GetPalettes(
+        public async global::System.Threading.Tasks.Task<global::Microsoft.AspNetCore.Mvc.IActionResult> GetPalettesTypeSafeEntry(
             
-        ) => (await GetPalettesTypeSafe()).ActionResult;
+        ) => (await GetPalettes()).ActionResult;
 
-        protected abstract global::System.Threading.Tasks.Task<TypeSafeGetPalettesResult> GetPalettesTypeSafe();
+        protected abstract global::System.Threading.Tasks.Task<GetPalettesActionResult> GetPalettes();
 
-        public readonly struct TypeSafeGetPalettesResult
+        public readonly struct GetPalettesActionResult
         {
             public readonly global::Microsoft.AspNetCore.Mvc.IActionResult ActionResult;
 
@@ -49,17 +49,17 @@ namespace PS.Controller
                 }
             }
 
-            private TypeSafeGetPalettesResult(global::Microsoft.AspNetCore.Mvc.IActionResult ActionResult, global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
+            private GetPalettesActionResult(global::Microsoft.AspNetCore.Mvc.IActionResult ActionResult, global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
             {
                 this.ActionResult = new HeaderActionResult(ActionResult, headers);
             }
 
-            private TypeSafeGetPalettesResult(int statusCode, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
+            private GetPalettesActionResult(int statusCode, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
                 : this(new global::Microsoft.AspNetCore.Mvc.StatusCodeResult(statusCode), headers)
             {
             }
 
-            private TypeSafeGetPalettesResult(int statusCode, string mediaType, global::System.Type declaredType, object? resultObject, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
+            private GetPalettesActionResult(int statusCode, string mediaType, global::System.Type declaredType, object? resultObject, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
                 : this(new global::Microsoft.AspNetCore.Mvc.ObjectResult(resultObject)
                 {
                     ContentTypes = new global::Microsoft.AspNetCore.Mvc.Formatters.MediaTypeCollection { { new global::Microsoft.Net.Http.Headers.MediaTypeHeaderValue(mediaType) } },
@@ -72,13 +72,13 @@ namespace PS.Controller
             /// <summary>
             /// The available palettes
             /// </summary>
-            public static TypeSafeGetPalettesResult Ok(global::System.Collections.Generic.IEnumerable<global::System.Collections.Generic.IEnumerable<string>> result) =>
-                new TypeSafeGetPalettesResult(200, "application/json", typeof(global::System.Collections.Generic.IEnumerable<global::System.Collections.Generic.IEnumerable<string>>), result);
+            public static GetPalettesActionResult Ok(global::System.Collections.Generic.IEnumerable<global::System.Collections.Generic.IEnumerable<string>> result) =>
+                new GetPalettesActionResult(200, "application/json", typeof(global::System.Collections.Generic.IEnumerable<global::System.Collections.Generic.IEnumerable<string>>), result);
             
 
             /// <summary>Allows for action results not specified in the API</summary>
-            public static TypeSafeGetPalettesResult Unsafe(global::Microsoft.AspNetCore.Mvc.IActionResult actionResult, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers) =>
-                new TypeSafeGetPalettesResult(actionResult, headers);
+            public static GetPalettesActionResult Unsafe(global::Microsoft.AspNetCore.Mvc.IActionResult actionResult, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers) =>
+                new GetPalettesActionResult(actionResult, headers);
         }
     }
 }
