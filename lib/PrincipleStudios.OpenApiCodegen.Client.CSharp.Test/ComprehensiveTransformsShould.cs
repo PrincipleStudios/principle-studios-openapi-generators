@@ -26,10 +26,10 @@ namespace PrincipleStudios.OpenApiCodegen.Client.CSharp
 
             var entries = transformer.GetSources(diagnostic).ToArray();
 
-            foreach (var entry in entries)
+            Assert.All(entries, entry =>
             {
                 Snapshot.Match(entry.SourceText, $"{nameof(ComprehensiveTransformsShould)}.{CSharpNaming.ToTitleCaseIdentifier(name, options.ReservedIdentifiers())}.{CSharpNaming.ToTitleCaseIdentifier(entry.Key.Split('.')[^2], options.ReservedIdentifiers())}");
-            }
+            });
             Assert.Empty(diagnostic.Errors);
         }
 

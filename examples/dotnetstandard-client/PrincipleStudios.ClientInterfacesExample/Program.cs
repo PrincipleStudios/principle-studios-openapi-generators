@@ -11,7 +11,20 @@ namespace PrincipleStudios.ClientInterfacesExample
     {
         public static async Task Main(string[] args)
         {
+            EnumConversion();
+
             await Petstore();
+        }
+
+        private static void EnumConversion()
+        {
+            var converter = System.ComponentModel.TypeDescriptor.GetConverter(typeof(Clients.Petstore3.FindPetsByStatusStatusItem));
+            
+
+            var sold = converter.ConvertToString(Clients.Petstore3.FindPetsByStatusStatusItem.Sold);
+            System.Diagnostics.Debug.Assert(sold == "sold");
+            var enumValue = (Clients.Petstore3.FindPetsByStatusStatusItem)converter.ConvertFromString(sold)!;
+            System.Diagnostics.Debug.Assert(Clients.Petstore3.FindPetsByStatusStatusItem.Sold == enumValue);
         }
 
         private static async Task Petstore()

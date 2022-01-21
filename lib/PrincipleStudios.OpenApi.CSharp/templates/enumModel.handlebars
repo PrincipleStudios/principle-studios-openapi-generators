@@ -25,6 +25,21 @@ namespace {{this.packageName}}
 
     public class {{className}}EnumConverter : global::System.ComponentModel.TypeConverter
     {
+        public override bool CanConvertTo(global::System.ComponentModel.ITypeDescriptorContext? context, global::System.Type? destinationType)
+        {
+            return destinationType == typeof(string) || base.CanConvertFrom(context, sourceType);
+        }
+
+        public override object? ConvertTo(global::System.ComponentModel.ITypeDescriptorContext? context, global::System.Globalization.CultureInfo? culture, object? value, global::System.Type destinationType)
+        {
+            if (destinationType != typeof(string))
+                return base.ConvertTo(context, culture, value, destinationType);
+            var result = global::Newtonsoft.Json.JsonConvert.SerializeObject(value);
+            if (result.StartsWith('"') && result.EndsWith('"'))
+                return result.Substring(1, result.Length - 2);
+            return result;
+        }
+
         public override object ConvertFrom(global::System.ComponentModel.ITypeDescriptorContext context, global::System.Globalization.CultureInfo culture, object value)
         {
             var s = value as string;
