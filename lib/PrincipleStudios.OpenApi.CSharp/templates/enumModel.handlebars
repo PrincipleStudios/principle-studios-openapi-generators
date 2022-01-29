@@ -27,7 +27,7 @@ namespace {{this.packageName}}
     {
         public override bool CanConvertTo(global::System.ComponentModel.ITypeDescriptorContext? context, global::System.Type? destinationType)
         {
-            return destinationType == typeof(string) || base.CanConvertFrom(context, sourceType);
+            return destinationType == typeof(string) || base.CanConvertFrom(context, destinationType);
         }
 
         public override object? ConvertTo(global::System.ComponentModel.ITypeDescriptorContext? context, global::System.Globalization.CultureInfo? culture, object? value, global::System.Type destinationType)

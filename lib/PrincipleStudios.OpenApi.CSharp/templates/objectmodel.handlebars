@@ -1,12 +1,5 @@
 {{>partial_header header}}
 #pragma warning disable
-using System;
-using System.Linq;
-using System.Text;
-using System.Collections.Generic;
-using System.Runtime.Serialization;
-using System.ComponentModel.DataAnnotations;
-using Newtonsoft.Json;
 #nullable enable
 #nullable disable warnings
 
@@ -53,7 +46,7 @@ namespace {{this.packageName}}
                 {{name}} == other.{{name}} ||{{#if nullable}}
                 {{name}} != null &&{{/if}}{{#unless isContainer}}
                 {{name}}.Equals(other.{{name}}){{else}}
-                {{name}}.SequenceEqual(other.{{name}}){{/unless}}
+                System.Linq.Enumerable.SequenceEqual({{name}}, other.{{name}}){{/unless}}
             ){{#unless @last}} && {{/unless}}{{else}}true{{/each}};
         }
 

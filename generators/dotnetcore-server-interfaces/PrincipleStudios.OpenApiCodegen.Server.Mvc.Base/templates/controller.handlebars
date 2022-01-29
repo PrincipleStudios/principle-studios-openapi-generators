@@ -40,7 +40,7 @@ namespace {{packageName}}
         }}{{#each operation.securityRequirements}}{{#if schemes.Length}}
         [global::Microsoft.AspNetCore.Authorization.Authorize(AuthenticationSchemes = "{{#each schemes}}{{schemeName}}{{#unless @last}},{{/unless}}{{/each}}")]{{else}}
         [global::Microsoft.AspNetCore.Authorization.AllowAnonymous]{{/if}}{{/each}}
-        public async global::System.Threading.Tasks.Task<global::Microsoft.AspNetCore.Mvc.IActionResult> {{operation.name}}TypeSafeEntry(
+        public async global::System.Threading.Tasks.Task<global::Microsoft.AspNetCore.Mvc.IActionResult> {{requestBody.name}}TypeSafeEntry(
             {{#each requestBody.allParams}}{{#unless isCookieParam}}[{{!
             }}{{#if isPathParam}}global::Microsoft.AspNetCore.Mvc.FromRoute(Name = "{{rawName}}"){{/if}}{{!
             }}{{#if isQueryParam}}global::Microsoft.AspNetCore.Mvc.FromQuery(Name = "{{rawName}}"){{/if}}{{!

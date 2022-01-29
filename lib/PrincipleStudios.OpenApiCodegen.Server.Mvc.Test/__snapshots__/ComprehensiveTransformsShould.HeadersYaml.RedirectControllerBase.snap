@@ -20,7 +20,7 @@ namespace PS.Controller
         [global::Microsoft.AspNetCore.Mvc.Route("/redirect")]
         // Redirection Response
         [global::Microsoft.AspNetCore.Mvc.ProducesResponseType(302)] // 
-        public async global::System.Threading.Tasks.Task<global::Microsoft.AspNetCore.Mvc.IActionResult> _RedirectTypeSafeEntry(
+        public async global::System.Threading.Tasks.Task<global::Microsoft.AspNetCore.Mvc.IActionResult> RedirectTypeSafeEntry(
             
         ) => (await Redirect()).ActionResult;
 
