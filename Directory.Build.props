@@ -3,6 +3,11 @@
   <PropertyGroup>
     <Nullable>enable</Nullable>
     <LangVersion>9</LangVersion>
+	
+	<IsWindows Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Windows)))' == 'true'">true</IsWindows>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(IsWindows)'=='true'">
+    <DefineConstants>Windows</DefineConstants>
   </PropertyGroup>
 
   <PropertyGroup>
