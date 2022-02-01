@@ -42,6 +42,7 @@ namespace PrincipleStudios.OpenApiCodegen.Client.CSharp
             Assert.Equal(expected, actual);
         }
 
+#if Windows
         [InlineData("PrincipleStudios.Project", @"C:\users\user\source\project\", @"C:\users\user\source\project\controllers\api.yaml", null, "PrincipleStudios.Project.Controllers")]
         [InlineData("PrincipleStudios.Project", @"C:\users\user\source\project\", @"C:\users\user\source\api.yaml", @"controllers\api.yaml", "PrincipleStudios.Project.Controllers")]
         [InlineData("PrincipleStudios.Project", @"C:\users\user\source\project\", @"C:\users\user\source\project\api.yaml", null, "PrincipleStudios.Project")]
@@ -50,6 +51,7 @@ namespace PrincipleStudios.OpenApiCodegen.Client.CSharp
         [InlineData("", @"C:\users\user\source\project\", @"C:\users\user\source\api.yaml", @"controllers\api.yaml", "Controllers")]
         [InlineData("", @"C:\users\user\source\project\", @"C:\users\user\source\project\api.yaml", null, "")]
         [InlineData("", @"C:\users\user\source\project\", @"C:\users\user\source\api.yaml", @"api.yaml", "")]
+#endif
         [InlineData("PrincipleStudios.Project", @"/users/user/source/project/", @"/users/user/source/project/controllers/api.yaml", null, "PrincipleStudios.Project.Controllers")]
         [InlineData("PrincipleStudios.Project", @"/users/user/source/project/", @"/users/user/source/api.yaml", @"controllers/api.yaml", "PrincipleStudios.Project.Controllers")]
         [InlineData("PrincipleStudios.Project", @"/users/user/source/project/", @"/users/user/source/project/api.yaml", null, "PrincipleStudios.Project")]
