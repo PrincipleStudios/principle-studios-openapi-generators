@@ -1,7 +1,7 @@
-name: .NET Server Interfaces
+name: .NET Server Interfaces - Publish
 
 on:
-  pull_request:
+  push:
     branches: [ main ]
 
 jobs:
@@ -41,7 +41,7 @@ jobs:
     - name: Build Package
       working-directory: ./generators/dotnetcore-server-interfaces/PrincipleStudios.OpenApiCodegen.Server.Mvc.MsBuild
       run: dotnet pack --no-restore --configuration Release -o out
-    # - name: Publish Nuget to GitHub registry if new version number
-    #   run: dotnet nuget push ./generators/dotnetcore-server-interfaces/PrincipleStudios.OpenApiCodegen.Server.Mvc.MsBuild/out/*.nupkg -k ${GITHUB_TOKEN} -s https://nuget.pkg.github.com/$GITHUB_REPOSITORY_OWNER/index.json --skip-duplicate --no-symbols 1
-    #   env:
-    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Publish Nuget to GitHub registry if new version number
+      run: dotnet nuget push ./generators/dotnetcore-server-interfaces/PrincipleStudios.OpenApiCodegen.Server.Mvc.MsBuild/out/*.nupkg -k ${NUGET_API_KEY} --skip-duplicate --no-symbols 1
+      env:
+        NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
