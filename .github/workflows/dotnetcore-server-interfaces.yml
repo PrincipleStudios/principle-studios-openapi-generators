@@ -32,13 +32,14 @@ jobs:
     - name: Test
       working-directory: ./lib/PrincipleStudios.OpenApiCodegen.Server.Mvc.Test
       run: dotnet test --no-build --verbosity normal --configuration Release --collect:"XPlat Code Coverage"
-    - name: Record code coverage
-      uses: 5monkeys/cobertura-action@master
-      with:
-        path: lib/PrincipleStudios.OpenApiCodegen.Server.Mvc.Test/out/TestResults/*/coverage.cobertura.xml
-        repo_token: ${{ secrets.GITHUB_TOKEN }}
-        minimum_coverage: 90
-        fail_below_threshold: false
+    ## The code coverage action works, but doesn't do much.
+    # - name: Record code coverage
+    #   uses: 5monkeys/cobertura-action@master
+    #   with:
+    #     path: lib/PrincipleStudios.OpenApiCodegen.Server.Mvc.Test/out/TestResults/*/coverage.cobertura.xml
+    #     repo_token: ${{ secrets.GITHUB_TOKEN }}
+    #     minimum_coverage: 90
+    #     fail_below_threshold: false
     - name: Build Package
       working-directory: ./generators/dotnetcore-server-interfaces/PrincipleStudios.OpenApiCodegen.Server.Mvc.MsBuild
       run: dotnet pack --no-restore --configuration Release -o out
