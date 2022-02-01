@@ -3,11 +3,16 @@
   <PropertyGroup>
     <Nullable>enable</Nullable>
     <LangVersion>9</LangVersion>
+
+	<IsWindows Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Windows)))' == 'true'">true</IsWindows>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(IsWindows)'=='true'">
+    <DefineConstants>Windows</DefineConstants>
   </PropertyGroup>
 
   <PropertyGroup>
-    <OpenApiMvcServerVersion>0.10.1-alpha.4</OpenApiMvcServerVersion>
-    <OpenApiCSharpClientVersion>0.3.5-alpha.4</OpenApiCSharpClientVersion>
+    <OpenApiMvcServerVersion>0.10.1</OpenApiMvcServerVersion>
+    <OpenApiCSharpClientVersion>0.3.5</OpenApiCSharpClientVersion>
   </PropertyGroup>
 
   <PropertyGroup>
