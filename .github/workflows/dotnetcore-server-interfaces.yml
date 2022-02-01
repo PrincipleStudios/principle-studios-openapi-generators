@@ -27,7 +27,7 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore
     - name: Build
-      working-directory: ./generators/dotnetcore-server-interfaces/PrincipleStudios.OpenApiCodegen.Server.Mvc.MsBuild
+      working-directory: ./lib/PrincipleStudios.OpenApiCodegen.Server.Mvc.Test
       run: dotnet build --no-restore
     - name: Test
       working-directory: ./lib/PrincipleStudios.OpenApiCodegen.Server.Mvc.Test
