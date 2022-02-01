@@ -41,6 +41,6 @@ jobs:
       env:
         NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
     - name: Publish MVC Server codegen to NuGet registry if new version number
-      run: dotnet nuget push ./generators/dotnetstandard-client\PrincipleStudios.OpenApiCodegen.Client.MsBuild/bin/Release/*.nupkg -k ${NUGET_API_KEY} -s https://api.nuget.org/v3/index.json --skip-duplicate --no-symbols 1
+      run: dotnet nuget push ./generators/dotnetstandard-client/PrincipleStudios.OpenApiCodegen.Client.MsBuild/bin/Release/*.nupkg -k ${NUGET_API_KEY} -s https://api.nuget.org/v3/index.json --skip-duplicate --no-symbols 1
       env:
         NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
