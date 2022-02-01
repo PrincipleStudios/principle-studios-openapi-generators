@@ -40,7 +40,7 @@ jobs:
       run: dotnet nuget push ./generators/dotnetcore-server-interfaces/PrincipleStudios.OpenApiCodegen.Server.Mvc.MsBuild/bin/Release/*.nupkg -k ${GITHUB_TOKEN} -s https://nuget.pkg.github.com/$GITHUB_REPOSITORY_OWNER/index.json --skip-duplicate --no-symbols 1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    - name: Publish MVC Server codegen to NuGet registry if new version number
+    - name: Publish .NET Client codegen to NuGet registry if new version number
       run: dotnet nuget push ./generators/dotnetstandard-client/PrincipleStudios.OpenApiCodegen.Client.MsBuild/bin/Release/*.nupkg -k ${GITHUB_TOKEN} -s https://nuget.pkg.github.com/$GITHUB_REPOSITORY_OWNER/index.json --skip-duplicate --no-symbols 1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

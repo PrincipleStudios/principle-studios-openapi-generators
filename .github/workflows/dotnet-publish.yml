@@ -1,4 +1,4 @@
-name: .NET Server Interfaces - Publish
+name: .NET packages publish
 
 on:
   push:
@@ -40,7 +40,7 @@ jobs:
       run: dotnet nuget push ./generators/dotnetcore-server-interfaces/PrincipleStudios.OpenApiCodegen.Server.Mvc.MsBuild/bin/Release/*.nupkg -k ${NUGET_API_KEY} -s https://api.nuget.org/v3/index.json --skip-duplicate --no-symbols 1
       env:
         NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
-    - name: Publish MVC Server codegen to NuGet registry if new version number
+    - name: Publish .NET Client codegen to NuGet registry if new version number
       run: dotnet nuget push ./generators/dotnetstandard-client/PrincipleStudios.OpenApiCodegen.Client.MsBuild/bin/Release/*.nupkg -k ${NUGET_API_KEY} -s https://api.nuget.org/v3/index.json --skip-duplicate --no-symbols 1
       env:
         NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
