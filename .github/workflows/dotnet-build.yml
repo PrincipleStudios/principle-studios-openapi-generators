@@ -1,6 +1,8 @@
 name: All packages build
 
 on:
+  push:
+    branches: [ main ]
   pull_request:
     branches: [ main ]
 
@@ -42,6 +44,8 @@ jobs:
           ${{ runner.os }}-build-
           ${{ runner.os }}-
 
+    ###########
+    # BUILD
     - name: Restore dependencies
       run: dotnet restore
     - name: Build
@@ -53,6 +57,8 @@ jobs:
       working-directory: ./generators/typescript/npm
       run: npm ci
 
+    ###########
+    # TEST
     - name: Test
       run: dotnet test --no-build --verbosity normal --configuration Release --collect:"XPlat Code Coverage"
     - name: 'Upload Code Coverage'
@@ -77,17 +83,42 @@ jobs:
       env:
         NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
 
-    - name: Publish MVC Server codegen to NuGet registry if new version number
+    ###########
+    # PUBLISH
+    - name: Publish MVC Server codegen to GitHub registry if new version number
+      if: ${{ github.ref != 'refs/heads/main' }}
       run: dotnet nuget push ./generators/dotnetcore-server-interfaces/PrincipleStudios.OpenApiCodegen.Server.Mvc.MsBuild/bin/Release/*.nupkg -k ${GITHUB_TOKEN} -s https://nuget.pkg.github.com/$GITHUB_REPOSITORY_OWNER/index.json --skip-duplicate --no-symbols 1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    - name: Publish .NET Client codegen to NuGet registry if new version number
+    - name: Publish MVC Server codegen to NuGet registry if new version number
+      if: ${{ github.ref == 'refs/heads/main' }}
+      run: dotnet nuget push ./generators/dotnetcore-server-interfaces/PrincipleStudios.OpenApiCodegen.Server.Mvc.MsBuild/bin/Release/*.nupkg -k ${NUGET_API_KEY} -s https://api.nuget.org/v3/index.json --skip-duplicate --no-symbols 1
+      env:
+        NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+
+    - name: Publish .NET Client codegen to GitHub registry if new version number
+      if: ${{ github.ref != 'refs/heads/main' }}
       run: dotnet nuget push ./generators/dotnetstandard-client/PrincipleStudios.OpenApiCodegen.Client.MsBuild/bin/Release/*.nupkg -k ${GITHUB_TOKEN} -s https://nuget.pkg.github.com/$GITHUB_REPOSITORY_OWNER/index.json --skip-duplicate --no-symbols 1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Publish .NET Client codegen to NuGet registry if new version number
+      if: ${{ github.ref == 'refs/heads/main' }}
+      run: dotnet nuget push ./generators/dotnetstandard-client/PrincipleStudios.OpenApiCodegen.Client.MsBuild/bin/Release/*.nupkg -k ${NUGET_API_KEY} -s https://api.nuget.org/v3/index.json --skip-duplicate --no-symbols 1
+      env:
+        NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+
     - name: 'Upload Typescript NPM Package'
+      if: ${{ github.ref != 'refs/heads/main' }}
       uses: actions/upload-artifact@v2
       with:
         name: principlestudios-openapi-codegen-typescript.tgz
         path: ./generators/typescript/npm/principlestudios-openapi-codegen-typescript-[0-9]*.tgz
         retention-days: 7
+    - name: Publish typescript npm package
+      if: ${{ github.ref == 'refs/heads/main' }}
+      working-directory: ./generators/typescript/npm
+      run: npm publish
+      continue-on-error: true # npm publish does not have a `--skip-duplicate` switch
+      env:
+        NODE_AUTH_TOKEN: ${{secrets.npm_token}}
+
