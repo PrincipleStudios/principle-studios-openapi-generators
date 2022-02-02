@@ -77,6 +77,8 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - name: Publish typescript npm package
       working-directory: ./generators/typescript/npm
-      run: npm publish
+      run: |
+        echo '@principlestudios:registry=https://npm.pkg.github.com' > .npmrc
+        npm publish
       env:
         NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
