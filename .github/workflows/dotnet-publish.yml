@@ -55,6 +55,11 @@ jobs:
 
     - name: Test
       run: dotnet test --no-build --verbosity normal --configuration Release --collect:"XPlat Code Coverage"
+    - name: 'Upload Code Coverage'
+      uses: actions/upload-artifact@v2
+      with:
+        name: code-coverage
+        path: lib/*/out/TestResults/*/coverage.cobertura.xml
     # # The code coverage action works, but doesn't do much.
     # - name: Record code coverage
     #   uses: 5monkeys/cobertura-action@master
@@ -66,6 +71,11 @@ jobs:
     - name: Test packages for typescript
       working-directory: ./generators/typescript/npm
       run: npm test
+    - name: Pack typescript npm package
+      working-directory: ./generators/typescript/npm
+      run: npm pack
+      env:
+        NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
 
     - name: Publish MVC Server codegen to NuGet registry if new version number
       run: dotnet nuget push ./generators/dotnetcore-server-interfaces/PrincipleStudios.OpenApiCodegen.Server.Mvc.MsBuild/bin/Release/*.nupkg -k ${NUGET_API_KEY} -s https://api.nuget.org/v3/index.json --skip-duplicate --no-symbols 1
@@ -75,8 +85,8 @@ jobs:
       run: dotnet nuget push ./generators/dotnetstandard-client/PrincipleStudios.OpenApiCodegen.Client.MsBuild/bin/Release/*.nupkg -k ${NUGET_API_KEY} -s https://api.nuget.org/v3/index.json --skip-duplicate --no-symbols 1
       env:
         NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
-    # - name: Publish typescript npm package
-    #   working-directory: ./generators/typescript/npm
-    #   run: npm publish
-    #   env:
-    #     NODE_AUTH_TOKEN: ${{secrets.npm_token}}
+    - name: Publish typescript npm package
+      working-directory: ./generators/typescript/npm
+      run: npm publish
+      env:
+        NODE_AUTH_TOKEN: ${{secrets.npm_token}}
