@@ -87,5 +87,6 @@ jobs:
     - name: Publish typescript npm package
       working-directory: ./generators/typescript/npm
       run: npm publish
+      continue-on-error: true # npm publish does not have a `--skip-duplicate` switch
       env:
         NODE_AUTH_TOKEN: ${{secrets.npm_token}}
