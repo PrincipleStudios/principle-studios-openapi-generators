@@ -61,13 +61,13 @@ jobs:
         name: code-coverage
         path: ./lib/*/TestResults/*/coverage.cobertura.xml
         retention-days: 7
-    - name: Record code coverage
-      uses: 5monkeys/cobertura-action@master
-      with:
-        path: ./lib/*/TestResults/*/coverage.cobertura.xml
-        repo_token: ${{ secrets.GITHUB_TOKEN }}
-        minimum_coverage: 90
-        fail_below_threshold: false
+    # - name: Record code coverage
+    #   uses: 5monkeys/cobertura-action@master
+    #   with:
+    #     path: ./lib/*/TestResults/*/coverage.cobertura.xml
+    #     repo_token: ${{ secrets.GITHUB_TOKEN }}
+    #     minimum_coverage: 90
+    #     fail_below_threshold: false
     - name: Test packages for typescript
       working-directory: ./generators/typescript/npm
       run: npm test
