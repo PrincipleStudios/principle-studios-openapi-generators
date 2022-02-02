@@ -59,11 +59,11 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: code-coverage
-        path: ./lib/*/out/TestResults/*/coverage.cobertura.xml
+        path: ./lib/*/TestResults/*/coverage.cobertura.xml
     - name: Record code coverage
       uses: 5monkeys/cobertura-action@master
       with:
-        path: ./lib/*/out/TestResults/*/coverage.cobertura.xml
+        path: ./lib/*/TestResults/*/coverage.cobertura.xml
         repo_token: ${{ secrets.GITHUB_TOKEN }}
         minimum_coverage: 90
         fail_below_threshold: false
