@@ -55,7 +55,7 @@ jobs:
 
     - name: Test
       run: dotnet test --no-build --verbosity normal --configuration Release --collect:"XPlat Code Coverage"
-    ## The code coverage action works, but doesn't do much.
+    # # The code coverage action works, but doesn't do much.
     # - name: Record code coverage
     #   uses: 5monkeys/cobertura-action@master
     #   with:
@@ -75,10 +75,10 @@ jobs:
       run: dotnet nuget push ./generators/dotnetstandard-client/PrincipleStudios.OpenApiCodegen.Client.MsBuild/bin/Release/*.nupkg -k ${GITHUB_TOKEN} -s https://nuget.pkg.github.com/$GITHUB_REPOSITORY_OWNER/index.json --skip-duplicate --no-symbols 1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    - name: Publish typescript npm package
-      working-directory: ./generators/typescript/npm
-      run: |
-        echo '@principlestudios:registry=https://npm.pkg.github.com' > .npmrc
-        npm publish
-      env:
-        NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+    # - name: Publish typescript npm package
+    #   working-directory: ./generators/typescript/npm
+    #   run: |
+    #     echo '@principlestudios:registry=https://npm.pkg.github.com' > .npmrc
+    #     npm publish
+    #   env:
+    #     NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
