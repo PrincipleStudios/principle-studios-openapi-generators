@@ -59,15 +59,14 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: code-coverage
-        path: lib/*/out/TestResults/*/coverage.cobertura.xml
-    # # The code coverage action works, but doesn't do much.
-    # - name: Record code coverage
-    #   uses: 5monkeys/cobertura-action@master
-    #   with:
-    #     path: lib/*/out/TestResults/*/coverage.cobertura.xml
-    #     repo_token: ${{ secrets.GITHUB_TOKEN }}
-    #     minimum_coverage: 90
-    #     fail_below_threshold: false
+        path: ./lib/*/out/TestResults/*/coverage.cobertura.xml
+    - name: Record code coverage
+      uses: 5monkeys/cobertura-action@master
+      with:
+        path: ./lib/*/out/TestResults/*/coverage.cobertura.xml
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        minimum_coverage: 90
+        fail_below_threshold: false
     - name: Test packages for typescript
       working-directory: ./generators/typescript/npm
       run: npm test
