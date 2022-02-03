@@ -58,12 +58,19 @@ jobs:
       run: npm ci
     - name: Pack typescript npm package
       working-directory: ./generators/typescript/npm
-      run: npm pack && mv ./principlestudios-openapi-codegen-typescript-[0-9]*.tgz ../../out
+      run: |
+        npm pack
+        mkdir ../../out/
+        mv ./principlestudios-openapi-codegen-typescript-[0-9]*.tgz ../../out/principlestudios-openapi-codegen-typescript.tgz
+        ls ../../out/
       env:
         NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
     - name: Install typescript-rxjs
       working-directory: ./generators/typescript-rxjs/npm
-      run: npm i
+      run: |
+        pattern="../../out/principlestudios-openapi-codegen-typescript.tgz"
+        npm i -D "$(echo $pattern)"
+        npm i
 
     ###########
     # TEST
