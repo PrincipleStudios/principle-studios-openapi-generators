@@ -61,16 +61,16 @@ jobs:
       run: |
         npm pack
         mkdir ../../out/
-        mv ./principlestudios-openapi-codegen-typescript-[0-9]*.tgz ../../out/principlestudios-openapi-codegen-typescript.tgz
-        ls ../../out/
-      env:
-        NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+        cp ./principlestudios-openapi-codegen-typescript-[0-9]*.tgz ../../out/principlestudios-openapi-codegen-typescript.tgz
     - name: Install typescript-rxjs
       working-directory: ./generators/typescript-rxjs/npm
       run: |
         pattern="../../out/principlestudios-openapi-codegen-typescript.tgz"
         npm i -D "$(echo $pattern)"
         npm i
+    - name: Pack typescript-rxjs npm package
+      working-directory: ./generators/typescript-rxjs/npm
+      run: npm pack
 
     ###########
     # TEST
