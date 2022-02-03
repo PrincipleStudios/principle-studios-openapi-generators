@@ -25,14 +25,17 @@
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
   "dependencies": {
-    "@principlestudios/openapi-codegen-typescript": "^0.2.0",
     "rxjs": "^6.5.5"
+  },
+  "peerDependencies": {
+    "@principlestudios/openapi-codegen-typescript": "*"
   },
   "devDependencies": {
     "@babel/cli": "^7.15.4",
     "@babel/core": "^7.15.5",
     "@babel/preset-env": "^7.15.6",
     "@babel/preset-typescript": "^7.15.0",
+    "@principlestudios/openapi-codegen-typescript": "file:../../out/principlestudios-openapi-codegen-typescript-0.3.1.tgz",
     "@types/eslint": "^7.28.0",
     "@types/jest": "^27.0.1",
     "@types/node": "^16.9.1",

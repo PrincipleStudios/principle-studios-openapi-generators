@@ -253,7 +253,6 @@ export type RequestParams = {
 };
 export type RequestBodies = {
     'application/json': Pet;
-    'application/xml': Pet;
 };
 
 export type StructuredResponses = {
@@ -706,7 +705,6 @@ export type RequestBodies = {
 export type StructuredResponses = {
     /** successful operation */
     200: {
-        'application/xml': Array<Pet>;
         'application/json': Array<Pet>;
     };
     /** Invalid status value */
@@ -715,7 +713,6 @@ export type StructuredResponses = {
     };
 };
 export type Responses = 
-    | StandardResponse<200, 'application/xml', Array<Pet>>
     | StandardResponse<200, 'application/json', Array<Pet>>
     | StandardResponse<400, '', undefined>;
 
@@ -780,7 +777,6 @@ export type RequestBodies = {
 export type StructuredResponses = {
     /** successful operation */
     200: {
-        'application/xml': Array<Pet>;
         'application/json': Array<Pet>;
     };
     /** Invalid tag value */
@@ -789,7 +785,6 @@ export type StructuredResponses = {
     };
 };
 export type Responses = 
-    | StandardResponse<200, 'application/xml', Array<Pet>>
     | StandardResponse<200, 'application/json', Array<Pet>>
     | StandardResponse<400, '', undefined>;
 
@@ -910,7 +905,6 @@ export type RequestBodies = {
 export type StructuredResponses = {
     /** successful operation */
     200: {
-        'application/xml': Order;
         'application/json': Order;
     };
     /** Invalid ID supplied */
@@ -923,7 +917,6 @@ export type StructuredResponses = {
     };
 };
 export type Responses = 
-    | StandardResponse<200, 'application/xml', Order>
     | StandardResponse<200, 'application/json', Order>
     | StandardResponse<400, '', undefined>
     | StandardResponse<404, '', undefined>;
@@ -985,7 +978,6 @@ export type RequestBodies = {
 export type StructuredResponses = {
     /** successful operation */
     200: {
-        'application/xml': Pet;
         'application/json': Pet;
     };
     /** Invalid ID supplied */
@@ -998,7 +990,6 @@ export type StructuredResponses = {
     };
 };
 export type Responses = 
-    | StandardResponse<200, 'application/xml', Pet>
     | StandardResponse<200, 'application/json', Pet>
     | StandardResponse<400, '', undefined>
     | StandardResponse<404, '', undefined>;
@@ -1060,7 +1051,6 @@ export type RequestBodies = {
 export type StructuredResponses = {
     /** successful operation */
     200: {
-        'application/xml': User;
         'application/json': User;
     };
     /** Invalid username supplied */
@@ -1073,7 +1063,6 @@ export type StructuredResponses = {
     };
 };
 export type Responses = 
-    | StandardResponse<200, 'application/xml', User>
     | StandardResponse<200, 'application/json', User>
     | StandardResponse<400, '', undefined>
     | StandardResponse<404, '', undefined>;
@@ -1189,7 +1178,6 @@ export type RequestBodies = {
 export type StructuredResponses = {
     /** successful operation */
     200: {
-        'application/xml': string;
         'application/json': string;
     };
     /** Invalid username/password supplied */
@@ -1198,7 +1186,6 @@ export type StructuredResponses = {
     };
 };
 export type Responses = 
-    | StandardResponse<200, 'application/xml', string>
     | StandardResponse<200, 'application/json', string>
     | StandardResponse<400, '', undefined>;
 
@@ -1320,7 +1307,6 @@ export type RequestBodies = {
 export type StructuredResponses = {
     /** successful operation */
     200: {
-        'application/xml': Order;
         'application/json': Order;
     };
     /** Invalid Order */
@@ -1329,7 +1315,6 @@ export type StructuredResponses = {
     };
 };
 export type Responses = 
-    | StandardResponse<200, 'application/xml', Order>
     | StandardResponse<200, 'application/json', Order>
     | StandardResponse<400, '', undefined>;
 
@@ -1387,7 +1372,6 @@ export type RequestParams = {
 };
 export type RequestBodies = {
     'application/json': Pet;
-    'application/xml': Pet;
 };
 
 export type StructuredResponses = {
@@ -1612,7 +1596,7 @@ export type RequestParams = {
     petId: BigInt;
 };
 export type RequestBodies = {
-    'application/octet-stream': string;
+    'application/octet-stream': Blob;
 };
 
 export type StructuredResponses = {
