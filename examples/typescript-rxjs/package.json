@@ -39,7 +39,6 @@
     ]
   },
   "devDependencies": {
-    "@principlestudios/openapi-codegen-typescript-rxjs": "file:../../generators/out/principlestudios-openapi-codegen-typescript-rxjs-0.1.0.tgz",
-    "@principlestudios/openapi-codegen-typescript": "file:../../generators/out/principlestudios-openapi-codegen-typescript-0.1.0.tgz"
+    "@principlestudios/openapi-codegen-typescript-rxjs": "file:../../generators/out/principlestudios-openapi-codegen-typescript-rxjs-0.3.0.tgz"
   }
 }

@@ -56,6 +56,21 @@ jobs:
     - name: Install node packages for typescript
       working-directory: ./generators/typescript/npm
       run: npm ci
+    - name: Pack typescript npm package
+      working-directory: ./generators/typescript/npm
+      run: |
+        npm pack
+        mkdir ../../out/
+        cp ./principlestudios-openapi-codegen-typescript-[0-9]*.tgz ../../out/principlestudios-openapi-codegen-typescript.tgz
+    - name: Install typescript-rxjs
+      working-directory: ./generators/typescript-rxjs/npm
+      run: |
+        pattern="../../out/principlestudios-openapi-codegen-typescript.tgz"
+        npm i -D "$(echo $pattern)"
+        npm i
+    - name: Pack typescript-rxjs npm package
+      working-directory: ./generators/typescript-rxjs/npm
+      run: npm pack
 
     ###########
     # TEST
@@ -74,14 +89,12 @@ jobs:
     #     repo_token: ${{ secrets.GITHUB_TOKEN }}
     #     minimum_coverage: 90
     #     fail_below_threshold: false
-    - name: Test packages for typescript
+    - name: Test package for typescript
       working-directory: ./generators/typescript/npm
       run: npm test
-    - name: Pack typescript npm package
-      working-directory: ./generators/typescript/npm
-      run: npm pack
-      env:
-        NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+    - name: Test package for typescript-rxjs
+      working-directory: ./generators/typescript-rxjs/npm
+      run: npm test
 
     ###########
     # PUBLISH
@@ -117,7 +130,22 @@ jobs:
     - name: Publish typescript npm package
       if: ${{ github.ref == 'refs/heads/main' }}
       working-directory: ./generators/typescript/npm
-      run: npm publish
+      run: npm publish || echo 'npm publish optional'
+      continue-on-error: true # npm publish does not have a `--skip-duplicate` switch
+      env:
+        NODE_AUTH_TOKEN: ${{secrets.npm_token}}
+
+    - name: 'Upload Typescript-rxjs NPM Package'
+      if: ${{ github.ref != 'refs/heads/main' }}
+      uses: actions/upload-artifact@v2
+      with:
+        name: principlestudios-openapi-codegen-typescript-rxjs.tgz
+        path: ./generators/typescript-rxjs/npm/principlestudios-openapi-codegen-typescript-rxjs-[0-9]*.tgz
+        retention-days: 7
+    - name: Publish typescript-rxjs npm package
+      if: ${{ github.ref == 'refs/heads/main' }}
+      working-directory: ./generators/typescript-rxjs/npm
+      run: npm publish || echo 'npm publish optional'
       continue-on-error: true # npm publish does not have a `--skip-duplicate` switch
       env:
         NODE_AUTH_TOKEN: ${{secrets.npm_token}}
