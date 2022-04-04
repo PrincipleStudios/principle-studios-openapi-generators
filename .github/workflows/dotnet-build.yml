@@ -21,7 +21,7 @@ jobs:
       uses: actions/setup-node@v2
       with:
         node-version: 16
-        registry-url: https://npm.pkg.github.com/
+        registry-url: ${{ github.ref != 'refs/heads/main' && 'https://npm.pkg.github.com/' || 'https://registry.npmjs.org/' }}
         scope: '@principlestudios'
 
     - name: Cache nuget packages
@@ -134,7 +134,7 @@ jobs:
         npm publish || echo 'npm publish optional'
       continue-on-error: true # npm publish does not have a `--skip-duplicate` switch
       env:
-        IS_PRERELEASE: ${{ github.ref != 'refs/heads/main' && github.sha }}
+        IS_PRERELEASE: ${{ github.ref != 'refs/heads/main' && github.sha || '' }}
         NODE_AUTH_TOKEN: "${{ github.ref == 'refs/heads/main' && secrets.NPM_TOKEN || secrets.GITHUB_TOKEN }}"
     - name: Publish typescript-rxjs npm package
       working-directory: ./generators/typescript-rxjs/npm
@@ -143,5 +143,5 @@ jobs:
         npm publish || echo 'npm publish optional'
       continue-on-error: true # npm publish does not have a `--skip-duplicate` switch
       env:
-        IS_PRERELEASE: ${{ github.ref != 'refs/heads/main' && github.sha }}
+        IS_PRERELEASE: ${{ github.ref != 'refs/heads/main' && github.sha || '' }}
         NODE_AUTH_TOKEN: "${{ github.ref == 'refs/heads/main' && secrets.NPM_TOKEN || secrets.GITHUB_TOKEN }}"
