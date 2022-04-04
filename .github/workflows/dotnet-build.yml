@@ -136,14 +136,9 @@ jobs:
       run:  |
         npm publish || echo 'npm publish optional'
       continue-on-error: true # npm publish does not have a `--skip-duplicate` switch
-      env:
-        NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
     - name: Publish typescript-rxjs npm package
       if: ${{ github.ref == 'refs/heads/main' }}
       working-directory: ./generators/typescript-rxjs/npm
       run: |
         npm publish || echo 'npm publish optional'
       continue-on-error: true # npm publish does not have a `--skip-duplicate` switch
-      env:
-        NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
-
