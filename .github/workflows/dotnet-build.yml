@@ -137,7 +137,6 @@ jobs:
       env:
         NODE_AUTH_TOKEN: "${{ github.ref == 'refs/heads/main' && secrets.NPM_TOKEN || secrets.GITHUB_TOKEN }}"
     - name: Publish typescript-rxjs npm package
-      if: ${{ github.ref == 'refs/heads/main' }}
       working-directory: ./generators/typescript-rxjs/npm
       run: |
         npm publish || echo 'npm publish optional'
