@@ -121,14 +121,12 @@ jobs:
       env:
         NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
 
-    - name: Set token for public NPM registry
+    - name: Set publish NPM registry
       if: ${{ github.ref == 'refs/heads/main' }}
       run:  |
-        echo '//registry.npmjs.org/' > ~/.npmrc
-    - name: Set publish to private registry
-      if: ${{ github.ref != 'refs/heads/main' }}
-      run:  |
-        echo '@principlestudios:registry=https://npm.pkg.github.com/' > ~/.npmrc
+        echo '@principlestudios:registry=$NODE_REGISTRY' > ~/.npmrc
+      env:
+        NODE_REGISTRY: ${{ github.ref != 'refs/heads/main' && 'https://npm.pkg.github.com/' || 'https://registry.npmjs.org/' }}
     - name: Publish typescript npm package
       working-directory: ./generators/typescript/npm
       run:  |
