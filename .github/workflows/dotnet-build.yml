@@ -22,6 +22,7 @@ jobs:
       with:
         node-version: 16
         registry-url: https://npm.pkg.github.com/
+        scope: '@principlestudios'
 
     - name: Cache nuget packages
       uses: actions/cache@v2
