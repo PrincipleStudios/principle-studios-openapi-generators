@@ -13,7 +13,7 @@
     },
     "author": "Matt DeKrey & Principle Studios",
     "license": "BSD-2-Clause",
-    "homepage": "https://github.com/mdekrey/principle-studios-openapi-generators",
+    "homepage": "https://github.com/PrincipleStudios/principle-studios-openapi-generators",
     "files": [
         "dotnet/*",
         "bin/*.js",
@@ -27,7 +27,7 @@
     "typings": "lib/index.d.ts",
     "repository": {
         "type": "git",
-        "url": "https://github.com/mdekrey/principle-studios-openapi-generators.git",
+        "url": "https://github.com/PrincipleStudios/principle-studios-openapi-generators.git",
         "directory": "generators/typescript/npm"
     },
     "devDependencies": {
