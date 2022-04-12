@@ -11,8 +11,8 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <OpenApiMvcServerVersion>0.10.3</OpenApiMvcServerVersion>
-    <OpenApiCSharpClientVersion>0.3.6</OpenApiCSharpClientVersion>
+    <OpenApiMvcServerVersion>0.10.4</OpenApiMvcServerVersion>
+    <OpenApiCSharpClientVersion>0.3.7</OpenApiCSharpClientVersion>
   </PropertyGroup>
 
   <PropertyGroup>
