@@ -34,7 +34,7 @@
     </ItemGroup>
   </Target>
 
-  <Target Name="CleanClientOpenApiCodeGen" BeforeTargets="Clean" DependsOnTargets="_UpdateClientOpenApiCodeGenMetatdata">
+  <Target Name="CleanClientOpenApiCodeGen" BeforeTargets="Clean" DependsOnTargets="_UpdateClientOpenApiCodeGenMetatdata" Condition=" '@(OpenApiSchemaClient)' != '' ">
     <ItemGroup>
       <CleanClientOpenApiCodeGen Include="%(OpenApiSchemaClient.OutputPath)/**/*" />
     </ItemGroup>
