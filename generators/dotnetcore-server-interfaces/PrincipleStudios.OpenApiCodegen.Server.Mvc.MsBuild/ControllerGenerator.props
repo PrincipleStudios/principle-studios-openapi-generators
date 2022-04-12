@@ -34,7 +34,7 @@
     </ItemGroup>
   </Target>
 
-  <Target Name="CleanServerOpenApiCodeGen" BeforeTargets="Clean" DependsOnTargets="_UpdateServerOpenApiCodeGenMetatdata">
+  <Target Name="CleanServerOpenApiCodeGen" BeforeTargets="Clean" DependsOnTargets="_UpdateServerOpenApiCodeGenMetatdata" Condition=" '@(OpenApiSchemaMvcServer)' != '' ">
     <ItemGroup>
       <CleanServerOpenApiCodeGen Include="%(OpenApiSchemaMvcServer.OutputPath)/**/*" />
     </ItemGroup>
