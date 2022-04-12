@@ -50,7 +50,9 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore
     - name: Build
-      run: dotnet build --no-restore --configuration Release
+      run: dotnet build --no-restore --configuration Release ${VERSION_SUFFIX_PARAM}
+      env:
+        VERSION_SUFFIX_PARAM: ${{ github.ref != 'refs/heads/main' && "--version-suffix ${github.sha}" || '' }}
     - name: Finish building TypeScript DLL
       working-directory: ./generators/typescript
       run: dotnet publish ./PrincipleStudios.OpenApiCodegen.Client.TypeScript/PrincipleStudios.OpenApiCodegen.Client.TypeScript.csproj -c Release -p:UseAppHost=false -o ./npm/dotnet

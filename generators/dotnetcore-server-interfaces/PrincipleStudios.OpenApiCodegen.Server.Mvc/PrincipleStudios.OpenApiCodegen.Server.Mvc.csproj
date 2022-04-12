@@ -35,29 +35,30 @@
 
     <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.3" PrivateAssets="all" />
 
-    <PackageReference Include="Handlebars.Net" Version="2.0.7" PrivateAssets="all" GeneratePathProperty="true" />
-    <PackageReference Include="Microsoft.OpenApi.Readers" Version="1.2.3" PrivateAssets="all" GeneratePathProperty="true" />
-    <PackageReference Include="Microsoft.OpenApi" Version="1.2.3" PrivateAssets="all" GeneratePathProperty="true" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" PrivateAssets="all" GeneratePathProperty="true" />
+    <PackageReference Include="Handlebars.Net" Version="2.0.7" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.OpenApi.Readers" Version="1.2.3" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.OpenApi" Version="1.2.3" PrivateAssets="all" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" PrivateAssets="all" />
   </ItemGroup>
 
-  <ItemGroup>
-    <!-- Package the generator in the analyzer directory of the nuget package -->
-    <None Include="$(OutputPath)\*.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
-  </ItemGroup>
   <ItemGroup>
     <None Include="*.props" Pack="true" PackagePath="build" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\PrincipleStudios.OpenApiCodegen.Server.Mvc.Base\PrincipleStudios.OpenApiCodegen.Server.Mvc.Base.csproj" PrivateAssets="all" />
+    <ProjectReference Include="..\PrincipleStudios.OpenApiCodegen.Server.Mvc.Base\PrincipleStudios.OpenApiCodegen.Server.Mvc.Base.csproj" OutputItemType="EmbeddedResource" PrivateAssets="all" />
   </ItemGroup>
 
-  <Target Name="AddBlankFile" BeforeTargets="CoreCompile">
-    <!-- Resolves NU5128 -->
-    <Touch Files="$(OutputPath)\_._" AlwaysCreate="true" />
-    <ItemGroup>
-      <None Include="$(OutputPath)\_._" Pack="true" PackagePath="lib/$(TargetFramework)" Visible="false" />
-    </ItemGroup>
-  </Target>
+	<Target Name="AddDlls" BeforeTargets="_GetPackageFiles">
+		<ItemGroup>
+			<!-- Package the generator in the build directory of the nuget package -->
+			<None Include="$(OutputPath)\**\*" Exclude="$(OutputPath)\**\_._;$(OutputPath)\**\*.pdb" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+		</ItemGroup>
+
+		<!-- Resolves NU5128 -->
+		<Touch Files="$(OutputPath)\_._" AlwaysCreate="true" />
+		<ItemGroup>
+			<None Include="$(OutputPath)\_._" Pack="true" PackagePath="lib/$(TargetFramework)" Visible="false" />
+		</ItemGroup>
+	</Target>
 </Project>
