@@ -15,7 +15,7 @@ namespace PrincipleStudios.OpenApiCodegen.Client
     [Generator]
     public class ClientGenerator : OpenApiGeneratorBase
     {
-        private static readonly DiagnosticDescriptor IncludeNewtonsoftJson = new DiagnosticDescriptor(id: "PSAPICTRL001",
+        private static readonly DiagnosticDescriptor IncludeNewtonsoftJson = new DiagnosticDescriptor(id: "PSAPICLNT001",
                                                                                                   title: "Include a reference to Newtonsoft.Json",
                                                                                                   messageFormat: "Include a reference to Newtonsoft.Json",
                                                                                                   category: "PrincipleStudios.OpenApiCodegen.Client",

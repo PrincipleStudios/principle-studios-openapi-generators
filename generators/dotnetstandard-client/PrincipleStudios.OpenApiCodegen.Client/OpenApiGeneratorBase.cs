@@ -20,19 +20,19 @@ namespace PrincipleStudios.OpenApiCodegen.Client
     public abstract class OpenApiGeneratorBase : ISourceGenerator
     {
         private const string sourceItemGroupKey = "SourceItemGroup";
-        private static readonly DiagnosticDescriptor NoFilesGenerated = new DiagnosticDescriptor(id: "PSAPIGEN001",
+        private static readonly DiagnosticDescriptor NoFilesGenerated = new DiagnosticDescriptor(id: "PSAPICLNT002",
                                                                                           title: "No files found enabled",
-                                                                                          messageFormat: "No additional files were found with SourceItemGroup '{0}'",
+                                                                                          messageFormat: "No files were found; ensure you have added an item for 'OpenApiSchemaClient'",
                                                                                           category: "PrincipleStudios.OpenApiCodegen",
                                                                                           DiagnosticSeverity.Warning,
                                                                                           isEnabledByDefault: true);
-        protected static readonly DiagnosticDescriptor FileGenerated = new DiagnosticDescriptor(id: "PSAPIGEN002",
+        protected static readonly DiagnosticDescriptor FileGenerated = new DiagnosticDescriptor(id: "PSAPICLNT003",
                                                                                           title: "File generated",
                                                                                           messageFormat: "Generated file '{0}'",
                                                                                           category: "PrincipleStudios.OpenApiCodegen",
                                                                                           DiagnosticSeverity.Info,
                                                                                           isEnabledByDefault: true);
-        protected static readonly DiagnosticDescriptor NoSourceGroup = new DiagnosticDescriptor(id: "PSAPIGEN003",
+        protected static readonly DiagnosticDescriptor NoSourceGroup = new DiagnosticDescriptor(id: "PSAPICLNT004",
                                                                                           title: "No source group",
                                                                                           messageFormat: "No source group for '{0}'",
                                                                                           category: "PrincipleStudios.OpenApiCodegen",
@@ -50,7 +50,7 @@ namespace PrincipleStudios.OpenApiCodegen.Client
         {
             var options = GetLoadOptions(context).ToArray();
             if (!options.Any())
-                context.ReportDiagnostic(Diagnostic.Create(NoFilesGenerated, Location.None, sourceGroup));
+                context.ReportDiagnostic(Diagnostic.Create(NoFilesGenerated, Location.None));
             var diagnostic = new OpenApiTransformDiagnostic();
             var nameCodeSequence = SourceFilesFromAdditionalFiles(options, diagnostic).ToArray();
             foreach (var entry in nameCodeSequence)

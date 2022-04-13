@@ -39,7 +39,7 @@ namespace PrincipleStudios.OpenApi.CSharp
         {
             var prefix = rootNamespace is { Length: > 0 } ? Enumerable.Repeat(rootNamespace, 1) : Enumerable.Empty<string>();
             
-            if (link == null)
+            if (link is not { Length: > 0 })
             {
                 if (identity == null || projectDir == null || !identity.StartsWith(projectDir))
                     throw new InvalidOperationException($"No link provided and '{identity}' does not start with '{projectDir}'; unable to determine root namespace");
