@@ -6,28 +6,28 @@
 
     <CompilerVisibleItemMetadata Include="AdditionalFiles" MetadataName="Identity" />
     <CompilerVisibleItemMetadata Include="AdditionalFiles" MetadataName="Link" />
-	<CompilerVisibleItemMetadata Include="AdditionalFiles" MetadataName="SourceItemGroup" />
-	<CompilerVisibleItemMetadata Include="AdditionalFiles" MetadataName="OpenApiServerConfiguration" />
+    <CompilerVisibleItemMetadata Include="AdditionalFiles" MetadataName="SourceItemGroup" />
+    <CompilerVisibleItemMetadata Include="AdditionalFiles" MetadataName="OpenApiServerConfiguration" />
     <CompilerVisibleItemMetadata Include="AdditionalFiles" MetadataName="OpenApiServerInterfaceNamespace" />
 
-	<AvailableItemName Include="OpenApiSchemaCSharpServerOptions" DisplayName="C# Options for Open API Code Generation (OpenApiCodeGen)" />
-	<AvailableItemName Include="OpenApiSchemaMvcServer" DisplayName="Open API Schema MVC Server (OpenApiCodeGen)" />
+    <AvailableItemName Include="OpenApiSchemaCSharpServerOptions" DisplayName="C# Options for Open API Code Generation (OpenApiCodeGen)" />
+    <AvailableItemName Include="OpenApiSchemaMvcServer" DisplayName="Open API Schema MVC Server (OpenApiCodeGen)" />
     <Watch Include="@(OpenApiSchemaMvcServer)" Condition=" '@(OpenApiSchemaMvcServer)' != '' " />
 
     <AdditionalFiles Include="@(OpenApiSchemaMvcServer->'%(rootdir)%(directory)%(filename)%(extension)')"
-					 SourceItemGroup="OpenApiServerInterface"
-					 OpenApiServerConfiguration="@(OpenApiSchemaCSharpServerOptions->'%(FullPath)')"
-					 Visible="false"
-					 Condition=" '@(OpenApiSchemaMvcServer)' != '' " />
+                     SourceItemGroup="OpenApiServerInterface"
+                     OpenApiServerConfiguration="@(OpenApiSchemaCSharpServerOptions->'%(FullPath)')"
+                     Visible="false"
+                     Condition=" '@(OpenApiSchemaMvcServer)' != '' " />
   </ItemGroup>
 
   <Target Name="_InjectAdditionalFilesForOpenApiSchemaMvcServer" BeforeTargets="GenerateMSBuildEditorConfigFileShouldRun">
     <ItemGroup>
       <AdditionalFiles Include="@(OpenApiSchemaMvcServer->'%(rootdir)%(directory)%(filename)%(extension)')"
-					   SourceItemGroup="OpenApiServerInterface"
-					   OpenApiServerConfiguration="@(OpenApiSchemaCSharpServerOptions->'%(FullPath)')"
-					   Visible="false"
-					   Condition=" '@(OpenApiSchemaMvcServer)' != '' " />
-	</ItemGroup>
+                       SourceItemGroup="OpenApiServerInterface"
+                       OpenApiServerConfiguration="@(OpenApiSchemaCSharpServerOptions->'%(FullPath)')"
+                       Visible="false"
+                       Condition=" '@(OpenApiSchemaMvcServer)' != '' " />
+    </ItemGroup>
   </Target>
 </Project>
