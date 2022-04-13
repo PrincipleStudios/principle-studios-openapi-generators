@@ -1,0 +1,4 @@
+types:
+  integer:
+    formats:
+      int32: System.Int32

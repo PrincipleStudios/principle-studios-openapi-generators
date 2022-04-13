@@ -21,21 +21,29 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
                                                                                                   category: "PrincipleStudios.OpenApiCodegen.Server.Mvc",
                                                                                                   DiagnosticSeverity.Warning,
                                                                                                   isEnabledByDefault: true);
-        private readonly CSharpSchemaOptions options;
         const string sourceGroup = "OpenApiServerInterface";
         const string propNamespace = "OpenApiServerInterfaceNamespace";
+        const string propConfig = "OpenApiServerConfiguration";
 
         public ControllerGenerator() : base(sourceGroup)
         {
-            this.options = LoadOptions();
         }
 
-        private CSharpSchemaOptions LoadOptions()
+        private CSharpSchemaOptions LoadOptions(string? optionsFiles)
         {
             using var defaultJsonStream = CSharpSchemaOptions.GetDefaultOptionsJson();
             var builder = new ConfigurationBuilder();
             builder.AddYamlStream(defaultJsonStream);
-            // TODO - allow config overrides
+            if (optionsFiles is { Length: > 0 })
+            {
+                foreach (var file in optionsFiles.Split(';'))
+                {
+                    if (System.IO.File.Exists(file))
+                    {
+                        builder.AddYamlFile(file);
+                    }
+                }
+            }
             var result = builder.Build().Get<CSharpSchemaOptions>();
             return result;
         }
@@ -60,16 +68,17 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
 
         protected override bool TryCreateSourceProvider(AdditionalText file, OpenApiDocument document, AnalyzerConfigOptions opt, GeneratorExecutionContext context, [NotNullWhen(true)] out ISourceProvider? result)
         {
+            var options = LoadOptions(opt.GetAdditionalFilesMetadata(propConfig));
             var documentNamespace = opt.GetAdditionalFilesMetadata(propNamespace);
             if (string.IsNullOrEmpty(documentNamespace))
-                documentNamespace = GetStandardNamespace(opt);
+                documentNamespace = GetStandardNamespace(opt, options);
             
-            result = document.BuildCSharpPathControllerSourceProvider(GetVersionInfo(), documentNamespace, this.options);
+            result = document.BuildCSharpPathControllerSourceProvider(GetVersionInfo(), documentNamespace, options);
 
             return true;
         }
 
-        private string? GetStandardNamespace(AnalyzerConfigOptions opt)
+        private string? GetStandardNamespace(AnalyzerConfigOptions opt, CSharpSchemaOptions options)
         {
             var identity = opt.GetAdditionalFilesMetadata("identity");
             var link = opt.GetAdditionalFilesMetadata("link");

@@ -2,14 +2,12 @@
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
-	  
-    <OpenApiMvcServerFullVersion Condition=" '$(OpenApiMvcServerFullVersion)' == '' and '$(VersionSuffix)' == '' ">$(OpenApiMvcServerVersion)</OpenApiMvcServerFullVersion>
-    <OpenApiMvcServerFullVersion Condition=" '$(OpenApiMvcServerFullVersion)' == '' and '$(VersionSuffix)' != '' ">$(OpenApiMvcServerVersion)-$(VersionSuffix)</OpenApiMvcServerFullVersion>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="5.0.3" />
-    <PackageReference Include="PrincipleStudios.OpenApiCodegen.Server.Mvc" Version="$(OpenApiMvcServerFullVersion)"/>
+	<PackageReference Include="PrincipleStudios.OpenApiCodegen.Server.Mvc" Condition=" '$(OpenApiMvcServerFullVersion)' == '' and '$(VersionSuffix)' == '' " Version="$(OpenApiMvcServerVersion)"/>
+	<PackageReference Include="PrincipleStudios.OpenApiCodegen.Server.Mvc" Condition=" '$(OpenApiMvcServerFullVersion)' == '' and '$(VersionSuffix)' != '' " Version="$(OpenApiMvcServerVersion)-$(VersionSuffix)"/>
   </ItemGroup>
 
   <ItemGroup>
