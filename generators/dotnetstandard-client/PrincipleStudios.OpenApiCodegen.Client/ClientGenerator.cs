@@ -10,22 +10,22 @@ using Microsoft.OpenApi.Models;
 using PrincipleStudios.OpenApi.CSharp;
 using PrincipleStudios.OpenApi.Transformations;
 
-namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
+namespace PrincipleStudios.OpenApiCodegen.Client
 {
     [Generator]
-    public class ControllerGenerator : OpenApiGeneratorBase
+    public class ClientGenerator : OpenApiGeneratorBase
     {
-        private static readonly DiagnosticDescriptor IncludeNewtonsoftJson = new DiagnosticDescriptor(id: "PSAPICTRL001",
+        private static readonly DiagnosticDescriptor IncludeNewtonsoftJson = new DiagnosticDescriptor(id: "PSAPICLNT001",
                                                                                                   title: "Include a reference to Newtonsoft.Json",
                                                                                                   messageFormat: "Include a reference to Newtonsoft.Json",
-                                                                                                  category: "PrincipleStudios.OpenApiCodegen.Server.Mvc",
+                                                                                                  category: "PrincipleStudios.OpenApiCodegen.Client",
                                                                                                   DiagnosticSeverity.Warning,
                                                                                                   isEnabledByDefault: true);
-        const string sourceGroup = "OpenApiServerInterface";
-        const string propNamespace = "OpenApiServerInterfaceNamespace";
-        const string propConfig = "OpenApiServerConfiguration";
+        const string sourceGroup = "OpenApiClientInterface";
+        const string propNamespace = "OpenApiClientInterfaceNamespace";
+        const string propConfig = "OpenApiClientConfiguration";
 
-        public ControllerGenerator() : base(sourceGroup)
+        public ClientGenerator() : base(sourceGroup)
         {
         }
 
@@ -62,8 +62,8 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
         }
 
         private static string GetVersionInfo()
-        {
-            return $"{typeof(CSharpControllerTransformer).FullName} v{typeof(CSharpControllerTransformer).Assembly.GetName().Version}";
+        {   
+            return $"{typeof(CSharpClientTransformer).FullName} v{typeof(CSharpClientTransformer).Assembly.GetName().Version}";
         }
 
         protected override bool TryCreateSourceProvider(AdditionalText file, OpenApiDocument document, AnalyzerConfigOptions opt, GeneratorExecutionContext context, [NotNullWhen(true)] out ISourceProvider? result)
@@ -73,7 +73,7 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
             if (string.IsNullOrEmpty(documentNamespace))
                 documentNamespace = GetStandardNamespace(opt, options);
             
-            result = document.BuildCSharpPathControllerSourceProvider(GetVersionInfo(), documentNamespace, options);
+            result = document.BuildCSharpClientSourceProvider(GetVersionInfo(), documentNamespace, options);
 
             return true;
         }

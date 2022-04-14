@@ -26,7 +26,7 @@ namespace PrincipleStudios.OpenApiCodegen.Client.CSharp
             var document = GetDocument(name);
             var options = LoadOptions();
 
-            var transformer = document.BuildCSharpPathControllerSourceProvider("", "PS.Controller", options);
+            var transformer = document.BuildCSharpClientSourceProvider("", "PS.Controller", options);
             OpenApiTransformDiagnostic diagnostic = new();
 
             var entries = transformer.GetSources(diagnostic).ToArray();
@@ -79,7 +79,7 @@ namespace PrincipleStudios.OpenApiCodegen.Client.CSharp
             var document = GetDocument(name);
             var options = LoadOptions();
 
-            var transformer = document.BuildCSharpPathControllerSourceProvider("", "PS.Controller", options);
+            var transformer = document.BuildCSharpClientSourceProvider("", "PS.Controller", options);
             OpenApiTransformDiagnostic diagnostic = new();
 
             var entries = transformer.GetSources(diagnostic).ToArray();
@@ -98,7 +98,7 @@ namespace PrincipleStudios.OpenApiCodegen.Client.CSharp
             var document = GetDocument(name);
             var options = LoadOptions();
 
-            var transformer = document.BuildCSharpPathControllerSourceProvider("", "PS.Controller", options);
+            var transformer = document.BuildCSharpClientSourceProvider("", "PS.Controller", options);
             OpenApiTransformDiagnostic diagnostic = new();
 
             var entries = transformer.GetSources(diagnostic).ToArray();

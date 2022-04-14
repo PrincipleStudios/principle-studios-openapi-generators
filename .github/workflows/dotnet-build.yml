@@ -50,7 +50,15 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore
     - name: Build
-      run: dotnet build --no-restore --configuration Release
+      run: |
+        if [[ $VERSION_SUFFIX ]]; then
+          VERSION_SUFFIX_PARAM="--version-suffix sha.$VERSION_SUFFIX"
+        else
+          VERSION_SUFFIX_PARAM=''
+        fi
+        dotnet build --no-restore --configuration Release ${VERSION_SUFFIX_PARAM}
+      env:
+        VERSION_SUFFIX: ${{ github.ref != 'refs/heads/main' && github.sha || '' }}
     - name: Finish building TypeScript DLL
       working-directory: ./generators/typescript
       run: dotnet publish ./PrincipleStudios.OpenApiCodegen.Client.TypeScript/PrincipleStudios.OpenApiCodegen.Client.TypeScript.csproj -c Release -p:UseAppHost=false -o ./npm/dotnet
@@ -101,23 +109,23 @@ jobs:
     # PUBLISH
     - name: Publish MVC Server codegen to GitHub registry if new version number
       if: ${{ github.ref != 'refs/heads/main' }}
-      run: dotnet nuget push ./generators/dotnetcore-server-interfaces/PrincipleStudios.OpenApiCodegen.Server.Mvc.MsBuild/bin/Release/*.nupkg -k ${GITHUB_TOKEN} -s https://nuget.pkg.github.com/$GITHUB_REPOSITORY_OWNER/index.json --skip-duplicate --no-symbols
+      run: dotnet nuget push ./generators/dotnetcore-server-interfaces/PrincipleStudios.OpenApiCodegen.Server.Mvc/bin/Release/*.nupkg -k ${GITHUB_TOKEN} -s https://nuget.pkg.github.com/$GITHUB_REPOSITORY_OWNER/index.json --skip-duplicate --no-symbols
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - name: Publish MVC Server codegen to NuGet registry if new version number
       if: ${{ github.ref == 'refs/heads/main' }}
-      run: dotnet nuget push ./generators/dotnetcore-server-interfaces/PrincipleStudios.OpenApiCodegen.Server.Mvc.MsBuild/bin/Release/*.nupkg -k ${NUGET_API_KEY} -s https://api.nuget.org/v3/index.json --skip-duplicate --no-symbols
+      run: dotnet nuget push ./generators/dotnetcore-server-interfaces/PrincipleStudios.OpenApiCodegen.Server.Mvc/bin/Release/*.nupkg -k ${NUGET_API_KEY} -s https://api.nuget.org/v3/index.json --skip-duplicate --no-symbols
       env:
         NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
 
     - name: Publish .NET Client codegen to GitHub registry if new version number
       if: ${{ github.ref != 'refs/heads/main' }}
-      run: dotnet nuget push ./generators/dotnetstandard-client/PrincipleStudios.OpenApiCodegen.Client.MsBuild/bin/Release/*.nupkg -k ${GITHUB_TOKEN} -s https://nuget.pkg.github.com/$GITHUB_REPOSITORY_OWNER/index.json --skip-duplicate --no-symbols
+      run: dotnet nuget push ./generators/dotnetstandard-client/PrincipleStudios.OpenApiCodegen.Client/bin/Release/*.nupkg -k ${GITHUB_TOKEN} -s https://nuget.pkg.github.com/$GITHUB_REPOSITORY_OWNER/index.json --skip-duplicate --no-symbols
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - name: Publish .NET Client codegen to NuGet registry if new version number
       if: ${{ github.ref == 'refs/heads/main' }}
-      run: dotnet nuget push ./generators/dotnetstandard-client/PrincipleStudios.OpenApiCodegen.Client.MsBuild/bin/Release/*.nupkg -k ${NUGET_API_KEY} -s https://api.nuget.org/v3/index.json --skip-duplicate --no-symbols
+      run: dotnet nuget push ./generators/dotnetstandard-client/PrincipleStudios.OpenApiCodegen.Client/bin/Release/*.nupkg -k ${NUGET_API_KEY} -s https://api.nuget.org/v3/index.json --skip-duplicate --no-symbols
       env:
         NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
 

@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <AssemblyName>PrincipleStudios.OpenApiCodegen.Client</AssemblyName>
@@ -6,7 +6,7 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <LangVersion>9</LangVersion>
     <Nullable>enable</Nullable>
-    <Version>$(OpenApiCSharpClientVersion)</Version>
+    <VersionPrefix Condition=" '$(VersionPrefix)' == '' ">$(OpenApiCSharpClientVersion)</VersionPrefix>
 
     <IsPackable>true</IsPackable>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
@@ -22,15 +22,21 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Handlebars.Net" Version="2.0.7" PrivateAssets="all" GeneratePathProperty="true" />
-    <PackageReference Include="Microsoft.OpenApi.Readers" Version="1.2.3" PrivateAssets="all" GeneratePathProperty="true" />
-    <PackageReference Include="Microsoft.OpenApi" Version="1.2.3" PrivateAssets="all" GeneratePathProperty="true" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" PrivateAssets="all" GeneratePathProperty="true" />
-    <PackageReference Include="Microsoft.Build.Utilities.Core" Version="16.9.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.0.1" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.3" PrivateAssets="all" />
+
+    <PackageReference Include="Handlebars.Net" Version="2.0.7" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.OpenApi.Readers" Version="1.2.3" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.OpenApi" Version="1.2.3" PrivateAssets="all" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" PrivateAssets="all" />
   </ItemGroup>
 
   <ItemGroup>
     <None Include="*.props" Pack="true" PackagePath="build" />
+    <None Remove="AnalyzerReleases.Shipped.md" />
+    <None Remove="AnalyzerReleases.Unshipped.md" />
+    <AdditionalFiles Include="AnalyzerReleases.Shipped.md" />
+    <AdditionalFiles Include="AnalyzerReleases.Unshipped.md" />
     <None Include="readme.md" Pack="true" PackagePath="\" Visible="false" />
   </ItemGroup>
 
@@ -38,18 +44,16 @@
     <ProjectReference Include="..\PrincipleStudios.OpenApiCodegen.Client.Base\PrincipleStudios.OpenApiCodegen.Client.Base.csproj" PrivateAssets="all" />
   </ItemGroup>
 
-  <Target Name="AddBlankFile" BeforeTargets="CoreCompile">
+  <Target Name="AddDlls" BeforeTargets="_GetPackageFiles">
+    <ItemGroup>
+      <!-- Package the generator in the build directory of the nuget package -->
+      <None Include="$(OutputPath)\**\*" Exclude="$(OutputPath)\**\_._;$(OutputPath)\**\*.pdb" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+    </ItemGroup>
+
     <!-- Resolves NU5128 -->
     <Touch Files="$(OutputPath)\_._" AlwaysCreate="true" />
     <ItemGroup>
       <None Include="$(OutputPath)\_._" Pack="true" PackagePath="lib/$(TargetFramework)" Visible="false" />
-    </ItemGroup>
-  </Target>
-  <Target Name="AddDlls" BeforeTargets="_GetPackageFiles">
-    <Message importance="high" Text="$(OutputPath)" />
-    <ItemGroup>
-      <!-- Package the generator in the build directory of the nuget package -->
-      <None Include="$(OutputPath)\*.dll" Pack="true" PackagePath="build" Visible="false" />
     </ItemGroup>
   </Target>
 </Project>

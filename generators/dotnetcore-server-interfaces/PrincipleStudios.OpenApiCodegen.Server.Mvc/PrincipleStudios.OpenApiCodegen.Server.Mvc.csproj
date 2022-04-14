@@ -1,10 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;netstandard2.1</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0</TargetFrameworks>
     <LangVersion>9</LangVersion>
     <Nullable>enable</Nullable>
-    <Version>$(OpenApiMvcServerVersion)</Version>
+    <VersionPrefix Condition=" '$(VersionPrefix)' == '' ">$(OpenApiMvcServerVersion)</VersionPrefix>
 
     <IsPackable>true</IsPackable>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
@@ -16,47 +16,51 @@
     <title>Controller source generators from OpenAPI specification for .NET 5</title>
     <PackageSummary>Adds source generators to generate C# controller base classes from an OpenAPI specification file.</PackageSummary>
     <description>
-      Adds source generators to generate C# controller base classes from an OpenAPI
-      specification file.
+Adds source generators to generate C# controller base classes from an OpenAPI specification file.
 
-      Add this package, and ???TODO???.
+Add this package, select the OpenAPI specification file from your project, and set the build action to `OpenApiSchemaMvcServer`. Within that folder's namespace, you'll automatically get the model and controller classes to implement your interface.
 
-      Depends on Newtonsoft.Json for attributes and serialization control. Be sure to
-      include the version you need; this package can use any version.
+A `services.AddOpenApi...` extension method is added for use in your startup file to ensure you have all base controllers implemented.
+
+This integrates during the build phase, so you can be sure your classes are up to date with your schema documentation. (You may need to unload/reload your project in Visual Studio.)
+
+Depends on Newtonsoft.Json for attributes and serialization control. Be sure to include the version you need; this package can use any version.
     </description>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <IncludeBuildOutput>false</IncludeBuildOutput>
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+    <SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="3.9.0" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.0.1" PrivateAssets="all" />
 
-    <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.2" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.3" PrivateAssets="all" />
 
-    <PackageReference Include="Handlebars.Net" Version="2.0.7" PrivateAssets="all" GeneratePathProperty="true" />
-    <PackageReference Include="Microsoft.OpenApi.Readers" Version="1.2.3" PrivateAssets="all" GeneratePathProperty="true" />
-    <PackageReference Include="Microsoft.OpenApi" Version="1.2.3" PrivateAssets="all" GeneratePathProperty="true" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" PrivateAssets="all" GeneratePathProperty="true" />
+    <PackageReference Include="Handlebars.Net" Version="2.0.7" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.OpenApi.Readers" Version="1.2.3" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.OpenApi" Version="1.2.3" PrivateAssets="all" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" PrivateAssets="all" />
   </ItemGroup>
 
-  <ItemGroup>
-    <!-- Package the generator in the analyzer directory of the nuget package -->
-    <None Include="$(OutputPath)\*.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
-  </ItemGroup>
   <ItemGroup>
     <None Include="*.props" Pack="true" PackagePath="build" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\PrincipleStudios.OpenApiCodegen.Server.Mvc.Base\PrincipleStudios.OpenApiCodegen.Server.Mvc.Base.csproj" PrivateAssets="all" />
+    <ProjectReference Include="..\PrincipleStudios.OpenApiCodegen.Server.Mvc.Base\PrincipleStudios.OpenApiCodegen.Server.Mvc.Base.csproj" OutputItemType="EmbeddedResource" PrivateAssets="all" />
   </ItemGroup>
 
-  <Target Name="AddBlankFile" BeforeTargets="CoreCompile">
-    <!-- Resolves NU5128 -->
-    <Touch Files="$(OutputPath)\_._" AlwaysCreate="true" />
-    <ItemGroup>
-      <None Include="$(OutputPath)\_._" Pack="true" PackagePath="lib/$(TargetFramework)" Visible="false" />
-    </ItemGroup>
-  </Target>
+	<Target Name="AddDlls" BeforeTargets="_GetPackageFiles">
+		<ItemGroup>
+			<!-- Package the generator in the build directory of the nuget package -->
+			<None Include="$(OutputPath)\**\*" Exclude="$(OutputPath)\**\_._;$(OutputPath)\**\*.pdb" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+		</ItemGroup>
+
+		<!-- Resolves NU5128 -->
+		<Touch Files="$(OutputPath)\_._" AlwaysCreate="true" />
+		<ItemGroup>
+			<None Include="$(OutputPath)\_._" Pack="true" PackagePath="lib/$(TargetFramework)" Visible="false" />
+		</ItemGroup>
+	</Target>
 </Project>

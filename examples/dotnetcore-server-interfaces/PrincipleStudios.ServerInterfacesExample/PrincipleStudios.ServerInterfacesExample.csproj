@@ -6,8 +6,18 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="csharp.config.yaml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <OpenApiSchemaCSharpServerOptions Include="csharp.config.yaml" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="5.0.3" />
-    <PackageReference Include="PrincipleStudios.OpenApiCodegen.Server.Mvc" Version="$(OpenApiMvcServerVersion)" />
+    <PackageReference Include="PrincipleStudios.OpenApiCodegen.Server.Mvc" Condition=" '$(OpenApiMvcServerFullVersion)' != '' " Version="$(OpenApiMvcServerFullVersion)" />
+    <PackageReference Include="PrincipleStudios.OpenApiCodegen.Server.Mvc" Condition=" '$(OpenApiMvcServerFullVersion)' == '' and '$(VersionSuffix)' == '' " Version="$(OpenApiMvcServerVersion)" />
+    <PackageReference Include="PrincipleStudios.OpenApiCodegen.Server.Mvc" Condition=" '$(OpenApiMvcServerFullVersion)' == '' and '$(VersionSuffix)' != '' " Version="$(OpenApiMvcServerVersion)-$(VersionSuffix)" />
   </ItemGroup>
 
   <ItemGroup>

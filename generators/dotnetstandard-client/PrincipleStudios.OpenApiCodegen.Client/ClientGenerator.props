@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Project>
+  <ItemGroup>
+    <CompilerVisibleProperty Include="RootNamespace" />
+    <CompilerVisibleProperty Include="ProjectDir" />
+
+    <CompilerVisibleItemMetadata Include="AdditionalFiles" MetadataName="Identity" />
+    <CompilerVisibleItemMetadata Include="AdditionalFiles" MetadataName="Link" />
+    <CompilerVisibleItemMetadata Include="AdditionalFiles" MetadataName="SourceItemGroup" />
+    <CompilerVisibleItemMetadata Include="AdditionalFiles" MetadataName="OpenApiClientConfiguration" />
+    <CompilerVisibleItemMetadata Include="AdditionalFiles" MetadataName="OpenApiClientInterfaceNamespace" />
+
+    <AvailableItemName Include="OpenApiSchemaCSharpClientOptions" DisplayName="C# Options for Open API Code Generation (OpenApiCodeGen)" />
+    <AvailableItemName Include="OpenApiSchemaClient" DisplayName="Open API Schema Client (OpenApiCodeGen)" />
+    <Watch Include="@(OpenApiSchemaClient);@(OpenApiSchemaCSharpOptions)" Condition=" '@(OpenApiSchemaClient)' != '' " />
+
+    <AdditionalFiles Include="@(OpenApiSchemaClient->'%(rootdir)%(directory)%(filename)%(extension)')"
+                     SourceItemGroup="OpenApiSchemaInterface"
+                     OpenApiClientConfiguration="@(OpenApiSchemaCSharpClientOptions->'%(FullPath)')"
+                     Visible="false"
+                     Condition=" '@(OpenApiSchemaClient)' != '' " />
+  </ItemGroup>
+
+  <Target Name="_InjectAdditionalFilesForOpenApiSchemaClient" BeforeTargets="GenerateMSBuildEditorConfigFileShouldRun">
+    <ItemGroup>
+      <AdditionalFiles Include="@(OpenApiSchemaClient->'%(rootdir)%(directory)%(filename)%(extension)')"
+                       SourceItemGroup="OpenApiClientInterface"
+                       OpenApiClientConfiguration="@(OpenApiSchemaCSharpClientOptions->'%(FullPath)')"
+                       Visible="false"
+                       Condition=" '@(OpenApiSchemaClient)' != '' " />
+    </ItemGroup>
+  </Target>
+</Project>

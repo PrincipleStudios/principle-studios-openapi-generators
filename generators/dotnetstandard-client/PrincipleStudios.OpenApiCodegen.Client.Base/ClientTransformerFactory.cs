@@ -4,9 +4,9 @@ using System.Linq;
 
 namespace PrincipleStudios.OpenApi.CSharp
 {
-    public static class PathControllerTransformerFactory
+    public static class ClientTransformerFactory
     {
-        public static ISourceProvider BuildCSharpPathControllerSourceProvider(this OpenApiDocument document, string versionInfo, string? documentNamespace, CSharpSchemaOptions options)
+        public static ISourceProvider BuildCSharpClientSourceProvider(this OpenApiDocument document, string versionInfo, string? documentNamespace, CSharpSchemaOptions options)
         {
             ISourceProvider? result;
             var handlebarsFactory = new HandlebarsFactory(ControllerHandlebarsTemplateProcess.CreateHandlebars);
