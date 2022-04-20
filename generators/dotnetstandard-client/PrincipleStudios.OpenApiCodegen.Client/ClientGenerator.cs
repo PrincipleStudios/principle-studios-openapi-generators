@@ -21,6 +21,13 @@ namespace PrincipleStudios.OpenApiCodegen.Client
                                                                                                   category: "PrincipleStudios.OpenApiCodegen.Client",
                                                                                                   DiagnosticSeverity.Warning,
                                                                                                   isEnabledByDefault: true);
+
+        private static readonly DiagnosticDescriptor GeneratedNamespace = new DiagnosticDescriptor(id: "PSAPICLNTINFO001",
+                                                                                                  title: "Generated Namespace",
+                                                                                                  messageFormat: "Generated Namespace: {0}",
+                                                                                                  category: "PrincipleStudios.OpenApiCodegen.Client",
+                                                                                                  DiagnosticSeverity.Info,
+                                                                                                  isEnabledByDefault: true);
         const string sourceGroup = "OpenApiClientInterface";
         const string propNamespace = "OpenApiClientInterfaceNamespace";
         const string propConfig = "OpenApiClientConfiguration";
@@ -72,7 +79,9 @@ namespace PrincipleStudios.OpenApiCodegen.Client
             var documentNamespace = opt.GetAdditionalFilesMetadata(propNamespace);
             if (string.IsNullOrEmpty(documentNamespace))
                 documentNamespace = GetStandardNamespace(opt, options);
-            
+
+            context.ReportDiagnostic(Diagnostic.Create(GeneratedNamespace, Location.None, documentNamespace));
+
             result = document.BuildCSharpClientSourceProvider(GetVersionInfo(), documentNamespace, options);
 
             return true;
