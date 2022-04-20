@@ -21,6 +21,12 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
                                                                                                   category: "PrincipleStudios.OpenApiCodegen.Server.Mvc",
                                                                                                   DiagnosticSeverity.Warning,
                                                                                                   isEnabledByDefault: true);
+        private static readonly DiagnosticDescriptor GeneratedNamespace = new DiagnosticDescriptor(id: "PSAPICTRLINFO001",
+                                                                                                  title: "Generated Namespace",
+                                                                                                  messageFormat: "Generated Namespace: {0}",
+                                                                                                  category: "PrincipleStudios.OpenApiCodegen.Server.Mvc",
+                                                                                                  DiagnosticSeverity.Info,
+                                                                                                  isEnabledByDefault: true);
         const string sourceGroup = "OpenApiServerInterface";
         const string propNamespace = "OpenApiServerInterfaceNamespace";
         const string propConfig = "OpenApiServerConfiguration";
@@ -72,7 +78,9 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
             var documentNamespace = opt.GetAdditionalFilesMetadata(propNamespace);
             if (string.IsNullOrEmpty(documentNamespace))
                 documentNamespace = GetStandardNamespace(opt, options);
-            
+
+            context.ReportDiagnostic(Diagnostic.Create(GeneratedNamespace, Location.None, documentNamespace));
+
             result = document.BuildCSharpPathControllerSourceProvider(GetVersionInfo(), documentNamespace, options);
 
             return true;
