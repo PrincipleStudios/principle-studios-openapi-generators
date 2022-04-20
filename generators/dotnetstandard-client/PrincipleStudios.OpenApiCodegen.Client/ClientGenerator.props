@@ -7,27 +7,27 @@
     <CompilerVisibleItemMetadata Include="AdditionalFiles" MetadataName="Identity" />
     <CompilerVisibleItemMetadata Include="AdditionalFiles" MetadataName="Link" />
     <CompilerVisibleItemMetadata Include="AdditionalFiles" MetadataName="SourceItemGroup" />
-    <CompilerVisibleItemMetadata Include="AdditionalFiles" MetadataName="OpenApiClientConfiguration" />
-    <CompilerVisibleItemMetadata Include="AdditionalFiles" MetadataName="OpenApiClientInterfaceNamespace" />
+    <CompilerVisibleItemMetadata Include="AdditionalFiles" MetadataName="Configuration" />
+    <CompilerVisibleItemMetadata Include="AdditionalFiles" MetadataName="Namespace" />
 
     <AvailableItemName Include="OpenApiSchemaCSharpClientOptions" DisplayName="C# Options for Open API Code Generation (OpenApiCodeGen)" />
     <AvailableItemName Include="OpenApiSchemaClient" DisplayName="Open API Schema Client (OpenApiCodeGen)" />
     <Watch Include="@(OpenApiSchemaClient);@(OpenApiSchemaCSharpOptions)" Condition=" '@(OpenApiSchemaClient)' != '' " />
-
-    <AdditionalFiles Include="@(OpenApiSchemaClient->'%(rootdir)%(directory)%(filename)%(extension)')"
-                     SourceItemGroup="OpenApiSchemaInterface"
-                     OpenApiClientConfiguration="@(OpenApiSchemaCSharpClientOptions->'%(FullPath)')"
-                     Visible="false"
-                     Condition=" '@(OpenApiSchemaClient)' != '' " />
   </ItemGroup>
 
   <Target Name="_InjectAdditionalFilesForOpenApiSchemaClient" BeforeTargets="GenerateMSBuildEditorConfigFileShouldRun">
     <ItemGroup>
-      <AdditionalFiles Include="@(OpenApiSchemaClient->'%(rootdir)%(directory)%(filename)%(extension)')"
-                       SourceItemGroup="OpenApiClientInterface"
-                       OpenApiClientConfiguration="@(OpenApiSchemaCSharpClientOptions->'%(FullPath)')"
-                       Visible="false"
-                       Condition=" '@(OpenApiSchemaClient)' != '' " />
+      <AdditionalFiles Include="@(OpenApiSchemaClient)">
+        <SourceItemGroup>OpenApiClientInterface</SourceItemGroup>
+        <WorkingOutputPath Condition=" '%(OpenApiSchemaClient.Link)' != '' ">$([System.Text.RegularExpressions.Regex]::Replace(%(OpenApiSchemaClient.Link), '(?&lt;=^|\\|/)..(?=$|\\|/)', '__'))</WorkingOutputPath>
+        <WorkingOutputPath Condition=" '%(OpenApiSchemaClient.Link)' == '' ">$([System.Text.RegularExpressions.Regex]::Replace(%(OpenApiSchemaClient.Identity), '(?&lt;=^|\\|/)..(?=$|\\|/)', '__'))</WorkingOutputPath>
+        <Namespace Condition=" '%(OpenApiSchemaClient.Namespace)' != '' ">%(OpenApiSchemaClient.Namespace)</Namespace>
+        <Configuration Condition=" '%(OpenApiSchemaClient.Configuration)' != '' ">%(OpenApiSchemaClient.Configuration)</Configuration>
+        <Configuration Condition=" '%(OpenApiSchemaClient.Configuration)' == '' ">@(OpenApiSchemaCSharpClientOptions->'%(FullPath)')</Configuration>
+      </AdditionalFiles>
+      <AdditionalFiles>
+        <Namespace Condition=" '%(AdditionalFiles.Namespace)' == '' and '%(AdditionalFiles.SourceItemGroup)' == 'OpenApiClientInterface' ">$(RootNamespace)$([System.Text.RegularExpressions.Regex]::Replace($([System.Text.RegularExpressions.Regex]::Replace('/$([System.IO.Path]::GetDirectoryName('%(AdditionalFiles.WorkingOutputPath)'))', '[/\\]', '.')), '\.$', ''))</Namespace>
+      </AdditionalFiles>
     </ItemGroup>
   </Target>
 </Project>

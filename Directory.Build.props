@@ -11,8 +11,8 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <OpenApiMvcServerVersion>0.11.1</OpenApiMvcServerVersion>
-    <OpenApiCSharpClientVersion>0.4.0</OpenApiCSharpClientVersion>
+    <OpenApiMvcServerVersion>0.11.2</OpenApiMvcServerVersion>
+    <OpenApiCSharpClientVersion>0.4.1</OpenApiCSharpClientVersion>
   </PropertyGroup>
 
   <Import Project="Directory.Build.local.props" Condition="exists('$(MSBuildThisFileDirectory)Directory.Build.local.props')" />
