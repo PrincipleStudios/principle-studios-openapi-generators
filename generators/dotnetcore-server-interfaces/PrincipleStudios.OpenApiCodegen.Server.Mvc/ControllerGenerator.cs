@@ -28,8 +28,8 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
                                                                                                   DiagnosticSeverity.Info,
                                                                                                   isEnabledByDefault: true);
         const string sourceGroup = "OpenApiServerInterface";
-        const string propNamespace = "OpenApiServerInterfaceNamespace";
-        const string propConfig = "OpenApiServerConfiguration";
+        const string propNamespace = "Namespace";
+        const string propConfig = "Configuration";
 
         public ControllerGenerator() : base(sourceGroup)
         {

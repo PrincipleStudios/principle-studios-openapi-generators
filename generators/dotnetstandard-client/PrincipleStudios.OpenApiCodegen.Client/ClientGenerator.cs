@@ -29,8 +29,8 @@ namespace PrincipleStudios.OpenApiCodegen.Client
                                                                                                   DiagnosticSeverity.Info,
                                                                                                   isEnabledByDefault: true);
         const string sourceGroup = "OpenApiClientInterface";
-        const string propNamespace = "OpenApiClientInterfaceNamespace";
-        const string propConfig = "OpenApiClientConfiguration";
+        const string propNamespace = "Namespace";
+        const string propConfig = "Configuration";
 
         public ClientGenerator() : base(sourceGroup)
         {
