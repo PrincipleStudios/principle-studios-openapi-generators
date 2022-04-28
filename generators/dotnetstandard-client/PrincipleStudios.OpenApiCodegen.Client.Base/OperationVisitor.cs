@@ -70,6 +70,7 @@ namespace PrincipleStudios.OpenApi.CSharp
                      name: CSharpNaming.ToTitleCaseIdentifier(operation.OperationId, options.ReservedIdentifiers("ControllerBase", controllerClassName)),
                      path: path,
                      requestBodies: requestBodies,
+                     hasQueryStringEmbedded: path.Contains("?"),
                      responses: new templates.OperationResponses(
                          defaultResponse: builder.DefaultResponse,
                          statusResponse: new(builder.StatusResponses)
