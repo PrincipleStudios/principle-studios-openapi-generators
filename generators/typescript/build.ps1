@@ -7,6 +7,7 @@ cd npm
 npm ci
 Remove-Item -LiteralPath "lib" -Force -Recurse -ErrorAction SilentlyContinue
 npm pack
+npm test
 
 cd $PSScriptRoot
 mkdir ../out -Force

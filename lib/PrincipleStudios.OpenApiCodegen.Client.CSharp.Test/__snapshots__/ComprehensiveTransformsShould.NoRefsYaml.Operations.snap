@@ -82,14 +82,18 @@ namespace PS.Controller
             }
 
             
-            
+            /// <summary>
+            /// OK
+            /// </summary>
             public class Ok : LookupRecordReturnType
             {
                 public LookupRecordResponse Body { get; set; }
                 
             }
             
-            
+            /// <summary>
+            /// Conflict
+            /// </summary>
             public class Conflict : LookupRecordReturnType
             {
                 public LookupRecordConflictResponse Body { get; set; }
@@ -162,7 +166,9 @@ namespace PS.Controller
             }
 
             
-            
+            /// <summary>
+            /// Photo found
+            /// </summary>
             public class Ok : GetPhotoReturnType
             {
                 public global::System.IO.Stream Body { get; set; }

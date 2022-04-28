@@ -20,9 +20,11 @@ export type StructuredResponses = {
     'other': {
         'application/json': { "code": string; "message": string };
     };
+    /** OK */
     200: {
         'application/json': { "id": string };
     };
+    /** Conflict */
     409: {
         'application/json': { "multiple": Array<{ "formattedAddress": string; "location": { "latitude": number; "longitude": number } }> };
     };
@@ -88,6 +90,7 @@ export type StructuredResponses = {
     'other': {
         'application/json': { "code": string; "message": string };
     };
+    /** Photo found */
     200: {
         'application/octet-stream': Blob;
     };

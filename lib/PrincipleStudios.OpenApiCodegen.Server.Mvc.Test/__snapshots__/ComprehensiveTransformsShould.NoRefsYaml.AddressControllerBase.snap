@@ -22,9 +22,9 @@ namespace PS.Controller
         [global::Microsoft.AspNetCore.Mvc.Consumes("application/json")]
         // unexpected error
         [global::Microsoft.AspNetCore.Mvc.ProducesDefaultResponseType(typeof(LookupRecordOtherResponse))] // application/json
-        // 
+        // OK
         [global::Microsoft.AspNetCore.Mvc.ProducesResponseType(200, Type = typeof(LookupRecordResponse))] // application/json
-        // 
+        // Conflict
         [global::Microsoft.AspNetCore.Mvc.ProducesResponseType(409, Type = typeof(LookupRecordConflictResponse))] // application/json
         public async global::System.Threading.Tasks.Task<global::Microsoft.AspNetCore.Mvc.IActionResult> LookupRecordTypeSafeEntry(
             [global::Microsoft.AspNetCore.Mvc.FromBody, global::System.ComponentModel.DataAnnotations.Required] LookupRecordRequest lookupRecordBody
@@ -76,11 +76,15 @@ namespace PS.Controller
             {
             }
             
-            
+            /// <summary>
+            /// OK
+            /// </summary>
             public static LookupRecordActionResult Ok(LookupRecordResponse result) =>
                 new LookupRecordActionResult(200, "application/json", typeof(LookupRecordResponse), result);
             
-            
+            /// <summary>
+            /// Conflict
+            /// </summary>
             public static LookupRecordActionResult Conflict(LookupRecordConflictResponse result) =>
                 new LookupRecordActionResult(409, "application/json", typeof(LookupRecordConflictResponse), result);
             
