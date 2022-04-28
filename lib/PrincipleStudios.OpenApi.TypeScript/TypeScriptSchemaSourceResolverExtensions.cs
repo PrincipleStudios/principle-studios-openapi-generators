@@ -10,11 +10,12 @@ namespace PrincipleStudios.OpenApi.TypeScript
     public static class TypeScriptSchemaSourceResolverExtensions
     {
 
-        public static IEnumerable<templates.ImportStatement> GetImportStatements(this ISchemaSourceResolver<InlineDataType> sourceResolver, IEnumerable<OpenApiSchema> schemasReferenced, string path)
+        public static IEnumerable<templates.ImportStatement> GetImportStatements(this ISchemaSourceResolver<InlineDataType> sourceResolver, IEnumerable<OpenApiSchema> schemasReferenced, IEnumerable<OpenApiSchema> excludedSchemas, string path)
         {
-            return from entry in schemasReferenced
+            return from entry in schemasReferenced.Except(excludedSchemas)
                    let t = sourceResolver.ToInlineDataType(entry)()
                    from import in t.Imports
+                   where !excludedSchemas.Contains(import.Schema)
                    let refName = import.Member
                    let fileName = import.File
                    group refName by fileName into imports

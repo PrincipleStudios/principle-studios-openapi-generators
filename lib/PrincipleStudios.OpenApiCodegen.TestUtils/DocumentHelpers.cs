@@ -29,6 +29,7 @@ namespace PrincipleStudios.OpenApiCodegen.TestUtils
             "self-ref.yaml",
             "regex-escape.yaml",
             "query-in-path.yaml",
+            "tree.yaml",
         };
 
         private static readonly string[] InvalidDocumentNames = new[]
