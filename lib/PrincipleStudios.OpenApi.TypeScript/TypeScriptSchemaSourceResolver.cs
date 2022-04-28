@@ -9,7 +9,7 @@ using System.Text.RegularExpressions;
 
 namespace PrincipleStudios.OpenApi.TypeScript
 {
-    public record ImportReference(string Member, string File);
+    public record ImportReference(OpenApiSchema Schema, string Member, string File);
     public record InlineDataType(string text, ImmutableList<ImportReference> Imports, bool nullable = false, bool isEnumerable = false)
     {
         public InlineDataType MakeNullable() =>
@@ -76,7 +76,7 @@ namespace PrincipleStudios.OpenApi.TypeScript
 
         public ImportReference ToImportReference(OpenApiSchema schema)
         {
-            return new ImportReference(UseReferenceName(schema), ToSourceEntryKey(schema));
+            return new ImportReference(schema, UseReferenceName(schema), ToSourceEntryKey(schema));
         }
 
         public SourceEntry? TransformSchema(OpenApiSchema schema, OpenApiContext context, OpenApiTransformDiagnostic diagnostic)
@@ -221,7 +221,7 @@ namespace PrincipleStudios.OpenApi.TypeScript
 
 
             return () => new templates.ObjectModel(
-                imports: this.GetImportStatements(properties.Values.Except(new[] { schema }), "./models/").ToArray(),
+                imports: this.GetImportStatements(properties.Values, new[] { schema }, "./models/").ToArray(),
                 description: schema.Description,
                 className: className,
                 parent: null, // TODO - if "all of" and only one was a reference, we should be able to use inheritance.
@@ -236,7 +236,7 @@ namespace PrincipleStudios.OpenApi.TypeScript
                 schema.Description,
                 className,
                 Item: dataType.text,
-                Imports: this.GetImportStatements(new[] { schema.Items }, "./models/").ToArray()
+                Imports: this.GetImportStatements(new[] { schema.Items }, Enumerable.Empty<OpenApiSchema>(), "./models/").ToArray()
             );
         }
 

@@ -1,0 +1,27 @@
+openapi: "3.0.3"
+info:
+  version: 1.0.0
+  title: Tree
+  description: A sample API that demonstrates a tree structure including self-referencing object
+components:
+  schemas:
+    Node:
+      type: object
+      required:
+        - children
+      properties:
+        children:
+          type: array
+          items:
+            $ref: '#/components/schemas/Node'
+paths:
+  /tree:
+    post:
+      operationId: getTree
+      responses:
+        '200':
+          description: A tree
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Node'

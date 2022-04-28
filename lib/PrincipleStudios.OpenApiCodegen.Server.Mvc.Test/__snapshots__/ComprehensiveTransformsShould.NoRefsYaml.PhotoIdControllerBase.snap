@@ -21,7 +21,7 @@ namespace PS.Controller
         [global::Microsoft.AspNetCore.Mvc.Route("/photo/{id}")]
         // unexpected error
         [global::Microsoft.AspNetCore.Mvc.ProducesDefaultResponseType(typeof(GetPhotoOtherResponse))] // application/json
-        // 
+        // Photo found
         [global::Microsoft.AspNetCore.Mvc.ProducesResponseType(200, Type = typeof(global::System.IO.Stream))] // application/octet-stream
         public async global::System.Threading.Tasks.Task<global::Microsoft.AspNetCore.Mvc.IActionResult> GetPhotoTypeSafeEntry(
             [global::Microsoft.AspNetCore.Mvc.FromRoute(Name = "id"), global::System.ComponentModel.DataAnnotations.Required] string id
@@ -73,7 +73,9 @@ namespace PS.Controller
             {
             }
             
-            
+            /// <summary>
+            /// Photo found
+            /// </summary>
             public static GetPhotoActionResult Ok(global::System.IO.Stream result) =>
                 new GetPhotoActionResult(200, "application/octet-stream", typeof(global::System.IO.Stream), result);
             

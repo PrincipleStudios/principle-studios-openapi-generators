@@ -93,7 +93,7 @@ namespace PrincipleStudios.OpenApiCodegen.Client.TypeScript
                     path: path,
                     allowNoBody: operation.RequestBody == null || !operation.RequestBody.Required || !operation.RequestBody.Content.Any(),
                     hasFormRequest: operation.RequestBody?.Content.Any(kvp => kvp.Key == formMimeType) ?? false,
-                    imports: typeScriptSchemaResolver.GetImportStatements(GetSchemas(), "./operation/").ToArray(),
+                    imports: typeScriptSchemaResolver.GetImportStatements(GetSchemas(), Enumerable.Empty<OpenApiSchema>(), "./operation/").ToArray(),
                     sharedParams: sharedParameters,
                     requestBodies: builder.RequestBodies.ToArray(),
                     responses: new templates.OperationResponses(

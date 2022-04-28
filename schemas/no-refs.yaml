@@ -31,6 +31,7 @@ paths:
                       type: number
       responses:
         '200':
+          description: OK
           content:
             application/json:
               schema:
@@ -39,6 +40,7 @@ paths:
                   id:
                     type: string
         '409':
+          description: Conflict
           content:
             application/json:
               schema:
@@ -89,6 +91,7 @@ paths:
             type: string
       responses:
         '200':
+          description: Photo found
           content:
             application/octet-stream:
               schema:
