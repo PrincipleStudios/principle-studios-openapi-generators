@@ -1,0 +1,20 @@
+openapi: "3.0.3"
+info:
+  version: 1.0.0
+  title: Query In Path
+  description: Testing query strings in paths
+paths:
+  /path?param1=test&param2=test:
+    get:
+      operationId: testPath
+      parameters:
+        - name: limit
+          in: query
+          description: maximum number of results to return
+          required: false
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '204':
+          description: No content

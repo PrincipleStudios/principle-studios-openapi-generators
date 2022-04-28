@@ -22,6 +22,7 @@ namespace PrincipleStudios.OpenApi.CSharp.templates
         string description,
         string name,
         string path,
+        bool hasQueryStringEmbedded,
         OperationRequestBody[] requestBodies,
         OperationResponses responses,
         OperationSecurityRequirement[] securityRequirements
