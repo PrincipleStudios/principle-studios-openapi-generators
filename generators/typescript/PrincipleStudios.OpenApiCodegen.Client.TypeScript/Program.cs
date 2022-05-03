@@ -61,7 +61,8 @@ namespace PrincipleStudios.OpenApiCodegen.Client.TypeScript
                 foreach (var entry in entries)
                 {
                     var path = System.IO.Path.Combine(outputPath, entry.Key);
-                    System.IO.Directory.CreateDirectory(System.IO.Path.GetDirectoryName(path));
+                    if (System.IO.Path.GetDirectoryName(path) is string dir)
+                        System.IO.Directory.CreateDirectory(dir);
                     System.IO.File.WriteAllText(path, entry.SourceText);
                 }
                 if (!excludeGitignore)

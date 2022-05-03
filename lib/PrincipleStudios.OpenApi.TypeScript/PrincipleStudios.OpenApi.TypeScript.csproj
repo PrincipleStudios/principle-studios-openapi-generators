@@ -1,0 +1,31 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<AssemblyName>PrincipleStudios.OpenApi.TypeScript</AssemblyName>
+		<RootNamespace>PrincipleStudios.OpenApi.TypeScript</RootNamespace>
+		<TargetFramework>netstandard2.0</TargetFramework>
+		<LangVersion>9</LangVersion>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
+	<ItemGroup>
+		<PackageReference Include="Handlebars.Net" Version="2.0.7" />
+		<PackageReference Include="Microsoft.OpenApi.Readers" Version="1.2.3" />
+		<PackageReference Include="Microsoft.OpenApi" Version="1.2.3" />
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+		<PackageReference Include="SharpYaml" Version="1.6.5" />
+	</ItemGroup>
+	<ItemGroup>
+		<Compile Include="$(SolutionRoot)lib\raw-files\IsExternalInit.cs" Link="IsExternalInit.cs" Visible="false" />
+	</ItemGroup>
+	<ItemGroup>
+		<EmbeddedResource Include="$(MSBuildThisFileDirectory)templates\*.handlebars">
+			<LogicalName>PrincipleStudios.OpenApi.TypeScript.templates.%(Filename)%(Extension)</LogicalName>
+		</EmbeddedResource>
+		<EmbeddedResource Include="$(MSBuildThisFileDirectory)typescript.config.yaml">
+			<CopyToOutputDirectory>Never</CopyToOutputDirectory>
+			<LogicalName>PrincipleStudios.OpenApi.TypeScript.%(Filename)%(Extension)</LogicalName>
+		</EmbeddedResource>
+	</ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\PrincipleStudios.OpenApi.Transformations\PrincipleStudios.OpenApi.Transformations.csproj" />
+	</ItemGroup>
+</Project>
