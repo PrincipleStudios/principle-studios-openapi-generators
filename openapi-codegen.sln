@@ -29,8 +29,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PrincipleStudios.OpenApiCod
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PrincipleStudios.OpenApiCodegen.Client.CSharp.Test", "lib\PrincipleStudios.OpenApiCodegen.Client.CSharp.Test\PrincipleStudios.OpenApiCodegen.Client.CSharp.Test.csproj", "{ADC3DB9C-888A-483E-A146-00683CDC4698}"
 EndProject
-Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "PrincipleStudios.OpenApiCodegen.TestUtils", "lib\PrincipleStudios.OpenApiCodegen.TestUtils\PrincipleStudios.OpenApiCodegen.TestUtils.shproj", "{FD414F56-B373-4E61-A0DD-D97B207891FA}"
-EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "PrincipleStudios.OpenApi.TypeScript", "lib\PrincipleStudios.OpenApi.TypeScript\PrincipleStudios.OpenApi.TypeScript.shproj", "{352E2375-8A65-44E8-91C3-7D45EC82F9F8}"
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "PrincipleStudios.OpenApi.Transformations", "lib\PrincipleStudios.OpenApi.Transformations\PrincipleStudios.OpenApi.Transformations.shproj", "{3477A14B-91D4-4178-BBA2-6AC7A4558E64}"
@@ -39,18 +37,16 @@ Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "PrincipleStudios.OpenApi.CS
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PrincipleStudios.OpenApiCodegen.Client", "generators\dotnetstandard-client\PrincipleStudios.OpenApiCodegen.Client\PrincipleStudios.OpenApiCodegen.Client.csproj", "{4CA8F765-D7CC-44DD-B752-F5A38FFAD977}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PrincipleStudios.OpenApiCodegen.TestUtils", "lib\PrincipleStudios.OpenApiCodegen.TestUtils\PrincipleStudios.OpenApiCodegen.TestUtils.csproj", "{31AF9FE6-B031-4080-9F11-BBBEAE1A8C0D}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		lib\PrincipleStudios.OpenApi.Transformations\PrincipleStudios.OpenApi.Transformations.projitems*{3477a14b-91d4-4178-bba2-6ac7a4558e64}*SharedItemsImports = 13
 		lib\PrincipleStudios.OpenApi.TypeScript\PrincipleStudios.OpenApi.TypeScript.projitems*{352e2375-8a65-44e8-91c3-7d45ec82f9f8}*SharedItemsImports = 13
 		lib\PrincipleStudios.OpenApi.CSharp\PrincipleStudios.OpenApi.CSharp.projitems*{6280ae1b-7534-4450-a502-2657d3b1f5d4}*SharedItemsImports = 5
-		lib\PrincipleStudios.OpenApiCodegen.TestUtils\PrincipleStudios.OpenApiCodegen.TestUtils.projitems*{7f4e8bd3-e0b2-44b0-b175-40852137e928}*SharedItemsImports = 5
 		lib\PrincipleStudios.OpenApi.CSharp\PrincipleStudios.OpenApi.CSharp.projitems*{9946c7bf-f669-48a1-aaf8-17ed1ec44c6f}*SharedItemsImports = 5
-		lib\PrincipleStudios.OpenApiCodegen.TestUtils\PrincipleStudios.OpenApiCodegen.TestUtils.projitems*{adc3db9c-888a-483e-a146-00683cdc4698}*SharedItemsImports = 5
 		lib\PrincipleStudios.OpenApi.TypeScript\PrincipleStudios.OpenApi.TypeScript.projitems*{c0e47301-8cb1-44f6-8321-bcb9c09219bb}*SharedItemsImports = 5
-		lib\PrincipleStudios.OpenApiCodegen.TestUtils\PrincipleStudios.OpenApiCodegen.TestUtils.projitems*{dc8a6ffa-dd3a-4b33-800e-cd8d9166a58d}*SharedItemsImports = 5
 		lib\PrincipleStudios.OpenApi.CSharp\PrincipleStudios.OpenApi.CSharp.projitems*{df4bdcf9-795f-45a2-aa10-867121d2eb53}*SharedItemsImports = 13
-		lib\PrincipleStudios.OpenApiCodegen.TestUtils\PrincipleStudios.OpenApiCodegen.TestUtils.projitems*{fd414f56-b373-4e61-a0dd-d97b207891fa}*SharedItemsImports = 13
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -157,6 +153,18 @@ Global
 		{4CA8F765-D7CC-44DD-B752-F5A38FFAD977}.Release|x64.Build.0 = Release|Any CPU
 		{4CA8F765-D7CC-44DD-B752-F5A38FFAD977}.Release|x86.ActiveCfg = Release|Any CPU
 		{4CA8F765-D7CC-44DD-B752-F5A38FFAD977}.Release|x86.Build.0 = Release|Any CPU
+		{31AF9FE6-B031-4080-9F11-BBBEAE1A8C0D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{31AF9FE6-B031-4080-9F11-BBBEAE1A8C0D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{31AF9FE6-B031-4080-9F11-BBBEAE1A8C0D}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{31AF9FE6-B031-4080-9F11-BBBEAE1A8C0D}.Debug|x64.Build.0 = Debug|Any CPU
+		{31AF9FE6-B031-4080-9F11-BBBEAE1A8C0D}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{31AF9FE6-B031-4080-9F11-BBBEAE1A8C0D}.Debug|x86.Build.0 = Debug|Any CPU
+		{31AF9FE6-B031-4080-9F11-BBBEAE1A8C0D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{31AF9FE6-B031-4080-9F11-BBBEAE1A8C0D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{31AF9FE6-B031-4080-9F11-BBBEAE1A8C0D}.Release|x64.ActiveCfg = Release|Any CPU
+		{31AF9FE6-B031-4080-9F11-BBBEAE1A8C0D}.Release|x64.Build.0 = Release|Any CPU
+		{31AF9FE6-B031-4080-9F11-BBBEAE1A8C0D}.Release|x86.ActiveCfg = Release|Any CPU
+		{31AF9FE6-B031-4080-9F11-BBBEAE1A8C0D}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

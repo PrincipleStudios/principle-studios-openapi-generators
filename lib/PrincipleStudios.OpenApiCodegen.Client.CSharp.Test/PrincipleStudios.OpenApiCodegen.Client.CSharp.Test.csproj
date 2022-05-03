@@ -24,8 +24,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\generators\dotnetstandard-client\PrincipleStudios.OpenApiCodegen.Client.Base\PrincipleStudios.OpenApiCodegen.Client.Base.csproj" />
+    <ProjectReference Include="..\PrincipleStudios.OpenApiCodegen.TestUtils\PrincipleStudios.OpenApiCodegen.TestUtils.csproj" />
   </ItemGroup>
-
-  <Import Project="..\PrincipleStudios.OpenApiCodegen.TestUtils\PrincipleStudios.OpenApiCodegen.TestUtils.projitems" Label="Shared" />
 
 </Project>
