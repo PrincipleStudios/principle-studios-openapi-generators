@@ -1,23 +1,25 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <OutputType>Exe</OutputType>
-    <TargetFramework>net6.0</TargetFramework>
-  </PropertyGroup>
+	<PropertyGroup>
+		<OutputType>Exe</OutputType>
+		<TargetFramework>net6.0</TargetFramework>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <None Remove="templates\operation.handlebars" />
-    <None Remove="templates\operationBarrelFile.handlebars" />
-  </ItemGroup>
+	<ItemGroup>
+		<None Remove="templates\operation.handlebars" />
+		<None Remove="templates\operationBarrelFile.handlebars" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <EmbeddedResource Include="templates\operation.handlebars" />
-    <EmbeddedResource Include="templates\operationBarrelFile.handlebars" />
-  </ItemGroup>
+	<ItemGroup>
+		<EmbeddedResource Include="templates\operation.handlebars" />
+		<EmbeddedResource Include="templates\operationBarrelFile.handlebars" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.CommandLineUtils" Version="1.1.1" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Microsoft.Extensions.CommandLineUtils" Version="1.1.1" />
+	</ItemGroup>
 
-  <Import Project="..\..\..\lib\PrincipleStudios.OpenApi.TypeScript\PrincipleStudios.OpenApi.TypeScript.projitems" Label="Shared" />
+	<ItemGroup>
+		<ProjectReference Include="$(SolutionRoot)lib\PrincipleStudios.OpenApi.TypeScript\PrincipleStudios.OpenApi.TypeScript.csproj" />
+	</ItemGroup>
 </Project>

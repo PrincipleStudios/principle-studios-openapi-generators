@@ -1,34 +1,35 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Project>
-  <PropertyGroup>
-    <Nullable>enable</Nullable>
-    <LangVersion>9</LangVersion>
+	<PropertyGroup>
+		<Nullable>enable</Nullable>
+		<LangVersion>9</LangVersion>
 
-	<IsWindows Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Windows)))' == 'true'">true</IsWindows>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(IsWindows)'=='true'">
-    <DefineConstants>Windows</DefineConstants>
-  </PropertyGroup>
+		<IsWindows Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Windows)))' == 'true'">true</IsWindows>
+		<SolutionRoot>$(MSBuildThisFileDirectory)</SolutionRoot>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(IsWindows)'=='true'">
+		<DefineConstants>Windows</DefineConstants>
+	</PropertyGroup>
 
-  <PropertyGroup>
-    <OpenApiMvcServerVersion>0.11.2</OpenApiMvcServerVersion>
-    <OpenApiCSharpClientVersion>0.4.2</OpenApiCSharpClientVersion>
-  </PropertyGroup>
+	<PropertyGroup>
+		<OpenApiMvcServerVersion>0.11.3</OpenApiMvcServerVersion>
+		<OpenApiCSharpClientVersion>0.4.3</OpenApiCSharpClientVersion>
+	</PropertyGroup>
 
-  <Import Project="Directory.Build.local.props" Condition="exists('$(MSBuildThisFileDirectory)Directory.Build.local.props')" />
+	<Import Project="Directory.Build.local.props" Condition="exists('$(MSBuildThisFileDirectory)Directory.Build.local.props')" />
 
-  <PropertyGroup>
-    <Authors>Matt DeKrey</Authors>
-    <PackageProjectUrl>https://github.com/PrincipleStudios/principle-studios-openapi-generators</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/PrincipleStudios/principle-studios-openapi-generators.git</RepositoryUrl>
-    <RepositoryType>git</RepositoryType>
-    <RepositoryBranch>master</RepositoryBranch>
-    <PublishRepositoryUrl>true</PublishRepositoryUrl>
-    <PackageIcon>logo_black_small.png</PackageIcon>
-    <Copyright>2021 Matt DeKrey &amp; Principle Studios</Copyright>
-  </PropertyGroup>
+	<PropertyGroup>
+		<Authors>Matt DeKrey</Authors>
+		<PackageProjectUrl>https://github.com/PrincipleStudios/principle-studios-openapi-generators</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/PrincipleStudios/principle-studios-openapi-generators.git</RepositoryUrl>
+		<RepositoryType>git</RepositoryType>
+		<RepositoryBranch>master</RepositoryBranch>
+		<PublishRepositoryUrl>true</PublishRepositoryUrl>
+		<PackageIcon>logo_black_small.png</PackageIcon>
+		<Copyright>2021 Matt DeKrey &amp; Principle Studios</Copyright>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <None Include="$(MSBuildThisFileDirectory)assets\logo_black_small.png" Pack="true" PackagePath="\" Visible="false"/>
-  </ItemGroup>
+	<ItemGroup>
+		<None Include="$(MSBuildThisFileDirectory)assets\logo_black_small.png" Pack="true" PackagePath="\" Visible="false"/>
+	</ItemGroup>
 </Project>
