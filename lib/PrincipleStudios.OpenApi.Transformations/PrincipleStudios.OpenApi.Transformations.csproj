@@ -19,6 +19,5 @@
 		<PackageReference Include="Microsoft.Extensions.FileProviders.Abstractions" Version="6.0.0" />
 		<PackageReference Include="Microsoft.Extensions.FileProviders.Physical" Version="6.0.0" />
 		<PackageReference Include="SharpYaml" Version="1.6.5" />
-		<PackageReference Include="System.Collections.Immutable" Version="6.0.0" />
 	</ItemGroup>
 </Project>
