@@ -1,41 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<AssemblyName>PrincipleStudios.OpenApiCodegen.Client.Base</AssemblyName>
-		<RootNamespace>PrincipleStudios.OpenApi.CSharp</RootNamespace>
-		<TargetFramework>netstandard2.0</TargetFramework>
-		<LangVersion>9</LangVersion>
-		<Nullable>enable</Nullable>
-		<VersionPrefix Condition=" '$(VersionPrefix)' == '' ">$(OpenApiCSharpClientVersion)</VersionPrefix>
+		<AssemblyName>PrincipleStudios.OpenApiCodegen.Client.Roslyn3_11</AssemblyName>
 
-		<IsPackable>true</IsPackable>
-		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-
-		<PackageLicenseExpression>BSD-2-Clause</PackageLicenseExpression>
-		<title>Controller source generators from OpenAPI specification for .NET 5</title>
-		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<AnalyzerRoslynVersion>3.11</AnalyzerRoslynVersion>
+		<RoslynApiVersion>3.11.0</RoslynApiVersion>
 	</PropertyGroup>
 
-	<ItemGroup>
-		<PackageReference Include="Handlebars.Net" Version="2.0.7" />
-		<PackageReference Include="Microsoft.OpenApi.Readers" Version="1.2.3" />
-		<PackageReference Include="Microsoft.OpenApi" Version="1.2.3" />
-		<PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-		<PackageReference Include="SharpYaml" Version="1.6.5" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<None Include="*.props" Pack="true" PackagePath="build" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<None Remove="templates\*.handlebars" />
-		<EmbeddedResource Include="templates\*.handlebars" />
-		<Compile Include="$(SolutionRoot)lib\raw-files\IsExternalInit.cs" Link="IsExternalInit.cs" Visible="false" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<ProjectReference Include="$(SolutionRoot)lib\PrincipleStudios.OpenApi.CSharp\PrincipleStudios.OpenApi.CSharp.csproj" />
-	</ItemGroup>
-
+	<Import Project="Analyzer.targets" />
 </Project>
