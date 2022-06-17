@@ -13,7 +13,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PrincipleStudios.OpenApiCodegen.Server.Mvc.Test", "lib\PrincipleStudios.OpenApiCodegen.Server.Mvc.Test\PrincipleStudios.OpenApiCodegen.Server.Mvc.Test.csproj", "{DC8A6FFA-DD3A-4B33-800E-CD8D9166A58D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PrincipleStudios.OpenApiCodegen.Server.Mvc.Base", "generators\dotnetcore-server-interfaces\PrincipleStudios.OpenApiCodegen.Server.Mvc.Base\PrincipleStudios.OpenApiCodegen.Server.Mvc.Base.csproj", "{9946C7BF-F669-48A1-AAF8-17ED1EC44C6F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PrincipleStudios.OpenApiCodegen.Server.Mvc.Roslyn3.11", "generators\dotnetcore-server-interfaces\PrincipleStudios.OpenApiCodegen.Server.Mvc.Analyzers\PrincipleStudios.OpenApiCodegen.Server.Mvc.Roslyn3.11.csproj", "{9946C7BF-F669-48A1-AAF8-17ED1EC44C6F}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Server.Mvc", "Server.Mvc", "{C800B3FC-9890-4858-B2F3-4DA9B6957415}"
 EndProject
@@ -40,6 +40,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PrincipleStudios.OpenApi.CSharp", "lib\PrincipleStudios.OpenApi.CSharp\PrincipleStudios.OpenApi.CSharp.csproj", "{3FF0B60D-AEEB-401F-BB97-51D42EFE7D55}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PrincipleStudios.OpenApi.TypeScript", "lib\PrincipleStudios.OpenApi.TypeScript\PrincipleStudios.OpenApi.TypeScript.csproj", "{91FFC178-D772-4C7A-BC98-E23BAA4D9B09}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PrincipleStudios.OpenApiCodegen.Server.Mvc.Roslyn4.0", "generators\dotnetcore-server-interfaces\PrincipleStudios.OpenApiCodegen.Server.Mvc.Analyzers\PrincipleStudios.OpenApiCodegen.Server.Mvc.Roslyn4.0.csproj", "{9623E35A-E80B-4643-B867-071C072A6EE7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -195,6 +197,18 @@ Global
 		{91FFC178-D772-4C7A-BC98-E23BAA4D9B09}.Release|x64.Build.0 = Release|Any CPU
 		{91FFC178-D772-4C7A-BC98-E23BAA4D9B09}.Release|x86.ActiveCfg = Release|Any CPU
 		{91FFC178-D772-4C7A-BC98-E23BAA4D9B09}.Release|x86.Build.0 = Release|Any CPU
+		{9623E35A-E80B-4643-B867-071C072A6EE7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9623E35A-E80B-4643-B867-071C072A6EE7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9623E35A-E80B-4643-B867-071C072A6EE7}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{9623E35A-E80B-4643-B867-071C072A6EE7}.Debug|x64.Build.0 = Debug|Any CPU
+		{9623E35A-E80B-4643-B867-071C072A6EE7}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{9623E35A-E80B-4643-B867-071C072A6EE7}.Debug|x86.Build.0 = Debug|Any CPU
+		{9623E35A-E80B-4643-B867-071C072A6EE7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9623E35A-E80B-4643-B867-071C072A6EE7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9623E35A-E80B-4643-B867-071C072A6EE7}.Release|x64.ActiveCfg = Release|Any CPU
+		{9623E35A-E80B-4643-B867-071C072A6EE7}.Release|x64.Build.0 = Release|Any CPU
+		{9623E35A-E80B-4643-B867-071C072A6EE7}.Release|x86.ActiveCfg = Release|Any CPU
+		{9623E35A-E80B-4643-B867-071C072A6EE7}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -211,6 +225,7 @@ Global
 		{61FF4A9C-3FAF-4DD2-BE92-233B894758F9} = {AAC9998B-F9AF-4096-92CB-81914E85BE56}
 		{3FF0B60D-AEEB-401F-BB97-51D42EFE7D55} = {AAC9998B-F9AF-4096-92CB-81914E85BE56}
 		{91FFC178-D772-4C7A-BC98-E23BAA4D9B09} = {AAC9998B-F9AF-4096-92CB-81914E85BE56}
+		{9623E35A-E80B-4643-B867-071C072A6EE7} = {C800B3FC-9890-4858-B2F3-4DA9B6957415}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {DC32F906-1354-428B-BD36-FC718248DAFB}

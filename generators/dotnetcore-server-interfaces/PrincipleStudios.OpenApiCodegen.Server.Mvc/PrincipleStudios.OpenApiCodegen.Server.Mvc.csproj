@@ -30,10 +30,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<AnalyzerReference Include="..\PrincipleStudios.OpenApiCodegen.Server.Mvc.Base\PrincipleStudios.OpenApiCodegen.Server.Mvc.Base.csproj" />
-		<!--<AnalyzerReference Include="..\gen\System.Text.Json.SourceGeneration.Roslyn4.0.csproj"
-						   Pack="true"
-						   ReferenceAnalyzer="false" />-->
+		<AnalyzerReference Include="..\PrincipleStudios.OpenApiCodegen.Server.Mvc.Analyzers\PrincipleStudios.OpenApiCodegen.Server.Mvc.Roslyn3.11.csproj" />
+		<AnalyzerReference Include="..\PrincipleStudios.OpenApiCodegen.Server.Mvc.Analyzers\PrincipleStudios.OpenApiCodegen.Server.Mvc.Roslyn4.0.csproj"
+						   ReferenceAnalyzer="false" />
 	</ItemGroup>
 
 	<Target Name="AddDlls" BeforeTargets="_GetPackageFiles">
