@@ -33,14 +33,7 @@
 		<Compile Include="$(SolutionRoot)lib\raw-files\IsExternalInit.cs" Link="IsExternalInit.cs" Visible="false" />
 	</ItemGroup>
 
-
 	<ItemGroup>
 		<ProjectReference Include="$(SolutionRoot)lib\PrincipleStudios.OpenApi.CSharp\PrincipleStudios.OpenApi.CSharp.csproj" />
 	</ItemGroup>
-
-	<Target Name="OutputReferenceBin"
-			DependsOnTargets="ResolveAssemblyReferences"
-			Outputs="@(ReferenceCopyLocalPaths)">
-	</Target>
-
 </Project>
