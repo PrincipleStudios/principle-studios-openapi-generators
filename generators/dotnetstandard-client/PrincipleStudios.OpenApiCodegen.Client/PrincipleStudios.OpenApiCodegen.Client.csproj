@@ -42,7 +42,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\PrincipleStudios.OpenApiCodegen.Client.Base\PrincipleStudios.OpenApiCodegen.Client.Base.csproj" PrivateAssets="all" />
+		<ProjectReference Include="..\PrincipleStudios.OpenApiCodegen.Client.Analyzers\PrincipleStudios.OpenApiCodegen.Client.Roslyn3.11.csproj" PrivateAssets="all" />
 	</ItemGroup>
 
 	<Target Name="AddDlls" BeforeTargets="_GetPackageFiles">

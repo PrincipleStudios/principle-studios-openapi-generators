@@ -25,7 +25,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PrincipleStudios.OpenApiCod
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Client.CSharp", "Client.CSharp", "{BFF7FB51-DB27-4E46-B575-DDD11430DE8C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PrincipleStudios.OpenApiCodegen.Client.Base", "generators\dotnetstandard-client\PrincipleStudios.OpenApiCodegen.Client.Base\PrincipleStudios.OpenApiCodegen.Client.Base.csproj", "{6280AE1B-7534-4450-A502-2657D3B1F5D4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PrincipleStudios.OpenApiCodegen.Client.Roslyn3.11", "generators\dotnetstandard-client\PrincipleStudios.OpenApiCodegen.Client.Analyzers\PrincipleStudios.OpenApiCodegen.Client.Roslyn3.11.csproj", "{6280AE1B-7534-4450-A502-2657D3B1F5D4}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PrincipleStudios.OpenApiCodegen.Client.CSharp.Test", "lib\PrincipleStudios.OpenApiCodegen.Client.CSharp.Test\PrincipleStudios.OpenApiCodegen.Client.CSharp.Test.csproj", "{ADC3DB9C-888A-483E-A146-00683CDC4698}"
 EndProject
