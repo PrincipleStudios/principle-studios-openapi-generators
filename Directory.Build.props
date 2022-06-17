@@ -1,11 +1,21 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Project>
+
 	<PropertyGroup>
 		<Nullable>enable</Nullable>
 		<LangVersion>9</LangVersion>
 
 		<IsWindows Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Windows)))' == 'true'">true</IsWindows>
 		<SolutionRoot>$(MSBuildThisFileDirectory)</SolutionRoot>
+		<RepositoryEngineeringDir>$(SolutionRoot)eng/</RepositoryEngineeringDir>
+
+		<!-- <ArtifactsDir>$([MSBuild]::NormalizeDirectory('$(SolutionRoot)', 'artifacts'))</ArtifactsDir>
+		<ArtifactsBinDir>$([MSBuild]::NormalizeDirectory('$(ArtifactsDir)', 'bin'))</ArtifactsBinDir>
+		<ArtifactsObjDir>$([MSBuild]::NormalizeDirectory('$(ArtifactsDir)', 'obj'))</ArtifactsObjDir>
+		<BaseIntermediateOutputPath>$([MSBuild]::NormalizeDirectory('$(ArtifactsObjDir)', 'obj', '$(MSBuildProjectName)'))</BaseIntermediateOutputPath> -->
+		<!-- <BaseOutputPath>$([MSBuild]::NormalizeDirectory('$(ArtifactsBinDir)', '$(MSBuildProjectName)'))</BaseOutputPath>
+		<IntermediateOutputPath Condition="'$(PlatformName)' == 'AnyCPU'">$(BaseIntermediateOutputPath)$(Configuration)\</IntermediateOutputPath>
+		<IntermediateOutputPath Condition="'$(PlatformName)' != 'AnyCPU'">$(BaseIntermediateOutputPath)$(PlatformName)\$(Configuration)\</IntermediateOutputPath> -->
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(IsWindows)'=='true'">
 		<DefineConstants>Windows</DefineConstants>

@@ -21,7 +21,7 @@ using System.Text;
 namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
 {
     [Generator]
-    public class OpenApiMvcServerGeneratorBase : ISourceGenerator
+    public class OpenApiMvcServerGenerator : ISourceGenerator
     {
         const string sourceGroup = "OpenApiServerInterface";
         const string propNamespace = "Namespace";
@@ -79,7 +79,7 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
                 context.ReportDiagnostic(Diagnostic.Create(FileGenerated, Location.None, $"PS_{entry.Key}"));
             }
             stopwatch.Stop();
-            context.AddSource($"PS_timing.txt", SourceText.From($"Complete: {stopwatch.Elapsed}", Encoding.UTF8));
+            //context.AddSource($"PS_timing.txt", SourceText.From($"Complete: {stopwatch.Elapsed}", Encoding.UTF8));
         }
 
 
