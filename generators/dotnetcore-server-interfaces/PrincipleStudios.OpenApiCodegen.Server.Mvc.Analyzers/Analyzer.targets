@@ -1,31 +1,30 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project>
 
 	<PropertyGroup>
-		<AssemblyName>PrincipleStudios.OpenApiCodegen.Server.Mvc.Base</AssemblyName>
 		<RootNamespace>PrincipleStudios.OpenApi.CSharp</RootNamespace>
 		<TargetFramework>netstandard2.0</TargetFramework>
 		<LangVersion>9</LangVersion>
 		<Nullable>enable</Nullable>
 		<VersionPrefix Condition=" '$(VersionPrefix)' == '' ">$(OpenApiMvcServerVersion)</VersionPrefix>
 
-		<IsPackable>true</IsPackable>
-		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+		<AnalyzerLanguage>cs</AnalyzerLanguage>
 
-		<PackageLicenseExpression>BSD-2-Clause</PackageLicenseExpression>
-		<title>Controller source generators from OpenAPI specification for .NET 5</title>
-		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Handlebars.Net" Version="2.0.7" />
-		<PackageReference Include="Microsoft.OpenApi.Readers" Version="1.2.3" />
-		<PackageReference Include="Microsoft.OpenApi" Version="1.2.3" />
-		<PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-		<PackageReference Include="SharpYaml" Version="1.6.5" />
+		<PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="$(RoslynApiVersion)" PrivateAssets="all">
+      		<IncludeAssets>compile</IncludeAssets>
+    	</PackageReference>
 	</ItemGroup>
 
 	<ItemGroup>
 		<None Include="*.props" Pack="true" PackagePath="build" />
+
+		<None Remove="AnalyzerReleases.Shipped.md" />
+		<None Remove="AnalyzerReleases.Unshipped.md" />
+		<AdditionalFiles Include="AnalyzerReleases.Shipped.md" />
+		<AdditionalFiles Include="AnalyzerReleases.Unshipped.md" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -34,9 +33,7 @@
 		<Compile Include="$(SolutionRoot)lib\raw-files\IsExternalInit.cs" Link="IsExternalInit.cs" Visible="false" />
 	</ItemGroup>
 
-
 	<ItemGroup>
 		<ProjectReference Include="$(SolutionRoot)lib\PrincipleStudios.OpenApi.CSharp\PrincipleStudios.OpenApi.CSharp.csproj" />
 	</ItemGroup>
-
 </Project>

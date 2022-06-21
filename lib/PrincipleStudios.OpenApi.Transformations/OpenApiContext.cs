@@ -3,13 +3,13 @@ using Microsoft.OpenApi.Models;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Collections.Immutable;
+using System.Linq;
 
 namespace PrincipleStudios.OpenApi.Transformations
 {
-    public record OpenApiContext(ImmutableList<OpenApiContextEntry> Entries) : IEnumerable<OpenApiContextEntry>
+    public record OpenApiContext(IReadOnlyList<OpenApiContextEntry> Entries) : IEnumerable<OpenApiContextEntry>
     {
-        public OpenApiContext() : this(ImmutableList<OpenApiContextEntry>.Empty) { }
+        public OpenApiContext() : this(Array.Empty<OpenApiContextEntry>()) { }
 
         public static OpenApiContext From(OpenApiDocument document)
         {
@@ -22,11 +22,11 @@ namespace PrincipleStudios.OpenApi.Transformations
         
         public OpenApiContext Append(string? property, string? key, IOpenApiElement elementEntry)
         {
-            return this with { Entries = Entries.Add(new OpenApiContextEntry(property, key, elementEntry)) };
+            return this with { Entries = Entries.ConcatOne(new OpenApiContextEntry(property, key, elementEntry)).ToArray() };
         }
         public OpenApiContext Append(OpenApiDocument elementEntry)
         {
-            return this with { Entries = Entries.Add(new OpenApiContextEntry(elementEntry)) };
+            return this with { Entries = Entries.ConcatOne(new OpenApiContextEntry(elementEntry)).ToArray() };
         }
 
         public string GetKeyFor(IOpenApiElement element)

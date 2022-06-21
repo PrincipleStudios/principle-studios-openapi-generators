@@ -4,3 +4,5 @@ node_modules/
 **/*.tgz
 .vs/
 **/*.user
+**/*.binlog
+artifacts/

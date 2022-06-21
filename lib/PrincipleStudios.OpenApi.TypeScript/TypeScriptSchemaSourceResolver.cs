@@ -3,14 +3,13 @@ using Microsoft.OpenApi.Models;
 using PrincipleStudios.OpenApi.Transformations;
 using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace PrincipleStudios.OpenApi.TypeScript
 {
     public record ImportReference(OpenApiSchema Schema, string Member, string File);
-    public record InlineDataType(string text, ImmutableList<ImportReference> Imports, bool nullable = false, bool isEnumerable = false)
+    public record InlineDataType(string text, IReadOnlyList<ImportReference> Imports, bool nullable = false, bool isEnumerable = false)
     {
         public InlineDataType MakeNullable() =>
             nullable ? this : new(text + " | null", Imports, nullable: true, isEnumerable: isEnumerable);
@@ -288,14 +287,14 @@ namespace PrincipleStudios.OpenApi.TypeScript
             InlineDataType result = schema switch
             {
                 { Reference: not null } =>
-                    new(UseReferenceName(schema), ImmutableList<ImportReference>.Empty.Add(ToImportReference(schema))),
+                    new(UseReferenceName(schema), new[] { ToImportReference(schema) }),
                 { Type: "object", Properties: { Count: 0 }, AdditionalProperties: OpenApiSchema dictionaryValueSchema } =>
                     DictionaryToInline(dictionaryValueSchema),
                 { Type: "array", Items: OpenApiSchema items } =>
                     ArrayToInline(items),
                 // TODO - better inline types
                 _ when ProduceSourceEntry(schema) =>
-                    new(UseReferenceName(schema), ImmutableList<ImportReference>.Empty.Add(ToImportReference(schema))),
+                    new(UseReferenceName(schema), new[] { ToImportReference(schema) }),
                 { Type: "object", Format: null, Properties: IDictionary<string, OpenApiSchema> properties, AdditionalProperties: null } =>
                     ObjectToInline(properties),
                 { Enum: { Count: > 0 } and IList<Microsoft.OpenApi.Any.IOpenApiAny> enumValues } =>
@@ -326,21 +325,21 @@ namespace PrincipleStudios.OpenApi.TypeScript
                                  text: $"\"{prop.Key}\": {inline.text}",
                                  imports: inline.Imports
                              )).ToArray();
-                return new($"{{ { string.Join("; ", props.Select(p => p.text))} }}", props.SelectMany(p => p.imports).ToImmutableList());
+                return new($"{{ { string.Join("; ", props.Select(p => p.text))} }}", props.SelectMany(p => p.imports).ToArray());
             }
             InlineDataType TypeWithFormatToInline(string type, string? format)
             {
-                return new(options.Find(type, format), ImmutableList<ImportReference>.Empty);
+                return new(options.Find(type, format), Array.Empty<ImportReference>());
             }
             InlineDataType EnumToInline(IEnumerable<Microsoft.OpenApi.Any.IOpenApiAny> enumValues)
             {
-                return new(string.Join(" | ", enumValues.Select(PrimitiveToJsonValue.GetPrimitiveValue)), ImmutableList<ImportReference>.Empty);
+                return new(string.Join(" | ", enumValues.Select(PrimitiveToJsonValue.GetPrimitiveValue)), Array.Empty<ImportReference>());
             }
         }
 
         protected override InlineDataType UnresolvedReferencePlaceholder()
         {
-            return new InlineDataType("unknown", ImmutableList<ImportReference>.Empty, false, false);
+            return new InlineDataType("unknown", Array.Empty<ImportReference>(), false, false);
         }
 
         protected virtual OpenApiContext GetBestContext(IEnumerable<OpenApiContext> allContexts)
