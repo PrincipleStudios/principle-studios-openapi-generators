@@ -14,6 +14,7 @@
 		<ArtifactsDir>$([MSBuild]::NormalizeDirectory('$(SolutionRoot)', 'artifacts'))</ArtifactsDir>
 		<ArtifactsBinDir>$([MSBuild]::NormalizeDirectory('$(ArtifactsDir)', 'bin'))</ArtifactsBinDir>
 		<ArtifactsObjDir>$([MSBuild]::NormalizeDirectory('$(ArtifactsDir)', 'obj'))</ArtifactsObjDir>
+		<PackageOutputPath>$([MSBuild]::NormalizeDirectory('$(ArtifactsDir)', 'packages', '$(PlatformName)', '$(Configuration)'))</PackageOutputPath>
 		<BaseIntermediateOutputPath>$([MSBuild]::NormalizeDirectory('$(ArtifactsObjDir)', '$(MSBuildProjectName)'))</BaseIntermediateOutputPath>
 		<MSBuildProjectExtensionsPath>$(BaseIntermediateOutputPath)</MSBuildProjectExtensionsPath>
 		<BaseOutputPath>$([MSBuild]::NormalizeDirectory('$(ArtifactsBinDir)', '$(MSBuildProjectName)'))</BaseOutputPath>
