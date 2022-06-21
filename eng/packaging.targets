@@ -39,14 +39,22 @@
            Text="Analyzers must only target netstandard2.0 since they run in the compiler which targets netstandard2.0. The following files were found to target '%(_AnalyzerPackFile.TargetFramework)': @(_AnalyzerPackFile)" />
     
     <ItemGroup>
-      <_AnalyzerPackFile Include="@(ReferenceCopyLocalPaths)"
+      <_AnalyzerFilesWithoutRoslyn Include="@(ReferenceCopyLocalPaths)"
                          TargetPath="%(ReferenceCopyLocalPaths.DestinationSubDirectory)%(Filename)%(Extension)"
                          Condition="'%(ReferenceCopyLocalPaths.NuGetPackageId)'!='System.Runtime.CompilerServices.Unsafe'
                             and '%(ReferenceCopyLocalPaths.NuGetPackageId)'!='System.Collections.Immutable'
                             and '%(ReferenceCopyLocalPaths.NuGetPackageId)'!='System.Numerics.Vectors'
                             and '%(ReferenceCopyLocalPaths.NuGetPackageId)'!='System.Memory'
-                            and '%(ReferenceCopyLocalPaths.NuGetPackageId)'!='Microsoft.CSharp'"
+                            and '%(ReferenceCopyLocalPaths.NuGetPackageId)'!='Microsoft.CSharp'" />
+    </ItemGroup>
+    <ItemGroup>
+      <_AnalyzerPackFile Include="@(_AnalyzerFilesWithoutRoslyn)"
+                         Condition="'%(_AnalyzerFilesWithoutRoslyn.Extension)'!='.pdb'"
                          IsSymbol="false" />
+      <!-- TODO: I'm not sure how to provide symbols here, or if I should since it's only for the analyzer -->
+      <!-- <_AnalyzerPackFile Include="@(_AnalyzerFilesWithoutRoslyn)"
+                         Condition="'%(_AnalyzerFilesWithoutRoslyn.Extension)'=='.pdb'"
+                         IsSymbol="true" /> -->
       <_AnalyzerPackFile PackagePath="$(_analyzerPath)/%(TargetPath)" />
     </ItemGroup>
   </Target>
