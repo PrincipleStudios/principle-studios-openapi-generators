@@ -16,3 +16,7 @@ The above example will take as input an `api.yaml`, output an `api-generated/`
 folder with all the typescript files and a gitignore. You should add this as
 part of your CI process with only the OpenAPI spec checked in, or download the
 spec as part of the CI process.
+
+Written in C#.
+
+[1]: https://www.nuget.org/packages/Microsoft.OpenApi.Readers
