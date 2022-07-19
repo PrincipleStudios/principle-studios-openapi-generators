@@ -29,7 +29,7 @@ namespace PS.Controller
         [global::Microsoft.AspNetCore.Mvc.ProducesResponseType(200, Type = typeof(global::System.Collections.Generic.IEnumerable<Pet>))] // application/xml        [global::Microsoft.AspNetCore.Mvc.ProducesResponseType(200, Type = typeof(global::System.Collections.Generic.IEnumerable<Pet>))] // application/json
         // Invalid tag value
         [global::Microsoft.AspNetCore.Mvc.ProducesResponseType(400)] // 
-        [global::Microsoft.AspNetCore.Authorization.Authorize(AuthenticationSchemes = "petstore_auth")]
+        [global::Microsoft.AspNetCore.Authorization.Authorize(Policy = "petstore_auth")]
         public async global::System.Threading.Tasks.Task<global::Microsoft.AspNetCore.Mvc.IActionResult> FindPetsByTagsTypeSafeEntry(
             [global::Microsoft.AspNetCore.Mvc.FromQuery(Name = "tags"), global::System.ComponentModel.DataAnnotations.Required] global::System.Collections.Generic.IEnumerable<string> tags
         ) => (await FindPetsByTags(tags)).ActionResult;

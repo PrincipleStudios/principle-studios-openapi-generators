@@ -25,7 +25,7 @@ namespace PrincipleStudios.Test
         [global::Microsoft.AspNetCore.Mvc.Consumes("application/json")]
         // Invalid input
         [global::Microsoft.AspNetCore.Mvc.ProducesResponseType(405)] // 
-        [global::Microsoft.AspNetCore.Authorization.Authorize(AuthenticationSchemes = "petstore_auth")]
+        [global::Microsoft.AspNetCore.Authorization.Authorize(Policy = "petstore_auth")]
         public async global::System.Threading.Tasks.Task<global::Microsoft.AspNetCore.Mvc.IActionResult> AddPetapplicationJsonTypeSafeEntry(
             [global::Microsoft.AspNetCore.Mvc.FromBody, global::System.ComponentModel.DataAnnotations.Required] Pet addPetBody
         ) => (await AddPetapplicationJson(addPetBody)).ActionResult;
@@ -42,7 +42,7 @@ namespace PrincipleStudios.Test
         [global::Microsoft.AspNetCore.Mvc.Consumes("application/xml")]
         // Invalid input
         [global::Microsoft.AspNetCore.Mvc.ProducesResponseType(405)] // 
-        [global::Microsoft.AspNetCore.Authorization.Authorize(AuthenticationSchemes = "petstore_auth")]
+        [global::Microsoft.AspNetCore.Authorization.Authorize(Policy = "petstore_auth")]
         public async global::System.Threading.Tasks.Task<global::Microsoft.AspNetCore.Mvc.IActionResult> AddPetapplicationXmlTypeSafeEntry(
             [global::Microsoft.AspNetCore.Mvc.FromBody, global::System.ComponentModel.DataAnnotations.Required] Pet addPetBody
         ) => (await AddPetapplicationXml(addPetBody)).ActionResult;
@@ -118,7 +118,7 @@ namespace PrincipleStudios.Test
         [global::Microsoft.AspNetCore.Mvc.ProducesResponseType(404)] // 
         // Validation exception
         [global::Microsoft.AspNetCore.Mvc.ProducesResponseType(405)] // 
-        [global::Microsoft.AspNetCore.Authorization.Authorize(AuthenticationSchemes = "petstore_auth")]
+        [global::Microsoft.AspNetCore.Authorization.Authorize(Policy = "petstore_auth")]
         public async global::System.Threading.Tasks.Task<global::Microsoft.AspNetCore.Mvc.IActionResult> UpdatePetapplicationJsonTypeSafeEntry(
             [global::Microsoft.AspNetCore.Mvc.FromBody, global::System.ComponentModel.DataAnnotations.Required] Pet updatePetBody
         ) => (await UpdatePetapplicationJson(updatePetBody)).ActionResult;
@@ -139,7 +139,7 @@ namespace PrincipleStudios.Test
         [global::Microsoft.AspNetCore.Mvc.ProducesResponseType(404)] // 
         // Validation exception
         [global::Microsoft.AspNetCore.Mvc.ProducesResponseType(405)] // 
-        [global::Microsoft.AspNetCore.Authorization.Authorize(AuthenticationSchemes = "petstore_auth")]
+        [global::Microsoft.AspNetCore.Authorization.Authorize(Policy = "petstore_auth")]
         public async global::System.Threading.Tasks.Task<global::Microsoft.AspNetCore.Mvc.IActionResult> UpdatePetapplicationXmlTypeSafeEntry(
             [global::Microsoft.AspNetCore.Mvc.FromBody, global::System.ComponentModel.DataAnnotations.Required] Pet updatePetBody
         ) => (await UpdatePetapplicationXml(updatePetBody)).ActionResult;

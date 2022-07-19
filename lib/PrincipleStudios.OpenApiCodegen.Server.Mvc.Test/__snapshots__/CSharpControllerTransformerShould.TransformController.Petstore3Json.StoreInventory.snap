@@ -26,7 +26,7 @@ namespace PrincipleStudios.Test
         [global::Microsoft.AspNetCore.Mvc.Route("/store/inventory")]
         // successful operation
         [global::Microsoft.AspNetCore.Mvc.ProducesResponseType(200, Type = typeof(global::System.Collections.Generic.Dictionary<string, int>))] // application/json
-        [global::Microsoft.AspNetCore.Authorization.Authorize(AuthenticationSchemes = "api_key")]
+        [global::Microsoft.AspNetCore.Authorization.Authorize(Policy = "api_key")]
         public async global::System.Threading.Tasks.Task<global::Microsoft.AspNetCore.Mvc.IActionResult> GetInventoryTypeSafeEntry(
             
         ) => (await GetInventory()).ActionResult;

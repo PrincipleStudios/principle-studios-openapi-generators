@@ -26,7 +26,7 @@ namespace PS.Controller
         [global::Microsoft.AspNetCore.Mvc.Consumes("application/octet-stream")]
         // successful operation
         [global::Microsoft.AspNetCore.Mvc.ProducesResponseType(200, Type = typeof(ApiResponse))] // application/json
-        [global::Microsoft.AspNetCore.Authorization.Authorize(AuthenticationSchemes = "petstore_auth")]
+        [global::Microsoft.AspNetCore.Authorization.Authorize(Policy = "petstore_auth")]
         public async global::System.Threading.Tasks.Task<global::Microsoft.AspNetCore.Mvc.IActionResult> UploadFileTypeSafeEntry(
             [global::Microsoft.AspNetCore.Mvc.FromRoute(Name = "petId"), global::System.ComponentModel.DataAnnotations.Required] long petId,
             [global::Microsoft.AspNetCore.Mvc.FromBody, global::System.ComponentModel.DataAnnotations.Required] global::System.IO.Stream uploadFileBody
