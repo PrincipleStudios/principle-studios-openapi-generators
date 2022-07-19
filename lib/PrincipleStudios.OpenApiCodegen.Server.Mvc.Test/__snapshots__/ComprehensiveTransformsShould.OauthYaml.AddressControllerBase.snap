@@ -20,8 +20,8 @@ namespace PS.Controller
         [global::Microsoft.AspNetCore.Mvc.Route("/address")]
         // Sample Response
         [global::Microsoft.AspNetCore.Mvc.ProducesResponseType(200, Type = typeof(string))] // application/json
-        [global::Microsoft.AspNetCore.Authorization.Authorize(AuthenticationSchemes = "ApiKeyAuth")]
-        [global::Microsoft.AspNetCore.Authorization.Authorize(AuthenticationSchemes = "OAuth2")]
+        [global::Microsoft.AspNetCore.Authorization.Authorize(Policy = "ApiKeyAuth")]
+        [global::Microsoft.AspNetCore.Authorization.Authorize(Policy = "OAuth2")]
         public async global::System.Threading.Tasks.Task<global::Microsoft.AspNetCore.Mvc.IActionResult> GetAddressTypeSafeEntry(
             
         ) => (await GetAddress()).ActionResult;

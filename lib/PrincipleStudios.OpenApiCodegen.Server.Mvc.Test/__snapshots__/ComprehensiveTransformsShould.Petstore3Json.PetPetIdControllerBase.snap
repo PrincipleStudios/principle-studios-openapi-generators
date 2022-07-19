@@ -31,7 +31,7 @@ namespace PS.Controller
         [global::Microsoft.AspNetCore.Mvc.ProducesResponseType(400)] // 
         // Pet not found
         [global::Microsoft.AspNetCore.Mvc.ProducesResponseType(404)] // 
-        [global::Microsoft.AspNetCore.Authorization.Authorize(AuthenticationSchemes = "api_key")]
+        [global::Microsoft.AspNetCore.Authorization.Authorize(Policy = "api_key")]
         public async global::System.Threading.Tasks.Task<global::Microsoft.AspNetCore.Mvc.IActionResult> GetPetByIdTypeSafeEntry(
             [global::Microsoft.AspNetCore.Mvc.FromRoute(Name = "petId"), global::System.ComponentModel.DataAnnotations.Required] long petId
         ) => (await GetPetById(petId)).ActionResult;
@@ -123,7 +123,7 @@ namespace PS.Controller
         [global::Microsoft.AspNetCore.Mvc.Consumes("application/x-www-form-urlencoded")]
         // Invalid input
         [global::Microsoft.AspNetCore.Mvc.ProducesResponseType(405)] // 
-        [global::Microsoft.AspNetCore.Authorization.Authorize(AuthenticationSchemes = "petstore_auth")]
+        [global::Microsoft.AspNetCore.Authorization.Authorize(Policy = "petstore_auth")]
         public async global::System.Threading.Tasks.Task<global::Microsoft.AspNetCore.Mvc.IActionResult> UpdatePetWithFormTypeSafeEntry(
             [global::Microsoft.AspNetCore.Mvc.FromRoute(Name = "petId"), global::System.ComponentModel.DataAnnotations.Required] long petId,
             [global::Microsoft.AspNetCore.Mvc.FromForm(Name = "name")] string? name,
@@ -201,7 +201,7 @@ namespace PS.Controller
         [global::Microsoft.AspNetCore.Mvc.ProducesResponseType(400)] // 
         // Pet not found
         [global::Microsoft.AspNetCore.Mvc.ProducesResponseType(404)] // 
-        [global::Microsoft.AspNetCore.Authorization.Authorize(AuthenticationSchemes = "petstore_auth")]
+        [global::Microsoft.AspNetCore.Authorization.Authorize(Policy = "petstore_auth")]
         public async global::System.Threading.Tasks.Task<global::Microsoft.AspNetCore.Mvc.IActionResult> DeletePetTypeSafeEntry(
             [global::Microsoft.AspNetCore.Mvc.FromHeader(Name = "api_key")] string? apiKey,
             [global::Microsoft.AspNetCore.Mvc.FromRoute(Name = "petId"), global::System.ComponentModel.DataAnnotations.Required] long petId

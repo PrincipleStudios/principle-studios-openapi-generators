@@ -22,7 +22,7 @@ namespace PS.Controller
         // Sample Response
         [global::Microsoft.AspNetCore.Mvc.ProducesResponseType(200, Type = typeof(string))] // application/json
         [global::Microsoft.AspNetCore.Authorization.AllowAnonymous]
-        [global::Microsoft.AspNetCore.Authorization.Authorize(AuthenticationSchemes = "ApiKeyAuth")]
+        [global::Microsoft.AspNetCore.Authorization.Authorize(Policy = "ApiKeyAuth")]
         public async global::System.Threading.Tasks.Task<global::Microsoft.AspNetCore.Mvc.IActionResult> GetInfoTypeSafeEntry(
             [global::Microsoft.AspNetCore.Mvc.FromQuery(Name = "data")] byte[]? data
         ) => (await GetInfo(data)).ActionResult;

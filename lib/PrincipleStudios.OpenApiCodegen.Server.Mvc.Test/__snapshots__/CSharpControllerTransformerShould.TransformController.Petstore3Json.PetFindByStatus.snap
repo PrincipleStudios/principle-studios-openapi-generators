@@ -29,7 +29,7 @@ namespace PrincipleStudios.Test
         [global::Microsoft.AspNetCore.Mvc.ProducesResponseType(200, Type = typeof(global::System.Collections.Generic.IEnumerable<Pet>))] // application/xml        [global::Microsoft.AspNetCore.Mvc.ProducesResponseType(200, Type = typeof(global::System.Collections.Generic.IEnumerable<Pet>))] // application/json
         // Invalid status value
         [global::Microsoft.AspNetCore.Mvc.ProducesResponseType(400)] // 
-        [global::Microsoft.AspNetCore.Authorization.Authorize(AuthenticationSchemes = "petstore_auth")]
+        [global::Microsoft.AspNetCore.Authorization.Authorize(Policy = "petstore_auth")]
         public async global::System.Threading.Tasks.Task<global::Microsoft.AspNetCore.Mvc.IActionResult> FindPetsByStatusTypeSafeEntry(
             [global::Microsoft.AspNetCore.Mvc.FromQuery(Name = "status"), global::System.ComponentModel.DataAnnotations.Required] global::System.Collections.Generic.IEnumerable<FindPetsByStatusStatusItem> status
         ) => (await FindPetsByStatus(status)).ActionResult;
