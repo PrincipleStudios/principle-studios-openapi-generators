@@ -1,9 +1,16 @@
-﻿using System;
+﻿using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Xunit;
+using PrincipleStudios.OpenApi.CSharp;
+using PrincipleStudios.OpenApi.Transformations;
+using static PrincipleStudios.OpenApiCodegen.Server.Mvc.OptionsHelpers;
+using static PrincipleStudios.OpenApiCodegen.TestUtils.DocumentHelpers;
 
 namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
 {
@@ -33,5 +40,43 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
             typeof(Newtonsoft.Json.JsonConvert).Assembly.Location,
             typeof(Microsoft.AspNetCore.Authorization.AuthorizeAttribute).Assembly.Location,
         };
+
+        public static byte[] GetGeneratedLibrary(string documentName)
+        {
+            var document = GetDocument(documentName);
+            var options = LoadOptions();
+
+            var transformer = document.BuildCSharpPathControllerSourceProvider("", "PS.Controller", options);
+            OpenApiTransformDiagnostic diagnostic = new();
+
+            var entries = transformer.GetSources(diagnostic).ToArray();
+
+            Assert.Empty(diagnostic.Errors);
+
+            var parseOptions = CSharpParseOptions.Default.WithLanguageVersion(LanguageVersion.CSharp10);
+            var syntaxTrees = entries.Select(e => CSharpSyntaxTree.ParseText(e.SourceText, options: parseOptions, path: e.Key)).ToArray();
+
+            string assemblyName = Path.GetRandomFileName();
+            MetadataReference[] references = NewtonsoftCompilationRefPaths.Select(r => MetadataReference.CreateFromFile(r)).ToArray();
+
+            CSharpCompilation compilation = CSharpCompilation.Create(assemblyName)
+                .WithReferences(references)
+                .AddSyntaxTrees(syntaxTrees)
+                .WithOptions(new CSharpCompilationOptions(
+                    OutputKind.DynamicallyLinkedLibrary,
+                    assemblyIdentityComparer: DesktopAssemblyIdentityComparer.Default
+                )
+            );
+
+            using var ms = new MemoryStream();
+            var result = compilation.Emit(ms);
+
+            Assert.All(result.Diagnostics, diagnostic =>
+            {
+                Assert.False(diagnostic.IsWarningAsError || diagnostic.Severity == DiagnosticSeverity.Error);
+            });
+            Assert.True(result.Success);
+            return ms.ToArray();
+        }
     }
 }

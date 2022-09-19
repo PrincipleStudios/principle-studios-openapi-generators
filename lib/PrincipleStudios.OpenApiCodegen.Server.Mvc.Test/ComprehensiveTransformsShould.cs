@@ -21,35 +21,7 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
         [Theory]
         public void Compile(string name)
         {
-            var document = GetDocument(name);
-            var options = LoadOptions();
-
-            var transformer = document.BuildCSharpPathControllerSourceProvider("", "PS.Controller", options);
-            OpenApiTransformDiagnostic diagnostic = new();
-
-            var entries = transformer.GetSources(diagnostic).ToArray();
-
-            Assert.Empty(diagnostic.Errors);
-
-            var syntaxTrees = entries.Select(e => CSharpSyntaxTree.ParseText(e.SourceText, path: e.Key)).ToArray();
-
-            string assemblyName = Path.GetRandomFileName();
-            MetadataReference[] references = DynamicCompilation.NewtonsoftCompilationRefPaths.Select(r => MetadataReference.CreateFromFile(r)).ToArray();
-
-            CSharpCompilation compilation = CSharpCompilation.Create(
-                assemblyName,
-                syntaxTrees: syntaxTrees,
-                references: references,
-                options: new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary) { });
-
-            using var ms = new MemoryStream();
-            var result = compilation.Emit(ms);
-
-            Assert.All(result.Diagnostics, diagnostic =>
-            {
-                Assert.False(diagnostic.IsWarningAsError || diagnostic.Severity == DiagnosticSeverity.Error);
-            });
-            Assert.True(result.Success);
+            DynamicCompilation.GetGeneratedLibrary(name);
         }
 
         [MemberData(nameof(ValidFileNames))]
