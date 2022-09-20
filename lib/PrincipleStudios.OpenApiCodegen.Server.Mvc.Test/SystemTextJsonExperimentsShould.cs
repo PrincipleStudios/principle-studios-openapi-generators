@@ -18,7 +18,7 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
         );
 
         [global::Newtonsoft.Json.JsonConverter(typeof(global::Newtonsoft.Json.Converters.StringEnumConverter))]
-        [global::System.Text.Json.Serialization.JsonConverter(typeof(SystemTextJsonExperiments.System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+        [global::System.Text.Json.Serialization.JsonConverter(typeof(SystemTextJsonExperiments.JsonStringEnumMemberConverter))]
         public enum OrderStatus
         {
             /// <summary>
