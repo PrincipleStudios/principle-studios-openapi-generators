@@ -29,7 +29,7 @@ namespace PS.Controller
             )
         {
             var requestMessage = new global::System.Net.Http.HttpRequestMessage(global::System.Net.Http.HttpMethod.Post, "address");
-            requestMessage.Content = new global::System.Net.Http.StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(lookupRecordBody), System.Text.Encoding.UTF8, "application/json");
+            requestMessage.Content = global::System.Net.Http.Json.JsonContent.Create<global::System.Collections.Generic.Dictionary<string, string>>(lookupRecordBody, global::System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json"));
 
 
             return requestMessage;
@@ -44,7 +44,7 @@ namespace PS.Controller
                         return new LookupRecordReturnType.Ok
                         {
                             Response = response,
-                            Body = Newtonsoft.Json.JsonConvert.DeserializeObject<global::System.Collections.Generic.Dictionary<string, string>>(await response.Content.ReadAsStringAsync()), 
+                            Body = await global::System.Text.Json.JsonSerializer.DeserializeAsync<global::System.Collections.Generic.Dictionary<string, string>>(await response.Content.ReadAsStreamAsync()), 
                         };
                     break;
                 

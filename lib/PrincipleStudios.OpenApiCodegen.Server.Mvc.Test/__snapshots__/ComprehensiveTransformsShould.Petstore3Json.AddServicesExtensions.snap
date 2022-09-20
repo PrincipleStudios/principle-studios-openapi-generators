@@ -29,7 +29,7 @@ namespace Microsoft.Extensions.DependencyInjection
             where TUserLogoutController : global::PS.Controller.UserLogoutControllerBase
             where TUserUsernameController : global::PS.Controller.UserUsernameControllerBase
         {
-            return services.AddControllers().AddNewtonsoftJson();
+            return services.AddControllers();
         }
     }
 }

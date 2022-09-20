@@ -4,68 +4,16 @@
 #nullable disable warnings
 
 namespace {{this.packageName}}
-{ {{#with model}}
+{
+    {{#with model}}
     {{#if description}}/// <summary>
     /// {{linewrap description "
     /// "}}
     /// </summary>
-    {{/if}}public partial class {{className}} : {{#if parent}}{{{parent}}}, {{/if}}global::System.IEquatable<{{className}}>
-    {
-        public {{className}}(
-        {{#each vars}}    [global::Newtonsoft.Json.JsonProperty(PropertyName="{{baseName}}"){{#if required}}, global::System.ComponentModel.DataAnnotations.Required{{/if}}]{{!
-        data type: }} {{{dataType}}}{{!
-        name: }} {{name}}{{#unless @last}}, {{/unless}}
-        {{/each}}) { {{#each vars}}
-            this.{{name}} = {{name}};{{/each}}
-        }
-
-        {{#each vars}}
-        /// <summary>
-        /// Gets {{^if description}}{{{name}}}{{else}}{{description}}{{/if}}
-        /// </summary>
-        {{#if required}}
-        [global::System.ComponentModel.DataAnnotations.Required]
-        {{/if}}
-        [global::Newtonsoft.Json.JsonProperty(PropertyName="{{baseName}}")]
-        public {{{dataType}}} {{name}} { get; }
-
-        {{/each}}
-        public override bool Equals(object obj)
-        {
-            if (obj is null) return false;
-            if (ReferenceEquals(this, obj)) return true;
-            return obj.GetType() == GetType() && Equals(({{classname}})obj);
-        }
-
-        public bool Equals({{classname}} other)
-        {
-            if (other is null) return false;
-            if (ReferenceEquals(this, other)) return true;
-
-            return {{#each vars}}(
-                {{name}} == other.{{name}} ||{{#if nullable}}
-                {{name}} != null &&{{/if}}{{#unless isContainer}}
-                {{name}}.Equals(other.{{name}}){{else}}
-                System.Linq.Enumerable.SequenceEqual({{name}}, other.{{name}}){{/unless}}
-            ){{#unless @last}} && {{/unless}}{{else}}true{{/each}};
-        }
-
-        /// <summary>
-        /// Gets the hash code
-        /// </summary>
-        /// <returns>Hash code</returns>
-        public override int GetHashCode()
-        {
-            unchecked // Overflow is fine, just wrap
-            {
-                var hashCode = 41;
-                {{#each vars}}
-                {{#if nullable}}if ({{name}} != null)
-                    {{/if}}hashCode = hashCode * 59 + {{name}}.GetHashCode();
-                {{/each}}
-                return hashCode;
-            }
-        }
-    }
-{{/with}}
+    {{/if}}public partial record {{className}}({{#each vars}}{{! TODO: support parent properties}}
+        [property: global::System.Text.Json.Serialization.JsonPropertyName("{{baseName}}"){{#if required}}, global::System.ComponentModel.DataAnnotations.Required{{/if}}]{{!
+    data type: }} {{{dataType}}}{{!
+    name: }} {{name}}{{#unless @last}}, {{/unless}}
+    {{/each}}){{#if parent}} : {{{parent}}}(){{/if}};
+    {{/with}}
 }

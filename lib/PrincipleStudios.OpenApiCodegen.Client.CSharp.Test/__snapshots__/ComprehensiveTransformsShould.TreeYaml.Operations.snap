@@ -40,7 +40,7 @@ namespace PS.Controller
                         return new GetTreeReturnType.Ok
                         {
                             Response = response,
-                            Body = Newtonsoft.Json.JsonConvert.DeserializeObject<Node>(await response.Content.ReadAsStringAsync()), 
+                            Body = await global::System.Text.Json.JsonSerializer.DeserializeAsync<Node>(await response.Content.ReadAsStreamAsync()), 
                         };
                     break;
                 

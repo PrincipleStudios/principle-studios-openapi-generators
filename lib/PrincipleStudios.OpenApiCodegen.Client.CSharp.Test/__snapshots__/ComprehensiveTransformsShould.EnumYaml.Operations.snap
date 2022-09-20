@@ -29,7 +29,7 @@ namespace PS.Controller
             )
         {
             var requestMessage = new global::System.Net.Http.HttpRequestMessage(global::System.Net.Http.HttpMethod.Post, "rock-paper-scissors");
-            requestMessage.Content = new global::System.Net.Http.StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(playRockPaperScissorsBody), System.Text.Encoding.UTF8, "application/json");
+            requestMessage.Content = global::System.Net.Http.Json.JsonContent.Create<PlayRockPaperScissorsRequest>(playRockPaperScissorsBody, global::System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json"));
 
 
             return requestMessage;
@@ -44,7 +44,7 @@ namespace PS.Controller
                         return new PlayRockPaperScissorsReturnType.Ok
                         {
                             Response = response,
-                            Body = Newtonsoft.Json.JsonConvert.DeserializeObject<PlayRockPaperScissorsResponse>(await response.Content.ReadAsStringAsync()), 
+                            Body = await global::System.Text.Json.JsonSerializer.DeserializeAsync<PlayRockPaperScissorsResponse>(await response.Content.ReadAsStreamAsync()), 
                         };
                     break;
                 

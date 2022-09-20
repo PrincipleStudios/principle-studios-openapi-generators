@@ -38,7 +38,7 @@ namespace PS.Controller
                         return new GetContactReturnType.Ok
                         {
                             Response = response,
-                            Body = Newtonsoft.Json.JsonConvert.DeserializeObject<ContactWithId>(await response.Content.ReadAsStringAsync()), 
+                            Body = await global::System.Text.Json.JsonSerializer.DeserializeAsync<ContactWithId>(await response.Content.ReadAsStreamAsync()), 
                         };
                     break;
                 

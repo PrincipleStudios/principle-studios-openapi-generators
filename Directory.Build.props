@@ -3,7 +3,8 @@
 
 	<PropertyGroup>
 		<Nullable>enable</Nullable>
-		<LangVersion>9</LangVersion>
+		<LangVersion>10</LangVersion>
+		<RootNamespace>PrincipleStudios</RootNamespace>
 
 		<IsWindows Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Windows)))' == 'true'">true</IsWindows>
 		<SolutionRoot>$(MSBuildThisFileDirectory)</SolutionRoot>
@@ -26,8 +27,8 @@
 	</PropertyGroup>
 
 	<PropertyGroup>
-		<OpenApiMvcServerVersion>0.11.5</OpenApiMvcServerVersion>
-		<OpenApiCSharpClientVersion>0.4.4</OpenApiCSharpClientVersion>
+		<OpenApiMvcServerVersion>0.12.0</OpenApiMvcServerVersion>
+		<OpenApiCSharpClientVersion>0.12.0</OpenApiCSharpClientVersion>
 	</PropertyGroup>
 
 	<Import Project="Directory.Build.local.props" Condition="exists('$(MSBuildThisFileDirectory)Directory.Build.local.props')" />

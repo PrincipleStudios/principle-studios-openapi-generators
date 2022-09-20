@@ -12,151 +12,22 @@
 #nullable disable warnings
 
 namespace PrincipleStudios.Test
-{ 
-    public partial class User : global::System.IEquatable<User>
-    {
-        public User(
-            [global::Newtonsoft.Json.JsonProperty(PropertyName="id")] long? Id, 
-            [global::Newtonsoft.Json.JsonProperty(PropertyName="username")] string? Username, 
-            [global::Newtonsoft.Json.JsonProperty(PropertyName="firstName")] string? FirstName, 
-            [global::Newtonsoft.Json.JsonProperty(PropertyName="lastName")] string? LastName, 
-            [global::Newtonsoft.Json.JsonProperty(PropertyName="email")] string? Email, 
-            [global::Newtonsoft.Json.JsonProperty(PropertyName="password")] string? Password, 
-            [global::Newtonsoft.Json.JsonProperty(PropertyName="phone")] string? Phone, 
-            [global::Newtonsoft.Json.JsonProperty(PropertyName="userStatus")] int? UserStatus
-        ) { 
-            this.Id = Id;
-            this.Username = Username;
-            this.FirstName = FirstName;
-            this.LastName = LastName;
-            this.Email = Email;
-            this.Password = Password;
-            this.Phone = Phone;
-            this.UserStatus = UserStatus;
-        }
-
-        /// <summary>
-        /// Gets Id
-        /// </summary>
-        [global::Newtonsoft.Json.JsonProperty(PropertyName="id")]
-        public long? Id { get; }
-
-        /// <summary>
-        /// Gets Username
-        /// </summary>
-        [global::Newtonsoft.Json.JsonProperty(PropertyName="username")]
-        public string? Username { get; }
-
-        /// <summary>
-        /// Gets FirstName
-        /// </summary>
-        [global::Newtonsoft.Json.JsonProperty(PropertyName="firstName")]
-        public string? FirstName { get; }
-
-        /// <summary>
-        /// Gets LastName
-        /// </summary>
-        [global::Newtonsoft.Json.JsonProperty(PropertyName="lastName")]
-        public string? LastName { get; }
-
-        /// <summary>
-        /// Gets Email
-        /// </summary>
-        [global::Newtonsoft.Json.JsonProperty(PropertyName="email")]
-        public string? Email { get; }
-
-        /// <summary>
-        /// Gets Password
-        /// </summary>
-        [global::Newtonsoft.Json.JsonProperty(PropertyName="password")]
-        public string? Password { get; }
-
-        /// <summary>
-        /// Gets Phone
-        /// </summary>
-        [global::Newtonsoft.Json.JsonProperty(PropertyName="phone")]
-        public string? Phone { get; }
-
-        /// <summary>
-        /// Gets UserStatus
-        /// </summary>
-        [global::Newtonsoft.Json.JsonProperty(PropertyName="userStatus")]
-        public int? UserStatus { get; }
-
-        public override bool Equals(object obj)
-        {
-            if (obj is null) return false;
-            if (ReferenceEquals(this, obj)) return true;
-            return obj.GetType() == GetType() && Equals((User)obj);
-        }
-
-        public bool Equals(User other)
-        {
-            if (other is null) return false;
-            if (ReferenceEquals(this, other)) return true;
-
-            return (
-                Id == other.Id ||
-                Id != null &&
-                Id.Equals(other.Id)
-            ) && (
-                Username == other.Username ||
-                Username != null &&
-                Username.Equals(other.Username)
-            ) && (
-                FirstName == other.FirstName ||
-                FirstName != null &&
-                FirstName.Equals(other.FirstName)
-            ) && (
-                LastName == other.LastName ||
-                LastName != null &&
-                LastName.Equals(other.LastName)
-            ) && (
-                Email == other.Email ||
-                Email != null &&
-                Email.Equals(other.Email)
-            ) && (
-                Password == other.Password ||
-                Password != null &&
-                Password.Equals(other.Password)
-            ) && (
-                Phone == other.Phone ||
-                Phone != null &&
-                Phone.Equals(other.Phone)
-            ) && (
-                UserStatus == other.UserStatus ||
-                UserStatus != null &&
-                UserStatus.Equals(other.UserStatus)
-            );
-        }
-
-        /// <summary>
-        /// Gets the hash code
-        /// </summary>
-        /// <returns>Hash code</returns>
-        public override int GetHashCode()
-        {
-            unchecked // Overflow is fine, just wrap
-            {
-                var hashCode = 41;
-                if (Id != null)
-                    hashCode = hashCode * 59 + Id.GetHashCode();
-                if (Username != null)
-                    hashCode = hashCode * 59 + Username.GetHashCode();
-                if (FirstName != null)
-                    hashCode = hashCode * 59 + FirstName.GetHashCode();
-                if (LastName != null)
-                    hashCode = hashCode * 59 + LastName.GetHashCode();
-                if (Email != null)
-                    hashCode = hashCode * 59 + Email.GetHashCode();
-                if (Password != null)
-                    hashCode = hashCode * 59 + Password.GetHashCode();
-                if (Phone != null)
-                    hashCode = hashCode * 59 + Phone.GetHashCode();
-                if (UserStatus != null)
-                    hashCode = hashCode * 59 + UserStatus.GetHashCode();
-                return hashCode;
-            }
-        }
-    }
+{
+    public partial record User(
+        [property: global::System.Text.Json.Serialization.JsonPropertyName("id")] long? Id, 
+    
+        [property: global::System.Text.Json.Serialization.JsonPropertyName("username")] string? Username, 
+    
+        [property: global::System.Text.Json.Serialization.JsonPropertyName("firstName")] string? FirstName, 
+    
+        [property: global::System.Text.Json.Serialization.JsonPropertyName("lastName")] string? LastName, 
+    
+        [property: global::System.Text.Json.Serialization.JsonPropertyName("email")] string? Email, 
+    
+        [property: global::System.Text.Json.Serialization.JsonPropertyName("password")] string? Password, 
+    
+        [property: global::System.Text.Json.Serialization.JsonPropertyName("phone")] string? Phone, 
+    
+        [property: global::System.Text.Json.Serialization.JsonPropertyName("userStatus")] int? UserStatus
+    );
 }

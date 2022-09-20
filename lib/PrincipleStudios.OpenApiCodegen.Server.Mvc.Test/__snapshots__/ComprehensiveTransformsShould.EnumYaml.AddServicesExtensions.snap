@@ -16,7 +16,7 @@ namespace Microsoft.Extensions.DependencyInjection
         public static IMvcBuilder AddOpenApiRockPaperScissors<TRockPaperScissorsController>(this IServiceCollection services)
             where TRockPaperScissorsController : global::PS.Controller.RockPaperScissorsControllerBase
         {
-            return services.AddControllers().AddNewtonsoftJson();
+            return services.AddControllers();
         }
     }
 }

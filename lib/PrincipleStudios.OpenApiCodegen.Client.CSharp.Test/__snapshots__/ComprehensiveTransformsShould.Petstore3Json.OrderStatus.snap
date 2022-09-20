@@ -16,56 +16,26 @@ namespace PS.Controller
     /// <summary>
     /// Order Status
     /// </summary>
-    [global::Newtonsoft.Json.JsonConverter(typeof(global::Newtonsoft.Json.Converters.StringEnumConverter))]
-    [global::System.ComponentModel.TypeConverterAttribute(typeof(OrderStatusEnumConverter))]
+    [global::System.Text.Json.Serialization.JsonConverter(typeof(global::PrincipleStudios.Json.Extensions.JsonStringEnumPropertyNameConverter))]
     public enum OrderStatus
     {
         /// <summary>
         /// Enum Placed for placed
         /// </summary>
-        [global::System.Runtime.Serialization.EnumMember(Value = "placed")]
+        [global::System.Text.Json.Serialization.JsonPropertyName("placed")]
         Placed = 0,
 
         /// <summary>
         /// Enum Approved for approved
         /// </summary>
-        [global::System.Runtime.Serialization.EnumMember(Value = "approved")]
+        [global::System.Text.Json.Serialization.JsonPropertyName("approved")]
         Approved = 1,
 
         /// <summary>
         /// Enum Delivered for delivered
         /// </summary>
-        [global::System.Runtime.Serialization.EnumMember(Value = "delivered")]
+        [global::System.Text.Json.Serialization.JsonPropertyName("delivered")]
         Delivered = 2,
 
-    }
-
-    public class OrderStatusEnumConverter : global::System.ComponentModel.TypeConverter
-    {
-        public override bool CanConvertTo(global::System.ComponentModel.ITypeDescriptorContext? context, global::System.Type? destinationType)
-        {
-            return destinationType == typeof(string) || base.CanConvertFrom(context, destinationType);
-        }
-
-        public override object? ConvertTo(global::System.ComponentModel.ITypeDescriptorContext? context, global::System.Globalization.CultureInfo? culture, object? value, global::System.Type destinationType)
-        {
-            if (destinationType != typeof(string))
-                return base.ConvertTo(context, culture, value, destinationType);
-            var result = global::Newtonsoft.Json.JsonConvert.SerializeObject(value);
-            if (result.StartsWith('"') && result.EndsWith('"'))
-                return result.Substring(1, result.Length - 2);
-            return result;
-        }
-
-        public override object ConvertFrom(global::System.ComponentModel.ITypeDescriptorContext context, global::System.Globalization.CultureInfo culture, object value)
-        {
-            var s = value as string;
-            if (string.IsNullOrEmpty(s))
-            {
-                return null;
-            }
-
-            return global::Newtonsoft.Json.JsonConvert.DeserializeObject<OrderStatus>(@"""" + value.ToString() + @"""");
-        }
     }
 }

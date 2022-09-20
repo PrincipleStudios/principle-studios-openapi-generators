@@ -16,7 +16,7 @@ namespace Microsoft.Extensions.DependencyInjection
         public static IMvcBuilder AddOpenApiOAuthScopesSample<TInformationController>(this IServiceCollection services)
             where TInformationController : global::PS.Controller.InformationControllerBase
         {
-            return services.AddControllers().AddNewtonsoftJson();
+            return services.AddControllers();
         }
     }
 }

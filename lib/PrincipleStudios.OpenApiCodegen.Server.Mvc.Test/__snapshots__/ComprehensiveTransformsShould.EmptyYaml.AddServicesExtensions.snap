@@ -15,7 +15,7 @@ namespace Microsoft.Extensions.DependencyInjection
     {
         public static IMvcBuilder AddOpenApiEmptySample(this IServiceCollection services)
         {
-            return services.AddControllers().AddNewtonsoftJson();
+            return services.AddControllers();
         }
     }
 }

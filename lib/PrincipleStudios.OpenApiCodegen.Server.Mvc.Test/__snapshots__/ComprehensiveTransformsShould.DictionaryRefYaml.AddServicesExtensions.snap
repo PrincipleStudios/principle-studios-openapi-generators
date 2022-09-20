@@ -16,7 +16,7 @@ namespace Microsoft.Extensions.DependencyInjection
         public static IMvcBuilder AddOpenApiDictionaryRefDemo<TAddressController>(this IServiceCollection services)
             where TAddressController : global::PS.Controller.AddressControllerBase
         {
-            return services.AddControllers().AddNewtonsoftJson();
+            return services.AddControllers();
         }
     }
 }

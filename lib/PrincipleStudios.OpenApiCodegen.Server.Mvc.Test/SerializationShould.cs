@@ -75,10 +75,10 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
             File.WriteAllBytes(fullPath, libBytes);
 
             var scriptOptions = ScriptOptions.Default
-                .AddReferences(DynamicCompilation.NewtonsoftCompilationRefPaths.Select(r => MetadataReference.CreateFromFile(r)).ToArray())
+                .AddReferences(DynamicCompilation.SystemTextCompilationRefPaths.Select(r => MetadataReference.CreateFromFile(r)).ToArray())
                 .AddReferences(MetadataReference.CreateFromFile(fullPath));
 
-            var result = (string)await CSharpScript.EvaluateAsync($"Newtonsoft.Json.JsonConvert.SerializeObject({csharpInitialization})", scriptOptions);
+            var result = (string)await CSharpScript.EvaluateAsync($"System.Text.Json.JsonSerializer.Serialize({csharpInitialization})", scriptOptions);
 
             Newtonsoft.Json.Linq.JToken.Parse(result).Should().BeEquivalentTo(
                 Newtonsoft.Json.Linq.JToken.FromObject(comparisonObject)
@@ -93,15 +93,15 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
             File.WriteAllBytes(fullPath, libBytes);
 
             var scriptOptions = ScriptOptions.Default
-                .AddReferences(DynamicCompilation.NewtonsoftCompilationRefPaths.Select(r => MetadataReference.CreateFromFile(r)).ToArray())
+                .AddReferences(DynamicCompilation.SystemTextCompilationRefPaths.Select(r => MetadataReference.CreateFromFile(r)).ToArray())
                 .AddReferences(MetadataReference.CreateFromFile(fullPath));
 
             var original = Newtonsoft.Json.Linq.JToken.FromObject(targetObject);
             var originalJson = original.ToString(Newtonsoft.Json.Formatting.Indented).Replace("\"", "\"\"");
 
             var script = @$"
-                Newtonsoft.Json.JsonConvert.SerializeObject(
-                    Newtonsoft.Json.JsonConvert.DeserializeObject<{typeName}>(
+                System.Text.Json.JsonSerializer.Serialize(
+                    System.Text.Json.JsonSerializer.Deserialize<{typeName}>(
                         @""{originalJson}""
                     )
                 )";

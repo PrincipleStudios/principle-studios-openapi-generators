@@ -12,121 +12,18 @@
 #nullable disable warnings
 
 namespace PrincipleStudios.Test
-{ 
-    public partial class Pet : global::System.IEquatable<Pet>
-    {
-        public Pet(
-            [global::Newtonsoft.Json.JsonProperty(PropertyName="id")] long? Id, 
-            [global::Newtonsoft.Json.JsonProperty(PropertyName="category")] Category? Category, 
-            [global::Newtonsoft.Json.JsonProperty(PropertyName="name"), global::System.ComponentModel.DataAnnotations.Required] string Name, 
-            [global::Newtonsoft.Json.JsonProperty(PropertyName="photoUrls"), global::System.ComponentModel.DataAnnotations.Required] global::System.Collections.Generic.IEnumerable<string> PhotoUrls, 
-            [global::Newtonsoft.Json.JsonProperty(PropertyName="tags")] global::System.Collections.Generic.IEnumerable<Tag>? Tags, 
-            [global::Newtonsoft.Json.JsonProperty(PropertyName="status")] PetStatus? Status
-        ) { 
-            this.Id = Id;
-            this.Category = Category;
-            this.Name = Name;
-            this.PhotoUrls = PhotoUrls;
-            this.Tags = Tags;
-            this.Status = Status;
-        }
-
-        /// <summary>
-        /// Gets Id
-        /// </summary>
-        [global::Newtonsoft.Json.JsonProperty(PropertyName="id")]
-        public long? Id { get; }
-
-        /// <summary>
-        /// Gets Category
-        /// </summary>
-        [global::Newtonsoft.Json.JsonProperty(PropertyName="category")]
-        public Category? Category { get; }
-
-        /// <summary>
-        /// Gets Name
-        /// </summary>
-        [global::System.ComponentModel.DataAnnotations.Required]
-        [global::Newtonsoft.Json.JsonProperty(PropertyName="name")]
-        public string Name { get; }
-
-        /// <summary>
-        /// Gets PhotoUrls
-        /// </summary>
-        [global::System.ComponentModel.DataAnnotations.Required]
-        [global::Newtonsoft.Json.JsonProperty(PropertyName="photoUrls")]
-        public global::System.Collections.Generic.IEnumerable<string> PhotoUrls { get; }
-
-        /// <summary>
-        /// Gets Tags
-        /// </summary>
-        [global::Newtonsoft.Json.JsonProperty(PropertyName="tags")]
-        public global::System.Collections.Generic.IEnumerable<Tag>? Tags { get; }
-
-        /// <summary>
-        /// Gets Status
-        /// </summary>
-        [global::Newtonsoft.Json.JsonProperty(PropertyName="status")]
-        public PetStatus? Status { get; }
-
-        public override bool Equals(object obj)
-        {
-            if (obj is null) return false;
-            if (ReferenceEquals(this, obj)) return true;
-            return obj.GetType() == GetType() && Equals((Pet)obj);
-        }
-
-        public bool Equals(Pet other)
-        {
-            if (other is null) return false;
-            if (ReferenceEquals(this, other)) return true;
-
-            return (
-                Id == other.Id ||
-                Id != null &&
-                Id.Equals(other.Id)
-            ) && (
-                Category == other.Category ||
-                Category != null &&
-                Category.Equals(other.Category)
-            ) && (
-                Name == other.Name ||
-                Name.Equals(other.Name)
-            ) && (
-                PhotoUrls == other.PhotoUrls ||
-                System.Linq.Enumerable.SequenceEqual(PhotoUrls, other.PhotoUrls)
-            ) && (
-                Tags == other.Tags ||
-                Tags != null &&
-                System.Linq.Enumerable.SequenceEqual(Tags, other.Tags)
-            ) && (
-                Status == other.Status ||
-                Status != null &&
-                Status.Equals(other.Status)
-            );
-        }
-
-        /// <summary>
-        /// Gets the hash code
-        /// </summary>
-        /// <returns>Hash code</returns>
-        public override int GetHashCode()
-        {
-            unchecked // Overflow is fine, just wrap
-            {
-                var hashCode = 41;
-                if (Id != null)
-                    hashCode = hashCode * 59 + Id.GetHashCode();
-                if (Category != null)
-                    hashCode = hashCode * 59 + Category.GetHashCode();
-                hashCode = hashCode * 59 + Name.GetHashCode();
-                hashCode = hashCode * 59 + PhotoUrls.GetHashCode();
-                if (Tags != null)
-                    hashCode = hashCode * 59 + Tags.GetHashCode();
-                if (Status != null)
-                    hashCode = hashCode * 59 + Status.GetHashCode();
-                return hashCode;
-            }
-        }
-    }
+{
+    public partial record Pet(
+        [property: global::System.Text.Json.Serialization.JsonPropertyName("id")] long? Id, 
+    
+        [property: global::System.Text.Json.Serialization.JsonPropertyName("category")] Category? Category, 
+    
+        [property: global::System.Text.Json.Serialization.JsonPropertyName("name"), global::System.ComponentModel.DataAnnotations.Required] string Name, 
+    
+        [property: global::System.Text.Json.Serialization.JsonPropertyName("photoUrls"), global::System.ComponentModel.DataAnnotations.Required] global::System.Collections.Generic.IEnumerable<string> PhotoUrls, 
+    
+        [property: global::System.Text.Json.Serialization.JsonPropertyName("tags")] global::System.Collections.Generic.IEnumerable<Tag>? Tags, 
+    
+        [property: global::System.Text.Json.Serialization.JsonPropertyName("status")] PetStatus? Status
+    );
 }

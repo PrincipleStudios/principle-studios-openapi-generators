@@ -19,7 +19,7 @@ namespace PS.Controller
         [global::Microsoft.AspNetCore.Mvc.HttpPost]
         [global::Microsoft.AspNetCore.Mvc.Route("/data")]
         // Gets any kind of JSON data
-        [global::Microsoft.AspNetCore.Mvc.ProducesResponseType(200, Type = typeof(global::Newtonsoft.Json.Linq.JToken))] // application/json
+        [global::Microsoft.AspNetCore.Mvc.ProducesResponseType(200, Type = typeof(global::System.Text.Json.Nodes.JsonNode))] // application/json
         public async global::System.Threading.Tasks.Task<global::Microsoft.AspNetCore.Mvc.IActionResult> GetDataTypeSafeEntry(
             
         ) => (await GetData()).ActionResult;
@@ -72,8 +72,8 @@ namespace PS.Controller
             /// <summary>
             /// Gets any kind of JSON data
             /// </summary>
-            public static GetDataActionResult Ok(global::Newtonsoft.Json.Linq.JToken result) =>
-                new GetDataActionResult(200, "application/json", typeof(global::Newtonsoft.Json.Linq.JToken), result);
+            public static GetDataActionResult Ok(global::System.Text.Json.Nodes.JsonNode result) =>
+                new GetDataActionResult(200, "application/json", typeof(global::System.Text.Json.Nodes.JsonNode), result);
             
 
             /// <summary>Allows for action results not specified in the API</summary>

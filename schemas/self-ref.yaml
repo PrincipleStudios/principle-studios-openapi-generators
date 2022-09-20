@@ -21,6 +21,8 @@ components:
       properties:
         target:
           $ref: '#/components/schemas/Target'
+        # Without the extra id, the self-reference constructor is unrealistic and matches the copy constructor from records
+        id: { type: number }
       required:
-        - target
+        - id
 

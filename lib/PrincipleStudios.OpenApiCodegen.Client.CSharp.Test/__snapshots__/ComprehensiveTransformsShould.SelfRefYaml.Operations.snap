@@ -40,7 +40,7 @@ namespace PS.Controller
                         return new GetDataReturnType.Ok
                         {
                             Response = response,
-                            Body = Newtonsoft.Json.JsonConvert.DeserializeObject<Target>(await response.Content.ReadAsStringAsync()), 
+                            Body = await global::System.Text.Json.JsonSerializer.DeserializeAsync<Target>(await response.Content.ReadAsStreamAsync()), 
                         };
                     break;
                 

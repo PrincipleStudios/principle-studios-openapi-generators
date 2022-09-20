@@ -17,7 +17,7 @@ namespace Microsoft.Extensions.DependencyInjection
             where TAddressController : global::PS.Controller.AddressControllerBase
             where TPhotoIdController : global::PS.Controller.PhotoIdControllerBase
         {
-            return services.AddControllers().AddNewtonsoftJson();
+            return services.AddControllers();
         }
     }
 }

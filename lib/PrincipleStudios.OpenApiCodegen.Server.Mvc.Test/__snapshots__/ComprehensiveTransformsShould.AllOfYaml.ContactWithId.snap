@@ -10,78 +10,12 @@
 #nullable disable warnings
 
 namespace PS.Controller
-{ 
-    public partial class ContactWithId : global::System.IEquatable<ContactWithId>
-    {
-        public ContactWithId(
-            [global::Newtonsoft.Json.JsonProperty(PropertyName="firstName"), global::System.ComponentModel.DataAnnotations.Required] string FirstName, 
-            [global::Newtonsoft.Json.JsonProperty(PropertyName="lastName"), global::System.ComponentModel.DataAnnotations.Required] string LastName, 
-            [global::Newtonsoft.Json.JsonProperty(PropertyName="id"), global::System.ComponentModel.DataAnnotations.Required] string Id
-        ) { 
-            this.FirstName = FirstName;
-            this.LastName = LastName;
-            this.Id = Id;
-        }
-
-        /// <summary>
-        /// Gets FirstName
-        /// </summary>
-        [global::System.ComponentModel.DataAnnotations.Required]
-        [global::Newtonsoft.Json.JsonProperty(PropertyName="firstName")]
-        public string FirstName { get; }
-
-        /// <summary>
-        /// Gets LastName
-        /// </summary>
-        [global::System.ComponentModel.DataAnnotations.Required]
-        [global::Newtonsoft.Json.JsonProperty(PropertyName="lastName")]
-        public string LastName { get; }
-
-        /// <summary>
-        /// Gets Id
-        /// </summary>
-        [global::System.ComponentModel.DataAnnotations.Required]
-        [global::Newtonsoft.Json.JsonProperty(PropertyName="id")]
-        public string Id { get; }
-
-        public override bool Equals(object obj)
-        {
-            if (obj is null) return false;
-            if (ReferenceEquals(this, obj)) return true;
-            return obj.GetType() == GetType() && Equals((ContactWithId)obj);
-        }
-
-        public bool Equals(ContactWithId other)
-        {
-            if (other is null) return false;
-            if (ReferenceEquals(this, other)) return true;
-
-            return (
-                FirstName == other.FirstName ||
-                FirstName.Equals(other.FirstName)
-            ) && (
-                LastName == other.LastName ||
-                LastName.Equals(other.LastName)
-            ) && (
-                Id == other.Id ||
-                Id.Equals(other.Id)
-            );
-        }
-
-        /// <summary>
-        /// Gets the hash code
-        /// </summary>
-        /// <returns>Hash code</returns>
-        public override int GetHashCode()
-        {
-            unchecked // Overflow is fine, just wrap
-            {
-                var hashCode = 41;
-                hashCode = hashCode * 59 + FirstName.GetHashCode();
-                hashCode = hashCode * 59 + LastName.GetHashCode();
-                hashCode = hashCode * 59 + Id.GetHashCode();
-                return hashCode;
-            }
-        }
-    }
+{
+    public partial record ContactWithId(
+        [property: global::System.Text.Json.Serialization.JsonPropertyName("firstName"), global::System.ComponentModel.DataAnnotations.Required] string FirstName, 
+    
+        [property: global::System.Text.Json.Serialization.JsonPropertyName("lastName"), global::System.ComponentModel.DataAnnotations.Required] string LastName, 
+    
+        [property: global::System.Text.Json.Serialization.JsonPropertyName("id"), global::System.ComponentModel.DataAnnotations.Required] string Id
+    );
 }

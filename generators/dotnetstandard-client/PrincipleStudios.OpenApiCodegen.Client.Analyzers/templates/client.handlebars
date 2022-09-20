@@ -59,7 +59,7 @@ namespace {{packageName}}
 {{else}}{{#each requestBody.allParams}}{{#if isBodyParam}}{{#if isFile}}
             requestMessage.Content = new global::System.Net.Http.StreamContent({{paramName}});
 {{else}}
-            requestMessage.Content = new global::System.Net.Http.StringContent(Newtonsoft.Json.JsonConvert.SerializeObject({{paramName}}), System.Text.Encoding.UTF8, "{{{requestBody.requestBodyType}}}");
+            requestMessage.Content = global::System.Net.Http.Json.JsonContent.Create<{{{dataType}}}>({{paramName}}, global::System.Net.Http.Headers.MediaTypeHeaderValue.Parse("{{{requestBody.requestBodyType}}}"));
 {{/if}}{{/if}}{{/each}}{{/if}}
 {{#each requestBody.allParams}}{{#if isHeaderParam}}
             requestMessage.Headers.Add("{{baseName}}", {{paramName}}{{#if dataTypeEnumerable}}.Select(v => v.ToString()){{else}}.ToString(){{/if}});{{/if}}{{/each}}
@@ -77,7 +77,7 @@ namespace {{packageName}}
                         return new {{operation.name}}ReturnType.{{responseMethodName}}
                         {
                             Response = response,{{#if dataType}}
-                            Body = Newtonsoft.Json.JsonConvert.DeserializeObject<{{{dataType}}}>(await response.Content.ReadAsStringAsync()), {{/if}}
+                            Body = await global::System.Text.Json.JsonSerializer.DeserializeAsync<{{{dataType}}}>(await response.Content.ReadAsStreamAsync()), {{/if}}
                             {{!-- {{#each ../headers}}
                             {{paramName}} = ,{{/each}} --}}
                         };
@@ -89,7 +89,7 @@ namespace {{packageName}}
                         return new {{operation.name}}ReturnType.{{responseMethodName}}
                         {
                             Response = response,{{#if dataType}}
-                            Body = Newtonsoft.Json.JsonConvert.DeserializeObject<{{{dataType}}}>(await response.Content.ReadAsStringAsync()), {{/if}}
+                            Body = await global::System.Text.Json.JsonSerializer.DeserializeAsync<{{{dataType}}}>(await response.Content.ReadAsStreamAsync()), {{/if}}
                             {{!-- {{#each ../headers}}
                             {{paramName}} = ,{{/each}} --}}
                         }; {{/each}}

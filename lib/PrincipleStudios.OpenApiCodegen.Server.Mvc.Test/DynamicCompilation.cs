@@ -16,7 +16,7 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
 {
     internal class DynamicCompilation
     {
-        public static readonly string[] NewtonsoftCompilationRefPaths = {
+        public static readonly string[] SystemTextCompilationRefPaths = {
             Path.Combine(Path.GetDirectoryName(typeof(object).Assembly.Location)!, "netstandard.dll"),
             Path.Combine(Path.GetDirectoryName(typeof(object).Assembly.Location)!, "System.Runtime.dll"),
             typeof(System.AttributeUsageAttribute).Assembly.Location,
@@ -24,7 +24,7 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
             typeof(System.ComponentModel.TypeConverter).Assembly.Location,
             typeof(System.ComponentModel.TypeConverterAttribute).Assembly.Location,
             typeof(System.ComponentModel.DataAnnotations.RequiredAttribute).Assembly.Location,
-            typeof(System.Runtime.Serialization.EnumMemberAttribute).Assembly.Location,
+            typeof(System.Text.Json.JsonSerializer).Assembly.Location,
 
             typeof(Microsoft.Extensions.DependencyInjection.IServiceCollection).Assembly.Location,
             typeof(Microsoft.Extensions.DependencyInjection.IMvcBuilder).Assembly.Location,
@@ -37,8 +37,9 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
             typeof(Microsoft.AspNetCore.Mvc.ObjectResult).Assembly.Location,
             typeof(Microsoft.AspNetCore.Http.HttpContext).Assembly.Location,
             typeof(Microsoft.AspNetCore.Http.IHeaderDictionary).Assembly.Location,
-            typeof(Newtonsoft.Json.JsonConvert).Assembly.Location,
             typeof(Microsoft.AspNetCore.Authorization.AuthorizeAttribute).Assembly.Location,
+
+            typeof(PrincipleStudios.Json.Extensions.JsonStringEnumPropertyNameConverter).Assembly.Location,
         };
 
         public static byte[] GetGeneratedLibrary(string documentName)
@@ -57,7 +58,7 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
             var syntaxTrees = entries.Select(e => CSharpSyntaxTree.ParseText(e.SourceText, options: parseOptions, path: e.Key)).ToArray();
 
             string assemblyName = Path.GetRandomFileName();
-            MetadataReference[] references = NewtonsoftCompilationRefPaths.Select(r => MetadataReference.CreateFromFile(r)).ToArray();
+            MetadataReference[] references = SystemTextCompilationRefPaths.Select(r => MetadataReference.CreateFromFile(r)).ToArray();
 
             CSharpCompilation compilation = CSharpCompilation.Create(assemblyName)
                 .WithReferences(references)

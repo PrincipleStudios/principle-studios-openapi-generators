@@ -11,14 +11,19 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
 {
     public class SystemTextJsonExperimentsShould
     {
-        public record Pet(
-            [property:global::System.Text.Json.Serialization.JsonPropertyName("id"), global::Newtonsoft.Json.JsonProperty("id")] long? Id,
+        public record NewPet(
             [property: global::System.Text.Json.Serialization.JsonPropertyName("name"), global::Newtonsoft.Json.JsonProperty("name")] string Name,
             [property: global::System.Text.Json.Serialization.JsonPropertyName("tag"), global::Newtonsoft.Json.JsonProperty("tag")] string? Tag
         );
 
+        public record Pet(
+            [property: global::System.Text.Json.Serialization.JsonPropertyName("id"), global::Newtonsoft.Json.JsonProperty("id")] long? Id,
+            string Name,
+            string? Tag
+        ) : NewPet(Name, Tag);
+
         [global::Newtonsoft.Json.JsonConverter(typeof(global::Newtonsoft.Json.Converters.StringEnumConverter))]
-        [global::System.Text.Json.Serialization.JsonConverter(typeof(SystemTextJsonExperiments.JsonStringEnumPropertyNameConverter))]
+        [global::System.Text.Json.Serialization.JsonConverter(typeof(global::PrincipleStudios.Json.Extensions.JsonStringEnumPropertyNameConverter))]
         public enum OrderStatus
         {
             /// <summary>
@@ -47,6 +52,31 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
         [Fact]
         public void SerializeRecords()
         {
+            var original = new NewPet("Fido", null);
+
+            var actual = JsonSerializer.Serialize(original);
+
+            Newtonsoft.Json.Linq.JToken.Parse(actual).Should().BeEquivalentTo(
+                Newtonsoft.Json.Linq.JToken.FromObject(original)
+            );
+        }
+
+        [Fact]
+        public void DeserializeRecords()
+        {
+            var json = @"{ ""name"": ""Fido"", ""tag"": null }";
+            var original = new NewPet("Fido", null);
+
+            var actual = JsonSerializer.Deserialize<NewPet>(json)!;
+
+            Newtonsoft.Json.Linq.JToken.FromObject(actual).Should().BeEquivalentTo(
+                Newtonsoft.Json.Linq.JToken.FromObject(original)
+            );
+        }
+
+        [Fact]
+        public void SerializeInheritedRecords()
+        {
             var original = new Pet(1007, "Fido", null);
             
             var actual = JsonSerializer.Serialize(original);
@@ -57,7 +87,7 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
         }
 
         [Fact]
-        public void DeserializeRecords()
+        public void DeserializeInheritedRecords()
         {
             var json = @"{ ""id"": 1007, ""name"": ""Fido"", ""tag"": null }";
             var original = new Pet(1007, "Fido", null);
@@ -118,5 +148,19 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
                 Newtonsoft.Json.Linq.JToken.FromObject(original)
             );
         }
+
+        [Fact]
+        public void DeserializeAny()
+        {
+            var json = @"[null, ""approved"", { ""id"": 1007, ""name"": ""Fido"", ""tag"": null } ]";
+
+            var actual = JsonSerializer.Deserialize<System.Text.Json.Nodes.JsonNode>(json)!;
+            var actualJson = actual.ToJsonString();
+
+            Newtonsoft.Json.Linq.JToken.Parse(json).Should().BeEquivalentTo(
+                Newtonsoft.Json.Linq.JToken.Parse(actualJson)
+            );
+        }
+
     }
 }

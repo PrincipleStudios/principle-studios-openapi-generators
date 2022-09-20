@@ -10,52 +10,8 @@
 #nullable disable warnings
 
 namespace PS.Controller
-{ 
-    public partial class RequiredId : global::System.IEquatable<RequiredId>
-    {
-        public RequiredId(
-            [global::Newtonsoft.Json.JsonProperty(PropertyName="id"), global::System.ComponentModel.DataAnnotations.Required] string Id
-        ) { 
-            this.Id = Id;
-        }
-
-        /// <summary>
-        /// Gets Id
-        /// </summary>
-        [global::System.ComponentModel.DataAnnotations.Required]
-        [global::Newtonsoft.Json.JsonProperty(PropertyName="id")]
-        public string Id { get; }
-
-        public override bool Equals(object obj)
-        {
-            if (obj is null) return false;
-            if (ReferenceEquals(this, obj)) return true;
-            return obj.GetType() == GetType() && Equals((RequiredId)obj);
-        }
-
-        public bool Equals(RequiredId other)
-        {
-            if (other is null) return false;
-            if (ReferenceEquals(this, other)) return true;
-
-            return (
-                Id == other.Id ||
-                Id.Equals(other.Id)
-            );
-        }
-
-        /// <summary>
-        /// Gets the hash code
-        /// </summary>
-        /// <returns>Hash code</returns>
-        public override int GetHashCode()
-        {
-            unchecked // Overflow is fine, just wrap
-            {
-                var hashCode = 41;
-                hashCode = hashCode * 59 + Id.GetHashCode();
-                return hashCode;
-            }
-        }
-    }
+{
+    public partial record RequiredId(
+        [property: global::System.Text.Json.Serialization.JsonPropertyName("id"), global::System.ComponentModel.DataAnnotations.Required] string Id
+    );
 }

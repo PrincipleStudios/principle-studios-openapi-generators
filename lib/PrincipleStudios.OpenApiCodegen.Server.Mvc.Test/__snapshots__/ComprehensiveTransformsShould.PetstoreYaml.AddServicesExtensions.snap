@@ -16,7 +16,7 @@ namespace Microsoft.Extensions.DependencyInjection
         public static IMvcBuilder AddOpenApiSwaggerPetstore<TPetsController>(this IServiceCollection services)
             where TPetsController : global::PS.Controller.PetsControllerBase
         {
-            return services.AddControllers().AddNewtonsoftJson();
+            return services.AddControllers();
         }
     }
 }
