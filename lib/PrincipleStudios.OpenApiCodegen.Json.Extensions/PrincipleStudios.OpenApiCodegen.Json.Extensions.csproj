@@ -12,7 +12,7 @@
 		<PackageSummary>Extensions for System.Text.Json.</PackageSummary>
 		<description>Extensions for System.Text.Json.</description>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-		<IncludeBuildOutput>false</IncludeBuildOutput>
+		<IncludeBuildOutput>true</IncludeBuildOutput>
 		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
 		<PackageReadmeFile>readme.md</PackageReadmeFile>
 	</PropertyGroup>

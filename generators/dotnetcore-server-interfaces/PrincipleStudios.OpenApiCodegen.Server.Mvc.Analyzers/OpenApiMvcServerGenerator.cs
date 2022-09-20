@@ -28,12 +28,6 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
         const string propConfig = "Configuration";
 
         private const string sourceItemGroupKey = "SourceItemGroup";
-        private static readonly DiagnosticDescriptor IncludeNewtonsoftJson = new DiagnosticDescriptor(id: "PSAPICTRL001",
-                                                                                                  title: "Include a reference to Newtonsoft.Json",
-                                                                                                  messageFormat: "Include a reference to Newtonsoft.Json",
-                                                                                                  category: "PrincipleStudios.OpenApiCodegen.Server.Mvc",
-                                                                                                  DiagnosticSeverity.Warning,
-                                                                                                  isEnabledByDefault: true);
         private static readonly DiagnosticDescriptor GeneratedNamespace = new DiagnosticDescriptor(id: "PSAPICTRLINFO001",
                                                                                                   title: "Generated Namespace",
                                                                                                   messageFormat: "Generated Namespace: {0}",
@@ -61,12 +55,6 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
 
         public virtual void Execute(GeneratorExecutionContext context)
         {
-            // check that the users compilation references the expected library 
-            if (!context.Compilation.ReferencedAssemblyNames.Any(ai => ai.Name.Equals("Newtonsoft.Json", StringComparison.OrdinalIgnoreCase)))
-            {
-                context.ReportDiagnostic(Diagnostic.Create(IncludeNewtonsoftJson, Location.None));
-            }
-
             Stopwatch stopwatch = Stopwatch.StartNew();
             var options = GetLoadOptions(context).ToArray();
             if (!options.Any())
