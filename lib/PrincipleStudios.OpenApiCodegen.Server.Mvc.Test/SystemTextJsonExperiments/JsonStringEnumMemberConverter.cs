@@ -1,5 +1,4 @@
-﻿using System.Runtime.Serialization;
-using System.Text.Json;
+﻿using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Reflection;
 using System;
@@ -14,21 +13,21 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc.SystemTextJsonExperiments
 	/// <summary>
 	/// <see cref="JsonConverterFactory"/> to convert enums to and from strings, respecting <see cref="EnumMemberAttribute"/> decorations. Supports nullable enums.
 	/// </summary>
-	public class JsonStringEnumMemberConverter : JsonConverterFactory
+	public class JsonStringEnumPropertyNameConverter : JsonConverterFactory
 	{
 		private readonly JsonNamingPolicy? _NamingPolicy;
 		private readonly bool _AllowIntegerValues;
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="JsonStringEnumMemberConverter"/> class.
+		/// Initializes a new instance of the <see cref="JsonStringEnumPropertyNameConverter"/> class.
 		/// </summary>
-		public JsonStringEnumMemberConverter()
+		public JsonStringEnumPropertyNameConverter()
 			: this(namingPolicy: null, allowIntegerValues: true)
 		{
 		}
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="JsonStringEnumMemberConverter"/> class.
+		/// Initializes a new instance of the <see cref="JsonStringEnumPropertyNameConverter"/> class.
 		/// </summary>
 		/// <param name="namingPolicy">
 		/// Optional naming policy for writing enum values.
@@ -37,7 +36,7 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc.SystemTextJsonExperiments
 		/// True to allow undefined enum values. When true, if an enum value isn't
 		/// defined it will output as a number rather than a string.
 		/// </param>
-		public JsonStringEnumMemberConverter(JsonNamingPolicy? namingPolicy = null, bool allowIntegerValues = true)
+		public JsonStringEnumPropertyNameConverter(JsonNamingPolicy? namingPolicy = null, bool allowIntegerValues = true)
 		{
 			_NamingPolicy = namingPolicy;
 			_AllowIntegerValues = allowIntegerValues;
@@ -173,8 +172,8 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc.SystemTextJsonExperiments
 
 				string name = builtInNames[i];
 				FieldInfo field = _EnumType.GetField(name, EnumBindings)!;
-				EnumMemberAttribute? enumMemberAttribute = field.GetCustomAttribute<EnumMemberAttribute>(true);
-				string transformedName = enumMemberAttribute?.Value ?? namingPolicy?.ConvertName(name) ?? name;
+				JsonPropertyNameAttribute? enumMemberAttribute = field.GetCustomAttribute<JsonPropertyNameAttribute>(true);
+				string transformedName = enumMemberAttribute?.Name ?? namingPolicy?.ConvertName(name) ?? name;
 
 				if (enumValue is not TEnum typedValue)
 					throw new NotSupportedException();

@@ -18,25 +18,28 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
         );
 
         [global::Newtonsoft.Json.JsonConverter(typeof(global::Newtonsoft.Json.Converters.StringEnumConverter))]
-        [global::System.Text.Json.Serialization.JsonConverter(typeof(SystemTextJsonExperiments.JsonStringEnumMemberConverter))]
+        [global::System.Text.Json.Serialization.JsonConverter(typeof(SystemTextJsonExperiments.JsonStringEnumPropertyNameConverter))]
         public enum OrderStatus
         {
             /// <summary>
             /// Enum Placed for placed
             /// </summary>
             [global::System.Runtime.Serialization.EnumMember(Value = "placed")]
+            [global::System.Text.Json.Serialization.JsonPropertyName("placed")]
             Placed = 0,
 
             /// <summary>
             /// Enum Approved for approved
             /// </summary>
             [global::System.Runtime.Serialization.EnumMember(Value = "approved")]
+            [global::System.Text.Json.Serialization.JsonPropertyName("approved")]
             Approved = 1,
 
             /// <summary>
             /// Enum Delivered for delivered
             /// </summary>
             [global::System.Runtime.Serialization.EnumMember(Value = "delivered")]
+            [global::System.Text.Json.Serialization.JsonPropertyName("delivered")]
             Delivered = 2,
 
         }
