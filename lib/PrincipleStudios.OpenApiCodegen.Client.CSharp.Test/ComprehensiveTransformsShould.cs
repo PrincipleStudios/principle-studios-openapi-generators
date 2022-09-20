@@ -34,7 +34,7 @@ namespace PrincipleStudios.OpenApiCodegen.Client.CSharp
             Assert.Empty(diagnostic.Errors);
 
             var syntaxTrees = entries.Select(e => CSharpSyntaxTree.ParseText(e.SourceText, path: e.Key)).ToArray();
-            
+
             string assemblyName = Path.GetRandomFileName();
             var refPaths = new[] {
                 Path.Combine(Path.GetDirectoryName(typeof(object).Assembly.Location)!, "netstandard.dll"),
@@ -52,7 +52,7 @@ namespace PrincipleStudios.OpenApiCodegen.Client.CSharp
                 typeof(Uri).Assembly.Location,
                 typeof(System.Web.HttpUtility).Assembly.Location,
                 typeof(System.Collections.Specialized.NameValueCollection).Assembly.Location,
-                typeof(PrincipleStudios.Json.Extensions.JsonStringEnumPropertyNameConverter).Assembly.Location,
+                typeof(PrincipleStudios.OpenApiCodegen.Json.Extensions.JsonStringEnumPropertyNameConverter).Assembly.Location,
             };
             MetadataReference[] references = refPaths.Select(r => MetadataReference.CreateFromFile(r)).ToArray();
 

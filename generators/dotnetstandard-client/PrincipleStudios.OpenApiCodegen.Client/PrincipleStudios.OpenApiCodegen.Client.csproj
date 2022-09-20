@@ -33,7 +33,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\..\..\lib\PrincipleStudios.Json.Extensions\PrincipleStudios.Json.Extensions.csproj" />
+		<ProjectReference Include="..\..\..\lib\PrincipleStudios.OpenApiCodegen.Json.Extensions\PrincipleStudios.OpenApiCodegen.Json.Extensions.csproj" />
 	</ItemGroup>
 
 	<Target Name="AddDlls" BeforeTargets="_GetPackageFiles">

@@ -23,7 +23,7 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
         ) : NewPet(Name, Tag);
 
         [global::Newtonsoft.Json.JsonConverter(typeof(global::Newtonsoft.Json.Converters.StringEnumConverter))]
-        [global::System.Text.Json.Serialization.JsonConverter(typeof(global::PrincipleStudios.Json.Extensions.JsonStringEnumPropertyNameConverter))]
+        [global::System.Text.Json.Serialization.JsonConverter(typeof(global::PrincipleStudios.OpenApiCodegen.Json.Extensions.JsonStringEnumPropertyNameConverter))]
         public enum OrderStatus
         {
             /// <summary>
@@ -78,7 +78,7 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
         public void SerializeInheritedRecords()
         {
             var original = new Pet(1007, "Fido", null);
-            
+
             var actual = JsonSerializer.Serialize(original);
 
             Newtonsoft.Json.Linq.JToken.Parse(actual).Should().BeEquivalentTo(

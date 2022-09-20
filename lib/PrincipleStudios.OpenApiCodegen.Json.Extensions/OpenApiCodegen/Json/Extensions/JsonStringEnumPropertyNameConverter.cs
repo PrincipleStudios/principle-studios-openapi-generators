@@ -3,10 +3,10 @@ using System.Text.Json.Serialization;
 using System.Reflection;
 using System;
 
-namespace PrincipleStudios.Json.Extensions;
+namespace PrincipleStudios.OpenApiCodegen.Json.Extensions;
 
 /// <summary>
-/// <see cref="JsonConverterFactory"/> to convert enums to and from strings, respecting <see cref="EnumMemberAttribute"/> decorations. Supports nullable enums.
+/// <see cref="JsonConverterFactory"/> to convert enums to and from strings, respecting <see cref="JsonPropertyNameAttribute"/> decorations. Supports nullable enums.
 /// </summary>
 public class JsonStringEnumPropertyNameConverter : JsonConverterFactory
 {

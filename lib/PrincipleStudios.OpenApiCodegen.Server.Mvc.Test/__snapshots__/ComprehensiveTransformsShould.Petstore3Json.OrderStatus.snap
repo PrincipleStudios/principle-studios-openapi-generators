@@ -12,11 +12,11 @@
 #pragma warning disable
 
 namespace PS.Controller
-{ 
+{
     /// <summary>
     /// Order Status
     /// </summary>
-    [global::System.Text.Json.Serialization.JsonConverter(typeof(global::PrincipleStudios.Json.Extensions.JsonStringEnumPropertyNameConverter))]
+    [global::System.Text.Json.Serialization.JsonConverter(typeof(global::PrincipleStudios.OpenApiCodegen.Json.Extensions.JsonStringEnumPropertyNameConverter))]
     public enum OrderStatus
     {
         /// <summary>

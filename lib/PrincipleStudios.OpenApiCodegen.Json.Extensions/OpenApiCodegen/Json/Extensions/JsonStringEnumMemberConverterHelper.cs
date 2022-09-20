@@ -6,7 +6,7 @@ using System.Globalization;
 using System.Collections.Generic;
 using System.Text;
 
-namespace PrincipleStudios.Json.Extensions;
+namespace PrincipleStudios.OpenApiCodegen.Json.Extensions;
 
 internal class JsonStringEnumMemberConverterHelper<TEnum>
 	where TEnum : struct, Enum

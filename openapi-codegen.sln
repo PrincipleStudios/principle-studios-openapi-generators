@@ -45,7 +45,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PrincipleStudios.OpenApiCod
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PrincipleStudios.OpenApiCodegen.Client.Roslyn4.0", "generators\dotnetstandard-client\PrincipleStudios.OpenApiCodegen.Client.Analyzers\PrincipleStudios.OpenApiCodegen.Client.Roslyn4.0.csproj", "{C724EA82-3A7D-4171-957D-7CF998B6B4EF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PrincipleStudios.Json.Extensions", "lib\PrincipleStudios.Json.Extensions\PrincipleStudios.Json.Extensions.csproj", "{2014CC5F-3E0A-4D2E-9AEE-1A020142784F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PrincipleStudios.OpenApiCodegen.Json.Extensions", "lib\PrincipleStudios.OpenApiCodegen.Json.Extensions\PrincipleStudios.OpenApiCodegen.Json.Extensions.csproj", "{2014CC5F-3E0A-4D2E-9AEE-1A020142784F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

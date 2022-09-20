@@ -24,7 +24,7 @@
 
 	<ItemGroup>
 		<ProjectReference Include="$(SolutionRoot)generators\dotnetstandard-client\PrincipleStudios.OpenApiCodegen.Client.Analyzers\PrincipleStudios.OpenApiCodegen.Client.Roslyn3.11.csproj" />
-		<ProjectReference Include="..\PrincipleStudios.Json.Extensions\PrincipleStudios.Json.Extensions.csproj" />
+		<ProjectReference Include="..\PrincipleStudios.OpenApiCodegen.Json.Extensions\PrincipleStudios.OpenApiCodegen.Json.Extensions.csproj" />
 		<ProjectReference Include="..\PrincipleStudios.OpenApiCodegen.TestUtils\PrincipleStudios.OpenApiCodegen.TestUtils.csproj" />
 	</ItemGroup>
 

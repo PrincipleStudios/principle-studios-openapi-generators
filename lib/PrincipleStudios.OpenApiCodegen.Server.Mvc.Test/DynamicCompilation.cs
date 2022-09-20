@@ -39,7 +39,7 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
             typeof(Microsoft.AspNetCore.Http.IHeaderDictionary).Assembly.Location,
             typeof(Microsoft.AspNetCore.Authorization.AuthorizeAttribute).Assembly.Location,
 
-            typeof(PrincipleStudios.Json.Extensions.JsonStringEnumPropertyNameConverter).Assembly.Location,
+            typeof(PrincipleStudios.OpenApiCodegen.Json.Extensions.JsonStringEnumPropertyNameConverter).Assembly.Location,
         };
 
         public static byte[] GetGeneratedLibrary(string documentName)

@@ -3,7 +3,7 @@ using System.Reflection;
 using System;
 using System.Diagnostics;
 
-namespace PrincipleStudios.Json.Extensions;
+namespace PrincipleStudios.OpenApiCodegen.Json.Extensions;
 
 internal static class ThrowHelper
 {
