@@ -4,7 +4,7 @@
 
     In GitHub, go to your Settings (under your profile icon), find the Developer Settings section, and open the Personal Access Tokens section. Click "Generate a new token" and configure it with the following settings. (The Note may be whatever you want to remember what it was for; I usually name it for the computer and purpose the key was for so it is easy to delete/revoke later.)
 
-    ![GitHub Key Settings](./github-packages-key-settings.png | width=1000)
+    <img src="./github-packages-key-settings.png" alt="GitHub Key Settings" width="600" />
 
     Save the generated key after saving - at least through step 2. (You may regenerate it if you lose it.)
 
