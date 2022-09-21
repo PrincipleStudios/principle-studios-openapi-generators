@@ -14,8 +14,7 @@
 namespace PS.Controller
 {
     public partial record LookupRecordRequestLocation(
-        [property: global::System.Text.Json.Serialization.JsonPropertyName("latitude"), global::System.ComponentModel.DataAnnotations.Required] double Latitude, 
-    
-        [property: global::System.Text.Json.Serialization.JsonPropertyName("longitude"), global::System.ComponentModel.DataAnnotations.Required] double Longitude
+        [property: global::System.Text.Json.Serialization.JsonPropertyName("latitude")][param: global::System.ComponentModel.DataAnnotations.Required] double Latitude, 
+        [property: global::System.Text.Json.Serialization.JsonPropertyName("longitude")][param: global::System.ComponentModel.DataAnnotations.Required] double Longitude
     );
 }

@@ -15,7 +15,6 @@ namespace PS.Controller
 {
     public partial record Target(
         [property: global::System.Text.Json.Serialization.JsonPropertyName("target")] Target? _Target, 
-    
-        [property: global::System.Text.Json.Serialization.JsonPropertyName("id"), global::System.ComponentModel.DataAnnotations.Required] double Id
+        [property: global::System.Text.Json.Serialization.JsonPropertyName("id")][param: global::System.ComponentModel.DataAnnotations.Required] double Id
     );
 }

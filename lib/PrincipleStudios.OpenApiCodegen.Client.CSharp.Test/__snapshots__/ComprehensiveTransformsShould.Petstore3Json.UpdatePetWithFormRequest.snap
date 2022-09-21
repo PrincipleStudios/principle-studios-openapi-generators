@@ -15,7 +15,6 @@ namespace PS.Controller
 {
     public partial record UpdatePetWithFormRequest(
         [property: global::System.Text.Json.Serialization.JsonPropertyName("name")] string? Name, 
-    
         [property: global::System.Text.Json.Serialization.JsonPropertyName("status")] string? Status
     );
 }

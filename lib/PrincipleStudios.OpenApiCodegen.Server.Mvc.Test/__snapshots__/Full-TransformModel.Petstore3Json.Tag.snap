@@ -15,7 +15,6 @@ namespace PrincipleStudios.Test
 {
     public partial record Tag(
         [property: global::System.Text.Json.Serialization.JsonPropertyName("id")] long? Id, 
-    
         [property: global::System.Text.Json.Serialization.JsonPropertyName("name")] string? Name
     );
 }

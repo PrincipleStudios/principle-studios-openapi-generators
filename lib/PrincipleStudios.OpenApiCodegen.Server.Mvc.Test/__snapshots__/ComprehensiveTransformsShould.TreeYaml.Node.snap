@@ -14,6 +14,6 @@
 namespace PS.Controller
 {
     public partial record Node(
-        [property: global::System.Text.Json.Serialization.JsonPropertyName("children"), global::System.ComponentModel.DataAnnotations.Required] global::System.Collections.Generic.IEnumerable<Node> Children
+        [property: global::System.Text.Json.Serialization.JsonPropertyName("children")][param: global::System.ComponentModel.DataAnnotations.Required] global::System.Collections.Generic.IEnumerable<Node> Children
     );
 }

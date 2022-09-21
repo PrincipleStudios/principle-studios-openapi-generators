@@ -15,15 +15,10 @@ namespace PrincipleStudios.Test
 {
     public partial record Order(
         [property: global::System.Text.Json.Serialization.JsonPropertyName("id")] long? Id, 
-    
         [property: global::System.Text.Json.Serialization.JsonPropertyName("petId")] long? PetId, 
-    
         [property: global::System.Text.Json.Serialization.JsonPropertyName("quantity")] int? Quantity, 
-    
         [property: global::System.Text.Json.Serialization.JsonPropertyName("shipDate")] global::System.DateTimeOffset? ShipDate, 
-    
         [property: global::System.Text.Json.Serialization.JsonPropertyName("status")] OrderStatus? Status, 
-    
         [property: global::System.Text.Json.Serialization.JsonPropertyName("complete")] bool? Complete
     );
 }

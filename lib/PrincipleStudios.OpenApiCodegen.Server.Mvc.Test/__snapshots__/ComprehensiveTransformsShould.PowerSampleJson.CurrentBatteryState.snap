@@ -15,9 +15,7 @@ namespace PS.Controller
 {
     public partial record CurrentBatteryState(
         [property: global::System.Text.Json.Serialization.JsonPropertyName("percent")] double? Percent, 
-    
         [property: global::System.Text.Json.Serialization.JsonPropertyName("currentCharge")] double? CurrentCharge, 
-    
         [property: global::System.Text.Json.Serialization.JsonPropertyName("maxCharge")] double? MaxCharge
     );
 }

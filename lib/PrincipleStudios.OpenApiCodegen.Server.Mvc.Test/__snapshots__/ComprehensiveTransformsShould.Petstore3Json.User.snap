@@ -15,19 +15,12 @@ namespace PS.Controller
 {
     public partial record User(
         [property: global::System.Text.Json.Serialization.JsonPropertyName("id")] long? Id, 
-    
         [property: global::System.Text.Json.Serialization.JsonPropertyName("username")] string? Username, 
-    
         [property: global::System.Text.Json.Serialization.JsonPropertyName("firstName")] string? FirstName, 
-    
         [property: global::System.Text.Json.Serialization.JsonPropertyName("lastName")] string? LastName, 
-    
         [property: global::System.Text.Json.Serialization.JsonPropertyName("email")] string? Email, 
-    
         [property: global::System.Text.Json.Serialization.JsonPropertyName("password")] string? Password, 
-    
         [property: global::System.Text.Json.Serialization.JsonPropertyName("phone")] string? Phone, 
-    
         [property: global::System.Text.Json.Serialization.JsonPropertyName("userStatus")] int? UserStatus
     );
 }

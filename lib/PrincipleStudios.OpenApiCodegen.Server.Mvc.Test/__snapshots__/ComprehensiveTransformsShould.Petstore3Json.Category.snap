@@ -15,7 +15,6 @@ namespace PS.Controller
 {
     public partial record Category(
         [property: global::System.Text.Json.Serialization.JsonPropertyName("id")] long? Id, 
-    
         [property: global::System.Text.Json.Serialization.JsonPropertyName("name")] string? Name
     );
 }

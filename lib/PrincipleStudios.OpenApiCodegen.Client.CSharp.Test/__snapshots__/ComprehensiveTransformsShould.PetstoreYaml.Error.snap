@@ -14,8 +14,7 @@
 namespace PS.Controller
 {
     public partial record Error(
-        [property: global::System.Text.Json.Serialization.JsonPropertyName("code"), global::System.ComponentModel.DataAnnotations.Required] int Code, 
-    
-        [property: global::System.Text.Json.Serialization.JsonPropertyName("message"), global::System.ComponentModel.DataAnnotations.Required] string Message
+        [property: global::System.Text.Json.Serialization.JsonPropertyName("code")][param: global::System.ComponentModel.DataAnnotations.Required] int Code, 
+        [property: global::System.Text.Json.Serialization.JsonPropertyName("message")][param: global::System.ComponentModel.DataAnnotations.Required] string Message
     );
 }

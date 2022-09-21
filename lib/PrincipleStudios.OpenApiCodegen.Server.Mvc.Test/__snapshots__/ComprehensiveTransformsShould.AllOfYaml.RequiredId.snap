@@ -12,6 +12,6 @@
 namespace PS.Controller
 {
     public partial record RequiredId(
-        [property: global::System.Text.Json.Serialization.JsonPropertyName("id"), global::System.ComponentModel.DataAnnotations.Required] string Id
+        [property: global::System.Text.Json.Serialization.JsonPropertyName("id")][param: global::System.ComponentModel.DataAnnotations.Required] string Id
     );
 }
