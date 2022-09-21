@@ -13,5 +13,6 @@
 
 namespace PS.Controller
 {
-    public partial record GetPowerFlowsResponse();
+    public partial record GetPowerFlowsResponse(
+    );
 }

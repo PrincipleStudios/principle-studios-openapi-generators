@@ -15,15 +15,10 @@ namespace PrincipleStudios.Test
 {
     public partial record Pet(
         [property: global::System.Text.Json.Serialization.JsonPropertyName("id")] long? Id, 
-    
         [property: global::System.Text.Json.Serialization.JsonPropertyName("category")] Category? Category, 
-    
-        [property: global::System.Text.Json.Serialization.JsonPropertyName("name"), global::System.ComponentModel.DataAnnotations.Required] string Name, 
-    
-        [property: global::System.Text.Json.Serialization.JsonPropertyName("photoUrls"), global::System.ComponentModel.DataAnnotations.Required] global::System.Collections.Generic.IEnumerable<string> PhotoUrls, 
-    
+        [property: global::System.Text.Json.Serialization.JsonPropertyName("name")][param: global::System.ComponentModel.DataAnnotations.Required] string Name, 
+        [property: global::System.Text.Json.Serialization.JsonPropertyName("photoUrls")][param: global::System.ComponentModel.DataAnnotations.Required] global::System.Collections.Generic.IEnumerable<string> PhotoUrls, 
         [property: global::System.Text.Json.Serialization.JsonPropertyName("tags")] global::System.Collections.Generic.IEnumerable<Tag>? Tags, 
-    
         [property: global::System.Text.Json.Serialization.JsonPropertyName("status")] PetStatus? Status
     );
 }

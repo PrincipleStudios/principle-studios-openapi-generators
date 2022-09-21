@@ -14,8 +14,7 @@
 namespace PS.Controller
 {
     public partial record LookupRecordConflictResponseMultipleItem(
-        [property: global::System.Text.Json.Serialization.JsonPropertyName("formattedAddress"), global::System.ComponentModel.DataAnnotations.Required] string FormattedAddress, 
-    
-        [property: global::System.Text.Json.Serialization.JsonPropertyName("location"), global::System.ComponentModel.DataAnnotations.Required] LookupRecordConflictResponseMultipleItemLocation Location
+        [property: global::System.Text.Json.Serialization.JsonPropertyName("formattedAddress")][param: global::System.ComponentModel.DataAnnotations.Required] string FormattedAddress, 
+        [property: global::System.Text.Json.Serialization.JsonPropertyName("location")][param: global::System.ComponentModel.DataAnnotations.Required] LookupRecordConflictResponseMultipleItemLocation Location
     );
 }

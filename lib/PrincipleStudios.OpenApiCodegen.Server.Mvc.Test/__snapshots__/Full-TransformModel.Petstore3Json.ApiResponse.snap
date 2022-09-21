@@ -15,9 +15,7 @@ namespace PrincipleStudios.Test
 {
     public partial record ApiResponse(
         [property: global::System.Text.Json.Serialization.JsonPropertyName("code")] int? Code, 
-    
         [property: global::System.Text.Json.Serialization.JsonPropertyName("type")] string? Type, 
-    
         [property: global::System.Text.Json.Serialization.JsonPropertyName("message")] string? Message
     );
 }
