@@ -10,10 +10,10 @@ namespace {{this.packageName}}
     /// {{linewrap description "
     /// "}}
     /// </summary>
-    {{/if}}public partial record {{className}}({{#each vars}}{{! TODO: support parent properties}}
+    {{/if}}public partial record {{className}}({{#each vars}}
         [property: global::System.Text.Json.Serialization.JsonPropertyName("{{baseName}}"){{#if required}}, global::System.ComponentModel.DataAnnotations.Required{{/if}}]{{!
     data type: }} {{{dataType}}}{{!
     name: }} {{name}}{{#unless @last}}, {{/unless}}
-    {{/each}}){{#if parent}} : {{{parent}}}(){{/if}};
+    {{/each}});
     {{/with}}
 }
