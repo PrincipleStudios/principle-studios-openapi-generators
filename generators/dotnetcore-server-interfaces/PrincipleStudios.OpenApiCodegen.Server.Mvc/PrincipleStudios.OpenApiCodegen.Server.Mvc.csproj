@@ -23,6 +23,7 @@
 
 	<ItemGroup>
 		<None Include="*.props" Pack="true" PackagePath="build" />
+		<None Include="*.targets" Pack="true" PackagePath="build" />
 		<None Include="readme.md" Pack="true" PackagePath="\" Visible="false" />
 	</ItemGroup>
 
