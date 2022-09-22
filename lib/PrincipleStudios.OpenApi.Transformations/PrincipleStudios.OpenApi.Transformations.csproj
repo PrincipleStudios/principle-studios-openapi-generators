@@ -5,6 +5,7 @@
 		<TargetFramework>netstandard2.0</TargetFramework>
 		<LangVersion>9</LangVersion>
 		<Nullable>enable</Nullable>
+		<VersionPrefix>$(SharedAnalyzerLibrariesVersion)</VersionPrefix>
 	</PropertyGroup>
 	<ItemGroup>
 		<Compile Include="$(SolutionRoot)lib\raw-files\IsExternalInit.cs" Link="IsExternalInit.cs" Visible="false" />
