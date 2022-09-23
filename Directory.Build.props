@@ -20,14 +20,20 @@
 		<BaseOutputPath>$([MSBuild]::NormalizeDirectory('$(ArtifactsBinDir)', '$(MSBuildProjectName)'))</BaseOutputPath>
 		<IntermediateOutputPath Condition="'$(PlatformName)' == 'AnyCPU'">$(BaseIntermediateOutputPath)$(Configuration)\</IntermediateOutputPath>
 		<IntermediateOutputPath Condition="'$(PlatformName)' != 'AnyCPU'">$(BaseIntermediateOutputPath)$(PlatformName)\$(Configuration)\</IntermediateOutputPath>
+
+		<SignAssembly>True</SignAssembly>
+		<AssemblyOriginatorKeyFile Condition="exists('$(SolutionRoot)OpenApiCodegen.snk')">$(SolutionRoot)OpenApiCodegen.snk</AssemblyOriginatorKeyFile>
+		<NoWarn Condition="$(MSBuildProjectName.Contains('Test'))">$(NoWarn);CS8002</NoWarn>
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(IsWindows)'=='true'">
 		<DefineConstants>Windows</DefineConstants>
 	</PropertyGroup>
 
 	<PropertyGroup>
-		<OpenApiMvcServerVersion>0.11.5</OpenApiMvcServerVersion>
-		<OpenApiCSharpClientVersion>0.4.4</OpenApiCSharpClientVersion>
+		<OpenApiMvcServerVersion>0.11.6</OpenApiMvcServerVersion>
+		<OpenApiCSharpClientVersion>0.4.5</OpenApiCSharpClientVersion>
+		<!-- Should be incremented anytime one of the internal libraries changes -->
+		<SharedAnalyzerLibrariesVersion>0.1.0</SharedAnalyzerLibrariesVersion>
 	</PropertyGroup>
 
 	<Import Project="Directory.Build.local.props" Condition="exists('$(MSBuildThisFileDirectory)Directory.Build.local.props')" />

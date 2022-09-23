@@ -45,6 +45,11 @@ jobs:
           ${{ runner.os }}-build-
           ${{ runner.os }}-
 
+    - name: Decode the Signing Key
+      # Generated via powershell: `[System.Convert]::ToBase64String((Get-Content '.\OpenApiCodegen.snk' -Encoding Byte)) | Set-Clipboard` and saved to GitHub Secrets SIGNING_KEY
+      run: |
+        echo "${{ secrets.SIGNING_KEY }}" | base64 --decode > ./OpenApiCodegen.snk
+
     ###########
     # BUILD
     - name: Restore dependencies
