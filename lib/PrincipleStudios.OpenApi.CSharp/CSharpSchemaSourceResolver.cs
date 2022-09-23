@@ -149,7 +149,7 @@ namespace PrincipleStudios.OpenApi.CSharp
                                         responses.Count == 1 ? ""
                                             : _2xxRegex.IsMatch(statusCode) && responses.Keys.Count(_2xxRegex.IsMatch) == 1 ? ""
                                             : statusCode == "default" && !responses.ContainsKey("other") ? "other"
-                                            : int.TryParse(statusCode, out var numeric) ? ((System.Net.HttpStatusCode)numeric).ToString("g")
+                                            : int.TryParse(statusCode, out var numeric) && HttpStatusCodes.StatusCodeNames.TryGetValue(numeric, out var statusCodeName) ? statusCodeName
                                             : statusCode,
                                         response.Content.Count == 1 ? ""
                                             : mimeType,

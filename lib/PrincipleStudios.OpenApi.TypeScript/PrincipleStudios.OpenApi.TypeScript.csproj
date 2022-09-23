@@ -5,6 +5,7 @@
 		<TargetFramework>netstandard2.0</TargetFramework>
 		<LangVersion>9</LangVersion>
 		<Nullable>enable</Nullable>
+		<VersionPrefix>$(SharedAnalyzerLibrariesVersion)</VersionPrefix>
 	</PropertyGroup>
 	<ItemGroup>
 		<PackageReference Include="Handlebars.Net" Version="2.0.7" />
@@ -26,6 +27,6 @@
 		</EmbeddedResource>
 	</ItemGroup>
 	<ItemGroup>
-		<ProjectReference Include="..\PrincipleStudios.OpenApi.Transformations\PrincipleStudios.OpenApi.Transformations.csproj" />
+		<ProjectReference Include="..\PrincipleStudios.OpenApi.Transformations\PrincipleStudios.OpenApi.Transformations.csproj" SpecificVersion="true" />
 	</ItemGroup>
 </Project>

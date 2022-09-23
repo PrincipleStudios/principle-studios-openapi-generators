@@ -20,6 +20,10 @@
 		<BaseOutputPath>$([MSBuild]::NormalizeDirectory('$(ArtifactsBinDir)', '$(MSBuildProjectName)'))</BaseOutputPath>
 		<IntermediateOutputPath Condition="'$(PlatformName)' == 'AnyCPU'">$(BaseIntermediateOutputPath)$(Configuration)\</IntermediateOutputPath>
 		<IntermediateOutputPath Condition="'$(PlatformName)' != 'AnyCPU'">$(BaseIntermediateOutputPath)$(PlatformName)\$(Configuration)\</IntermediateOutputPath>
+
+		<SignAssembly>True</SignAssembly>
+		<AssemblyOriginatorKeyFile Condition="exists('$(SolutionRoot)OpenApiCodegen.snk')">$(SolutionRoot)OpenApiCodegen.snk</AssemblyOriginatorKeyFile>
+		<NoWarn Condition="$(MSBuildProjectName.Contains('Test'))">$(NoWarn);CS8002</NoWarn>
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(IsWindows)'=='true'">
 		<DefineConstants>Windows</DefineConstants>
@@ -29,6 +33,8 @@
 		<OpenApiJsonExtensionsVersion>0.12.0</OpenApiJsonExtensionsVersion>
 		<OpenApiMvcServerVersion>0.12.0</OpenApiMvcServerVersion>
 		<OpenApiCSharpClientVersion>0.12.0</OpenApiCSharpClientVersion>
+		<!-- Should be incremented anytime one of the internal libraries changes -->
+		<SharedAnalyzerLibrariesVersion>0.1.0</SharedAnalyzerLibrariesVersion>
 	</PropertyGroup>
 
 	<Import Project="Directory.Build.local.props" Condition="exists('$(MSBuildThisFileDirectory)Directory.Build.local.props')" />

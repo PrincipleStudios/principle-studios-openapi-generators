@@ -97,7 +97,8 @@ namespace PrincipleStudios.OpenApi.CSharp
         {
             var responseKey = context.GetLastKeyFor(response);
             int? statusCode = int.TryParse(responseKey, out var s) ? s : null;
-            var statusCodeName = statusCode.HasValue ? ((System.Net.HttpStatusCode)statusCode).ToString("g") : "other status code";
+            if (!statusCode.HasValue || !HttpStatusCodes.StatusCodeNames.TryGetValue(statusCode.Value, out var statusCodeName))
+                statusCodeName = "other status code";
             if (statusCodeName == responseKey)
                 statusCodeName = $"status code {statusCode}";
 
