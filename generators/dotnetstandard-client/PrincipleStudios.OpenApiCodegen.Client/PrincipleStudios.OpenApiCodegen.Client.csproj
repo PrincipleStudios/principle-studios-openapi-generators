@@ -32,10 +32,6 @@
 						   ReferenceAnalyzer="false" />
 	</ItemGroup>
 
-	<ItemGroup>
-		<ProjectReference Include="..\..\..\lib\PrincipleStudios.OpenApiCodegen.Json.Extensions\PrincipleStudios.OpenApiCodegen.Json.Extensions.csproj" />
-	</ItemGroup>
-
 	<Target Name="AddDlls" BeforeTargets="_GetPackageFiles">
 		<!-- Resolves NU5128 -->
 		<Touch Files="$(OutputPath)\_._" AlwaysCreate="true" />

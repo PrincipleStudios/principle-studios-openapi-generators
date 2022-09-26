@@ -13,6 +13,10 @@
 		<PackageReference Include="PrincipleStudios.OpenApiCodegen.Client" Condition=" '$(OpenApiCSharpClientFullVersion)' != '' " Version="$(OpenApiCSharpClientFullVersion)" />
 		<PackageReference Include="PrincipleStudios.OpenApiCodegen.Client" Condition=" '$(OpenApiCSharpClientFullVersion)' == '' and '$(VersionSuffix)' == '' " Version="$(OpenApiCSharpClientVersion)" />
 		<PackageReference Include="PrincipleStudios.OpenApiCodegen.Client" Condition=" '$(OpenApiCSharpClientFullVersion)' == '' and '$(VersionSuffix)' != '' " Version="$(OpenApiCSharpClientVersion)-$(VersionSuffix)" />
+
+		<PackageReference Include="PrincipleStudios.OpenApiCodegen.Json.Extensions" Condition=" '$(OpenApiJsonExtensionsFullVersion)' != '' " Version="$(OpenApiJsonExtensionsFullVersion)" />
+		<PackageReference Include="PrincipleStudios.OpenApiCodegen.Json.Extensions" Condition=" '$(OpenApiJsonExtensionsFullVersion)' == '' and '$(VersionSuffix)' == '' " Version="$(OpenApiJsonExtensionsVersion)" />
+		<PackageReference Include="PrincipleStudios.OpenApiCodegen.Json.Extensions" Condition=" '$(OpenApiJsonExtensionsFullVersion)' == '' and '$(VersionSuffix)' != '' " Version="$(OpenApiJsonExtensionsVersion)-$(VersionSuffix)" />
 	</ItemGroup>
 
 	<ItemGroup>

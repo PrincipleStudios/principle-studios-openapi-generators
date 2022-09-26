@@ -26,6 +26,13 @@ namespace PrincipleStudios.OpenApiCodegen.Client
         const string sourceGroup = "OpenApiClientInterface";
         const string propNamespace = "Namespace";
         const string propConfig = "Configuration";
+        private static readonly DiagnosticDescriptor IncludeDependentDll = new DiagnosticDescriptor(id: "PSAPICLNT001",
+                                                                                                  title: "Include a reference to PrincipleStudios.OpenApiCodegen.Json.Extensions",
+                                                                                                  messageFormat: "Include a reference to PrincipleStudios.OpenApiCodegen.Json.Extensions",
+                                                                                                  category: "PrincipleStudios.OpenApiCodegen.Client",
+                                                                                                  DiagnosticSeverity.Warning,
+                                                                                                  isEnabledByDefault: true);
+
         private static readonly DiagnosticDescriptor GeneratedNamespace = new DiagnosticDescriptor(id: "PSAPICLNTINFO001",
                                                                                                   title: "Generated Namespace",
                                                                                                   messageFormat: "Generated Namespace: {0}",
@@ -54,6 +61,12 @@ namespace PrincipleStudios.OpenApiCodegen.Client
 
         public virtual void Execute(GeneratorExecutionContext context)
         {
+            // check that the users compilation references the expected library 
+            if (!context.Compilation.ReferencedAssemblyNames.Any(ai => ai.Name.Equals("PrincipleStudios.OpenApiCodegen.Json.Extensions", StringComparison.OrdinalIgnoreCase)))
+            {
+                context.ReportDiagnostic(Diagnostic.Create(IncludeDependentDll, Location.None));
+            }
+
             var options = GetLoadOptions(context).ToArray();
             if (!options.Any())
                 context.ReportDiagnostic(Diagnostic.Create(NoFilesGenerated, Location.None));

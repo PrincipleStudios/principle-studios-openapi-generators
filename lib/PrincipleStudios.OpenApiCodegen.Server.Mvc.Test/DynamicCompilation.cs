@@ -29,7 +29,6 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
             typeof(Microsoft.Extensions.DependencyInjection.IServiceCollection).Assembly.Location,
             typeof(Microsoft.Extensions.DependencyInjection.IMvcBuilder).Assembly.Location,
             typeof(Microsoft.Extensions.DependencyInjection.MvcServiceCollectionExtensions).Assembly.Location,
-            typeof(Microsoft.AspNetCore.Mvc.NewtonsoftJson.JsonSerializerSettingsProvider).Assembly.Location,
 
             typeof(Microsoft.Net.Http.Headers.MediaTypeHeaderValue).Assembly.Location,
             typeof(Microsoft.Extensions.Primitives.StringSegment).Assembly.Location,
