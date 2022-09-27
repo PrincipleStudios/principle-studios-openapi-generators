@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
-		<AssemblyName>PrincipleStudios.OpenApi.TypeScript</AssemblyName>
+		<AssemblyName>PrincipleStudios.OpenApi.TypeScript.$(SharedAnalyzerLibrariesVersion)</AssemblyName>
 		<RootNamespace>PrincipleStudios.OpenApi.TypeScript</RootNamespace>
 		<TargetFramework>netstandard2.0</TargetFramework>
 		<LangVersion>9</LangVersion>
