@@ -16,7 +16,7 @@ namespace Microsoft.Extensions.DependencyInjection
         public static IMvcBuilder AddOpenApiSelfRef<TDataController>(this IServiceCollection services)
             where TDataController : global::PS.Controller.DataControllerBase
         {
-            return services.AddControllers().AddNewtonsoftJson();
+            return services.AddControllers();
         }
     }
 }

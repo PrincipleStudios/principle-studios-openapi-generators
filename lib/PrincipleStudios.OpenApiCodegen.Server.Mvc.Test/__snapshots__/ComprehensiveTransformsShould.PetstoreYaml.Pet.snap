@@ -12,79 +12,10 @@
 #nullable disable warnings
 
 namespace PS.Controller
-{ 
-    public partial class Pet : global::System.IEquatable<Pet>
-    {
-        public Pet(
-            [global::Newtonsoft.Json.JsonProperty(PropertyName="name"), global::System.ComponentModel.DataAnnotations.Required] string Name, 
-            [global::Newtonsoft.Json.JsonProperty(PropertyName="tag")] string? Tag, 
-            [global::Newtonsoft.Json.JsonProperty(PropertyName="id"), global::System.ComponentModel.DataAnnotations.Required] long Id
-        ) { 
-            this.Name = Name;
-            this.Tag = Tag;
-            this.Id = Id;
-        }
-
-        /// <summary>
-        /// Gets Name
-        /// </summary>
-        [global::System.ComponentModel.DataAnnotations.Required]
-        [global::Newtonsoft.Json.JsonProperty(PropertyName="name")]
-        public string Name { get; }
-
-        /// <summary>
-        /// Gets Tag
-        /// </summary>
-        [global::Newtonsoft.Json.JsonProperty(PropertyName="tag")]
-        public string? Tag { get; }
-
-        /// <summary>
-        /// Gets Id
-        /// </summary>
-        [global::System.ComponentModel.DataAnnotations.Required]
-        [global::Newtonsoft.Json.JsonProperty(PropertyName="id")]
-        public long Id { get; }
-
-        public override bool Equals(object obj)
-        {
-            if (obj is null) return false;
-            if (ReferenceEquals(this, obj)) return true;
-            return obj.GetType() == GetType() && Equals((Pet)obj);
-        }
-
-        public bool Equals(Pet other)
-        {
-            if (other is null) return false;
-            if (ReferenceEquals(this, other)) return true;
-
-            return (
-                Name == other.Name ||
-                Name.Equals(other.Name)
-            ) && (
-                Tag == other.Tag ||
-                Tag != null &&
-                Tag.Equals(other.Tag)
-            ) && (
-                Id == other.Id ||
-                Id.Equals(other.Id)
-            );
-        }
-
-        /// <summary>
-        /// Gets the hash code
-        /// </summary>
-        /// <returns>Hash code</returns>
-        public override int GetHashCode()
-        {
-            unchecked // Overflow is fine, just wrap
-            {
-                var hashCode = 41;
-                hashCode = hashCode * 59 + Name.GetHashCode();
-                if (Tag != null)
-                    hashCode = hashCode * 59 + Tag.GetHashCode();
-                hashCode = hashCode * 59 + Id.GetHashCode();
-                return hashCode;
-            }
-        }
-    }
+{
+    public partial record Pet(
+        [property: global::System.Text.Json.Serialization.JsonPropertyName("name")][param: global::System.ComponentModel.DataAnnotations.Required] string Name, 
+        [property: global::System.Text.Json.Serialization.JsonPropertyName("tag")] string? Tag, 
+        [property: global::System.Text.Json.Serialization.JsonPropertyName("id")][param: global::System.ComponentModel.DataAnnotations.Required] long Id
+    );
 }

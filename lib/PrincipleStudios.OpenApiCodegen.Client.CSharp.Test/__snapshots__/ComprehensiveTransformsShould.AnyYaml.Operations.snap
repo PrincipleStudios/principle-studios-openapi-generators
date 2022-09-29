@@ -40,7 +40,7 @@ namespace PS.Controller
                         return new GetDataReturnType.Ok
                         {
                             Response = response,
-                            Body = Newtonsoft.Json.JsonConvert.DeserializeObject<global::Newtonsoft.Json.Linq.JToken>(await response.Content.ReadAsStringAsync()), 
+                            Body = await global::System.Text.Json.JsonSerializer.DeserializeAsync<global::System.Text.Json.Nodes.JsonNode>(await response.Content.ReadAsStreamAsync()), 
                         };
                     break;
                 
@@ -66,7 +66,7 @@ namespace PS.Controller
             /// </summary>
             public class Ok : GetDataReturnType
             {
-                public global::Newtonsoft.Json.Linq.JToken Body { get; set; }
+                public global::System.Text.Json.Nodes.JsonNode Body { get; set; }
                 
             }
             

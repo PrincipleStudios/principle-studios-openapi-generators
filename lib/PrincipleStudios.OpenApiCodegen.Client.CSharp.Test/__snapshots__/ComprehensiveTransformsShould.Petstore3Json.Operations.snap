@@ -32,7 +32,7 @@ namespace PS.Controller
             )
         {
             var requestMessage = new global::System.Net.Http.HttpRequestMessage(global::System.Net.Http.HttpMethod.Post, "pet");
-            requestMessage.Content = new global::System.Net.Http.StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(addPetBody), System.Text.Encoding.UTF8, "application/json");
+            requestMessage.Content = global::System.Net.Http.Json.JsonContent.Create<Pet>(addPetBody, global::System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json"));
 
 
             return requestMessage;
@@ -93,7 +93,7 @@ namespace PS.Controller
             )
         {
             var requestMessage = new global::System.Net.Http.HttpRequestMessage(global::System.Net.Http.HttpMethod.Put, "pet");
-            requestMessage.Content = new global::System.Net.Http.StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(updatePetBody), System.Text.Encoding.UTF8, "application/json");
+            requestMessage.Content = global::System.Net.Http.Json.JsonContent.Create<Pet>(updatePetBody, global::System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json"));
 
 
             return requestMessage;
@@ -213,7 +213,7 @@ namespace PS.Controller
                         return new FindPetsByStatusReturnType.ApplicationJsonOk
                         {
                             Response = response,
-                            Body = Newtonsoft.Json.JsonConvert.DeserializeObject<global::System.Collections.Generic.IEnumerable<Pet>>(await response.Content.ReadAsStringAsync()), 
+                            Body = await global::System.Text.Json.JsonSerializer.DeserializeAsync<global::System.Collections.Generic.IEnumerable<Pet>>(await response.Content.ReadAsStreamAsync()), 
                         };
                     break;
                 
@@ -304,7 +304,7 @@ namespace PS.Controller
                         return new FindPetsByTagsReturnType.ApplicationJsonOk
                         {
                             Response = response,
-                            Body = Newtonsoft.Json.JsonConvert.DeserializeObject<global::System.Collections.Generic.IEnumerable<Pet>>(await response.Content.ReadAsStringAsync()), 
+                            Body = await global::System.Text.Json.JsonSerializer.DeserializeAsync<global::System.Collections.Generic.IEnumerable<Pet>>(await response.Content.ReadAsStreamAsync()), 
                         };
                     break;
                 
@@ -386,7 +386,7 @@ namespace PS.Controller
                         return new GetPetByIdReturnType.ApplicationJsonOk
                         {
                             Response = response,
-                            Body = Newtonsoft.Json.JsonConvert.DeserializeObject<Pet>(await response.Content.ReadAsStringAsync()), 
+                            Body = await global::System.Text.Json.JsonSerializer.DeserializeAsync<Pet>(await response.Content.ReadAsStreamAsync()), 
                         };
                     break;
                 
@@ -688,7 +688,7 @@ global::System.IO.Stream uploadFileBody,
                         return new UploadFileReturnType.Ok
                         {
                             Response = response,
-                            Body = Newtonsoft.Json.JsonConvert.DeserializeObject<ApiResponse>(await response.Content.ReadAsStringAsync()), 
+                            Body = await global::System.Text.Json.JsonSerializer.DeserializeAsync<ApiResponse>(await response.Content.ReadAsStreamAsync()), 
                         };
                     break;
                 
@@ -750,7 +750,7 @@ global::System.IO.Stream uploadFileBody,
                         return new GetInventoryReturnType.Ok
                         {
                             Response = response,
-                            Body = Newtonsoft.Json.JsonConvert.DeserializeObject<global::System.Collections.Generic.Dictionary<string, int>>(await response.Content.ReadAsStringAsync()), 
+                            Body = await global::System.Text.Json.JsonSerializer.DeserializeAsync<global::System.Collections.Generic.Dictionary<string, int>>(await response.Content.ReadAsStreamAsync()), 
                         };
                     break;
                 
@@ -798,7 +798,7 @@ global::System.IO.Stream uploadFileBody,
             )
         {
             var requestMessage = new global::System.Net.Http.HttpRequestMessage(global::System.Net.Http.HttpMethod.Post, "store/order");
-            requestMessage.Content = new global::System.Net.Http.StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(placeOrderBody), System.Text.Encoding.UTF8, "application/json");
+            requestMessage.Content = global::System.Net.Http.Json.JsonContent.Create<Order>(placeOrderBody, global::System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json"));
 
 
             return requestMessage;
@@ -813,7 +813,7 @@ global::System.IO.Stream uploadFileBody,
                         return new PlaceOrderReturnType.ApplicationJsonOk
                         {
                             Response = response,
-                            Body = Newtonsoft.Json.JsonConvert.DeserializeObject<Order>(await response.Content.ReadAsStringAsync()), 
+                            Body = await global::System.Text.Json.JsonSerializer.DeserializeAsync<Order>(await response.Content.ReadAsStreamAsync()), 
                         };
                     break;
                 
@@ -895,7 +895,7 @@ global::System.IO.Stream uploadFileBody,
                         return new GetOrderByIdReturnType.ApplicationJsonOk
                         {
                             Response = response,
-                            Body = Newtonsoft.Json.JsonConvert.DeserializeObject<Order>(await response.Content.ReadAsStringAsync()), 
+                            Body = await global::System.Text.Json.JsonSerializer.DeserializeAsync<Order>(await response.Content.ReadAsStreamAsync()), 
                         };
                     break;
                 
@@ -1058,7 +1058,7 @@ global::System.IO.Stream uploadFileBody,
             )
         {
             var requestMessage = new global::System.Net.Http.HttpRequestMessage(global::System.Net.Http.HttpMethod.Post, "user");
-            requestMessage.Content = new global::System.Net.Http.StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(createUserBody), System.Text.Encoding.UTF8, "application/json");
+            requestMessage.Content = global::System.Net.Http.Json.JsonContent.Create<User>(createUserBody, global::System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json"));
 
 
             return requestMessage;
@@ -1116,7 +1116,7 @@ global::System.IO.Stream uploadFileBody,
             )
         {
             var requestMessage = new global::System.Net.Http.HttpRequestMessage(global::System.Net.Http.HttpMethod.Post, "user/createWithArray");
-            requestMessage.Content = new global::System.Net.Http.StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(createUsersWithArrayInputBody), System.Text.Encoding.UTF8, "application/json");
+            requestMessage.Content = global::System.Net.Http.Json.JsonContent.Create<global::System.Collections.Generic.IEnumerable<User>>(createUsersWithArrayInputBody, global::System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json"));
 
 
             return requestMessage;
@@ -1174,7 +1174,7 @@ global::System.IO.Stream uploadFileBody,
             )
         {
             var requestMessage = new global::System.Net.Http.HttpRequestMessage(global::System.Net.Http.HttpMethod.Post, "user/createWithList");
-            requestMessage.Content = new global::System.Net.Http.StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(createUsersWithListInputBody), System.Text.Encoding.UTF8, "application/json");
+            requestMessage.Content = global::System.Net.Http.Json.JsonContent.Create<global::System.Collections.Generic.IEnumerable<User>>(createUsersWithListInputBody, global::System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json"));
 
 
             return requestMessage;
@@ -1259,7 +1259,7 @@ string password,
                         return new LoginUserReturnType.ApplicationJsonOk
                         {
                             Response = response,
-                            Body = Newtonsoft.Json.JsonConvert.DeserializeObject<string>(await response.Content.ReadAsStringAsync()), 
+                            Body = await global::System.Text.Json.JsonSerializer.DeserializeAsync<string>(await response.Content.ReadAsStreamAsync()), 
                         };
                     break;
                 
@@ -1392,7 +1392,7 @@ string password,
                         return new GetUserByNameReturnType.ApplicationJsonOk
                         {
                             Response = response,
-                            Body = Newtonsoft.Json.JsonConvert.DeserializeObject<User>(await response.Content.ReadAsStringAsync()), 
+                            Body = await global::System.Text.Json.JsonSerializer.DeserializeAsync<User>(await response.Content.ReadAsStreamAsync()), 
                         };
                     break;
                 
@@ -1479,7 +1479,7 @@ User updateUserBody,
         {
             var requestMessage = new global::System.Net.Http.HttpRequestMessage(global::System.Net.Http.HttpMethod.Put, "user/{username}"
                         .Replace("{" + "username" + "}", global::System.Web.HttpUtility.UrlEncode(username.ToString())));
-            requestMessage.Content = new global::System.Net.Http.StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(updateUserBody), System.Text.Encoding.UTF8, "application/json");
+            requestMessage.Content = global::System.Net.Http.Json.JsonContent.Create<User>(updateUserBody, global::System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json"));
 
 
             return requestMessage;

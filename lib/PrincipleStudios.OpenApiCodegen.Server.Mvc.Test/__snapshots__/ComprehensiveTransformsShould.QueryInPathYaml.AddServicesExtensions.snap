@@ -16,7 +16,7 @@ namespace Microsoft.Extensions.DependencyInjection
         public static IMvcBuilder AddOpenApiQueryInPath<TPathParam1TestParam2TestController>(this IServiceCollection services)
             where TPathParam1TestParam2TestController : global::PS.Controller.PathParam1TestParam2TestControllerBase
         {
-            return services.AddControllers().AddNewtonsoftJson();
+            return services.AddControllers();
         }
     }
 }

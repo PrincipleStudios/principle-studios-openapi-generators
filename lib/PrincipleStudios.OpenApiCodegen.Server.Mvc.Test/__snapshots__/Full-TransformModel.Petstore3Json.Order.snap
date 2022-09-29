@@ -12,123 +12,13 @@
 #nullable disable warnings
 
 namespace PrincipleStudios.Test
-{ 
-    public partial class Order : global::System.IEquatable<Order>
-    {
-        public Order(
-            [global::Newtonsoft.Json.JsonProperty(PropertyName="id")] long? Id, 
-            [global::Newtonsoft.Json.JsonProperty(PropertyName="petId")] long? PetId, 
-            [global::Newtonsoft.Json.JsonProperty(PropertyName="quantity")] int? Quantity, 
-            [global::Newtonsoft.Json.JsonProperty(PropertyName="shipDate")] global::System.DateTimeOffset? ShipDate, 
-            [global::Newtonsoft.Json.JsonProperty(PropertyName="status")] OrderStatus? Status, 
-            [global::Newtonsoft.Json.JsonProperty(PropertyName="complete")] bool? Complete
-        ) { 
-            this.Id = Id;
-            this.PetId = PetId;
-            this.Quantity = Quantity;
-            this.ShipDate = ShipDate;
-            this.Status = Status;
-            this.Complete = Complete;
-        }
-
-        /// <summary>
-        /// Gets Id
-        /// </summary>
-        [global::Newtonsoft.Json.JsonProperty(PropertyName="id")]
-        public long? Id { get; }
-
-        /// <summary>
-        /// Gets PetId
-        /// </summary>
-        [global::Newtonsoft.Json.JsonProperty(PropertyName="petId")]
-        public long? PetId { get; }
-
-        /// <summary>
-        /// Gets Quantity
-        /// </summary>
-        [global::Newtonsoft.Json.JsonProperty(PropertyName="quantity")]
-        public int? Quantity { get; }
-
-        /// <summary>
-        /// Gets ShipDate
-        /// </summary>
-        [global::Newtonsoft.Json.JsonProperty(PropertyName="shipDate")]
-        public global::System.DateTimeOffset? ShipDate { get; }
-
-        /// <summary>
-        /// Gets Status
-        /// </summary>
-        [global::Newtonsoft.Json.JsonProperty(PropertyName="status")]
-        public OrderStatus? Status { get; }
-
-        /// <summary>
-        /// Gets Complete
-        /// </summary>
-        [global::Newtonsoft.Json.JsonProperty(PropertyName="complete")]
-        public bool? Complete { get; }
-
-        public override bool Equals(object obj)
-        {
-            if (obj is null) return false;
-            if (ReferenceEquals(this, obj)) return true;
-            return obj.GetType() == GetType() && Equals((Order)obj);
-        }
-
-        public bool Equals(Order other)
-        {
-            if (other is null) return false;
-            if (ReferenceEquals(this, other)) return true;
-
-            return (
-                Id == other.Id ||
-                Id != null &&
-                Id.Equals(other.Id)
-            ) && (
-                PetId == other.PetId ||
-                PetId != null &&
-                PetId.Equals(other.PetId)
-            ) && (
-                Quantity == other.Quantity ||
-                Quantity != null &&
-                Quantity.Equals(other.Quantity)
-            ) && (
-                ShipDate == other.ShipDate ||
-                ShipDate != null &&
-                ShipDate.Equals(other.ShipDate)
-            ) && (
-                Status == other.Status ||
-                Status != null &&
-                Status.Equals(other.Status)
-            ) && (
-                Complete == other.Complete ||
-                Complete != null &&
-                Complete.Equals(other.Complete)
-            );
-        }
-
-        /// <summary>
-        /// Gets the hash code
-        /// </summary>
-        /// <returns>Hash code</returns>
-        public override int GetHashCode()
-        {
-            unchecked // Overflow is fine, just wrap
-            {
-                var hashCode = 41;
-                if (Id != null)
-                    hashCode = hashCode * 59 + Id.GetHashCode();
-                if (PetId != null)
-                    hashCode = hashCode * 59 + PetId.GetHashCode();
-                if (Quantity != null)
-                    hashCode = hashCode * 59 + Quantity.GetHashCode();
-                if (ShipDate != null)
-                    hashCode = hashCode * 59 + ShipDate.GetHashCode();
-                if (Status != null)
-                    hashCode = hashCode * 59 + Status.GetHashCode();
-                if (Complete != null)
-                    hashCode = hashCode * 59 + Complete.GetHashCode();
-                return hashCode;
-            }
-        }
-    }
+{
+    public partial record Order(
+        [property: global::System.Text.Json.Serialization.JsonPropertyName("id")] long? Id, 
+        [property: global::System.Text.Json.Serialization.JsonPropertyName("petId")] long? PetId, 
+        [property: global::System.Text.Json.Serialization.JsonPropertyName("quantity")] int? Quantity, 
+        [property: global::System.Text.Json.Serialization.JsonPropertyName("shipDate")] global::System.DateTimeOffset? ShipDate, 
+        [property: global::System.Text.Json.Serialization.JsonPropertyName("status")] OrderStatus? Status, 
+        [property: global::System.Text.Json.Serialization.JsonPropertyName("complete")] bool? Complete
+    );
 }

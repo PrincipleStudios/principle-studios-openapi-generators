@@ -17,7 +17,7 @@ namespace Microsoft.Extensions.DependencyInjection
             where TColorsController : global::PS.Controller.ColorsControllerBase
             where TPaletteController : global::PS.Controller.PaletteControllerBase
         {
-            return services.AddControllers().AddNewtonsoftJson();
+            return services.AddControllers();
         }
     }
 }

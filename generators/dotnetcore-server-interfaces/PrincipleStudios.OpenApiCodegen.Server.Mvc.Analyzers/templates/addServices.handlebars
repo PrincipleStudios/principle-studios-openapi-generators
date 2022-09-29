@@ -9,7 +9,7 @@ namespace Microsoft.Extensions.DependencyInjection
         public static IMvcBuilder AddOpenApi{{methodName}}{{#if controllers.length}}<{{#each controllers}}{{genericTypeName}}{{#unless @last}}, {{/unless}}{{/each}}>{{/if}}(this IServiceCollection services){{#each controllers}}
             where {{genericTypeName}} : global::{{root.packageName}}.{{className}}{{/each}}
         {
-            return services.AddControllers().AddNewtonsoftJson();
+            return services.AddControllers();
         }
     }
 }

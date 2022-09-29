@@ -40,7 +40,7 @@ namespace PS.Controller
                         return new GetColorsReturnType.Ok
                         {
                             Response = response,
-                            Body = Newtonsoft.Json.JsonConvert.DeserializeObject<global::System.Collections.Generic.IEnumerable<string>>(await response.Content.ReadAsStringAsync()), 
+                            Body = await global::System.Text.Json.JsonSerializer.DeserializeAsync<global::System.Collections.Generic.IEnumerable<string>>(await response.Content.ReadAsStreamAsync()), 
                         };
                     break;
                 
@@ -96,7 +96,7 @@ namespace PS.Controller
                         return new GetPalettesReturnType.Ok
                         {
                             Response = response,
-                            Body = Newtonsoft.Json.JsonConvert.DeserializeObject<global::System.Collections.Generic.IEnumerable<global::System.Collections.Generic.IEnumerable<string>>>(await response.Content.ReadAsStringAsync()), 
+                            Body = await global::System.Text.Json.JsonSerializer.DeserializeAsync<global::System.Collections.Generic.IEnumerable<global::System.Collections.Generic.IEnumerable<string>>>(await response.Content.ReadAsStreamAsync()), 
                         };
                     break;
                 

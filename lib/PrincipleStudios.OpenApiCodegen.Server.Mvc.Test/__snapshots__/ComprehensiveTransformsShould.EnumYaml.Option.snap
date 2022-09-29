@@ -13,56 +13,26 @@
 
 namespace PS.Controller
 { 
-    [global::Newtonsoft.Json.JsonConverter(typeof(global::Newtonsoft.Json.Converters.StringEnumConverter))]
-    [global::System.ComponentModel.TypeConverterAttribute(typeof(OptionEnumConverter))]
+    [global::System.Text.Json.Serialization.JsonConverter(typeof(global::PrincipleStudios.OpenApiCodegen.Json.Extensions.JsonStringEnumPropertyNameConverter))]
     public enum Option
     {
         /// <summary>
         /// Enum Rock for rock
         /// </summary>
-        [global::System.Runtime.Serialization.EnumMember(Value = "rock")]
+        [global::System.Text.Json.Serialization.JsonPropertyName("rock")]
         Rock = 0,
 
         /// <summary>
         /// Enum Paper for paper
         /// </summary>
-        [global::System.Runtime.Serialization.EnumMember(Value = "paper")]
+        [global::System.Text.Json.Serialization.JsonPropertyName("paper")]
         Paper = 1,
 
         /// <summary>
         /// Enum Scissors for scissors
         /// </summary>
-        [global::System.Runtime.Serialization.EnumMember(Value = "scissors")]
+        [global::System.Text.Json.Serialization.JsonPropertyName("scissors")]
         Scissors = 2,
 
-    }
-
-    public class OptionEnumConverter : global::System.ComponentModel.TypeConverter
-    {
-        public override bool CanConvertTo(global::System.ComponentModel.ITypeDescriptorContext? context, global::System.Type? destinationType)
-        {
-            return destinationType == typeof(string) || base.CanConvertFrom(context, destinationType);
-        }
-
-        public override object? ConvertTo(global::System.ComponentModel.ITypeDescriptorContext? context, global::System.Globalization.CultureInfo? culture, object? value, global::System.Type destinationType)
-        {
-            if (destinationType != typeof(string))
-                return base.ConvertTo(context, culture, value, destinationType);
-            var result = global::Newtonsoft.Json.JsonConvert.SerializeObject(value);
-            if (result.StartsWith('"') && result.EndsWith('"'))
-                return result.Substring(1, result.Length - 2);
-            return result;
-        }
-
-        public override object ConvertFrom(global::System.ComponentModel.ITypeDescriptorContext context, global::System.Globalization.CultureInfo culture, object value)
-        {
-            var s = value as string;
-            if (string.IsNullOrEmpty(s))
-            {
-                return null;
-            }
-
-            return global::Newtonsoft.Json.JsonConvert.DeserializeObject<Option>(@"""" + value.ToString() + @"""");
-        }
     }
 }

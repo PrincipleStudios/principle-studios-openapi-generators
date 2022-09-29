@@ -17,7 +17,7 @@ namespace Microsoft.Extensions.DependencyInjection
             where TInfoController : global::PS.Controller.InfoControllerBase
             where TAddressController : global::PS.Controller.AddressControllerBase
         {
-            return services.AddControllers().AddNewtonsoftJson();
+            return services.AddControllers();
         }
     }
 }

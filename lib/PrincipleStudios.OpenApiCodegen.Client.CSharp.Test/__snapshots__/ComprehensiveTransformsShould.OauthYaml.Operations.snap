@@ -51,7 +51,7 @@ namespace PS.Controller
                         return new GetInfoReturnType.Ok
                         {
                             Response = response,
-                            Body = Newtonsoft.Json.JsonConvert.DeserializeObject<string>(await response.Content.ReadAsStringAsync()), 
+                            Body = await global::System.Text.Json.JsonSerializer.DeserializeAsync<string>(await response.Content.ReadAsStreamAsync()), 
                         };
                     break;
                 
@@ -107,7 +107,7 @@ namespace PS.Controller
                         return new GetAddressReturnType.Ok
                         {
                             Response = response,
-                            Body = Newtonsoft.Json.JsonConvert.DeserializeObject<string>(await response.Content.ReadAsStringAsync()), 
+                            Body = await global::System.Text.Json.JsonSerializer.DeserializeAsync<string>(await response.Content.ReadAsStreamAsync()), 
                         };
                     break;
                 

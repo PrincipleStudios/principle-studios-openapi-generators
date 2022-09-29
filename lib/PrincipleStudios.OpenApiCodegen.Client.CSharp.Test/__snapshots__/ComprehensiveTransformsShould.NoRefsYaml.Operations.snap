@@ -29,7 +29,7 @@ namespace PS.Controller
             )
         {
             var requestMessage = new global::System.Net.Http.HttpRequestMessage(global::System.Net.Http.HttpMethod.Post, "address");
-            requestMessage.Content = new global::System.Net.Http.StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(lookupRecordBody), System.Text.Encoding.UTF8, "application/json");
+            requestMessage.Content = global::System.Net.Http.Json.JsonContent.Create<LookupRecordRequest>(lookupRecordBody, global::System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json"));
 
 
             return requestMessage;
@@ -44,7 +44,7 @@ namespace PS.Controller
                         return new LookupRecordReturnType.Ok
                         {
                             Response = response,
-                            Body = Newtonsoft.Json.JsonConvert.DeserializeObject<LookupRecordResponse>(await response.Content.ReadAsStringAsync()), 
+                            Body = await global::System.Text.Json.JsonSerializer.DeserializeAsync<LookupRecordResponse>(await response.Content.ReadAsStreamAsync()), 
                         };
                     break;
                 
@@ -53,7 +53,7 @@ namespace PS.Controller
                         return new LookupRecordReturnType.Conflict
                         {
                             Response = response,
-                            Body = Newtonsoft.Json.JsonConvert.DeserializeObject<LookupRecordConflictResponse>(await response.Content.ReadAsStringAsync()), 
+                            Body = await global::System.Text.Json.JsonSerializer.DeserializeAsync<LookupRecordConflictResponse>(await response.Content.ReadAsStreamAsync()), 
                         };
                     break;
                 
@@ -62,7 +62,7 @@ namespace PS.Controller
                         return new LookupRecordReturnType.OtherStatusCode
                         {
                             Response = response,
-                            Body = Newtonsoft.Json.JsonConvert.DeserializeObject<LookupRecordOtherResponse>(await response.Content.ReadAsStringAsync()), 
+                            Body = await global::System.Text.Json.JsonSerializer.DeserializeAsync<LookupRecordOtherResponse>(await response.Content.ReadAsStreamAsync()), 
                         }; 
                     break;
             }
@@ -137,7 +137,7 @@ namespace PS.Controller
                         return new GetPhotoReturnType.Ok
                         {
                             Response = response,
-                            Body = Newtonsoft.Json.JsonConvert.DeserializeObject<global::System.IO.Stream>(await response.Content.ReadAsStringAsync()), 
+                            Body = await global::System.Text.Json.JsonSerializer.DeserializeAsync<global::System.IO.Stream>(await response.Content.ReadAsStreamAsync()), 
                         };
                     break;
                 
@@ -146,7 +146,7 @@ namespace PS.Controller
                         return new GetPhotoReturnType.OtherStatusCode
                         {
                             Response = response,
-                            Body = Newtonsoft.Json.JsonConvert.DeserializeObject<GetPhotoOtherResponse>(await response.Content.ReadAsStringAsync()), 
+                            Body = await global::System.Text.Json.JsonSerializer.DeserializeAsync<GetPhotoOtherResponse>(await response.Content.ReadAsStreamAsync()), 
                         }; 
                     break;
             }

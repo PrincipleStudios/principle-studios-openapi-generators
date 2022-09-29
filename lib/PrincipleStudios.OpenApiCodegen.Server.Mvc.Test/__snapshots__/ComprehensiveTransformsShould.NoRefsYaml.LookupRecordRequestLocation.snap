@@ -12,65 +12,9 @@
 #nullable disable warnings
 
 namespace PS.Controller
-{ 
-    public partial class LookupRecordRequestLocation : global::System.IEquatable<LookupRecordRequestLocation>
-    {
-        public LookupRecordRequestLocation(
-            [global::Newtonsoft.Json.JsonProperty(PropertyName="latitude"), global::System.ComponentModel.DataAnnotations.Required] double Latitude, 
-            [global::Newtonsoft.Json.JsonProperty(PropertyName="longitude"), global::System.ComponentModel.DataAnnotations.Required] double Longitude
-        ) { 
-            this.Latitude = Latitude;
-            this.Longitude = Longitude;
-        }
-
-        /// <summary>
-        /// Gets Latitude
-        /// </summary>
-        [global::System.ComponentModel.DataAnnotations.Required]
-        [global::Newtonsoft.Json.JsonProperty(PropertyName="latitude")]
-        public double Latitude { get; }
-
-        /// <summary>
-        /// Gets Longitude
-        /// </summary>
-        [global::System.ComponentModel.DataAnnotations.Required]
-        [global::Newtonsoft.Json.JsonProperty(PropertyName="longitude")]
-        public double Longitude { get; }
-
-        public override bool Equals(object obj)
-        {
-            if (obj is null) return false;
-            if (ReferenceEquals(this, obj)) return true;
-            return obj.GetType() == GetType() && Equals((LookupRecordRequestLocation)obj);
-        }
-
-        public bool Equals(LookupRecordRequestLocation other)
-        {
-            if (other is null) return false;
-            if (ReferenceEquals(this, other)) return true;
-
-            return (
-                Latitude == other.Latitude ||
-                Latitude.Equals(other.Latitude)
-            ) && (
-                Longitude == other.Longitude ||
-                Longitude.Equals(other.Longitude)
-            );
-        }
-
-        /// <summary>
-        /// Gets the hash code
-        /// </summary>
-        /// <returns>Hash code</returns>
-        public override int GetHashCode()
-        {
-            unchecked // Overflow is fine, just wrap
-            {
-                var hashCode = 41;
-                hashCode = hashCode * 59 + Latitude.GetHashCode();
-                hashCode = hashCode * 59 + Longitude.GetHashCode();
-                return hashCode;
-            }
-        }
-    }
+{
+    public partial record LookupRecordRequestLocation(
+        [property: global::System.Text.Json.Serialization.JsonPropertyName("latitude")][param: global::System.ComponentModel.DataAnnotations.Required] double Latitude, 
+        [property: global::System.Text.Json.Serialization.JsonPropertyName("longitude")][param: global::System.ComponentModel.DataAnnotations.Required] double Longitude
+    );
 }

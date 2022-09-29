@@ -14,7 +14,7 @@ namespace Microsoft.Extensions.DependencyInjection
         public static IMvcBuilder AddOpenApiAllOfExample<TContactController>(this IServiceCollection services)
             where TContactController : global::PS.Controller.ContactControllerBase
         {
-            return services.AddControllers().AddNewtonsoftJson();
+            return services.AddControllers();
         }
     }
 }

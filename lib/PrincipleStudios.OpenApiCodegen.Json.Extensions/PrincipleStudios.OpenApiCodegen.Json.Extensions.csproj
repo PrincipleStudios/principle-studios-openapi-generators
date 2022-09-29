@@ -1,0 +1,27 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>netstandard2.0</TargetFramework>
+		<VersionPrefix Condition=" '$(VersionPrefix)' == '' ">$(OpenApiJsonExtensionsVersion)</VersionPrefix>
+
+		<IsPackable>true</IsPackable>
+		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+
+		<PackageLicenseExpression>BSD-2-Clause</PackageLicenseExpression>
+		<title>Extensions for System.Text.Json</title>
+		<PackageSummary>Extensions for System.Text.Json.</PackageSummary>
+		<description>Extensions for System.Text.Json.</description>
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<IncludeBuildOutput>true</IncludeBuildOutput>
+		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+		<PackageReadmeFile>readme.md</PackageReadmeFile>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<None Include="readme.md" Pack="true" PackagePath="\" Visible="false" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="System.Text.Json" Version="6.0.6" />
+	</ItemGroup>
+</Project>

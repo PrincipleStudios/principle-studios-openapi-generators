@@ -193,4 +193,4 @@ types:
     default: int
   object:
     formats:
-      any: global::Newtonsoft.Json.Linq.JToken
+      any: global::System.Text.Json.Nodes.JsonNode

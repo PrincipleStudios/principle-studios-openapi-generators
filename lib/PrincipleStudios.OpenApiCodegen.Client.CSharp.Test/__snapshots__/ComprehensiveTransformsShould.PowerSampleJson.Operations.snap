@@ -64,7 +64,7 @@ string? end,
                         return new GetPowerFlowsReturnType.Ok
                         {
                             Response = response,
-                            Body = Newtonsoft.Json.JsonConvert.DeserializeObject<GetPowerFlowsResponse>(await response.Content.ReadAsStringAsync()), 
+                            Body = await global::System.Text.Json.JsonSerializer.DeserializeAsync<GetPowerFlowsResponse>(await response.Content.ReadAsStreamAsync()), 
                         };
                     break;
                 
@@ -148,7 +148,7 @@ string? end,
                         return new GetCurrentBatteryStateReturnType.Ok
                         {
                             Response = response,
-                            Body = Newtonsoft.Json.JsonConvert.DeserializeObject<CurrentBatteryState>(await response.Content.ReadAsStringAsync()), 
+                            Body = await global::System.Text.Json.JsonSerializer.DeserializeAsync<CurrentBatteryState>(await response.Content.ReadAsStreamAsync()), 
                         };
                     break;
                 

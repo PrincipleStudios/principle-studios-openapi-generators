@@ -87,9 +87,13 @@ exports[`models/Target.ts`] = `/*
  */
 export type Target = {
     /**
-     * @type Target
+     * @type Target | null
      */
-    target: Target;
+    target?: Target | null;
+    /**
+     * @type number
+     */
+    id: number;
 };
 `;
 

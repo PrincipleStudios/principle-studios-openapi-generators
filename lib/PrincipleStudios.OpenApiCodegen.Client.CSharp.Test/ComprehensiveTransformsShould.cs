@@ -34,7 +34,7 @@ namespace PrincipleStudios.OpenApiCodegen.Client.CSharp
             Assert.Empty(diagnostic.Errors);
 
             var syntaxTrees = entries.Select(e => CSharpSyntaxTree.ParseText(e.SourceText, path: e.Key)).ToArray();
-            
+
             string assemblyName = Path.GetRandomFileName();
             var refPaths = new[] {
                 Path.Combine(Path.GetDirectoryName(typeof(object).Assembly.Location)!, "netstandard.dll"),
@@ -44,14 +44,15 @@ namespace PrincipleStudios.OpenApiCodegen.Client.CSharp
                 typeof(System.ComponentModel.TypeConverter).Assembly.Location,
                 typeof(System.ComponentModel.TypeConverterAttribute).Assembly.Location,
                 typeof(System.ComponentModel.DataAnnotations.RequiredAttribute).Assembly.Location,
-                typeof(System.Runtime.Serialization.EnumMemberAttribute).Assembly.Location,
+                typeof(System.Text.Json.JsonSerializer).Assembly.Location,
+                typeof(System.Net.Http.Json.JsonContent).Assembly.Location,
 
-                typeof(Newtonsoft.Json.JsonConvert).Assembly.Location,
                 Path.Combine(Path.GetDirectoryName(typeof(object).Assembly.Location)!, "System.Net.Http.dll"),
                 Path.Combine(Path.GetDirectoryName(typeof(object).Assembly.Location)!, "System.Net.Primitives.dll"),
                 typeof(Uri).Assembly.Location,
                 typeof(System.Web.HttpUtility).Assembly.Location,
                 typeof(System.Collections.Specialized.NameValueCollection).Assembly.Location,
+                typeof(PrincipleStudios.OpenApiCodegen.Json.Extensions.JsonStringEnumPropertyNameConverter).Assembly.Location,
             };
             MetadataReference[] references = refPaths.Select(r => MetadataReference.CreateFromFile(r)).ToArray();
 

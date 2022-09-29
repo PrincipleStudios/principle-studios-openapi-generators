@@ -3,7 +3,7 @@
 
 	<PropertyGroup>
 		<Nullable>enable</Nullable>
-		<LangVersion>9</LangVersion>
+		<LangVersion>10</LangVersion>
 
 		<IsWindows Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Windows)))' == 'true'">true</IsWindows>
 		<SolutionRoot>$(MSBuildThisFileDirectory)</SolutionRoot>
@@ -30,10 +30,11 @@
 	</PropertyGroup>
 
 	<PropertyGroup>
-		<OpenApiMvcServerVersion>0.11.6</OpenApiMvcServerVersion>
-		<OpenApiCSharpClientVersion>0.4.5</OpenApiCSharpClientVersion>
+		<OpenApiJsonExtensionsVersion>0.12.0</OpenApiJsonExtensionsVersion>
+		<OpenApiMvcServerVersion>0.12.0</OpenApiMvcServerVersion>
+		<OpenApiCSharpClientVersion>0.12.0</OpenApiCSharpClientVersion>
 		<!-- Should be incremented anytime one of the internal libraries changes -->
-		<SharedAnalyzerLibrariesVersion>0.1.0</SharedAnalyzerLibrariesVersion>
+		<SharedAnalyzerLibrariesVersion>0.2.0</SharedAnalyzerLibrariesVersion>
 	</PropertyGroup>
 
 	<Import Project="Directory.Build.local.props" Condition="exists('$(MSBuildThisFileDirectory)Directory.Build.local.props')" />

@@ -12,52 +12,9 @@
 #nullable disable warnings
 
 namespace PS.Controller
-{ 
-    public partial class Target : global::System.IEquatable<Target>
-    {
-        public Target(
-            [global::Newtonsoft.Json.JsonProperty(PropertyName="target"), global::System.ComponentModel.DataAnnotations.Required] Target _Target
-        ) { 
-            this._Target = _Target;
-        }
-
-        /// <summary>
-        /// Gets _Target
-        /// </summary>
-        [global::System.ComponentModel.DataAnnotations.Required]
-        [global::Newtonsoft.Json.JsonProperty(PropertyName="target")]
-        public Target _Target { get; }
-
-        public override bool Equals(object obj)
-        {
-            if (obj is null) return false;
-            if (ReferenceEquals(this, obj)) return true;
-            return obj.GetType() == GetType() && Equals((Target)obj);
-        }
-
-        public bool Equals(Target other)
-        {
-            if (other is null) return false;
-            if (ReferenceEquals(this, other)) return true;
-
-            return (
-                _Target == other._Target ||
-                _Target.Equals(other._Target)
-            );
-        }
-
-        /// <summary>
-        /// Gets the hash code
-        /// </summary>
-        /// <returns>Hash code</returns>
-        public override int GetHashCode()
-        {
-            unchecked // Overflow is fine, just wrap
-            {
-                var hashCode = 41;
-                hashCode = hashCode * 59 + _Target.GetHashCode();
-                return hashCode;
-            }
-        }
-    }
+{
+    public partial record Target(
+        [property: global::System.Text.Json.Serialization.JsonPropertyName("target")] Target? _Target, 
+        [property: global::System.Text.Json.Serialization.JsonPropertyName("id")][param: global::System.ComponentModel.DataAnnotations.Required] double Id
+    );
 }

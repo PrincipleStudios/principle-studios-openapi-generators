@@ -9,47 +9,17 @@ namespace {{this.packageName}}
     /// {{linewrap description "
     /// "}}
     /// </summary>{{/if}}
-    {{#if model.isString}}[global::Newtonsoft.Json.JsonConverter(typeof(global::Newtonsoft.Json.Converters.StringEnumConverter))]
-    [global::System.ComponentModel.TypeConverterAttribute(typeof({{className}}EnumConverter))]{{/if}}
+    {{#if model.isString}}[global::System.Text.Json.Serialization.JsonConverter(typeof(global::PrincipleStudios.OpenApiCodegen.Json.Extensions.JsonStringEnumPropertyNameConverter))]{{/if}}
     public enum {{className}}
     {
         {{#each enumVars as |enumVar|}}
         /// <summary>
         /// Enum {{enumVar.name}} for {{{enumVar.value}}}
         /// </summary>{{#if model.isString}}
-        [global::System.Runtime.Serialization.EnumMember(Value = "{{{enumVar.value}}}")]{{/if}}
+        [global::System.Text.Json.Serialization.JsonPropertyName("{{{enumVar.value}}}")]{{/if}}
         {{enumVar.name}} = {{#if model.isString}}{{@index}}{{else}}{{{enumVar.value}}}{{/if}},
 
         {{/each}}
-    }
-
-    public class {{className}}EnumConverter : global::System.ComponentModel.TypeConverter
-    {
-        public override bool CanConvertTo(global::System.ComponentModel.ITypeDescriptorContext? context, global::System.Type? destinationType)
-        {
-            return destinationType == typeof(string) || base.CanConvertFrom(context, destinationType);
-        }
-
-        public override object? ConvertTo(global::System.ComponentModel.ITypeDescriptorContext? context, global::System.Globalization.CultureInfo? culture, object? value, global::System.Type destinationType)
-        {
-            if (destinationType != typeof(string))
-                return base.ConvertTo(context, culture, value, destinationType);
-            var result = global::Newtonsoft.Json.JsonConvert.SerializeObject(value);
-            if (result.StartsWith('"') && result.EndsWith('"'))
-                return result.Substring(1, result.Length - 2);
-            return result;
-        }
-
-        public override object ConvertFrom(global::System.ComponentModel.ITypeDescriptorContext context, global::System.Globalization.CultureInfo culture, object value)
-        {
-            var s = value as string;
-            if (string.IsNullOrEmpty(s))
-            {
-                return null;
-            }
-
-            return global::Newtonsoft.Json.JsonConvert.DeserializeObject<{{className}}>(@"""" + value.ToString() + @"""");
-        }
     }
 {{/with}}
 }
