@@ -213,8 +213,7 @@ namespace PrincipleStudios.OpenApi.CSharp
 
             Func<templates.ModelVar>[] vars = (from entry in properties
                                                let req = required.Contains(entry.Key)
-                                               let dataTypeBase = ToInlineDataType(entry.Value)
-                                               let dataType = req ? dataTypeBase : () => dataTypeBase().MakeNullable()
+                                               let dataType = ToInlineDataType(entry.Value)
                                                select (Func<templates.ModelVar>)(() => new templates.ModelVar(
                                                    baseName: entry.Key,
                                                    dataType: dataType().text,

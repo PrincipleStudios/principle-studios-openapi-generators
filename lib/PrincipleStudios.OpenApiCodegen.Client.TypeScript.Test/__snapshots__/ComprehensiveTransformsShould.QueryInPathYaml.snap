@@ -10,7 +10,7 @@
 import { HttpHeaders, HttpQuery, RequestOpts, ResponseArgs, throwIfNullOrUndefined, encodeURI, RequestConversion, StandardResponse, TransformRequest } from '@principlestudios/openapi-codegen-typescript';
 
 export type RequestParams = {
-    limit?: number | null;
+    limit?: number;
 };
 export type RequestBodies = {
 };
@@ -32,7 +32,7 @@ export function testPath(params: RequestParams): RequestOpts {
 
     const query: HttpQuery = { 
     };
-    if (params.limit != null) { query['limit'] = params.limit; }
+    if (params.limit !== undefined) { query['limit'] = params.limit; }
 
     return {
         path: '/path?param1=test&param2=test',

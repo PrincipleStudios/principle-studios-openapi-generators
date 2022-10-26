@@ -12,6 +12,8 @@ public abstract record Optional<T>
 {
     private Optional() { }
 
+    public static readonly Optional<T>? None = null;
+
     public sealed record Present(T Value) : Optional<T>;
 
     public class Serializer : JsonConverter<Optional<T>>
@@ -37,6 +39,9 @@ public abstract record Optional<T>
 
         public override bool HandleNull => true;
     }
+
+    public static implicit operator Optional<T>(T value) => new Optional<T>.Present(value);
+    public static explicit operator T(Optional<T> maybeValue) => maybeValue is Optional<T>.Present { Value: var result } ? result : throw new InvalidCastException("Optional value was not present");
 }
 
 public class OptionalJsonConverterFactory : JsonConverterFactory

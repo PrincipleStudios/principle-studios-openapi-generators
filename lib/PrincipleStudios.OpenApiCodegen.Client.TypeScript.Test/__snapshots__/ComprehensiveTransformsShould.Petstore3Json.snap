@@ -361,8 +361,8 @@ export type RequestParams = {
 };
 export type RequestBodies = {
     'application/x-www-form-urlencoded': {
-        name?: string | null;
-        status?: string | null;
+        name?: string;
+        status?: string;
     };
 };
 
@@ -431,7 +431,7 @@ exports[`operations/deletePet.ts`] = `/*
 import { HttpHeaders, HttpQuery, RequestOpts, ResponseArgs, throwIfNullOrUndefined, encodeURI, RequestConversion, StandardResponse, TransformRequest } from '@principlestudios/openapi-codegen-typescript';
 
 export type RequestParams = {
-    apiKey?: string | null;
+    apiKey?: string;
     petId: BigInt;
 };
 export type RequestBodies = {
@@ -457,7 +457,7 @@ export function deletePet(params: RequestParams): RequestOpts {
     throwIfNullOrUndefined(params.petId, 'petId');
 
     const headers: HttpHeaders = {};
-    if (params.apiKey) headers['api_key'] = params.apiKey; 
+    if (params.apiKey !== undefined) headers['api_key'] = params.apiKey; 
 
     return {
         path: '/pet/{petId}'.replace('{petId}', encodeURI(params.petId)),

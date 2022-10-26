@@ -75,7 +75,7 @@ export function {{{name}}}(params: RequestParams{{#if requestBodies.length}}, bo
     {{/if}}
     {{#each sharedParams}}
     {{#if isHeaderParam}}
-    if (params.{{{paramName}}}) headers['{{{rawName}}}'] = params.{{{paramName}}}; {{!-- TODO - openapi style/explode combo --}}
+    if (params.{{{paramName}}} !== undefined) headers['{{{rawName}}}'] = params.{{{paramName}}}; {{!-- TODO - openapi style/explode combo --}}
     {{/if}}
     {{/each}}
 
@@ -98,9 +98,9 @@ export function {{{name}}}(params: RequestParams{{#if requestBodies.length}}, bo
     {{#unless required}}
     {{#if dataTypeEnumerable}}
     {{!-- TODO - openapi style/explode combo --}}
-    if (params.{{{paramName}}} != null) { query['{{rawName}}'] = params.{{{paramName}}}; }
+    if (params.{{{paramName}}} !== undefined) { query['{{rawName}}'] = params.{{{paramName}}}; }
     {{else}}
-    if (params.{{{paramName}}} != null) { query['{{rawName}}'] = params.{{{paramName}}}; }
+    if (params.{{{paramName}}} !== undefined) { query['{{rawName}}'] = params.{{{paramName}}}; }
     {{/if}}
     {{/unless}}
     {{/if}}

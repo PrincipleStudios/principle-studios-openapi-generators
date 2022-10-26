@@ -14,6 +14,6 @@ namespace PS.Controller
     public partial record Contact(
         [property: global::System.Text.Json.Serialization.JsonPropertyName("firstName")][param: global::System.ComponentModel.DataAnnotations.Required] string FirstName, 
         [property: global::System.Text.Json.Serialization.JsonPropertyName("lastName")][param: global::System.ComponentModel.DataAnnotations.Required] string LastName, 
-        [property: global::System.Text.Json.Serialization.JsonPropertyName("id")] string? Id
+        [property: global::System.Text.Json.Serialization.JsonPropertyName("id")][property: global::System.Text.Json.Serialization.JsonIgnore(Condition = global::System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)] global::PrincipleStudios.OpenApiCodegen.Json.Extensions.Optional<string>? Id
     );
 }

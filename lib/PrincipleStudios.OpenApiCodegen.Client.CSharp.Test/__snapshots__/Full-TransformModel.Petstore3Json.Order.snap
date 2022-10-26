@@ -14,11 +14,11 @@
 namespace PrincipleStudios.Test
 {
     public partial record Order(
-        [property: global::System.Text.Json.Serialization.JsonPropertyName("id")] long? Id, 
-        [property: global::System.Text.Json.Serialization.JsonPropertyName("petId")] long? PetId, 
-        [property: global::System.Text.Json.Serialization.JsonPropertyName("quantity")] int? Quantity, 
-        [property: global::System.Text.Json.Serialization.JsonPropertyName("shipDate")] global::System.DateTimeOffset? ShipDate, 
-        [property: global::System.Text.Json.Serialization.JsonPropertyName("status")] OrderStatus? Status, 
-        [property: global::System.Text.Json.Serialization.JsonPropertyName("complete")] bool? Complete
+        [property: global::System.Text.Json.Serialization.JsonPropertyName("id")][property: global::System.Text.Json.Serialization.JsonIgnore(Condition = global::System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)] global::PrincipleStudios.OpenApiCodegen.Json.Extensions.Optional<long>? Id, 
+        [property: global::System.Text.Json.Serialization.JsonPropertyName("petId")][property: global::System.Text.Json.Serialization.JsonIgnore(Condition = global::System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)] global::PrincipleStudios.OpenApiCodegen.Json.Extensions.Optional<long>? PetId, 
+        [property: global::System.Text.Json.Serialization.JsonPropertyName("quantity")][property: global::System.Text.Json.Serialization.JsonIgnore(Condition = global::System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)] global::PrincipleStudios.OpenApiCodegen.Json.Extensions.Optional<int>? Quantity, 
+        [property: global::System.Text.Json.Serialization.JsonPropertyName("shipDate")][property: global::System.Text.Json.Serialization.JsonIgnore(Condition = global::System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)] global::PrincipleStudios.OpenApiCodegen.Json.Extensions.Optional<global::System.DateTimeOffset>? ShipDate, 
+        [property: global::System.Text.Json.Serialization.JsonPropertyName("status")][property: global::System.Text.Json.Serialization.JsonIgnore(Condition = global::System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)] global::PrincipleStudios.OpenApiCodegen.Json.Extensions.Optional<OrderStatus>? Status, 
+        [property: global::System.Text.Json.Serialization.JsonPropertyName("complete")][property: global::System.Text.Json.Serialization.JsonIgnore(Condition = global::System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)] global::PrincipleStudios.OpenApiCodegen.Json.Extensions.Optional<bool>? Complete
     );
 }

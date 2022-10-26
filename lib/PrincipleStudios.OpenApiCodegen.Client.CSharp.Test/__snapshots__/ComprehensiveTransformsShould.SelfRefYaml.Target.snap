@@ -14,7 +14,7 @@
 namespace PS.Controller
 {
     public partial record Target(
-        [property: global::System.Text.Json.Serialization.JsonPropertyName("target")] Target? _Target, 
+        [property: global::System.Text.Json.Serialization.JsonPropertyName("target")][property: global::System.Text.Json.Serialization.JsonIgnore(Condition = global::System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)] global::PrincipleStudios.OpenApiCodegen.Json.Extensions.Optional<Target>? _Target, 
         [property: global::System.Text.Json.Serialization.JsonPropertyName("id")][param: global::System.ComponentModel.DataAnnotations.Required] double Id
     );
 }

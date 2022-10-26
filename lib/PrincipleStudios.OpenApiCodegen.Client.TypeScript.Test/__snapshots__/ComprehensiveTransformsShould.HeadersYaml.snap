@@ -40,7 +40,7 @@ export function getInfo(params: RequestParams): RequestOpts {
     throwIfNullOrUndefined(params.xData, 'X-Data');
 
     const headers: HttpHeaders = {};
-    if (params.xData) headers['X-Data'] = params.xData; 
+    if (params.xData !== undefined) headers['X-Data'] = params.xData; 
 
     return {
         path: '/info',

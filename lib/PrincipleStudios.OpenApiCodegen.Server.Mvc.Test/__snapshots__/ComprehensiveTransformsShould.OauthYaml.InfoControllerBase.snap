@@ -24,11 +24,11 @@ namespace PS.Controller
         [global::Microsoft.AspNetCore.Authorization.AllowAnonymous]
         [global::Microsoft.AspNetCore.Authorization.Authorize(Policy = "ApiKeyAuth")]
         public async global::System.Threading.Tasks.Task<global::Microsoft.AspNetCore.Mvc.IActionResult> GetInfoTypeSafeEntry(
-            [global::Microsoft.AspNetCore.Mvc.FromQuery(Name = "data")] byte[]? data
+            [global::Microsoft.AspNetCore.Mvc.FromQuery(Name = "data")] global::PrincipleStudios.OpenApiCodegen.Json.Extensions.Optional<byte[]> data
         ) => (await GetInfo(data)).ActionResult;
 
         protected abstract global::System.Threading.Tasks.Task<GetInfoActionResult> GetInfo(
-            byte[]? data);
+            global::PrincipleStudios.OpenApiCodegen.Json.Extensions.Optional<byte[]> data);
 
         public readonly struct GetInfoActionResult
         {

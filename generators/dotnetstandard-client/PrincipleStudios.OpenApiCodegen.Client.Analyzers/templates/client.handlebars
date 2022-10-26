@@ -19,50 +19,50 @@ namespace {{packageName}}
         /// <param name="{{paramName}}">{{description}}</param>{{/each}}
         public static async global::System.Threading.Tasks.Task<{{operation.name}}ReturnType> {{operation.name}}(
             this global::System.Net.Http.HttpClient client,
-            {{#each requestBody.allParams}}{{{dataType}}} {{paramName}},
+            {{#each requestBody.allParams}}{{#unless required}}global::PrincipleStudios.OpenApiCodegen.Json.Extensions.Optional<{{/unless}}{{{dataType}}}{{#unless required}}>?{{/unless}} {{paramName}},
             {{/each}}
             global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken)
         ) => await (await client.SendAsync({{operation.name}}({{#each requestBody.allParams}}{{paramName}}{{#unless @last}},{{/unless}}{{/each}})).ConfigureAwait(false))
             .Parse{{operation.name}}().ConfigureAwait(false);
 
         public static global::System.Net.Http.HttpRequestMessage {{operation.name}}(
-            {{#each requestBody.allParams}}{{{dataType}}} {{paramName}}{{#unless @last}},{{/unless}}
+            {{#each requestBody.allParams}}{{#unless required}}global::PrincipleStudios.OpenApiCodegen.Json.Extensions.Optional<{{/unless}}{{{dataType}}}{{#unless required}}>?{{/unless}} {{paramName}}{{#unless @last}},{{/unless}}
             {{/each}})
         {
 {{#if requestBody.hasQueryParam}}
             var query = global::System.Web.HttpUtility.ParseQueryString(string.Empty); {{!-- This is a weird way to get the internal NameValueCollection that properly serializes query strings --}}
 {{#each requestBody.allParams}}{{#if isQueryParam}}{{#if dataTypeEnumerable}}
             if ({{paramName}} != null)
-                foreach (var entry in {{paramName}})
+                foreach (var entry in {{#unless required}}({{{dataType}}}){{/unless}}{{paramName}})
                     query.Add("{{rawName}}", global::System.Convert.ToString(entry));
 {{else}}
             if ({{paramName}} != null)
-                query.Add("{{rawName}}", global::System.Convert.ToString({{paramName}}));
+                query.Add("{{rawName}}", global::System.Convert.ToString({{#unless required}}({{{dataType}}}){{/unless}}{{paramName}}));
 {{/if}}{{/if}}{{/each}}
             var requestMessage = new global::System.Net.Http.HttpRequestMessage(
                 global::System.Net.Http.HttpMethod.{{{operation.httpMethod}}},
                 new global::System.Uri("{{{operation.path}}}"{{#each requestBody.allParams}}{{#if isPathParam}}
-                    .Replace("{" + "{{rawName}}" + "}", global::System.Web.HttpUtility.UrlEncode({{paramName}}.ToString())){{/if}}{{/each}}
+                    .Replace("{" + "{{rawName}}" + "}", global::System.Web.HttpUtility.UrlEncode(({{#unless required}}({{{dataType}}}){{/unless}}{{paramName}}).ToString()){{/if}}{{/each}}
                     + {{#if operation.hasQueryStringEmbedded}}"&"{{else}}"?"{{/if}} + query.ToString(),
                     global::System.UriKind.Relative));
 {{else}}
             var requestMessage = new global::System.Net.Http.HttpRequestMessage(global::System.Net.Http.HttpMethod.{{{operation.httpMethod}}}, "{{{operation.path}}}"{{#each requestBody.allParams}}{{#if isPathParam}}
-                        .Replace("{" + "{{rawName}}" + "}", global::System.Web.HttpUtility.UrlEncode({{paramName}}.ToString())){{/if}}{{/each}});
+                        .Replace("{" + "{{rawName}}" + "}", global::System.Web.HttpUtility.UrlEncode({{#if required}}{{paramName}}{{else}}(({{{dataType}}}){{paramName}}){{/if}}.ToString())){{/if}}{{/each}});
 {{/if}}
 {{#if requestBody.isForm}}
             requestMessage.Content = new global::System.Net.Http.MultipartFormDataContent()
             {
 {{#each requestBody.allParams}}{{#if isFormParam}}
-                { new {{#if isFile}}global::System.Net.Http.StreamContent({{paramName}}){{else}}global::System.Net.Http.StringContent({{paramName}}.ToString()){{/if}}, "{{rawName}}" },
+                { new {{#if isFile}}global::System.Net.Http.StreamContent({{#unless required}}({{{dataType}}}){{/unless}}{{paramName}}){{else}}global::System.Net.Http.StringContent({{#if required}}{{paramName}}{{else}}(({{{dataType}}}){{paramName}}){{/if}}.ToString()){{/if}}, "{{rawName}}" },
 {{/if}}{{/each}}
             };
 {{else}}{{#each requestBody.allParams}}{{#if isBodyParam}}{{#if isFile}}
-            requestMessage.Content = new global::System.Net.Http.StreamContent({{paramName}});
+            requestMessage.Content = new global::System.Net.Http.StreamContent({{#unless required}}({{{dataType}}}){{/unless}}{{paramName}});
 {{else}}
             requestMessage.Content = global::System.Net.Http.Json.JsonContent.Create<{{{dataType}}}>({{paramName}}, global::System.Net.Http.Headers.MediaTypeHeaderValue.Parse("{{{requestBody.requestBodyType}}}"));
 {{/if}}{{/if}}{{/each}}{{/if}}
 {{#each requestBody.allParams}}{{#if isHeaderParam}}
-            requestMessage.Headers.Add("{{baseName}}", {{paramName}}{{#if dataTypeEnumerable}}.Select(v => v.ToString()){{else}}.ToString(){{/if}});{{/if}}{{/each}}
+            requestMessage.Headers.Add("{{baseName}}", {{#if required}}{{paramName}}{{else}}(({{{dataType}}}){{paramName}}){{/if}}{{#if dataTypeEnumerable}}.Select(v => v.ToString()){{else}}.ToString(){{/if}});{{/if}}{{/each}}
             return requestMessage;
         }
 

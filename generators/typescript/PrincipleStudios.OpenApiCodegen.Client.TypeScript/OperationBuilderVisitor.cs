@@ -56,8 +56,7 @@ namespace PrincipleStudios.OpenApiCodegen.Client.TypeScript
 
         public override void Visit(OpenApiParameter param, OpenApiContext context, Argument argument)
         {
-            var dataTypeBase = typeScriptSchemaResolver.ToInlineDataType(param.Schema)();
-            var dataType = param.Required ? dataTypeBase : dataTypeBase.MakeNullable();
+            var dataType = typeScriptSchemaResolver.ToInlineDataType(param.Schema)();
             argument.Builder?.SharedParameters.Add(new templates.OperationParameter(
                 rawName: param.Name,
                 rawNameWithCurly: $"{{{param.Name}}}",
@@ -145,8 +144,7 @@ namespace PrincipleStudios.OpenApiCodegen.Client.TypeScript
                 headers: (from entry in response.Headers
                           let entryContext = context.Append(nameof(response.Headers), entry.Key, entry.Value)
                           let required = entry.Value.Required
-                          let dataTypeBase = typeScriptSchemaResolver.ToInlineDataType(entry.Value.Schema)()
-                          let dataType = required ? dataTypeBase : dataTypeBase.MakeNullable()
+                          let dataType = typeScriptSchemaResolver.ToInlineDataType(entry.Value.Schema)()
                           select new templates.OperationResponseHeader(
                               rawName: entry.Key,
                               paramName: TypeScriptNaming.ToParameterName("header " + entry.Key, options.ReservedIdentifiers()),
@@ -188,8 +186,7 @@ namespace PrincipleStudios.OpenApiCodegen.Client.TypeScript
             IEnumerable<OperationParameter> GetFormParams() =>
                 from param in mediaType.Schema.Properties
                 let required = mediaType.Schema.Required.Contains(param.Key)
-                let dataTypeBase = typeScriptSchemaResolver.ToInlineDataType(param.Value)()
-                let dataType = required ? dataTypeBase : dataTypeBase.MakeNullable()
+                let dataType = typeScriptSchemaResolver.ToInlineDataType(param.Value)()
                 select new templates.OperationParameter(
                     rawName: param.Key,
                     rawNameWithCurly: $"{{{param.Key}}}",

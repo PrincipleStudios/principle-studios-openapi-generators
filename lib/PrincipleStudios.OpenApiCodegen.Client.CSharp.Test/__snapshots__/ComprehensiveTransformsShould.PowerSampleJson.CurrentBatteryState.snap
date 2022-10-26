@@ -14,8 +14,8 @@
 namespace PS.Controller
 {
     public partial record CurrentBatteryState(
-        [property: global::System.Text.Json.Serialization.JsonPropertyName("percent")] double? Percent, 
-        [property: global::System.Text.Json.Serialization.JsonPropertyName("currentCharge")] double? CurrentCharge, 
-        [property: global::System.Text.Json.Serialization.JsonPropertyName("maxCharge")] double? MaxCharge
+        [property: global::System.Text.Json.Serialization.JsonPropertyName("percent")][property: global::System.Text.Json.Serialization.JsonIgnore(Condition = global::System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)] global::PrincipleStudios.OpenApiCodegen.Json.Extensions.Optional<double>? Percent, 
+        [property: global::System.Text.Json.Serialization.JsonPropertyName("currentCharge")][property: global::System.Text.Json.Serialization.JsonIgnore(Condition = global::System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)] global::PrincipleStudios.OpenApiCodegen.Json.Extensions.Optional<double>? CurrentCharge, 
+        [property: global::System.Text.Json.Serialization.JsonPropertyName("maxCharge")][property: global::System.Text.Json.Serialization.JsonIgnore(Condition = global::System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)] global::PrincipleStudios.OpenApiCodegen.Json.Extensions.Optional<double>? MaxCharge
     );
 }

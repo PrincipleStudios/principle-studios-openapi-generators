@@ -14,8 +14,8 @@
 namespace PrincipleStudios.Test
 {
     public partial record ApiResponse(
-        [property: global::System.Text.Json.Serialization.JsonPropertyName("code")] int? Code, 
-        [property: global::System.Text.Json.Serialization.JsonPropertyName("type")] string? Type, 
-        [property: global::System.Text.Json.Serialization.JsonPropertyName("message")] string? Message
+        [property: global::System.Text.Json.Serialization.JsonPropertyName("code")][property: global::System.Text.Json.Serialization.JsonIgnore(Condition = global::System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)] global::PrincipleStudios.OpenApiCodegen.Json.Extensions.Optional<int>? Code, 
+        [property: global::System.Text.Json.Serialization.JsonPropertyName("type")][property: global::System.Text.Json.Serialization.JsonIgnore(Condition = global::System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)] global::PrincipleStudios.OpenApiCodegen.Json.Extensions.Optional<string>? Type, 
+        [property: global::System.Text.Json.Serialization.JsonPropertyName("message")][property: global::System.Text.Json.Serialization.JsonIgnore(Condition = global::System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)] global::PrincipleStudios.OpenApiCodegen.Json.Extensions.Optional<string>? Message
     );
 }

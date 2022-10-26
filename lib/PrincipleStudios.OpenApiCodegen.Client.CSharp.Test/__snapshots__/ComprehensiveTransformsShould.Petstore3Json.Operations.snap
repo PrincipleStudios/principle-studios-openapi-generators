@@ -482,16 +482,16 @@ namespace PS.Controller
         public static async global::System.Threading.Tasks.Task<UpdatePetWithFormReturnType> UpdatePetWithForm(
             this global::System.Net.Http.HttpClient client,
             long petId,
-string? name,
-string? status,
+global::PrincipleStudios.OpenApiCodegen.Json.Extensions.Optional<string>? name,
+global::PrincipleStudios.OpenApiCodegen.Json.Extensions.Optional<string>? status,
             global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken)
         ) => await (await client.SendAsync(UpdatePetWithForm(petId,name,status)).ConfigureAwait(false))
             .ParseUpdatePetWithForm().ConfigureAwait(false);
 
         public static global::System.Net.Http.HttpRequestMessage UpdatePetWithForm(
             long petId,
-            string? name,
-            string? status
+            global::PrincipleStudios.OpenApiCodegen.Json.Extensions.Optional<string>? name,
+            global::PrincipleStudios.OpenApiCodegen.Json.Extensions.Optional<string>? status
             )
         {
             var requestMessage = new global::System.Net.Http.HttpRequestMessage(global::System.Net.Http.HttpMethod.Post, "pet/{petId}"
@@ -499,9 +499,9 @@ string? status,
             requestMessage.Content = new global::System.Net.Http.MultipartFormDataContent()
             {
 
-                { new global::System.Net.Http.StringContent(name.ToString()), "name" },
+                { new global::System.Net.Http.StringContent(((string)name).ToString()), "name" },
 
-                { new global::System.Net.Http.StringContent(status.ToString()), "status" },
+                { new global::System.Net.Http.StringContent(((string)status).ToString()), "status" },
 
             };
 
@@ -555,14 +555,14 @@ string? status,
         /// <param name="petId">Pet id to delete</param>
         public static async global::System.Threading.Tasks.Task<DeletePetReturnType> DeletePet(
             this global::System.Net.Http.HttpClient client,
-            string? apiKey,
+            global::PrincipleStudios.OpenApiCodegen.Json.Extensions.Optional<string>? apiKey,
 long petId,
             global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken)
         ) => await (await client.SendAsync(DeletePet(apiKey,petId)).ConfigureAwait(false))
             .ParseDeletePet().ConfigureAwait(false);
 
         public static global::System.Net.Http.HttpRequestMessage DeletePet(
-            string? apiKey,
+            global::PrincipleStudios.OpenApiCodegen.Json.Extensions.Optional<string>? apiKey,
             long petId
             )
         {
@@ -570,7 +570,7 @@ long petId,
                         .Replace("{" + "petId" + "}", global::System.Web.HttpUtility.UrlEncode(petId.ToString())));
 
 
-            requestMessage.Headers.Add("", apiKey.ToString());
+            requestMessage.Headers.Add("", ((string)apiKey).ToString());
             return requestMessage;
         }
 

@@ -21,7 +21,7 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
         }
 
         [Fact]
-        public void DeserializeOptionalMIssing()
+        public void DeserializeOptionalMissing()
         {
             var json = @"{}";
             HasOptional target = JsonSerializer.Deserialize<HasOptional>(json)!;
@@ -45,7 +45,7 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
         }
 
         [Fact]
-        public void SerializeOptionalMIssing()
+        public void SerializeOptionalMissing()
         {
             var expectedJson = @"{}";
             var original = new HasOptional { };
@@ -68,6 +68,63 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
             var expectedJson = @"{""optionalNullableInteger"":15}";
             var original = new HasOptional { OptionalNullableInteger = new Optional<int?>.Present(15) };
             var actual = JsonSerializer.Serialize<HasOptional>(original);
+            Assert.Equal(expectedJson, actual);
+        }
+
+        public record RecordHasOptional(
+            [property: System.Text.Json.Serialization.JsonPropertyName("optionalNullableInteger")]
+            [property: global::System.Text.Json.Serialization.JsonIgnore(Condition = global::System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]
+            global::PrincipleStudios.OpenApiCodegen.Json.Extensions.Optional<int?>? OptionalNullableInteger
+        );
+
+        [Fact]
+        public void DeserializeRecordOptionalMissing()
+        {
+            var json = @"{}";
+            RecordHasOptional target = JsonSerializer.Deserialize<RecordHasOptional>(json)!;
+            Assert.Null(target.OptionalNullableInteger);
+        }
+
+        [Fact]
+        public void DeserializeRecordOptionalAsNull()
+        {
+            var json = @"{ ""optionalNullableInteger"": null }";
+            RecordHasOptional target = JsonSerializer.Deserialize<RecordHasOptional>(json)!;
+            Assert.True(target.OptionalNullableInteger is Optional<int?>.Present { Value: null });
+        }
+
+        [Fact]
+        public void DeserializeRecordOptionalPresent()
+        {
+            var json = @"{ ""optionalNullableInteger"": 15 }";
+            RecordHasOptional target = JsonSerializer.Deserialize<RecordHasOptional>(json)!;
+            Assert.True(target.OptionalNullableInteger is Optional<int?>.Present { Value: 15 });
+        }
+
+        [Fact]
+        public void SerializeRecordOptionalMissing()
+        {
+            var expectedJson = @"{}";
+            var original = new RecordHasOptional(Optional<int?>.None);
+            var actual = JsonSerializer.Serialize<RecordHasOptional>(original);
+            Assert.Equal(expectedJson, actual);
+        }
+
+        [Fact]
+        public void SerializeRecordOptionalAsNull()
+        {
+            var expectedJson = @"{""optionalNullableInteger"":null}";
+            var original = new RecordHasOptional(new Optional<int?>.Present(null));
+            var actual = JsonSerializer.Serialize<RecordHasOptional>(original);
+            Assert.Equal(expectedJson, actual);
+        }
+
+        [Fact]
+        public void SerializeRecordOptionalPresent()
+        {
+            var expectedJson = @"{""optionalNullableInteger"":15}";
+            var original = new RecordHasOptional(new Optional<int?>.Present(15));
+            var actual = JsonSerializer.Serialize<RecordHasOptional>(original);
             Assert.Equal(expectedJson, actual);
         }
 
