@@ -53,7 +53,7 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
 
             Assert.Empty(diagnostic.Errors);
 
-            var parseOptions = CSharpParseOptions.Default.WithLanguageVersion(LanguageVersion.CSharp10);
+            var parseOptions = CSharpParseOptions.Default.WithLanguageVersion(LanguageVersion.CSharp9);
             var syntaxTrees = entries.Select(e => CSharpSyntaxTree.ParseText(e.SourceText, options: parseOptions, path: e.Key)).ToArray();
 
             string assemblyName = Path.GetRandomFileName();
