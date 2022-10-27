@@ -26,7 +26,7 @@ act as the starting point for a server.
 
 Prerequisites:
 
-    Dotnot CLI v3.1 or higher
+    .NET CLI 6.0 or higher
 
 To build:
 
