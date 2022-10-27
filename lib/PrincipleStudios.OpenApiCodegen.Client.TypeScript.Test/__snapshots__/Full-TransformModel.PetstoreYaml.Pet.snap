@@ -18,9 +18,9 @@ export type Pet = {
      */
     name: string;
     /**
-     * @type string | null
+     * @type string
      */
-    tag?: string | null;
+    tag?: string;
     /**
      * @type BigInt
      */

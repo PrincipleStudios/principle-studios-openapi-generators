@@ -18,7 +18,7 @@ export type NewPet = {
      */
     name: string;
     /**
-     * @type string | null
+     * @type string
      */
-    tag?: string | null;
+    tag?: string;
 };

@@ -171,17 +171,17 @@ exports[`models/CurrentBatteryState.ts`] = `/*
  */
 export type CurrentBatteryState = {
     /**
-     * @type number | null
+     * @type number
      */
-    percent?: number | null;
+    percent?: number;
     /**
-     * @type number | null
+     * @type number
      */
-    currentCharge?: number | null;
+    currentCharge?: number;
     /**
-     * @type number | null
+     * @type number
      */
-    maxCharge?: number | null;
+    maxCharge?: number;
 };
 `;
 

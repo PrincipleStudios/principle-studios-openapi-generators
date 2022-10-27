@@ -14,15 +14,15 @@
  */
 export type ApiResponse = {
     /**
-     * @type number | null
+     * @type number
      */
-    code?: number | null;
+    code?: number;
     /**
-     * @type string | null
+     * @type string
      */
-    type?: string | null;
+    type?: string;
     /**
-     * @type string | null
+     * @type string
      */
-    message?: string | null;
+    message?: string;
 };
