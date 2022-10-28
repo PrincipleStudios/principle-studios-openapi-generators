@@ -20,13 +20,13 @@ import {
  */
 export type Pet = {
     /**
-     * @type BigInt | null
+     * @type BigInt
      */
-    id?: BigInt | null;
+    id?: BigInt;
     /**
-     * @type Category | null
+     * @type Category
      */
-    category?: Category | null;
+    category?: Category;
     /**
      * @type string
      */
@@ -36,11 +36,11 @@ export type Pet = {
      */
     photoUrls: Array<string>;
     /**
-     * @type Array<Tag> | null
+     * @type Array<Tag>
      */
-    tags?: Array<Tag> | null;
+    tags?: Array<Tag>;
     /**
-     * @type "available" | "pending" | "sold" | null
+     * @type "available" | "pending" | "sold"
      */
-    status?: "available" | "pending" | "sold" | null;
+    status?: "available" | "pending" | "sold";
 };

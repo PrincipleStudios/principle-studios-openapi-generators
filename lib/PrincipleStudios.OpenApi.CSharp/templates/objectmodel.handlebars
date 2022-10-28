@@ -11,8 +11,10 @@ namespace {{this.packageName}}
     /// "}}
     /// </summary>
     {{/if}}public partial record {{className}}({{#each vars}}
-        [property: global::System.Text.Json.Serialization.JsonPropertyName("{{baseName}}"){{#if required}}][param: global::System.ComponentModel.DataAnnotations.Required{{/if}}]{{!
-    data type: }} {{{dataType}}}{{!
+        [property: global::System.Text.Json.Serialization.JsonPropertyName("{{baseName}}")]{{#if required
+            }}[param: global::System.ComponentModel.DataAnnotations.Required]{{else
+            }}[property: global::System.Text.Json.Serialization.JsonIgnore(Condition = global::System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]{{/if}}{{!
+    data type: }} {{#unless required}}global::PrincipleStudios.OpenApiCodegen.Json.Extensions.Optional<{{/unless}}{{{dataType}}}{{#unless required}}>?{{/unless}}{{!
     name: }} {{name}}{{#unless @last}}, {{/unless}}{{/each}}
     );
     {{/with}}

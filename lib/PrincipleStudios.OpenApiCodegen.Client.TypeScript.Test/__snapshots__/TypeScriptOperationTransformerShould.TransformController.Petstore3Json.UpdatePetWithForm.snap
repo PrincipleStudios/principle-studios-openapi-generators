@@ -14,8 +14,8 @@ export type RequestParams = {
 };
 export type RequestBodies = {
     'application/x-www-form-urlencoded': {
-        name?: string | null;
-        status?: string | null;
+        name?: string;
+        status?: string;
     };
 };
 

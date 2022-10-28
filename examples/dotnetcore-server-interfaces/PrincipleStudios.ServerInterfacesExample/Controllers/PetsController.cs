@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PrincipleStudios.OpenApiCodegen.Json.Extensions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -14,7 +15,7 @@ namespace PrincipleStudios.ServerInterfacesExample.Controllers
             await Task.Yield();
             var newId = Interlocked.Increment(ref Data.lastId);
             var result = new Pet(newPet.Name, newPet.Tag, newId);
-            if (Data.pets.TryAdd(newId, (result.Name, result.Tag)))
+            if (Data.pets.TryAdd(newId, (result.Name, result.Tag.GetValueOrDefault())))
             {
                 return AddPetActionResult.Ok(result);
             }
@@ -24,19 +25,19 @@ namespace PrincipleStudios.ServerInterfacesExample.Controllers
             }
         }
 
-        protected override async Task<FindPetsActionResult> FindPets(IEnumerable<string>? tags, int? limit)
+        protected override async Task<FindPetsActionResult> FindPets(Optional<IEnumerable<string>>? tags, Optional<int>? limit)
         {
             await Task.Yield();
             var result = Data.pets.AsEnumerable();
-            if (tags != null && tags.Any())
+            if (tags.TryGet(out var actualTags) && actualTags.Any())
             {
-                result = result.Where(p => tags.Contains(p.Value.tag));
+                result = result.Where(p => actualTags.Contains(p.Value.tag));
             }
-            if (limit != null)
+            if (limit.TryGet(out var actualLimit))
             {
-                result = result.Take(limit.Value);
+                result = result.Take(actualLimit);
             }
-            return FindPetsActionResult.Ok(result.Select(kvp => new Pet(kvp.Value.name, kvp.Value.tag, kvp.Key)).ToArray());
+            return FindPetsActionResult.Ok(result.Select(kvp => new Pet(kvp.Value.name, kvp.Value.tag is string ? (Optional<string>)kvp.Value.tag : null, kvp.Key)).ToArray());
         }
 
         protected override async Task<DeletePetActionResult> DeletePet(long id)
@@ -57,7 +58,7 @@ namespace PrincipleStudios.ServerInterfacesExample.Controllers
             await Task.Yield();
             if (Data.pets.TryGetValue(id, out var tuple))
             {
-                return FindPetByIdActionResult.Ok(new Pet(tuple.name, tuple.tag, id));
+                return FindPetByIdActionResult.Ok(new Pet(tuple.name, tuple.tag is string ? (Optional<string>)tuple.tag : null, id));
             }
             else
             {

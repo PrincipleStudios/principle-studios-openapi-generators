@@ -19,18 +19,18 @@ namespace PS.Controller
         /// <param name="data">base-64 encoded data</param>
         public static async global::System.Threading.Tasks.Task<GetInfoReturnType> GetInfo(
             this global::System.Net.Http.HttpClient client,
-            byte[]? data,
+            global::PrincipleStudios.OpenApiCodegen.Json.Extensions.Optional<byte[]>? data,
             global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken)
         ) => await (await client.SendAsync(GetInfo(data)).ConfigureAwait(false))
             .ParseGetInfo().ConfigureAwait(false);
 
         public static global::System.Net.Http.HttpRequestMessage GetInfo(
-            byte[]? data
+            global::PrincipleStudios.OpenApiCodegen.Json.Extensions.Optional<byte[]>? data
             )
         {
             var query = global::System.Web.HttpUtility.ParseQueryString(string.Empty); 
             if (data != null)
-                query.Add("data", global::System.Convert.ToString(data));
+                query.Add("data", global::System.Convert.ToString((byte[])data));
 
             var requestMessage = new global::System.Net.Http.HttpRequestMessage(
                 global::System.Net.Http.HttpMethod.Get,

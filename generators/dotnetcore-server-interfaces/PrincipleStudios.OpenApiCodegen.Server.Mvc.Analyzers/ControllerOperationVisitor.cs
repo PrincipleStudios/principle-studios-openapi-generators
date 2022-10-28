@@ -71,8 +71,7 @@ namespace PrincipleStudios.OpenApi.CSharp
 
         public override void Visit(OpenApiParameter param, OpenApiContext context, Argument argument)
         {
-            var dataTypeBase = csharpSchemaResolver.ToInlineDataType(param.Schema)();
-            var dataType = param.Required ? dataTypeBase : dataTypeBase.MakeNullable();
+            var dataType = csharpSchemaResolver.ToInlineDataType(param.Schema)();
             argument.Builder?.SharedParameters.Add(new templates.OperationParameter(
                 rawName: param.Name,
                 paramName: CSharpNaming.ToParameterName(param.Name, options.ReservedIdentifiers()),
@@ -115,8 +114,7 @@ namespace PrincipleStudios.OpenApi.CSharp
                 headers: (from entry in response.Headers
                           let entryContext = context.Append(nameof(response.Headers), entry.Key, entry.Value)
                           let required = entry.Value.Required
-                          let dataTypeBase = csharpSchemaResolver.ToInlineDataType(entry.Value.Schema)()
-                          let dataType = required ? dataTypeBase : dataTypeBase.MakeNullable()
+                          let dataType = csharpSchemaResolver.ToInlineDataType(entry.Value.Schema)()
                           select new templates.OperationResponseHeader(
                               rawName: entry.Key,
                               paramName: CSharpNaming.ToParameterName("header " + entry.Key, options.ReservedIdentifiers()),
@@ -156,8 +154,7 @@ namespace PrincipleStudios.OpenApi.CSharp
             IEnumerable<OperationParameter> GetFormParams() =>
                 from param in mediaType.Schema.Properties
                 let required = mediaType.Schema.Required.Contains(param.Key)
-                let dataTypeBase = csharpSchemaResolver.ToInlineDataType(param.Value)()
-                let dataType = required ? dataTypeBase : dataTypeBase.MakeNullable()
+                let dataType = csharpSchemaResolver.ToInlineDataType(param.Value)()
                 select new templates.OperationParameter(
                     rawName: param.Key,
                     paramName: CSharpNaming.ToParameterName(param.Key, options.ReservedIdentifiers()),

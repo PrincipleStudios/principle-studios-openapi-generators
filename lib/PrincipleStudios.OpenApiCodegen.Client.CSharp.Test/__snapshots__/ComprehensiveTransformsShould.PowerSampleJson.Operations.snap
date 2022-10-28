@@ -25,25 +25,25 @@ namespace PS.Controller
         public static async global::System.Threading.Tasks.Task<GetPowerFlowsReturnType> GetPowerFlows(
             this global::System.Net.Http.HttpClient client,
             global::System.Guid houseId,
-string? start,
-string? end,
+global::PrincipleStudios.OpenApiCodegen.Json.Extensions.Optional<string>? start,
+global::PrincipleStudios.OpenApiCodegen.Json.Extensions.Optional<string>? end,
             global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken)
         ) => await (await client.SendAsync(GetPowerFlows(houseId,start,end)).ConfigureAwait(false))
             .ParseGetPowerFlows().ConfigureAwait(false);
 
         public static global::System.Net.Http.HttpRequestMessage GetPowerFlows(
             global::System.Guid houseId,
-            string? start,
-            string? end
+            global::PrincipleStudios.OpenApiCodegen.Json.Extensions.Optional<string>? start,
+            global::PrincipleStudios.OpenApiCodegen.Json.Extensions.Optional<string>? end
             )
         {
             var query = global::System.Web.HttpUtility.ParseQueryString(string.Empty); 
             if (houseId != null)
                 query.Add("houseId", global::System.Convert.ToString(houseId));
             if (start != null)
-                query.Add("start", global::System.Convert.ToString(start));
+                query.Add("start", global::System.Convert.ToString((string)start));
             if (end != null)
-                query.Add("end", global::System.Convert.ToString(end));
+                query.Add("end", global::System.Convert.ToString((string)end));
 
             var requestMessage = new global::System.Net.Http.HttpRequestMessage(
                 global::System.Net.Http.HttpMethod.Get,

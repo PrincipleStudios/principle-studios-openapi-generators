@@ -10,7 +10,7 @@
 import { HttpHeaders, HttpQuery, RequestOpts, ResponseArgs, throwIfNullOrUndefined, encodeURI, RequestConversion, StandardResponse, TransformRequest } from '@principlestudios/openapi-codegen-typescript';
 
 export type RequestParams = {
-    data?: string | null;
+    data?: string;
 };
 export type RequestBodies = {
 };
@@ -32,7 +32,7 @@ export function getInfo(params: RequestParams): RequestOpts {
 
     const query: HttpQuery = { 
     };
-    if (params.data != null) { query['data'] = params.data; }
+    if (params.data !== undefined) { query['data'] = params.data; }
 
     return {
         path: '/info',

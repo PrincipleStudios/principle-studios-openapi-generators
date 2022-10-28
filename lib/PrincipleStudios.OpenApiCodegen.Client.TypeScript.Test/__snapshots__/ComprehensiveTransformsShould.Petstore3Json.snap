@@ -361,8 +361,8 @@ export type RequestParams = {
 };
 export type RequestBodies = {
     'application/x-www-form-urlencoded': {
-        name?: string | null;
-        status?: string | null;
+        name?: string;
+        status?: string;
     };
 };
 
@@ -431,7 +431,7 @@ exports[`operations/deletePet.ts`] = `/*
 import { HttpHeaders, HttpQuery, RequestOpts, ResponseArgs, throwIfNullOrUndefined, encodeURI, RequestConversion, StandardResponse, TransformRequest } from '@principlestudios/openapi-codegen-typescript';
 
 export type RequestParams = {
-    apiKey?: string | null;
+    apiKey?: string;
     petId: BigInt;
 };
 export type RequestBodies = {
@@ -457,7 +457,7 @@ export function deletePet(params: RequestParams): RequestOpts {
     throwIfNullOrUndefined(params.petId, 'petId');
 
     const headers: HttpHeaders = {};
-    if (params.apiKey) headers['api_key'] = params.apiKey; 
+    if (params.apiKey !== undefined) headers['api_key'] = params.apiKey; 
 
     return {
         path: '/pet/{petId}'.replace('{petId}', encodeURI(params.petId)),
@@ -1388,13 +1388,13 @@ import {
  */
 export type Pet = {
     /**
-     * @type BigInt | null
+     * @type BigInt
      */
-    id?: BigInt | null;
+    id?: BigInt;
     /**
-     * @type Category | null
+     * @type Category
      */
-    category?: Category | null;
+    category?: Category;
     /**
      * @type string
      */
@@ -1404,13 +1404,13 @@ export type Pet = {
      */
     photoUrls: Array<string>;
     /**
-     * @type Array<Tag> | null
+     * @type Array<Tag>
      */
-    tags?: Array<Tag> | null;
+    tags?: Array<Tag>;
     /**
-     * @type "available" | "pending" | "sold" | null
+     * @type "available" | "pending" | "sold"
      */
-    status?: "available" | "pending" | "sold" | null;
+    status?: "available" | "pending" | "sold";
 };
 `;
 
@@ -1430,13 +1430,13 @@ exports[`models/Category.ts`] = `/*
  */
 export type Category = {
     /**
-     * @type BigInt | null
+     * @type BigInt
      */
-    id?: BigInt | null;
+    id?: BigInt;
     /**
-     * @type string | null
+     * @type string
      */
-    name?: string | null;
+    name?: string;
 };
 `;
 
@@ -1456,13 +1456,13 @@ exports[`models/Tag.ts`] = `/*
  */
 export type Tag = {
     /**
-     * @type BigInt | null
+     * @type BigInt
      */
-    id?: BigInt | null;
+    id?: BigInt;
     /**
-     * @type string | null
+     * @type string
      */
-    name?: string | null;
+    name?: string;
 };
 `;
 
@@ -1482,37 +1482,37 @@ exports[`models/User.ts`] = `/*
  */
 export type User = {
     /**
-     * @type BigInt | null
+     * @type BigInt
      */
-    id?: BigInt | null;
+    id?: BigInt;
     /**
-     * @type string | null
+     * @type string
      */
-    username?: string | null;
+    username?: string;
     /**
-     * @type string | null
+     * @type string
      */
-    firstName?: string | null;
+    firstName?: string;
     /**
-     * @type string | null
+     * @type string
      */
-    lastName?: string | null;
+    lastName?: string;
     /**
-     * @type string | null
+     * @type string
      */
-    email?: string | null;
+    email?: string;
     /**
-     * @type string | null
+     * @type string
      */
-    password?: string | null;
+    password?: string;
     /**
-     * @type string | null
+     * @type string
      */
-    phone?: string | null;
+    phone?: string;
     /**
-     * @type number | null
+     * @type number
      */
-    userStatus?: number | null;
+    userStatus?: number;
 };
 `;
 
@@ -1532,29 +1532,29 @@ exports[`models/Order.ts`] = `/*
  */
 export type Order = {
     /**
-     * @type BigInt | null
+     * @type BigInt
      */
-    id?: BigInt | null;
+    id?: BigInt;
     /**
-     * @type BigInt | null
+     * @type BigInt
      */
-    petId?: BigInt | null;
+    petId?: BigInt;
     /**
-     * @type number | null
+     * @type number
      */
-    quantity?: number | null;
+    quantity?: number;
     /**
-     * @type string | null
+     * @type string
      */
-    shipDate?: string | null;
+    shipDate?: string;
     /**
-     * @type "placed" | "approved" | "delivered" | null
+     * @type "placed" | "approved" | "delivered"
      */
-    status?: "placed" | "approved" | "delivered" | null;
+    status?: "placed" | "approved" | "delivered";
     /**
-     * @type boolean | null
+     * @type boolean
      */
-    complete?: boolean | null;
+    complete?: boolean;
 };
 `;
 
@@ -1574,17 +1574,17 @@ exports[`models/ApiResponse.ts`] = `/*
  */
 export type ApiResponse = {
     /**
-     * @type number | null
+     * @type number
      */
-    code?: number | null;
+    code?: number;
     /**
-     * @type string | null
+     * @type string
      */
-    type?: string | null;
+    type?: string;
     /**
-     * @type string | null
+     * @type string
      */
-    message?: string | null;
+    message?: string;
 };
 `;
 

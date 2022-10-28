@@ -14,7 +14,7 @@
 namespace PrincipleStudios.Test
 {
     public partial record Tag(
-        [property: global::System.Text.Json.Serialization.JsonPropertyName("id")] long? Id, 
-        [property: global::System.Text.Json.Serialization.JsonPropertyName("name")] string? Name
+        [property: global::System.Text.Json.Serialization.JsonPropertyName("id")][property: global::System.Text.Json.Serialization.JsonIgnore(Condition = global::System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)] global::PrincipleStudios.OpenApiCodegen.Json.Extensions.Optional<long>? Id, 
+        [property: global::System.Text.Json.Serialization.JsonPropertyName("name")][property: global::System.Text.Json.Serialization.JsonIgnore(Condition = global::System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)] global::PrincipleStudios.OpenApiCodegen.Json.Extensions.Optional<string>? Name
     );
 }

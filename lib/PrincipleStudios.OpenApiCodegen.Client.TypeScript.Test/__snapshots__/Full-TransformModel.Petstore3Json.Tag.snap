@@ -14,11 +14,11 @@
  */
 export type Tag = {
     /**
-     * @type BigInt | null
+     * @type BigInt
      */
-    id?: BigInt | null;
+    id?: BigInt;
     /**
-     * @type string | null
+     * @type string
      */
-    name?: string | null;
+    name?: string;
 };

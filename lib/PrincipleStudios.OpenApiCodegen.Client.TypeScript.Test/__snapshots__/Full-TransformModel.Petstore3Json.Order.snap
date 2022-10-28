@@ -14,27 +14,27 @@
  */
 export type Order = {
     /**
-     * @type BigInt | null
+     * @type BigInt
      */
-    id?: BigInt | null;
+    id?: BigInt;
     /**
-     * @type BigInt | null
+     * @type BigInt
      */
-    petId?: BigInt | null;
+    petId?: BigInt;
     /**
-     * @type number | null
+     * @type number
      */
-    quantity?: number | null;
+    quantity?: number;
     /**
-     * @type string | null
+     * @type string
      */
-    shipDate?: string | null;
+    shipDate?: string;
     /**
-     * @type "placed" | "approved" | "delivered" | null
+     * @type "placed" | "approved" | "delivered"
      */
-    status?: "placed" | "approved" | "delivered" | null;
+    status?: "placed" | "approved" | "delivered";
     /**
-     * @type boolean | null
+     * @type boolean
      */
-    complete?: boolean | null;
+    complete?: boolean;
 };

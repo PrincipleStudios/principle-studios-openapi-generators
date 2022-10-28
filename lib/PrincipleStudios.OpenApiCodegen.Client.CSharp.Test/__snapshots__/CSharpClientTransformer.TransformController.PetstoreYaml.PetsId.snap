@@ -27,24 +27,24 @@ namespace PrincipleStudios.Test
         /// <param name="limit">maximum number of results to return</param>
         public static async global::System.Threading.Tasks.Task<FindPetsReturnType> FindPets(
             this global::System.Net.Http.HttpClient client,
-            global::System.Collections.Generic.IEnumerable<string>? tags,
-int? limit,
+            global::PrincipleStudios.OpenApiCodegen.Json.Extensions.Optional<global::System.Collections.Generic.IEnumerable<string>>? tags,
+global::PrincipleStudios.OpenApiCodegen.Json.Extensions.Optional<int>? limit,
             global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken)
         ) => await (await client.SendAsync(FindPets(tags,limit)).ConfigureAwait(false))
             .ParseFindPets().ConfigureAwait(false);
 
         public static global::System.Net.Http.HttpRequestMessage FindPets(
-            global::System.Collections.Generic.IEnumerable<string>? tags,
-            int? limit
+            global::PrincipleStudios.OpenApiCodegen.Json.Extensions.Optional<global::System.Collections.Generic.IEnumerable<string>>? tags,
+            global::PrincipleStudios.OpenApiCodegen.Json.Extensions.Optional<int>? limit
             )
         {
             var query = global::System.Web.HttpUtility.ParseQueryString(string.Empty); 
 
             if (tags != null)
-                foreach (var entry in tags)
+                foreach (var entry in (global::System.Collections.Generic.IEnumerable<string>)tags)
                     query.Add("tags", global::System.Convert.ToString(entry));
             if (limit != null)
-                query.Add("limit", global::System.Convert.ToString(limit));
+                query.Add("limit", global::System.Convert.ToString((int)limit));
 
             var requestMessage = new global::System.Net.Http.HttpRequestMessage(
                 global::System.Net.Http.HttpMethod.Get,

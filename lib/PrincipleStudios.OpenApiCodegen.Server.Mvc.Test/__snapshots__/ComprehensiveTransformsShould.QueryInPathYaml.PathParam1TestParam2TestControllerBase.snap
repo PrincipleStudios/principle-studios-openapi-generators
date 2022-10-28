@@ -22,11 +22,11 @@ namespace PS.Controller
         // No content
         [global::Microsoft.AspNetCore.Mvc.ProducesResponseType(204)] // 
         public async global::System.Threading.Tasks.Task<global::Microsoft.AspNetCore.Mvc.IActionResult> TestPathTypeSafeEntry(
-            [global::Microsoft.AspNetCore.Mvc.FromQuery(Name = "limit")] int? limit
+            [global::Microsoft.AspNetCore.Mvc.FromQuery(Name = "limit")] global::PrincipleStudios.OpenApiCodegen.Json.Extensions.Optional<int> limit
         ) => (await TestPath(limit)).ActionResult;
 
         protected abstract global::System.Threading.Tasks.Task<TestPathActionResult> TestPath(
-            int? limit);
+            global::PrincipleStudios.OpenApiCodegen.Json.Extensions.Optional<int> limit);
 
         public readonly struct TestPathActionResult
         {

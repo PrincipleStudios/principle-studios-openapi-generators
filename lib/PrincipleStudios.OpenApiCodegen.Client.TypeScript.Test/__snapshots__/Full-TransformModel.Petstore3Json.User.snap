@@ -14,35 +14,35 @@
  */
 export type User = {
     /**
-     * @type BigInt | null
+     * @type BigInt
      */
-    id?: BigInt | null;
+    id?: BigInt;
     /**
-     * @type string | null
+     * @type string
      */
-    username?: string | null;
+    username?: string;
     /**
-     * @type string | null
+     * @type string
      */
-    firstName?: string | null;
+    firstName?: string;
     /**
-     * @type string | null
+     * @type string
      */
-    lastName?: string | null;
+    lastName?: string;
     /**
-     * @type string | null
+     * @type string
      */
-    email?: string | null;
+    email?: string;
     /**
-     * @type string | null
+     * @type string
      */
-    password?: string | null;
+    password?: string;
     /**
-     * @type string | null
+     * @type string
      */
-    phone?: string | null;
+    phone?: string;
     /**
-     * @type number | null
+     * @type number
      */
-    userStatus?: number | null;
+    userStatus?: number;
 };

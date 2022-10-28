@@ -126,14 +126,14 @@ namespace PS.Controller
         [global::Microsoft.AspNetCore.Authorization.Authorize(Policy = "petstore_auth")]
         public async global::System.Threading.Tasks.Task<global::Microsoft.AspNetCore.Mvc.IActionResult> UpdatePetWithFormTypeSafeEntry(
             [global::Microsoft.AspNetCore.Mvc.FromRoute(Name = "petId"), global::System.ComponentModel.DataAnnotations.Required] long petId,
-            [global::Microsoft.AspNetCore.Mvc.FromForm(Name = "name")] string? name,
-            [global::Microsoft.AspNetCore.Mvc.FromForm(Name = "status")] string? status
+            [global::Microsoft.AspNetCore.Mvc.FromForm(Name = "name")] global::PrincipleStudios.OpenApiCodegen.Json.Extensions.Optional<string> name,
+            [global::Microsoft.AspNetCore.Mvc.FromForm(Name = "status")] global::PrincipleStudios.OpenApiCodegen.Json.Extensions.Optional<string> status
         ) => (await UpdatePetWithForm(petId,name,status)).ActionResult;
 
         protected abstract global::System.Threading.Tasks.Task<UpdatePetWithFormActionResult> UpdatePetWithForm(
             long petId, 
-            string? name, 
-            string? status);
+            global::PrincipleStudios.OpenApiCodegen.Json.Extensions.Optional<string> name, 
+            global::PrincipleStudios.OpenApiCodegen.Json.Extensions.Optional<string> status);
 
         public readonly struct UpdatePetWithFormActionResult
         {
@@ -203,12 +203,12 @@ namespace PS.Controller
         [global::Microsoft.AspNetCore.Mvc.ProducesResponseType(404)] // 
         [global::Microsoft.AspNetCore.Authorization.Authorize(Policy = "petstore_auth")]
         public async global::System.Threading.Tasks.Task<global::Microsoft.AspNetCore.Mvc.IActionResult> DeletePetTypeSafeEntry(
-            [global::Microsoft.AspNetCore.Mvc.FromHeader(Name = "api_key")] string? apiKey,
+            [global::Microsoft.AspNetCore.Mvc.FromHeader(Name = "api_key")] global::PrincipleStudios.OpenApiCodegen.Json.Extensions.Optional<string> apiKey,
             [global::Microsoft.AspNetCore.Mvc.FromRoute(Name = "petId"), global::System.ComponentModel.DataAnnotations.Required] long petId
         ) => (await DeletePet(apiKey,petId)).ActionResult;
 
         protected abstract global::System.Threading.Tasks.Task<DeletePetActionResult> DeletePet(
-            string? apiKey, 
+            global::PrincipleStudios.OpenApiCodegen.Json.Extensions.Optional<string> apiKey, 
             long petId);
 
         public readonly struct DeletePetActionResult

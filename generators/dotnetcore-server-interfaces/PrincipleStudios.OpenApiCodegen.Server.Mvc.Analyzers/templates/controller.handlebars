@@ -52,7 +52,8 @@ namespace {{packageName}}
             }}{{#if minLength.HasValue}}, global::System.ComponentModel.DataAnnotations.MinLength({{minLength}}){{/if}}{{!
             }}{{#if maxLength.HasValue}}, global::System.ComponentModel.DataAnnotations.MaxLength({{maxLength}}){{/if}}{{!
             }}{{#if minimum.HasValue}}{{#if maximum.HasValue}}, global::System.ComponentModel.DataAnnotations.Range({{minimum}}, {{maximum}}){{/if}}{{/if}}{{!
-            }}] {{{dataType}}} {{paramName}}{{#unless @last}},
+            }}] {{#if required}}{{{dataType}}}{{else
+            }}global::PrincipleStudios.OpenApiCodegen.Json.Extensions.Optional<{{{dataType}}}>{{/if}} {{paramName}}{{#unless @last}},
             {{/unless}}{{/unless}}{{/each}}
         ) => (await {{requestBody.name}}({{#each requestBody.allParams}}{{paramName}}{{#unless @last}},{{/unless}}{{/each}})).ActionResult;
         {{!--
@@ -63,7 +64,8 @@ namespace {{packageName}}
             return --}}
 
         protected abstract global::System.Threading.Tasks.Task<{{operation.name}}ActionResult> {{requestBody.name}}({{#each requestBody.allParams}}
-            {{{dataType}}} {{paramName}}{{#unless @last}}, {{/unless}}{{/each}});
+            {{#if required}}{{{dataType}}}{{else
+            }}global::PrincipleStudios.OpenApiCodegen.Json.Extensions.Optional<{{{dataType}}}>{{/if}} {{paramName}}{{#unless @last}}, {{/unless}}{{/each}});
         {{/each}}
 
         public readonly struct {{name}}ActionResult

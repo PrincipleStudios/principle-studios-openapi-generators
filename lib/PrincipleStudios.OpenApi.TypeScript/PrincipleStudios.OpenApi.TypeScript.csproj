@@ -3,8 +3,6 @@
 		<AssemblyName>PrincipleStudios.OpenApi.TypeScript.$(SharedAnalyzerLibrariesVersion)</AssemblyName>
 		<RootNamespace>PrincipleStudios.OpenApi.TypeScript</RootNamespace>
 		<TargetFramework>netstandard2.0</TargetFramework>
-		<LangVersion>9</LangVersion>
-		<Nullable>enable</Nullable>
 		<VersionPrefix>$(SharedAnalyzerLibrariesVersion)</VersionPrefix>
 	</PropertyGroup>
 	<ItemGroup>
@@ -15,7 +13,8 @@
 		<PackageReference Include="SharpYaml" Version="1.6.5" />
 	</ItemGroup>
 	<ItemGroup>
-		<Compile Include="$(SolutionRoot)lib\raw-files\IsExternalInit.cs" Link="IsExternalInit.cs" Visible="false" />
+		<Compile Include="$(RepositoryEngineeringDir)IsExternalInit.cs" Visible="false" />
+		<Compile Include="$(RepositoryEngineeringDir)MaybeNullWhenAttribute.cs" Visible="false" />
 	</ItemGroup>
 	<ItemGroup>
 		<EmbeddedResource Include="$(MSBuildThisFileDirectory)templates\*.handlebars">

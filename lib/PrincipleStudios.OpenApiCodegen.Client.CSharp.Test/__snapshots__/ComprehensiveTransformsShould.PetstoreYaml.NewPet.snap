@@ -15,6 +15,6 @@ namespace PS.Controller
 {
     public partial record NewPet(
         [property: global::System.Text.Json.Serialization.JsonPropertyName("name")][param: global::System.ComponentModel.DataAnnotations.Required] string Name, 
-        [property: global::System.Text.Json.Serialization.JsonPropertyName("tag")] string? Tag
+        [property: global::System.Text.Json.Serialization.JsonPropertyName("tag")][property: global::System.Text.Json.Serialization.JsonIgnore(Condition = global::System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)] global::PrincipleStudios.OpenApiCodegen.Json.Extensions.Optional<string>? Tag
     );
 }

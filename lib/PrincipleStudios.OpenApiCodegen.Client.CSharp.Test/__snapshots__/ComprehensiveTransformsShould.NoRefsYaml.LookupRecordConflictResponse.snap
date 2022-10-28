@@ -14,6 +14,6 @@
 namespace PS.Controller
 {
     public partial record LookupRecordConflictResponse(
-        [property: global::System.Text.Json.Serialization.JsonPropertyName("multiple")] global::System.Collections.Generic.IEnumerable<LookupRecordConflictResponseMultipleItem>? Multiple
+        [property: global::System.Text.Json.Serialization.JsonPropertyName("multiple")][property: global::System.Text.Json.Serialization.JsonIgnore(Condition = global::System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)] global::PrincipleStudios.OpenApiCodegen.Json.Extensions.Optional<global::System.Collections.Generic.IEnumerable<LookupRecordConflictResponseMultipleItem>>? Multiple
     );
 }

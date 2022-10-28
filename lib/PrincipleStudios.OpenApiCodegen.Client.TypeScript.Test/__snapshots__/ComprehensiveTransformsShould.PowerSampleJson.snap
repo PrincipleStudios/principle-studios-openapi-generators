@@ -11,8 +11,8 @@ import { HttpHeaders, HttpQuery, RequestOpts, ResponseArgs, throwIfNullOrUndefin
 
 export type RequestParams = {
     houseId: string;
-    start?: string | null;
-    end?: string | null;
+    start?: string;
+    end?: string;
 };
 export type RequestBodies = {
 };
@@ -40,8 +40,8 @@ export function getPowerFlows(params: RequestParams): RequestOpts {
     const query: HttpQuery = { 
         'houseId': params.houseId,
     };
-    if (params.start != null) { query['start'] = params.start; }
-    if (params.end != null) { query['end'] = params.end; }
+    if (params.start !== undefined) { query['start'] = params.start; }
+    if (params.end !== undefined) { query['end'] = params.end; }
 
     return {
         path: '/power',
@@ -171,17 +171,17 @@ exports[`models/CurrentBatteryState.ts`] = `/*
  */
 export type CurrentBatteryState = {
     /**
-     * @type number | null
+     * @type number
      */
-    percent?: number | null;
+    percent?: number;
     /**
-     * @type number | null
+     * @type number
      */
-    currentCharge?: number | null;
+    currentCharge?: number;
     /**
-     * @type number | null
+     * @type number
      */
-    maxCharge?: number | null;
+    maxCharge?: number;
 };
 `;
 

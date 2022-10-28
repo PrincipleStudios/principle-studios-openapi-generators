@@ -16,8 +16,8 @@ import {
 } from './../models/Pet';
 
 export type RequestParams = {
-    tags?: Array<string> | null;
-    limit?: number | null;
+    tags?: Array<string>;
+    limit?: number;
 };
 export type RequestBodies = {
 };
@@ -44,8 +44,8 @@ export function findPets(params: RequestParams): RequestOpts {
 
     const query: HttpQuery = { 
     };
-    if (params.tags != null) { query['tags'] = params.tags; }
-    if (params.limit != null) { query['limit'] = params.limit; }
+    if (params.tags !== undefined) { query['tags'] = params.tags; }
+    if (params.limit !== undefined) { query['limit'] = params.limit; }
 
     return {
         path: '/pets',

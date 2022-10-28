@@ -20,19 +20,35 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
         }
 
         [Fact]
-        public Task SerializeABasicClass() => 
+        public Task SerializeABasicClass() =>
             SerializeAsync(
                 "petstore.yaml",
-                @"new PS.Controller.NewPet(Tag: null, Name: ""Fido"")",
-                new { tag = (string?)null, name = "Fido" }
+                @"new PS.Controller.NewPet(Tag: ""dog"", Name: ""Fido"")",
+                new { tag = "dog", name = "Fido" }
+            );
+
+        [Fact]
+        public Task SerializeABasicClassWithOptionalValueOmitted() => 
+            SerializeAsync(
+                "petstore.yaml",
+                @"new PS.Controller.NewPet(Tag: PrincipleStudios.OpenApiCodegen.Json.Extensions.Optional<string>.None, Name: ""Fido"")",
+                new { name = "Fido" }
             );
 
         [Fact]
         public Task SerializeAnAllOfClass() =>
             SerializeAsync(
-                "petstore.yaml", 
-                @"new PS.Controller.Pet(Id: 1007L, Tag: null, Name: ""Fido"")", 
-                new { id = 1007L, tag = (string?)null, name = "Fido" }
+                "petstore.yaml",
+                @"new PS.Controller.Pet(Id: 1007L, Tag: ""dog"", Name: ""Fido"")", 
+                new { id = 1007L, tag = "dog", name = "Fido" }
+            );
+
+        [Fact]
+        public Task SerializeAnAllOfClassWithOptionalValueOmitted() =>
+            SerializeAsync(
+                "petstore.yaml",
+                @"new PS.Controller.Pet(Id: 1007L, Tag: PrincipleStudios.OpenApiCodegen.Json.Extensions.Optional<string>.None, Name: ""Fido"")",
+                new { id = 1007L, name = "Fido" }
             );
 
         [Fact]
