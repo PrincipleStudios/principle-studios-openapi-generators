@@ -22,17 +22,17 @@ export type StructuredResponses = {
     };
     /** OK */
     200: {
-        'application/json': { "id": string };
+        'application/json': { "id"?: string };
     };
     /** Conflict */
     409: {
-        'application/json': { "multiple": Array<{ "formattedAddress": string; "location": { "latitude": number; "longitude": number } }> };
+        'application/json': { "multiple"?: Array<{ "formattedAddress": string; "location": { "latitude": number; "longitude": number } }> };
     };
 };
 export type Responses = 
     | StandardResponse<'other', 'application/json', { "code": string; "message": string }>
-    | StandardResponse<200, 'application/json', { "id": string }>
-    | StandardResponse<409, 'application/json', { "multiple": Array<{ "formattedAddress": string; "location": { "latitude": number; "longitude": number } }> }>;
+    | StandardResponse<200, 'application/json', { "id"?: string }>
+    | StandardResponse<409, 'application/json', { "multiple"?: Array<{ "formattedAddress": string; "location": { "latitude": number; "longitude": number } }> }>;
 
 export function lookupRecord<K extends keyof RequestBodies>(params: RequestParams, body: RequestBodies[K], mimeType: K): RequestOpts;
 export function lookupRecord(params: RequestParams, body: RequestBodies[keyof RequestBodies] | null = null, mimeType: keyof RequestBodies | null = null): RequestOpts {

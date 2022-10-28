@@ -48,6 +48,15 @@ namespace PS.Controller
                         };
                     break;
                 
+                case 400:
+                     if (response.Content.Headers.ContentType.MediaType == "application/json") 
+                        return new SearchReturnType.BadRequest
+                        {
+                            Response = response,
+                            Body = await global::System.Text.Json.JsonSerializer.DeserializeAsync<Error>(await response.Content.ReadAsStreamAsync()), 
+                        };
+                    break;
+                
             }
             return new SearchReturnType
             {
@@ -71,6 +80,15 @@ namespace PS.Controller
             public class Ok : SearchReturnType
             {
                 public global::System.Collections.Generic.IEnumerable<SearchResponseItem> Body { get; set; }
+                
+            }
+            
+            /// <summary>
+            /// An error occurred processing the request
+            /// </summary>
+            public class BadRequest : SearchReturnType
+            {
+                public Error Body { get; set; }
                 
             }
             

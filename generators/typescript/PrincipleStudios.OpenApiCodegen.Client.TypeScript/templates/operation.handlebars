@@ -11,14 +11,14 @@ import {
 
 export type RequestParams = {
     {{#sharedParams}}
-    {{paramName}}{{^required}}?{{/required}}: {{{dataType}}}{{#isNullable}} | null{{/isNullable}};
+    {{paramName}}{{#unless required}}?{{/unless}}: {{{dataType}}}{{#isNullable}} | null{{/isNullable}};
     {{/sharedParams}}
 };
 export type RequestBodies = {
     {{#each requestBodies}}
     '{{requestBodyType}}': {{#unless isForm}}{{#allParams}}{{{dataType}}}{{#isNullable}} | null{{/isNullable}}{{/allParams}}{{else}}{
         {{#allParams}}
-        {{paramName}}{{^required}}?{{/required}}: {{{dataType}}}{{#isNullable}} | null{{/isNullable}};
+        {{paramName}}{{#unless required}}?{{/unless}}: {{{dataType}}}{{#isNullable}} | null{{/isNullable}};
         {{/allParams}}
     }{{/unless}};
     {{/each}}

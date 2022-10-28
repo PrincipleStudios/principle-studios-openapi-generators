@@ -294,8 +294,8 @@ namespace PrincipleStudios.OpenApi.TypeScript
                 // TODO - better inline types
                 _ when ProduceSourceEntry(schema) =>
                     new(UseReferenceName(schema), new[] { ToImportReference(schema) }),
-                { Type: "object", Format: null, Properties: IDictionary<string, OpenApiSchema> properties, AdditionalProperties: null } =>
-                    ObjectToInline(properties),
+                { Type: "object", Format: null, Properties: IDictionary<string, OpenApiSchema> properties, AdditionalProperties: null, Required: var requiredProperties } =>
+                    ObjectToInline(properties, requiredProperties),
                 { Enum: { Count: > 0 } and IList<Microsoft.OpenApi.Any.IOpenApiAny> enumValues } =>
                     EnumToInline(enumValues),
                 { Type: string type, Format: var format } =>
@@ -316,12 +316,12 @@ namespace PrincipleStudios.OpenApi.TypeScript
                 var inline = ToInlineDataType(items)();
                 return new(options.ToArrayType(inline.text), inline.Imports, isEnumerable: true);
             }
-            InlineDataType ObjectToInline(IDictionary<string, OpenApiSchema> properties)
+            InlineDataType ObjectToInline(IDictionary<string, OpenApiSchema> properties, ISet<string> requiredProperties)
             {
                 var props = (from prop in properties
                              let inline = ToInlineDataType(prop.Value)()
                              select (
-                                 text: $"\"{prop.Key}\": {inline.text}",
+                                 text: $"\"{prop.Key}\"{(requiredProperties.Contains(prop.Key) ? "" : "?")}: {inline.text}",
                                  imports: inline.Imports
                              )).ToArray();
                 return new($"{{ { string.Join("; ", props.Select(p => p.text))} }}", props.SelectMany(p => p.imports).ToArray());
