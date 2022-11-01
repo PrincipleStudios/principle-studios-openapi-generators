@@ -31,7 +31,7 @@
 
 	<PropertyGroup>
 		<OpenApiJsonExtensionsVersion>0.13.0</OpenApiJsonExtensionsVersion>
-		<OpenApiMvcServerVersion>0.13.0</OpenApiMvcServerVersion>
+		<OpenApiMvcServerVersion>0.13.1</OpenApiMvcServerVersion>
 		<OpenApiCSharpClientVersion>0.13.0</OpenApiCSharpClientVersion>
 		<!-- Should be incremented anytime one of the internal libraries changes -->
 		<SharedAnalyzerLibrariesVersion>0.3.0</SharedAnalyzerLibrariesVersion>

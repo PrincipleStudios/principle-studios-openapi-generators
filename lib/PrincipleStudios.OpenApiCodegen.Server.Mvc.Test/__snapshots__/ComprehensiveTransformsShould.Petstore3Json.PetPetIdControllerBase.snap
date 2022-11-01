@@ -203,12 +203,12 @@ namespace PS.Controller
         [global::Microsoft.AspNetCore.Mvc.ProducesResponseType(404)] // 
         [global::Microsoft.AspNetCore.Authorization.Authorize(Policy = "petstore_auth")]
         public async global::System.Threading.Tasks.Task<global::Microsoft.AspNetCore.Mvc.IActionResult> DeletePetTypeSafeEntry(
-            [global::Microsoft.AspNetCore.Mvc.FromHeader(Name = "api_key")] global::PrincipleStudios.OpenApiCodegen.Json.Extensions.Optional<string> apiKey,
+            [global::Microsoft.AspNetCore.Mvc.FromHeader(Name = "api_key")] string? apiKey,
             [global::Microsoft.AspNetCore.Mvc.FromRoute(Name = "petId"), global::System.ComponentModel.DataAnnotations.Required] long petId
         ) => (await DeletePet(apiKey,petId)).ActionResult;
 
         protected abstract global::System.Threading.Tasks.Task<DeletePetActionResult> DeletePet(
-            global::PrincipleStudios.OpenApiCodegen.Json.Extensions.Optional<string> apiKey, 
+            string? apiKey, 
             long petId);
 
         public readonly struct DeletePetActionResult

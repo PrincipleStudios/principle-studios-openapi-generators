@@ -72,6 +72,11 @@ namespace PrincipleStudios.OpenApi.CSharp
         public override void Visit(OpenApiParameter param, OpenApiContext context, Argument argument)
         {
             var dataType = csharpSchemaResolver.ToInlineDataType(param.Schema)();
+            if (!param.Required)
+            {
+                // Path/Query/Header/Cookie parameters can't really be nullable, but rather than using custom ModelBinding on Optional<T>, we use nullability.
+                dataType = dataType.MakeNullable();
+            }
             argument.Builder?.SharedParameters.Add(new templates.OperationParameter(
                 rawName: param.Name,
                 paramName: CSharpNaming.ToParameterName(param.Name, options.ReservedIdentifiers()),
@@ -84,6 +89,7 @@ namespace PrincipleStudios.OpenApi.CSharp
                 isCookieParam: param.In == ParameterLocation.Cookie,
                 isBodyParam: false,
                 isFormParam: false,
+                optional: false,
                 required: param.Required,
                 pattern: param.Schema.Pattern,
                 minLength: param.Schema.MinLength,
@@ -168,6 +174,7 @@ namespace PrincipleStudios.OpenApi.CSharp
                     isBodyParam: false,
                     isFormParam: true,
                     required: mediaType.Schema.Required.Contains(param.Key),
+                    optional: !mediaType.Schema.Required.Contains(param.Key),
                     pattern: param.Value.Pattern,
                     minLength: param.Value.MinLength,
                     maxLength: param.Value.MaxLength,
@@ -190,6 +197,7 @@ namespace PrincipleStudios.OpenApi.CSharp
                    isBodyParam: true,
                    isFormParam: false,
                    required: true,
+                   optional: false,
                    pattern: mediaType.Schema.Pattern,
                    minLength: mediaType.Schema.MinLength,
                    maxLength: mediaType.Schema.MaxLength,

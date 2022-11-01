@@ -33,14 +33,14 @@ namespace PS.Controller
         [global::Microsoft.AspNetCore.Mvc.ProducesResponseType(400)] // 
         public async global::System.Threading.Tasks.Task<global::Microsoft.AspNetCore.Mvc.IActionResult> GetPowerFlowsTypeSafeEntry(
             [global::Microsoft.AspNetCore.Mvc.FromQuery(Name = "houseId"), global::System.ComponentModel.DataAnnotations.Required] global::System.Guid houseId,
-            [global::Microsoft.AspNetCore.Mvc.FromQuery(Name = "start")] global::PrincipleStudios.OpenApiCodegen.Json.Extensions.Optional<string> start,
-            [global::Microsoft.AspNetCore.Mvc.FromQuery(Name = "end")] global::PrincipleStudios.OpenApiCodegen.Json.Extensions.Optional<string> end
+            [global::Microsoft.AspNetCore.Mvc.FromQuery(Name = "start")] string? start,
+            [global::Microsoft.AspNetCore.Mvc.FromQuery(Name = "end")] string? end
         ) => (await GetPowerFlows(houseId,start,end)).ActionResult;
 
         protected abstract global::System.Threading.Tasks.Task<GetPowerFlowsActionResult> GetPowerFlows(
             global::System.Guid houseId, 
-            global::PrincipleStudios.OpenApiCodegen.Json.Extensions.Optional<string> start, 
-            global::PrincipleStudios.OpenApiCodegen.Json.Extensions.Optional<string> end);
+            string? start, 
+            string? end);
 
         public readonly struct GetPowerFlowsActionResult
         {

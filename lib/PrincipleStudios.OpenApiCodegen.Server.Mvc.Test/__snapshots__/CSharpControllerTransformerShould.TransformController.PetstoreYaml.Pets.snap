@@ -32,13 +32,13 @@ namespace PrincipleStudios.Test
         // pet response
         [global::Microsoft.AspNetCore.Mvc.ProducesResponseType(200, Type = typeof(global::System.Collections.Generic.IEnumerable<Pet>))] // application/json
         public async global::System.Threading.Tasks.Task<global::Microsoft.AspNetCore.Mvc.IActionResult> FindPetsTypeSafeEntry(
-            [global::Microsoft.AspNetCore.Mvc.FromQuery(Name = "tags")] global::PrincipleStudios.OpenApiCodegen.Json.Extensions.Optional<global::System.Collections.Generic.IEnumerable<string>> tags,
-            [global::Microsoft.AspNetCore.Mvc.FromQuery(Name = "limit")] global::PrincipleStudios.OpenApiCodegen.Json.Extensions.Optional<int> limit
+            [global::Microsoft.AspNetCore.Mvc.FromQuery(Name = "tags")] global::System.Collections.Generic.IEnumerable<string>? tags,
+            [global::Microsoft.AspNetCore.Mvc.FromQuery(Name = "limit")] int? limit
         ) => (await FindPets(tags,limit)).ActionResult;
 
         protected abstract global::System.Threading.Tasks.Task<FindPetsActionResult> FindPets(
-            global::PrincipleStudios.OpenApiCodegen.Json.Extensions.Optional<global::System.Collections.Generic.IEnumerable<string>> tags, 
-            global::PrincipleStudios.OpenApiCodegen.Json.Extensions.Optional<int> limit);
+            global::System.Collections.Generic.IEnumerable<string>? tags, 
+            int? limit);
 
         public readonly struct FindPetsActionResult
         {

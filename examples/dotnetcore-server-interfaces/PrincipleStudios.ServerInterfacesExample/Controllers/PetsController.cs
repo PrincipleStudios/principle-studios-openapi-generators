@@ -25,15 +25,15 @@ namespace PrincipleStudios.ServerInterfacesExample.Controllers
             }
         }
 
-        protected override async Task<FindPetsActionResult> FindPets(Optional<IEnumerable<string>>? tags, Optional<int>? limit)
+        protected override async Task<FindPetsActionResult> FindPets(IEnumerable<string>? tags, int? limit)
         {
             await Task.Yield();
             var result = Data.pets.AsEnumerable();
-            if (tags.TryGet(out var actualTags) && actualTags.Any())
+            if (tags?.Any() ?? false)
             {
-                result = result.Where(p => actualTags.Contains(p.Value.tag));
+                result = result.Where(p => tags.Contains(p.Value.tag));
             }
-            if (limit.TryGet(out var actualLimit))
+            if (limit is int actualLimit)
             {
                 result = result.Take(actualLimit);
             }
