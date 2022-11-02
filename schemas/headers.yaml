@@ -12,7 +12,6 @@ paths:
           in: header
           description: base-64 encoded data
           required: true
-          style: form
           schema:
             type: string
             format: byte
