@@ -41,9 +41,9 @@ global::PrincipleStudios.OpenApiCodegen.Json.Extensions.Optional<string>? end,
             if (houseId != null)
                 query.Add("houseId", global::System.Convert.ToString(houseId));
             if (start != null)
-                query.Add("start", global::System.Convert.ToString((string)start));
+                query.Add("start", global::System.Convert.ToString(global::PrincipleStudios.OpenApiCodegen.Json.Extensions.Optional.GetValueOrThrow(start)));
             if (end != null)
-                query.Add("end", global::System.Convert.ToString((string)end));
+                query.Add("end", global::System.Convert.ToString(global::PrincipleStudios.OpenApiCodegen.Json.Extensions.Optional.GetValueOrThrow(end)));
 
             var requestMessage = new global::System.Net.Http.HttpRequestMessage(
                 global::System.Net.Http.HttpMethod.Get,

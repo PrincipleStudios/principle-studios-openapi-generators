@@ -37,7 +37,7 @@ namespace PrincipleStudios.ServerInterfacesExample.Controllers
             {
                 result = result.Take(actualLimit);
             }
-            return FindPetsActionResult.Ok(result.Select(kvp => new Pet(kvp.Value.name, kvp.Value.tag is string ? (Optional<string>)kvp.Value.tag : null, kvp.Key)).ToArray());
+            return FindPetsActionResult.Ok(result.Select(kvp => new Pet(kvp.Value.name, kvp.Value.tag is string ? Optional.Create(kvp.Value.tag) : null, kvp.Key)).ToArray());
         }
 
         protected override async Task<DeletePetActionResult> DeletePet(long id)
@@ -58,7 +58,7 @@ namespace PrincipleStudios.ServerInterfacesExample.Controllers
             await Task.Yield();
             if (Data.pets.TryGetValue(id, out var tuple))
             {
-                return FindPetByIdActionResult.Ok(new Pet(tuple.name, tuple.tag is string ? (Optional<string>)tuple.tag : null, id));
+                return FindPetByIdActionResult.Ok(new Pet(tuple.name, tuple.tag is string ? Optional.Create(tuple.tag) : null, id));
             }
             else
             {

@@ -23,7 +23,7 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
         public Task SerializeABasicClass() =>
             SerializeAsync(
                 "petstore.yaml",
-                @"new PS.Controller.NewPet(Tag: ""dog"", Name: ""Fido"")",
+                @"new PS.Controller.NewPet(Tag: PrincipleStudios.OpenApiCodegen.Json.Extensions.Optional.Create(""dog""), Name: ""Fido"")",
                 new { tag = "dog", name = "Fido" }
             );
 
@@ -39,7 +39,7 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
         public Task SerializeAnAllOfClass() =>
             SerializeAsync(
                 "petstore.yaml",
-                @"new PS.Controller.Pet(Id: 1007L, Tag: ""dog"", Name: ""Fido"")", 
+                @"new PS.Controller.Pet(Id: 1007L, Tag: PrincipleStudios.OpenApiCodegen.Json.Extensions.Optional.Create(""dog""), Name: ""Fido"")", 
                 new { id = 1007L, tag = "dog", name = "Fido" }
             );
 
