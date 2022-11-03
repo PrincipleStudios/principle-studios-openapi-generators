@@ -23,54 +23,7 @@ namespace PrincipleStudios.OpenApiCodegen.Client.CSharp
         [Theory]
         public void Compile(string name)
         {
-            var document = GetDocument(name);
-            var options = LoadOptions();
-
-            var transformer = document.BuildCSharpClientSourceProvider("", "PS.Controller", options);
-            OpenApiTransformDiagnostic diagnostic = new();
-
-            var entries = transformer.GetSources(diagnostic).ToArray();
-
-            Assert.Empty(diagnostic.Errors);
-
-            var syntaxTrees = entries.Select(e => CSharpSyntaxTree.ParseText(e.SourceText, path: e.Key)).ToArray();
-
-            string assemblyName = Path.GetRandomFileName();
-            var refPaths = new[] {
-                Path.Combine(Path.GetDirectoryName(typeof(object).Assembly.Location)!, "netstandard.dll"),
-                Path.Combine(Path.GetDirectoryName(typeof(object).Assembly.Location)!, "System.Runtime.dll"),
-                typeof(System.AttributeUsageAttribute).Assembly.Location,
-                typeof(System.Linq.Enumerable).Assembly.Location,
-                typeof(System.ComponentModel.TypeConverter).Assembly.Location,
-                typeof(System.ComponentModel.TypeConverterAttribute).Assembly.Location,
-                typeof(System.ComponentModel.DataAnnotations.RequiredAttribute).Assembly.Location,
-                typeof(System.Text.Json.JsonSerializer).Assembly.Location,
-                typeof(System.Net.Http.Json.JsonContent).Assembly.Location,
-
-                Path.Combine(Path.GetDirectoryName(typeof(object).Assembly.Location)!, "System.Net.Http.dll"),
-                Path.Combine(Path.GetDirectoryName(typeof(object).Assembly.Location)!, "System.Net.Primitives.dll"),
-                typeof(Uri).Assembly.Location,
-                typeof(System.Web.HttpUtility).Assembly.Location,
-                typeof(System.Collections.Specialized.NameValueCollection).Assembly.Location,
-                typeof(PrincipleStudios.OpenApiCodegen.Json.Extensions.JsonStringEnumPropertyNameConverter).Assembly.Location,
-            };
-            MetadataReference[] references = refPaths.Select(r => MetadataReference.CreateFromFile(r)).ToArray();
-
-            CSharpCompilation compilation = CSharpCompilation.Create(
-                assemblyName,
-                syntaxTrees: syntaxTrees,
-                references: references,
-                options: new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary) {  });
-
-
-            using var ms = new MemoryStream();
-            var result = compilation.Emit(ms);
-
-            Assert.All(result.Diagnostics, diagnostic =>
-            {
-                Assert.False(diagnostic.IsWarningAsError || diagnostic.Severity == DiagnosticSeverity.Error);
-            });
-            Assert.True(result.Success);
+            DynamicCompilation.GetGeneratedLibrary(name);
         }
 
         [MemberData(nameof(ValidFileNames))]
