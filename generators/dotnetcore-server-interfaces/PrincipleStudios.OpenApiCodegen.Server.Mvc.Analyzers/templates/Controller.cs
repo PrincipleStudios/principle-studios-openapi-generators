@@ -44,6 +44,7 @@ namespace PrincipleStudios.OpenApi.CSharp.templates
         bool isBodyParam,
         bool isFormParam,
         bool required,
+        bool optional,
         string pattern,
         int? minLength,
         int? maxLength,

@@ -7,6 +7,13 @@ using System.Text.Json.Serialization;
 
 namespace PrincipleStudios.OpenApiCodegen.Json.Extensions;
 
+public static class Optional
+{
+    public static Optional<T> Create<T>(T value) => new Optional<T>.Present(value);
+    public static T GetValueOrThrow<T>(Optional<T> input) =>
+        input.TryGet(out var result) ? result : throw new InvalidOperationException();
+}
+
 [JsonConverter(typeof(OptionalJsonConverterFactory))]
 public abstract record Optional<T>
 {
@@ -39,9 +46,6 @@ public abstract record Optional<T>
 
         public override bool HandleNull => true;
     }
-
-    public static implicit operator Optional<T>(T value) => new Optional<T>.Present(value);
-    public static explicit operator T(Optional<T> maybeValue) => maybeValue is Optional<T>.Present { Value: var result } ? result : throw new InvalidCastException("Optional value was not present");
 }
 
 public class OptionalJsonConverterFactory : JsonConverterFactory

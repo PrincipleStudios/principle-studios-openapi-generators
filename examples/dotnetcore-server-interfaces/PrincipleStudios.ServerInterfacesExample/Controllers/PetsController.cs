@@ -25,19 +25,19 @@ namespace PrincipleStudios.ServerInterfacesExample.Controllers
             }
         }
 
-        protected override async Task<FindPetsActionResult> FindPets(Optional<IEnumerable<string>>? tags, Optional<int>? limit)
+        protected override async Task<FindPetsActionResult> FindPets(IEnumerable<string>? tags, int? limit)
         {
             await Task.Yield();
             var result = Data.pets.AsEnumerable();
-            if (tags.TryGet(out var actualTags) && actualTags.Any())
+            if (tags?.Any() ?? false)
             {
-                result = result.Where(p => actualTags.Contains(p.Value.tag));
+                result = result.Where(p => tags.Contains(p.Value.tag));
             }
-            if (limit.TryGet(out var actualLimit))
+            if (limit is int actualLimit)
             {
                 result = result.Take(actualLimit);
             }
-            return FindPetsActionResult.Ok(result.Select(kvp => new Pet(kvp.Value.name, kvp.Value.tag is string ? (Optional<string>)kvp.Value.tag : null, kvp.Key)).ToArray());
+            return FindPetsActionResult.Ok(result.Select(kvp => new Pet(kvp.Value.name, kvp.Value.tag is string ? Optional.Create(kvp.Value.tag) : null, kvp.Key)).ToArray());
         }
 
         protected override async Task<DeletePetActionResult> DeletePet(long id)
@@ -58,7 +58,7 @@ namespace PrincipleStudios.ServerInterfacesExample.Controllers
             await Task.Yield();
             if (Data.pets.TryGetValue(id, out var tuple))
             {
-                return FindPetByIdActionResult.Ok(new Pet(tuple.name, tuple.tag is string ? (Optional<string>)tuple.tag : null, id));
+                return FindPetByIdActionResult.Ok(new Pet(tuple.name, tuple.tag is string ? Optional.Create(tuple.tag) : null, id));
             }
             else
             {

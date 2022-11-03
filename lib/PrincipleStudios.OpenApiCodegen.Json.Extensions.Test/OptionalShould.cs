@@ -128,7 +128,38 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
             Assert.Equal(expectedJson, actual);
         }
 
+        [Fact]
+        public void AllowCreationOfOptional()
+        {
+            Optional<string> actual = Optional.Create("foo");
+            Assert.True(actual is Optional<string>.Present);
+            Assert.Equal("foo", Optional.GetValueOrThrow(actual));
+        }
 
+        [Fact]
+        public void AllowUnwrappingOptional()
+        {
+            Optional<string> sample = Optional.Create("foo");
+            var actual = Optional.GetValueOrThrow(sample);
+            Assert.Equal("foo", actual);
+        }
+
+        [Fact]
+        public void AllowCreationOfOptionalWithEnumerables()
+        {
+            Optional<IEnumerable<string>> actual = Optional.Create(Enumerable.Empty<string>());
+            Assert.True(actual is Optional<IEnumerable<string>>.Present);
+            Assert.Empty(Optional.GetValueOrThrow(actual));
+        }
+
+        [Fact]
+        public void AllowUnwrappingOptionalWithEnumerables()
+        {
+            Optional<IEnumerable<string>> sample = Optional.Create(Enumerable.Empty<string>());
+            var actual = Optional.GetValueOrThrow(sample);
+            Assert.NotNull(actual);
+            Assert.Empty(actual);
+        }
 
     }
 }

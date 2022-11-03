@@ -41,10 +41,10 @@ global::PrincipleStudios.OpenApiCodegen.Json.Extensions.Optional<int>? limit,
             var query = global::System.Web.HttpUtility.ParseQueryString(string.Empty); 
 
             if (tags != null)
-                foreach (var entry in (global::System.Collections.Generic.IEnumerable<string>)tags)
+                foreach (var entry in global::PrincipleStudios.OpenApiCodegen.Json.Extensions.Optional.GetValueOrThrow(tags))
                     query.Add("tags", global::System.Convert.ToString(entry));
             if (limit != null)
-                query.Add("limit", global::System.Convert.ToString((int)limit));
+                query.Add("limit", global::System.Convert.ToString(global::PrincipleStudios.OpenApiCodegen.Json.Extensions.Optional.GetValueOrThrow(limit)));
 
             var requestMessage = new global::System.Net.Http.HttpRequestMessage(
                 global::System.Net.Http.HttpMethod.Get,

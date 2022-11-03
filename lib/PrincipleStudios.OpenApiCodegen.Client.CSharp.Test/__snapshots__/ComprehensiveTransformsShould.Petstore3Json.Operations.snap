@@ -499,9 +499,9 @@ global::PrincipleStudios.OpenApiCodegen.Json.Extensions.Optional<string>? status
             requestMessage.Content = new global::System.Net.Http.MultipartFormDataContent()
             {
 
-                { new global::System.Net.Http.StringContent(((string)name).ToString()), "name" },
+                { new global::System.Net.Http.StringContent(global::PrincipleStudios.OpenApiCodegen.Json.Extensions.Optional.GetValueOrThrow(name).ToString()), "name" },
 
-                { new global::System.Net.Http.StringContent(((string)status).ToString()), "status" },
+                { new global::System.Net.Http.StringContent(global::PrincipleStudios.OpenApiCodegen.Json.Extensions.Optional.GetValueOrThrow(status).ToString()), "status" },
 
             };
 
@@ -570,7 +570,7 @@ long petId,
                         .Replace("{" + "petId" + "}", global::System.Web.HttpUtility.UrlEncode(petId.ToString())));
 
 
-            requestMessage.Headers.Add("", ((string)apiKey).ToString());
+            requestMessage.Headers.Add("", global::PrincipleStudios.OpenApiCodegen.Json.Extensions.Optional.GetValueOrThrow(apiKey).ToString());
             return requestMessage;
         }
 
