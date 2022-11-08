@@ -175,7 +175,6 @@ public class HttpResponseMessageParsersShould : IClassFixture<TempDirectory>
 
         Assert.NotNull(result);
 
-        // .Value is needed because Multiple is optional - normally this would use an extension method, but I can't via Optional.
         Assert.Null((object)result.Body.NullableOnly);
         var optionalOnly = Assert.IsAssignableFrom<Optional<int>>((object)result.Body.OptionalOnly);
         Assert.Equal(15, optionalOnly.GetValueOrDefault());
@@ -195,10 +194,26 @@ public class HttpResponseMessageParsersShould : IClassFixture<TempDirectory>
 
         Assert.NotNull(result);
 
-        // .Value is needed because Multiple is optional - normally this would use an extension method, but I can't via Optional.
         Assert.Null((object)result.Body.NullableOnly);
         Assert.Null(result.Body.OptionalOnly);
         Assert.Null(result.Body.OptionalOrNullable);
+    }
+
+    [Fact]
+    public async Task DeserializeSelfReferentialObjects()
+    {
+        var result = await DeserializeResponseMessage("self-ref.yaml", @"ParseGetData", 200, "GetDataReturnType.Ok", new
+        {
+            id = 1,
+            target = new { id = 2 },
+        });
+
+        Assert.NotNull(result);
+
+        Assert.NotNull(result.Body._Target);
+        Assert.Equal(1, result.Body.Id);
+        Assert.Null(result.Body._Target.Value._Target);
+        Assert.Equal(2, result.Body._Target.Value.Id);
     }
 
     // Using dynamic for this because it is returned from an EvaluateAsync script of a type we don't have - it was generated from the yaml during runtime!
