@@ -112,7 +112,7 @@ public class HttpRequestMessageFactoriesShould : IClassFixture<TempDirectory>
     [Fact]
     public async Task HandleWhenAnOptionalParameterIsNullableAndNull()
     {
-        var actualMessage = await GetRequestMessage("nullable-vs-optional.yaml", @"Contrived(contrivedBody: new(NullableOnly: null, OptionalOnly: 15, OptionalOrNullable: Optional.Create<int?>(null)))");
+        var actualMessage = await GetRequestMessage("nullable-vs-optional.yaml", @"Contrived(contrivedBody: new(NullableOnly: null, OptionalOnly: Optional.Create(15), OptionalOrNullable: Optional.Create<int?>(null)))");
 
         Assert.Equal("POST", actualMessage.Method.Method);
         Assert.Equal("contrived", actualMessage.RequestUri?.OriginalString);
