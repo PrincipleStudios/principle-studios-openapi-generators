@@ -110,6 +110,32 @@ public class HttpRequestMessageFactoriesShould : IClassFixture<TempDirectory>
     }
 
     [Fact]
+    public async Task HandleWhenAnOptionalParameterIsNullableAndNull()
+    {
+        var actualMessage = await GetRequestMessage("nullable-vs-optional.yaml", @"Contrived(contrivedBody: new(NullableOnly: null, OptionalOnly: 15, OptionalOrNullable: Optional.Create<int?>(null)))");
+
+        Assert.Equal("POST", actualMessage.Method.Method);
+        Assert.Equal("contrived", actualMessage.RequestUri?.OriginalString);
+        Assert.NotNull(actualMessage.Content);
+        var jsonContent = await actualMessage.Content!.ReadAsStringAsync();
+
+        CompareJson(jsonContent, new { nullableOnly = (int?)null, optionalOnly = 15, optionalOrNullable = (int?)null });
+    }
+
+    [Fact]
+    public async Task HandleWhenANullableParameterIsOptionalAndNotProvided()
+    {
+        var actualMessage = await GetRequestMessage("nullable-vs-optional.yaml", @"Contrived(contrivedBody: new(NullableOnly: null, OptionalOnly: null, OptionalOrNullable: null))");
+
+        Assert.Equal("POST", actualMessage.Method.Method);
+        Assert.Equal("contrived", actualMessage.RequestUri?.OriginalString);
+        Assert.NotNull(actualMessage.Content);
+        var jsonContent = await actualMessage.Content!.ReadAsStringAsync();
+
+        CompareJson(jsonContent, new { nullableOnly = (int?)null });
+    }
+
+    [Fact]
     public async Task NotAlterOperationsWhenSecurityIsRequired()
     {
         var actualMessage = await GetRequestMessage("oauth.yaml", @"GetInfo()");

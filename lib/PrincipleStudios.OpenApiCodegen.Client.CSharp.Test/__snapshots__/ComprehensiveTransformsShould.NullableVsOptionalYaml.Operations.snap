@@ -93,5 +93,65 @@ namespace PS.Controller
             }
             
         }
+
+        /// <param name="contrivedBody"></param>
+        public static async global::System.Threading.Tasks.Task<ContrivedReturnType> Contrived(
+            this global::System.Net.Http.HttpClient client,
+            ContrivedRequest contrivedBody,
+            global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken)
+        ) => await (await client.SendAsync(Contrived(contrivedBody)).ConfigureAwait(false))
+            .ParseContrived().ConfigureAwait(false);
+
+        public static global::System.Net.Http.HttpRequestMessage Contrived(
+            ContrivedRequest contrivedBody
+            )
+        {
+            var requestMessage = new global::System.Net.Http.HttpRequestMessage(global::System.Net.Http.HttpMethod.Post, "contrived");
+            requestMessage.Content = global::System.Net.Http.Json.JsonContent.Create<ContrivedRequest>(contrivedBody, global::System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json"));
+
+
+            return requestMessage;
+        }
+
+        public static async global::System.Threading.Tasks.Task<ContrivedReturnType?> ParseContrived(this global::System.Net.Http.HttpResponseMessage response)
+        {
+            switch ((int)response.StatusCode)
+            { 
+                case 200:
+                     if (response.Content.Headers.ContentType.MediaType == "application/json") 
+                        return new ContrivedReturnType.Ok
+                        {
+                            Response = response,
+                            Body = await global::System.Text.Json.JsonSerializer.DeserializeAsync<ContrivedResponse>(await response.Content.ReadAsStreamAsync()), 
+                        };
+                    break;
+                
+            }
+            return new ContrivedReturnType
+            {
+                Response = response,
+            };
+        }
+
+        public class ContrivedReturnType : global::System.IDisposable
+        {
+            public global::System.Net.Http.HttpResponseMessage Response { get; set; }
+
+            void global::System.IDisposable.Dispose()
+            {
+                Response?.Dispose();
+            }
+
+            
+            /// <summary>
+            /// Contrived response
+            /// </summary>
+            public class Ok : ContrivedReturnType
+            {
+                public ContrivedResponse Body { get; set; }
+                
+            }
+            
+        }
     }
 }

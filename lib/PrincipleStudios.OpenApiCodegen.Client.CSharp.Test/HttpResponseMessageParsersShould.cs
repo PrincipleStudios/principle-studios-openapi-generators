@@ -1,7 +1,7 @@
 ﻿using FluentAssertions.Json;
-using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Scripting;
 using Microsoft.CodeAnalysis.Scripting;
+using PrincipleStudios.OpenApiCodegen.Json.Extensions;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -163,6 +163,44 @@ public class HttpResponseMessageParsersShould : IClassFixture<TempDirectory>
         );
     }
 
+    [Fact]
+    public async Task DeserializeOptionalNullValuesAsPresent()
+    {
+        var result = await DeserializeResponseMessage("nullable-vs-optional.yaml", @"ParseContrived", 200, "ContrivedReturnType.Ok", new
+        {
+            nullableOnly = (int?)null,
+            optionalOnly = 15,
+            optionalOrNullable = (int?)null,
+        });
+
+        Assert.NotNull(result);
+
+        // .Value is needed because Multiple is optional - normally this would use an extension method, but I can't via Optional.
+        Assert.Null((object)result.Body.NullableOnly);
+        var optionalOnly = Assert.IsAssignableFrom<Optional<int>>((object)result.Body.OptionalOnly);
+        Assert.Equal(15, optionalOnly.GetValueOrDefault());
+        var optionalOrNullable = Assert.IsAssignableFrom<Optional<int?>>((object)result.Body.OptionalOrNullable);
+        Assert.NotNull(optionalOrNullable);
+        Assert.True(optionalOrNullable.TryGet(out var nullable));
+        Assert.Null(nullable);
+    }
+
+    [Fact]
+    public async Task DeserializeOptionalNullValuesAsNotPresent()
+    {
+        var result = await DeserializeResponseMessage("nullable-vs-optional.yaml", @"ParseContrived", 200, "ContrivedReturnType.Ok", new
+        {
+            nullableOnly = (int?)null,
+        });
+
+        Assert.NotNull(result);
+
+        // .Value is needed because Multiple is optional - normally this would use an extension method, but I can't via Optional.
+        Assert.Null((object)result.Body.NullableOnly);
+        Assert.Null(result.Body.OptionalOnly);
+        Assert.Null(result.Body.OptionalOrNullable);
+    }
+
     // Using dynamic for this because it is returned from an EvaluateAsync script of a type we don't have - it was generated from the yaml during runtime!
     private Task<dynamic> DeserializeResponseMessage(string documentName, string operation, int statusCode, string parsedType, object? jsonBody, Action<HttpResponseMessage>? additionalMessageSetup = null) =>
         DeserializeResponseMessage(documentName, operation, statusCode, parsedType, responseMessage => {
@@ -182,8 +220,8 @@ public class HttpResponseMessageParsersShould : IClassFixture<TempDirectory>
         File.WriteAllBytes(fullPath, libBytes);
 
         var scriptOptions = ScriptOptions.Default
-            .AddReferences(DynamicCompilation.SystemTextCompilationRefPaths.Select(r => MetadataReference.CreateFromFile(r)).ToArray())
-            .AddReferences(MetadataReference.CreateFromFile(fullPath))
+            .AddReferences(DynamicCompilation.SystemTextCompilationRefPaths.Select(r => Microsoft.CodeAnalysis.MetadataReference.CreateFromFile(r)).ToArray())
+            .AddReferences(Microsoft.CodeAnalysis.MetadataReference.CreateFromFile(fullPath))
             .WithImports(
                 "PS.Controller",
                 "PS.Controller.Operations",
