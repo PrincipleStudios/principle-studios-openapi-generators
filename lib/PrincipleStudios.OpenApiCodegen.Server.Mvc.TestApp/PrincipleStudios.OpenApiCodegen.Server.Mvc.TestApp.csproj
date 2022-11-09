@@ -1,0 +1,44 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+
+  </PropertyGroup>
+
+  <ItemGroup>
+    <OpenApiSchemaMvcServer Include="$(SolutionRoot)schemas\all-of.yaml" Link="AllOf\all-of.yaml" Key="AllOf" />
+    <OpenApiSchemaMvcServer Include="$(SolutionRoot)schemas\enum.yaml" Link="Enum\enum.yaml" Key="Enum" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\generators\dotnetcore-server-interfaces\PrincipleStudios.OpenApiCodegen.Server.Mvc.Cli\PrincipleStudios.OpenApiCodegen.Server.Mvc.Cli.csproj" PrivateAssets="all" ReferenceOutputAssembly="false" OutputItemType="CodegenCli" />
+  </ItemGroup>
+
+  <Target Name="CompileServerOpenApiCodeGen" AfterTargets="ResolveProjectReferences" Condition=" '@(OpenApiSchemaMvcServer)' != '' ">
+    <ItemGroup>
+      <Compile Remove="generated/**/*.cs" />
+      <CodegenCliFiles Include="@(OpenApiSchemaMvcServer)">
+        <WorkingOutputPath Condition=" '%(OpenApiSchemaMvcServer.Link)' != '' ">$([System.Text.RegularExpressions.Regex]::Replace(%(OpenApiSchemaMvcServer.Link), '(?&lt;=^|\\|/)..(?=$|\\|/)', '__'))</WorkingOutputPath>
+        <WorkingOutputPath Condition=" '%(OpenApiSchemaMvcServer.Link)' == '' ">$([System.Text.RegularExpressions.Regex]::Replace(%(OpenApiSchemaMvcServer.Identity), '(?&lt;=^|\\|/)..(?=$|\\|/)', '__'))</WorkingOutputPath>
+        <Namespace Condition=" '%(OpenApiSchemaMvcServer.Namespace)' != '' ">%(OpenApiSchemaMvcServer.Namespace)</Namespace>
+        <Key>%(OpenApiSchemaMvcServer.Key)</Key>
+      </CodegenCliFiles>
+      <CodegenCliFiles>
+        <Namespace Condition=" '%(CodegenCliFiles.Namespace)' == '' ">$(RootNamespace)$([System.Text.RegularExpressions.Regex]::Replace($([System.Text.RegularExpressions.Regex]::Replace('/$([System.IO.Path]::GetDirectoryName('%(CodegenCliFiles.WorkingOutputPath)'))', '[/\\]', '.')), '\.$', ''))</Namespace>
+      </CodegenCliFiles>
+    </ItemGroup>
+    
+    <PropertyGroup>
+      <CodegenCliPath>%(CodegenCli.Identity)</CodegenCliPath>
+    </PropertyGroup>
+    <Exec Command="dotnet &quot;$(CodegenCliPath)&quot; &quot;%(CodegenCliFiles.FullPath)&quot; &quot;%(CodegenCliFiles.Namespace)&quot; &quot;$(MSBuildProjectDirectory)/generated/%(CodegenCliFiles.Key)&quot;" Outputs="CodegenOutputs" />
+
+    <ItemGroup>
+      <Compile Include="generated/**/*.cs" />
+    </ItemGroup>
+  </Target>
+
+</Project>
