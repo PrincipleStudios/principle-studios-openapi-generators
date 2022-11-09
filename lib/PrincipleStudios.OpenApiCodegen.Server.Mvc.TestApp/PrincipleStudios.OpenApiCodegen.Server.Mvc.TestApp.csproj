@@ -15,9 +15,16 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\generators\dotnetcore-server-interfaces\PrincipleStudios.OpenApiCodegen.Server.Mvc.Cli\PrincipleStudios.OpenApiCodegen.Server.Mvc.Cli.csproj" PrivateAssets="all" ReferenceOutputAssembly="false" OutputItemType="CodegenCli" />
+    <ProjectReference Include="..\PrincipleStudios.OpenApiCodegen.Json.Extensions\PrincipleStudios.OpenApiCodegen.Json.Extensions.csproj" />
   </ItemGroup>
 
-  <Target Name="CompileServerOpenApiCodeGen" AfterTargets="ResolveProjectReferences" Condition=" '@(OpenApiSchemaMvcServer)' != '' ">
+  <Target Name="CompileServerOpenApiCodeGen" AfterTargets="ResolveProjectReferences" DependsOnTargets="_GenerateServerOpenApiCodegen" Condition=" '@(OpenApiSchemaMvcServer)' != '' ">
+    <ItemGroup>
+      <Compile Include="generated/**/*.cs" />
+    </ItemGroup>
+  </Target>
+
+	<Target Name="_PrepareCodegenFiles">
     <ItemGroup>
       <Compile Remove="generated/**/*.cs" />
       <CodegenCliFiles Include="@(OpenApiSchemaMvcServer)">
@@ -29,16 +36,18 @@
       <CodegenCliFiles>
         <Namespace Condition=" '%(CodegenCliFiles.Namespace)' == '' ">$(RootNamespace)$([System.Text.RegularExpressions.Regex]::Replace($([System.Text.RegularExpressions.Regex]::Replace('/$([System.IO.Path]::GetDirectoryName('%(CodegenCliFiles.WorkingOutputPath)'))', '[/\\]', '.')), '\.$', ''))</Namespace>
       </CodegenCliFiles>
+		<CodegenOutputFiles Include="$(MSBuildProjectDirectory)/generated/**/*.cs" />
     </ItemGroup>
-    
-    <PropertyGroup>
-      <CodegenCliPath>%(CodegenCli.Identity)</CodegenCliPath>
-    </PropertyGroup>
-    <Exec Command="dotnet &quot;$(CodegenCliPath)&quot; &quot;%(CodegenCliFiles.FullPath)&quot; &quot;%(CodegenCliFiles.Namespace)&quot; &quot;$(MSBuildProjectDirectory)/generated/%(CodegenCliFiles.Key)&quot;" Outputs="CodegenOutputs" />
+		
+	</Target>
+	
+    <Target Name="_GenerateServerOpenApiCodegen" DependsOnTargets="_PrepareCodegenFiles" Inputs="%(CodegenCliFiles.FullPath)" Outputs="@(CodegenCliFiles->'$(MSBuildProjectDirectory)/generated/%(Key)/_._')">
+        <PropertyGroup>
+          <CodegenCliPath>%(CodegenCli.Identity)</CodegenCliPath>
+        </PropertyGroup>
 
-    <ItemGroup>
-      <Compile Include="generated/**/*.cs" />
-    </ItemGroup>
-  </Target>
+		<Exec Command="dotnet &quot;$(CodegenCliPath)&quot; &quot;%(CodegenCliFiles.FullPath)&quot; &quot;%(CodegenCliFiles.Namespace)&quot; &quot;$(MSBuildProjectDirectory)/generated/%(CodegenCliFiles.Key)&quot;" Outputs="CodegenOutputs" />
+		<Touch Files="$(MSBuildProjectDirectory)/generated/%(CodegenCliFiles.Key)/_._" AlwaysCreate="true" />
+	</Target>
 
 </Project>

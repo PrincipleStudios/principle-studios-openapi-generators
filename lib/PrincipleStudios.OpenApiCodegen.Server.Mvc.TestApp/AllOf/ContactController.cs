@@ -1,6 +1,9 @@
-﻿namespace PrincipleStudios.OpenApiCodegen.Server.Mvc.TestApp.AllOf
+﻿namespace PrincipleStudios.OpenApiCodegen.Server.Mvc.TestApp.AllOf;
+
+public class ContactController : ContactControllerBase
 {
-    public class ContactController : ContactControllerBase
+    protected override Task<GetContactActionResult> GetContact()
     {
+        throw new NotImplementedException();
     }
 }
