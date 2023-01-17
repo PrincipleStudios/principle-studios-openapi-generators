@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFramework>net6.0</TargetFramework>
+		<TargetFramework>net7.0</TargetFramework>
 
 		<IsPackable>false</IsPackable>
 
@@ -10,6 +10,7 @@
 
 	<ItemGroup>
 		<FrameworkReference Include="Microsoft.AspNetCore.App" />
+		<PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="6.0.0" />
 		<PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.1.0" />
 		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.2.0" />
 		<PackageReference Include="System.Text.Json" Version="6.0.6" />
@@ -26,6 +27,7 @@
 	<ItemGroup>
 		<ProjectReference Include="$(SolutionRoot)generators\dotnetcore-server-interfaces\PrincipleStudios.OpenApiCodegen.Server.Mvc.Analyzers\PrincipleStudios.OpenApiCodegen.Server.Mvc.Roslyn3.11.csproj" />
 		<ProjectReference Include="..\PrincipleStudios.OpenApiCodegen.Json.Extensions\PrincipleStudios.OpenApiCodegen.Json.Extensions.csproj" />
+		<ProjectReference Include="..\TestApp\PrincipleStudios.OpenApiCodegen.Server.Mvc.TestApp.csproj" />
 		<ProjectReference Include="..\PrincipleStudios.OpenApiCodegen.TestUtils\PrincipleStudios.OpenApiCodegen.TestUtils.csproj" />
 	</ItemGroup>
 </Project>

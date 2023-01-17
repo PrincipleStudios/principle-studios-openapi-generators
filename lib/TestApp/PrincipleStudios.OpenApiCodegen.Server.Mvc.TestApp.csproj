@@ -11,6 +11,7 @@
   <ItemGroup>
     <OpenApiSchemaMvcServer Include="$(SolutionRoot)schemas\all-of.yaml" Link="AllOf\all-of.yaml" Key="AllOf" />
     <OpenApiSchemaMvcServer Include="$(SolutionRoot)schemas\enum.yaml" Link="Enum\enum.yaml" Key="Enum" />
+    <OpenApiSchemaMvcServer Include="$(SolutionRoot)schemas\controller-extension.yaml" Link="ControllerExtensions\controller-extension.yaml" Key="ControllerExtensions" />
   </ItemGroup>
 
   <ItemGroup>
