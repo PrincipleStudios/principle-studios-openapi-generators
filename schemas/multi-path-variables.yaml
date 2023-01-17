@@ -1,0 +1,57 @@
+openapi: "3.0.3"
+info:
+  version: 1.0.0
+  title: Path with multiple variables Demo
+  description: A sample API document that has multiple variables in the path
+paths:
+  /photo/{id}/{size}:
+    get:
+      operationId: getPhoto
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: size
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Photo was found and resized
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+  /photo/{id}:
+    get:
+      operationId: getPhotoAsFormat
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: size
+          in: query
+          required: false
+          schema:
+            type: integer
+        - name: format
+          in: query
+          required: false
+          description: Mime type of expected format
+          example: image/webp
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Photo was found, resized, and reformatted
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary

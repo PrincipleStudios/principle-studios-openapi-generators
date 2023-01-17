@@ -31,6 +31,7 @@ namespace PrincipleStudios.OpenApiCodegen.TestUtils
             "query-in-path.yaml",
             "tree.yaml",
             "nullable-vs-optional.yaml",
+            "multi-path-variables.yaml",
         };
 
         private static readonly string[] InvalidDocumentNames = new[]
