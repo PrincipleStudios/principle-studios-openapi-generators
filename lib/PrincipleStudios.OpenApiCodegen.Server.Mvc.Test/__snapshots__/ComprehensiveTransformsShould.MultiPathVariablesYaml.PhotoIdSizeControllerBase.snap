@@ -1,7 +1,7 @@
 ﻿/*
- * OAuth Scopes Sample
+ * Path with multiple variables Demo
  *
- * A sample API that uses oauth scopes
+ * A sample API document that has multiple variables in the path
  *
  * OpenAPI spec version: 1.0.0
  * 
@@ -13,22 +13,25 @@
 
 namespace PS.Controller
 { 
-    public abstract class InfoControllerBase : global::Microsoft.AspNetCore.Mvc.ControllerBase
+    public abstract class PhotoIdSizeControllerBase : global::Microsoft.AspNetCore.Mvc.ControllerBase
     {
         
+        /// <param name="id"></param>
+        /// <param name="size"></param>
         [global::Microsoft.AspNetCore.Mvc.HttpGet]
-        [global::Microsoft.AspNetCore.Mvc.Route("/info")]
-        // Sample Response
-        [global::Microsoft.AspNetCore.Mvc.ProducesResponseType(200, Type = typeof(string))] // application/json
-        [global::Microsoft.AspNetCore.Authorization.AllowAnonymous]
-        [global::Microsoft.AspNetCore.Authorization.Authorize(Policy = "ApiKeyAuth")]
-        public async global::System.Threading.Tasks.Task<global::Microsoft.AspNetCore.Mvc.IActionResult> GetInfoTypeSafeEntry(
-            
-        ) => (await GetInfo()).ActionResult;
+        [global::Microsoft.AspNetCore.Mvc.Route("/photo/{id}/{size}")]
+        // Photo was found and resized
+        [global::Microsoft.AspNetCore.Mvc.ProducesResponseType(200, Type = typeof(global::System.IO.Stream))] // application/octet-stream
+        public async global::System.Threading.Tasks.Task<global::Microsoft.AspNetCore.Mvc.IActionResult> GetPhotoTypeSafeEntry(
+            [global::Microsoft.AspNetCore.Mvc.FromRoute(Name = "id"), global::System.ComponentModel.DataAnnotations.Required] string id,
+            [global::Microsoft.AspNetCore.Mvc.FromRoute(Name = "size"), global::System.ComponentModel.DataAnnotations.Required] int size
+        ) => (await GetPhoto(id,size)).ActionResult;
 
-        protected abstract global::System.Threading.Tasks.Task<GetInfoActionResult> GetInfo();
+        protected abstract global::System.Threading.Tasks.Task<GetPhotoActionResult> GetPhoto(
+            string id, 
+            int size);
 
-        public readonly struct GetInfoActionResult
+        public readonly struct GetPhotoActionResult
         {
             public readonly global::Microsoft.AspNetCore.Mvc.IActionResult ActionResult;
 
@@ -51,17 +54,17 @@ namespace PS.Controller
                 }
             }
 
-            private GetInfoActionResult(global::Microsoft.AspNetCore.Mvc.IActionResult ActionResult, global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
+            private GetPhotoActionResult(global::Microsoft.AspNetCore.Mvc.IActionResult ActionResult, global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
             {
                 this.ActionResult = new HeaderActionResult(ActionResult, headers);
             }
 
-            private GetInfoActionResult(int statusCode, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
+            private GetPhotoActionResult(int statusCode, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
                 : this(new global::Microsoft.AspNetCore.Mvc.StatusCodeResult(statusCode), headers)
             {
             }
 
-            private GetInfoActionResult(int statusCode, string mediaType, global::System.Type declaredType, object? resultObject, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
+            private GetPhotoActionResult(int statusCode, string mediaType, global::System.Type declaredType, object? resultObject, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
                 : this(new global::Microsoft.AspNetCore.Mvc.ObjectResult(resultObject)
                 {
                     ContentTypes = new global::Microsoft.AspNetCore.Mvc.Formatters.MediaTypeCollection { { new global::Microsoft.Net.Http.Headers.MediaTypeHeaderValue(mediaType) } },
@@ -72,15 +75,15 @@ namespace PS.Controller
             }
             
             /// <summary>
-            /// Sample Response
+            /// Photo was found and resized
             /// </summary>
-            public static GetInfoActionResult Ok(string result) =>
-                new GetInfoActionResult(200, "application/json", typeof(string), result);
+            public static GetPhotoActionResult Ok(global::System.IO.Stream result) =>
+                new GetPhotoActionResult(200, "application/octet-stream", typeof(global::System.IO.Stream), result);
             
 
             /// <summary>Allows for action results not specified in the API</summary>
-            public static GetInfoActionResult Unsafe(global::Microsoft.AspNetCore.Mvc.IActionResult actionResult, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers) =>
-                new GetInfoActionResult(actionResult, headers);
+            public static GetPhotoActionResult Unsafe(global::Microsoft.AspNetCore.Mvc.IActionResult actionResult, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers) =>
+                new GetPhotoActionResult(actionResult, headers);
         }
     }
 }

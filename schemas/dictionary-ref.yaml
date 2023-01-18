@@ -15,6 +15,7 @@ paths:
               $ref: '#/components/schemas/Record'
       responses:
         '200':
+          description: ''
           content:
             application/json:
               schema:

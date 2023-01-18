@@ -54,3 +54,31 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+  /contrived:
+    post:
+      operationId: contrived
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - nullableOnly
+              properties:
+                nullableOnly: { type: integer, nullable: true }
+                optionalOnly: { type: integer }
+                optionalOrNullable: { type: integer, nullable: true }
+      responses:
+        '200':
+          description: Contrived response
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - nullableOnly
+                properties:
+                  nullableOnly: { type: integer, nullable: true }
+                  optionalOnly: { type: integer }
+                  optionalOrNullable: { type: integer, nullable: true }

@@ -1,4 +1,4 @@
-﻿/*
+/*
  * OAuth Scopes Sample
  *
  * A sample API that uses oauth scopes
@@ -11,22 +11,22 @@
 #nullable disable warnings
 #pragma warning disable
 
-namespace PS.Controller
+namespace PrincipleStudios.OpenApiCodegen.Server.Mvc.TestApp.ControllerExtensions
 { 
-    public abstract class InfoControllerBase : global::Microsoft.AspNetCore.Mvc.ControllerBase
+    public abstract class InformationControllerBase : global::Microsoft.AspNetCore.Mvc.ControllerBase
     {
         
+        /// <param name="data">base-64 encoded data</param>
         [global::Microsoft.AspNetCore.Mvc.HttpGet]
-        [global::Microsoft.AspNetCore.Mvc.Route("/info")]
+        [global::Microsoft.AspNetCore.Mvc.Route("/api/info")]
         // Sample Response
         [global::Microsoft.AspNetCore.Mvc.ProducesResponseType(200, Type = typeof(string))] // application/json
-        [global::Microsoft.AspNetCore.Authorization.AllowAnonymous]
-        [global::Microsoft.AspNetCore.Authorization.Authorize(Policy = "ApiKeyAuth")]
         public async global::System.Threading.Tasks.Task<global::Microsoft.AspNetCore.Mvc.IActionResult> GetInfoTypeSafeEntry(
-            
-        ) => (await GetInfo()).ActionResult;
+            [global::Microsoft.AspNetCore.Mvc.FromQuery(Name = "data")] byte[]? data
+        ) => (await GetInfo(data)).ActionResult;
 
-        protected abstract global::System.Threading.Tasks.Task<GetInfoActionResult> GetInfo();
+        protected abstract global::System.Threading.Tasks.Task<GetInfoActionResult> GetInfo(
+            byte[]? data);
 
         public readonly struct GetInfoActionResult
         {

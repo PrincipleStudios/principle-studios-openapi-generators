@@ -13,8 +13,9 @@ namespace Microsoft.Extensions.DependencyInjection
 {
     public static partial class OpenApiControllerRegistrationExtensions
     {
-        public static IMvcBuilder AddOpenApiNullableVsOptional<TSearchController>(this IServiceCollection services)
+        public static IMvcBuilder AddOpenApiNullableVsOptional<TSearchController, TContrivedController>(this IServiceCollection services)
             where TSearchController : global::PS.Controller.SearchControllerBase
+            where TContrivedController : global::PS.Controller.ContrivedControllerBase
         {
             return services.AddControllers();
         }
