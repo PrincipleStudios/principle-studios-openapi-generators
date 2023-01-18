@@ -1,16 +1,4 @@
-﻿using FluentAssertions.Json;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.AspNetCore.TestHost;
-using Microsoft.Extensions.DependencyInjection;
-using PrincipleStudios.OpenApiCodegen.Json.Extensions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
-using System.Text;
-using System.Threading;
+﻿using System.Net.Http.Json;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -20,6 +8,17 @@ using static Utilities;
 
 public class MvcBindingShould
 {
+    [Fact]
+    public Task HandleEnumRequestsAndResponses() =>
+        TestSingleRequest<Enum.RockPaperScissorsControllerBase.PlayRockPaperScissorsActionResult>(new(
+            Enum.RockPaperScissorsControllerBase.PlayRockPaperScissorsActionResult.Ok(Enum.PlayRockPaperScissorsResponse.Player1),
+            client => client.PostAsync("/rock-paper-scissors", JsonContent.Create(new { player1 = "rock", player2 = "scissors" }))
+        )
+        {
+            AssertResponseMessage = VerifyResponse(200, "player1"),
+        });
+
+
     [Fact]
     public Task HandleAllOfResponses() =>
         TestSingleRequest<AllOf.ContactControllerBase.GetContactActionResult>(new(
