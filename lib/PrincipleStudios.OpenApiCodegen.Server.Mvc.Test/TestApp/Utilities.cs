@@ -1,11 +1,8 @@
 ﻿using FluentAssertions.Json;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.AspNetCore.TestHost;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
-using PrincipleStudios.OpenApiCodegen.Json.Extensions;
-using PrincipleStudios.OpenApiCodegen.Server.Mvc.TestApp;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,33 +11,13 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
+using Microsoft.AspNetCore.TestHost;
 
-namespace PrincipleStudios.OpenApiCodegen.Server.Mvc;
+namespace PrincipleStudios.OpenApiCodegen.Server.Mvc.TestApp;
 
-public class MvcBindingShould
+internal class Utilities
 {
-    [Fact]
-    public Task HandleAllOfResponses() => 
-        TestSingleRequest<TestApp.AllOf.ContactControllerBase.GetContactActionResult>(new(
-            TestApp.AllOf.ContactControllerBase.GetContactActionResult.Ok(new(FirstName: "John", LastName: "Doe", Id: "john-doe-123")),
-            client => client.GetAsync("/contact")
-        )
-        {
-            AssertResponseMessage = VerifyResponse(200, new { firstName = "John", lastName = "Doe", id = "john-doe-123" }),
-        });
-
-    [Fact]
-    public Task DecodeBase64EncodedQueryData() =>
-        TestSingleRequest<TestApp.ControllerExtensions.InformationControllerBase.GetInfoActionResult>(new(
-            TestApp.ControllerExtensions.InformationControllerBase.GetInfoActionResult.Ok("SomeData"),
-            client => client.GetAsync("/api/info")
-        )
-        {
-            
-            AssertResponseMessage = VerifyResponse(200, "SomeData"),
-        });
-
-    private Func<HttpResponseMessage, Task> VerifyResponse(int statusCode, object? jsonBody)
+    internal static Func<HttpResponseMessage, Task> VerifyResponse(int statusCode, object? jsonBody)
     {
         return async (message) =>
         {
@@ -52,7 +29,7 @@ public class MvcBindingShould
         };
     }
 
-    private async Task TestSingleRequest<T>(MvcRequestTest<T> testDefinition)
+    internal static async Task TestSingleRequest<T>(MvcRequestTest<T> testDefinition)
     {
         var assertionCompleted = 0;
         using var factory = new TestAppFactory();
@@ -72,7 +49,7 @@ public class MvcBindingShould
 
         Assert.Equal(1, assertionCompleted);
     }
-    private void CompareJson(string actualJson, object? expected)
+    internal static void CompareJson(string actualJson, object? expected)
     {
         Newtonsoft.Json.Linq.JToken.Parse(actualJson).Should().BeEquivalentTo(
             expected == null ? Newtonsoft.Json.Linq.JValue.CreateNull() : Newtonsoft.Json.Linq.JToken.FromObject(expected)
