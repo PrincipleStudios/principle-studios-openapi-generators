@@ -14,6 +14,7 @@ namespace PrincipleStudios.OpenApiCodegen.Client.TypeScript
     using static OptionsHelpers;
     public class ComprehensiveTransformsShould
     {
+        [Trait("Category", "Integration")]
         [MemberData(nameof(ValidFileNames))]
         [Theory]
         public void CoverFullFiles(string name)
@@ -36,6 +37,7 @@ namespace PrincipleStudios.OpenApiCodegen.Client.TypeScript
             Assert.Empty(diagnostic.Errors);
         }
 
+        [Trait("Category", "Integration")]
         [MemberData(nameof(InvalidFileNames))]
         [Theory]
         public void ReportDiagnosticsForMissingReferences(string name)

@@ -18,6 +18,7 @@ namespace PrincipleStudios.OpenApiCodegen.Client.TypeScript
     public class TypeScriptOperationTransformerShould
     {
         [Theory]
+        [Trait("Category", "Integration")] // Integration because it calls petstore models?
         [InlineData("petstore.yaml", "findPets")]
         [InlineData("petstore.yaml", "find pet by id")]
         [InlineData("petstore3.json", "addPet")]

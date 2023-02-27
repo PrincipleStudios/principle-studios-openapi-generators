@@ -17,6 +17,7 @@ namespace PrincipleStudios.OpenApiCodegen.Client.TypeScript
     public class TypeScriptSchemaTransformerShould
     {
         [Theory]
+        [Trait("Category", "Integration")] // Integration because it calls petstore models?
         [InlineData(false, "petstore.yaml", "paths./pets.get.parameters[?(@.name=='tags')].schema")]
         [InlineData(false, "petstore.yaml", "paths./pets.get.parameters[?(@.name=='limit')].schema")]
         [InlineData(false, "petstore.yaml", "paths./pets.get.responses.200.content.application/json.schema")]
@@ -74,6 +75,7 @@ namespace PrincipleStudios.OpenApiCodegen.Client.TypeScript
         }
 
         [Theory]
+        [Trait("Category", "Integration")] // Integration because it calls petstore models?
         [MemberData(nameof(InlineAssertionData))]
         public void ConvertToInlineTypes(string documentName, Func<OpenApiDocument, OpenApiSchema> findSchema, string expectedInline)
         {
@@ -86,7 +88,7 @@ namespace PrincipleStudios.OpenApiCodegen.Client.TypeScript
             var target = ConstructTarget(document, LoadOptions());
             target.EnsureSchemasRegistered(document, OpenApiContext.From(document), new());
             var inline = target.ToInlineDataType(schema)();
-            
+
             Assert.Equal(expectedInline, inline.text);
         }
 
@@ -111,6 +113,7 @@ namespace PrincipleStudios.OpenApiCodegen.Client.TypeScript
             }.Select(t => new object[] { t.documentName, t.findSchema, t.expectedInline });
 
         [Theory]
+        [Trait("Category", "Integration")] // Integration because it calls petstore models?
         [InlineData("petstore.yaml", "Pet")]
         [InlineData("petstore.yaml", "NewPet")]
         [InlineData("petstore.yaml", "Error")]

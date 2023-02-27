@@ -19,6 +19,7 @@ namespace PrincipleStudios.OpenApiCodegen.Client.CSharp
 {
     public class ComprehensiveTransformsShould
     {
+        [Trait("Category", "Integration")]
         [MemberData(nameof(ValidFileNames))]
         [Theory]
         public void Compile(string name)
@@ -26,6 +27,7 @@ namespace PrincipleStudios.OpenApiCodegen.Client.CSharp
             DynamicCompilation.GetGeneratedLibrary(name);
         }
 
+        [Trait("Category", "Integration")]
         [MemberData(nameof(ValidFileNames))]
         [Theory]
         public void CoverFullFiles(string name)
@@ -45,6 +47,7 @@ namespace PrincipleStudios.OpenApiCodegen.Client.CSharp
             Assert.Empty(diagnostic.Errors);
         }
 
+        [Trait("Category", "Integration")]
         [MemberData(nameof(InvalidFileNames))]
         [Theory]
         public void ReportDiagnosticsForMissingReferences(string name)
