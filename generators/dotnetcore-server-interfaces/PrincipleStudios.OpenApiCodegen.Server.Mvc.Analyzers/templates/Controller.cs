@@ -50,7 +50,14 @@ namespace PrincipleStudios.OpenApi.CSharp.templates
         int? maxLength,
         decimal? minimum,
         decimal? maximum
-    );
+    )
+    {
+        public bool HasMinLength => minLength.HasValue;
+        public bool HasMaxLength => maxLength.HasValue;
+
+        public bool HasMinimum => minimum.HasValue;
+        public bool HasMaximum => maximum.HasValue;
+    }
 
     public record OperationResponses(
         OperationResponse? defaultResponse,

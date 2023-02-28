@@ -32,7 +32,7 @@ namespace PrincipleStudios.Test
         // Order not found
         [global::Microsoft.AspNetCore.Mvc.ProducesResponseType(404)] // 
         public async global::System.Threading.Tasks.Task<global::Microsoft.AspNetCore.Mvc.IActionResult> GetOrderByIdTypeSafeEntry(
-            [global::Microsoft.AspNetCore.Mvc.FromRoute(Name = "orderId"), global::System.ComponentModel.DataAnnotations.Required] long orderId
+            [global::Microsoft.AspNetCore.Mvc.FromRoute(Name = "orderId"), global::System.ComponentModel.DataAnnotations.Required, global::System.ComponentModel.DataAnnotations.Range(1, 10)] long orderId
         ) => (await GetOrderById(orderId)).ActionResult;
 
         protected abstract global::System.Threading.Tasks.Task<GetOrderByIdActionResult> GetOrderById(

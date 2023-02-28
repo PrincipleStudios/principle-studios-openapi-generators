@@ -12,6 +12,7 @@
     <OpenApiSchemaMvcServer Include="$(SolutionRoot)schemas\all-of.yaml" Link="AllOf\all-of.yaml" Key="AllOf" />
     <OpenApiSchemaMvcServer Include="$(SolutionRoot)schemas\enum.yaml" Link="Enum\enum.yaml" Key="Enum" />
     <OpenApiSchemaMvcServer Include="$(SolutionRoot)schemas\controller-extension.yaml" Link="ControllerExtensions\controller-extension.yaml" Key="ControllerExtensions" />
+    <OpenApiSchemaMvcServer Include="$(SolutionRoot)schemas\validation-min-max.yaml" Link="ValidationMinMax\validation-min-max.yaml" Key="ValidationMinMax" />
     <OpenApiSchemaMvcServer Include="$(SolutionRoot)schemas\regex-escape.yaml" Link="RegexEscape\regex-escape.yaml" Key="RegexEscape" />
   </ItemGroup>
 
@@ -43,7 +44,7 @@
 		
 	</Target>
 	
-    <Target Name="_GenerateServerOpenApiCodegen" DependsOnTargets="_PrepareCodegenFiles" Inputs="%(CodegenCliFiles.FullPath)" Outputs="@(CodegenCliFiles->'$(MSBuildProjectDirectory)/generated/%(Key)/_._')">
+    <Target Name="_GenerateServerOpenApiCodegen" DependsOnTargets="_PrepareCodegenFiles" Inputs="%(CodegenCliFiles.FullPath);$(ProjectPath)" Outputs="@(CodegenCliFiles->'$(MSBuildProjectDirectory)/generated/%(Key)/_._')">
         <PropertyGroup>
           <CodegenCliPath>%(CodegenCli.Identity)</CodegenCliPath>
         </PropertyGroup>
