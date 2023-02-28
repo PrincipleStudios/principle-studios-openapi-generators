@@ -17,6 +17,17 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc.TestApp;
 
 internal class Utilities
 {
+    internal static Func<HttpResponseMessage, Task> VerifyResponse(int statusCode)
+    {
+        return (message) =>
+        {
+            Assert.Equal(statusCode, (int)message.StatusCode);
+            Assert.NotNull(message.Content);
+            Assert.Null(message.Content.Headers.ContentType?.MediaType);
+            return Task.CompletedTask;
+        };
+    }
+
     internal static Func<HttpResponseMessage, Task> VerifyResponse(int statusCode, object? jsonBody)
     {
         return async (message) =>
@@ -29,16 +40,24 @@ internal class Utilities
         };
     }
 
-    internal static async Task TestSingleRequest<T>(MvcRequestTest<T> testDefinition)
+    internal static Task TestSingleRequest<T>(MvcRequestTest<T, object?> testDefinition) =>
+        TestSingleRequest<T, object?>(testDefinition);
+
+
+    internal static async Task TestSingleRequest<TResponse, TRequest>(MvcRequestTest<TResponse, TRequest> testDefinition)
     {
         var assertionCompleted = 0;
         using var factory = new TestAppFactory();
         factory.OverrideServices += (services) =>
         {
-            services.AddSingleton<IProvideArbitraryResponse<T>>(new ProvideArbitraryResponse<T>(testDefinition.Response, (controller) =>
+            services.AddSingleton<IProvideArbitraryResponse<TResponse>>(new ProvideArbitraryResponse<TResponse>(testDefinition.Response, (controller) =>
             {
                 Interlocked.Increment(ref assertionCompleted);
             }));
+            if (testDefinition.AssertRequest != null)
+            {
+                services.AddSingleton<IHandleArbitraryRequest<TRequest>>(new HandleArbitraryRequest<TRequest>(testDefinition.AssertRequest));
+            }
         };
 
         using var client = factory.CreateDefaultClient();
@@ -49,6 +68,7 @@ internal class Utilities
 
         Assert.Equal(1, assertionCompleted);
     }
+
     internal static void CompareJson(string actualJson, object? expected)
     {
         Newtonsoft.Json.Linq.JToken.Parse(actualJson).Should().BeEquivalentTo(
@@ -57,17 +77,18 @@ internal class Utilities
     }
 }
 
-internal class MvcRequestTest<T>
+internal class MvcRequestTest<TResponse, TRequest>
 {
-    public MvcRequestTest(T Response, Func<HttpClient, Task<HttpResponseMessage>> PerformRequest)
+    public MvcRequestTest(TResponse Response, Func<HttpClient, Task<HttpResponseMessage>> PerformRequest)
     {
         this.Response = Response;
         this.PerformRequest = PerformRequest;
     }
 
-    public T Response { get; }
+    public TResponse Response { get; }
     public Func<HttpClient, Task<HttpResponseMessage>> PerformRequest { get; }
     public Func<HttpResponseMessage, Task>? AssertResponseMessage { get; init; }
+    public Action<ControllerBase, TRequest>? AssertRequest { get; init; }
 
 }
 
@@ -76,6 +97,14 @@ internal record ProvideArbitraryResponse<T>(T Response, Action<ControllerBase> C
     public void AssertController(ControllerBase controller)
     {
         ControllerAssertion(controller);
+    }
+}
+
+internal record HandleArbitraryRequest<TRequest>(Action<ControllerBase, TRequest> RequestAssertion) : IHandleArbitraryRequest<TRequest>
+{
+    public void AssertRequest(ControllerBase controller, TRequest request)
+    {
+        RequestAssertion(controller, request);
     }
 }
 
