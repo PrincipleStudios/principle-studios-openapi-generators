@@ -17,6 +17,16 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
 {
     public class ComprehensiveTransformsShould
     {
+        [Trait("Category", "RepeatMsBuild")]
+        [InlineData("all-of.yaml")]
+        [InlineData("enum.yaml")]
+        [InlineData("controller-extension.yaml")]
+        [Theory]
+        public void Compile_api_documents_included_in_the_TestApp(string name)
+        {
+            DynamicCompilation.GetGeneratedLibrary(name);
+        }
+
         [Trait("Category", "Integration")]
         [MemberData(nameof(ValidFileNames))]
         [Theory]
@@ -25,7 +35,7 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
             DynamicCompilation.GetGeneratedLibrary(name);
         }
 
-        [Trait("Category", "Integration")]
+        [Trait("Category", "Snapshot")]
         [MemberData(nameof(ValidFileNames))]
         [Theory]
         public void CoverFullFiles(string name)
@@ -45,7 +55,7 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
             Assert.Empty(diagnostic.Errors);
         }
 
-        [Trait("Category", "Integration")]
+        [Trait("Category", "Snapshot")]
         [MemberData(nameof(InvalidFileNames))]
         [Theory]
         public void ReportDiagnosticsForMissingReferences(string name)

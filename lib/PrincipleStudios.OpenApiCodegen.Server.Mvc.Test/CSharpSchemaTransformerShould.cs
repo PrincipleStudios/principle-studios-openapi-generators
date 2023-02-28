@@ -78,7 +78,7 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
         }
 
         [Theory]
-        [Trait("Category", "Integration")] // Integration because it calls petstore models?
+        [Trait("Category", "Snapshot")]
         [InlineData("petstore.yaml", "Pet")]
         [InlineData("petstore.yaml", "NewPet")]
         [InlineData("petstore.yaml", "Error")]

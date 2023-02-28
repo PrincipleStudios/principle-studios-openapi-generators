@@ -18,7 +18,7 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
     public class CSharpControllerTransformerShould
     {
         [Theory]
-        [Trait("Category", "Integration")] // Integration because it calls petstore models?
+        [Trait("Category", "Snapshot")]
         [InlineData("petstore.yaml", "/pets")]
         [InlineData("petstore.yaml", "/pets/{id}")]
         [InlineData("petstore3.json", "/pet")]

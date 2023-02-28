@@ -27,7 +27,7 @@ namespace PrincipleStudios.OpenApiCodegen.Client.CSharp
             DynamicCompilation.GetGeneratedLibrary(name);
         }
 
-        [Trait("Category", "Integration")]
+        [Trait("Category", "Snapshot")]
         [MemberData(nameof(ValidFileNames))]
         [Theory]
         public void CoverFullFiles(string name)

@@ -20,7 +20,6 @@ namespace PrincipleStudios.OpenApiCodegen.Client.CSharp
     {
         public delegate OpenApiSchema SchemaAccessor(OpenApiDocument document);
         [Theory]
-        [Trait("Category", "Integration")] // Integration because it calls petstore models?
         [InlineData(false, "petstore.yaml", "paths./pets.get.parameters[?(@.name=='tags')].schema")]
         [InlineData(false, "petstore.yaml", "paths./pets.get.parameters[?(@.name=='limit')].schema")]
         [InlineData(false, "petstore.yaml", "paths./pets.get.responses.200.content.application/json.schema")]
@@ -79,7 +78,7 @@ namespace PrincipleStudios.OpenApiCodegen.Client.CSharp
         }
 
         [Theory]
-        [Trait("Category", "Integration")] // Integration because it calls petstore models?
+        [Trait("Category", "Snapshot")]
         [InlineData("petstore.yaml", "Pet")]
         [InlineData("petstore.yaml", "NewPet")]
         [InlineData("petstore.yaml", "Error")]
