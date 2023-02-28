@@ -49,6 +49,36 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
             Assert.Equal(expectedInline, actual);
         }
 
+        [Theory]
+        [MemberData(nameof(DetermineSchemaNameList))]
+        public void Determine_a_name_for_schema(string expectedName, string documentName, Func<OpenApiDocument, OpenApiSchema> locateSchema)
+        {
+            var document = GetDocument(documentName);
+            var schema = locateSchema(document);
+            
+            Assert.NotNull(document);
+            Assert.NotNull(schema);
+
+            var target = ConstructTarget(document!, LoadOptions());
+            target.EnsureSchemasRegistered(document!, OpenApiContext.From(document!), new());
+
+            var actual = target.ToInlineDataType(schema!)();
+
+            Assert.Equal(expectedName, actual?.text);
+        }
+
+        private static IEnumerable<object[]> DetermineSchemaNameList()
+        {
+            return new[]
+            {
+                Entry("FindPetsByStatusStatusItem", "petstore3.json", doc =>
+                    doc.Paths["/pet/findByStatus"].Operations[OperationType.Get].Parameters.First(p => p.Name == "status").Schema.Items),
+            };
+
+            object[] Entry(string expectedName, string documentName, Func<OpenApiDocument, OpenApiSchema> locateSchema) =>
+                new object[] { expectedName, documentName, locateSchema };
+        }
+
         private (OpenApiDocument? document, OpenApiSchema? schema) GetSchema(string docContents, string path)
         {
             const string prefix = "components.schemas.";
