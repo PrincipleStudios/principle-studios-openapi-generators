@@ -25,7 +25,7 @@ namespace PS.Controller
         public static global::System.Net.Http.HttpRequestMessage GetInfo(
             )
         {
-            var requestMessage = new global::System.Net.Http.HttpRequestMessage(global::System.Net.Http.HttpMethod.Get, "info");
+            var requestMessage = new global::System.Net.Http.HttpRequestMessage(global::System.Net.Http.HttpMethod.Get, "oauth/info");
 
 
             return requestMessage;
@@ -81,7 +81,7 @@ namespace PS.Controller
         public static global::System.Net.Http.HttpRequestMessage GetAddress(
             )
         {
-            var requestMessage = new global::System.Net.Http.HttpRequestMessage(global::System.Net.Http.HttpMethod.Get, "address");
+            var requestMessage = new global::System.Net.Http.HttpRequestMessage(global::System.Net.Http.HttpMethod.Get, "oauth/address");
 
 
             return requestMessage;

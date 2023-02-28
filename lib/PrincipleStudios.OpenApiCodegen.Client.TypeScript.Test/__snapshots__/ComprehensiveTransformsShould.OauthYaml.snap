@@ -30,7 +30,7 @@ export function getInfo(params: RequestParams): RequestOpts {
     const headers: HttpHeaders = {};
 
     return {
-        path: '/info',
+        path: '/oauth/info',
         method: 'GET',
         headers,
     };
@@ -84,7 +84,7 @@ export function getAddress(params: RequestParams): RequestOpts {
     const headers: HttpHeaders = {};
 
     return {
-        path: '/address',
+        path: '/oauth/address',
         method: 'GET',
         headers,
     };

@@ -4,7 +4,7 @@ info:
   title: OAuth Scopes Sample
   description: A sample API that uses oauth scopes
 paths:
-  /info:
+  /oauth/info:
     get:
       operationId: getInfo
       security:
@@ -17,7 +17,7 @@ paths:
             application/json:
               schema:
                 type: string
-  /address:
+  /oauth/address:
     get:
       operationId: getAddress
       security:

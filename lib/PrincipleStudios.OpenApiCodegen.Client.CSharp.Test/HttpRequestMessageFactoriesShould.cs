@@ -141,7 +141,7 @@ public class HttpRequestMessageFactoriesShould : IClassFixture<TempDirectory>
         var actualMessage = await GetRequestMessage("oauth.yaml", @"GetInfo()");
 
         Assert.Equal("GET", actualMessage.Method.Method);
-        Assert.Equal("info", actualMessage.RequestUri?.OriginalString);
+        Assert.Equal("oauth/info", actualMessage.RequestUri?.OriginalString);
     }
 
     [Fact]
