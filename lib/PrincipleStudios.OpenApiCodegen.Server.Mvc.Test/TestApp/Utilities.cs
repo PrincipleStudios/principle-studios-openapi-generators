@@ -43,6 +43,15 @@ internal class Utilities
     internal static Task TestSingleRequest<T>(MvcRequestTest<T, object?> testDefinition) =>
         TestSingleRequest<T, object?>(testDefinition);
 
+    internal static async Task TestRequestBlockedByFramework(Func<HttpClient, Task<HttpResponseMessage>> performRequest, Func<HttpResponseMessage, Task> assertResponseMessage)
+    {
+        using var factory = new TestAppFactory();
+        using var client = factory.CreateDefaultClient();
+        using var responseMessage = await performRequest(client);
+
+        await assertResponseMessage(responseMessage);
+    }
+
 
     internal static async Task TestSingleRequest<TResponse, TRequest>(MvcRequestTest<TResponse, TRequest> testDefinition)
     {
