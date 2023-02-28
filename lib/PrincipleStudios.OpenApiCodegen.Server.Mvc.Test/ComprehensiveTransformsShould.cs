@@ -23,6 +23,7 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
         [InlineData("controller-extension.yaml")]
         [InlineData("regex-escape.yaml")]
         [InlineData("validation-min-max.yaml")]
+        [InlineData("headers.yaml")]
         [Theory]
         public void Compile_api_documents_included_in_the_TestApp(string name)
         {

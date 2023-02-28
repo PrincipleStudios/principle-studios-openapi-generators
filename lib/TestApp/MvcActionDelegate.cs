@@ -17,6 +17,11 @@ public interface IProvideArbitraryResponse<T>
 
 public static class DelegatingRequestExtensions
 {
+    public static void DelegateRequest(this ControllerBase controller)
+    {
+        controller.DelegateRequest<object?>(null);
+    }
+
     public static void DelegateRequest<T>(this ControllerBase controller, T request)
     {
         var handleRequest = controller.HttpContext.RequestServices.GetService<IHandleArbitraryRequest<T>>();
