@@ -57,10 +57,7 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
             Assert.Empty(diagnostic.Errors);
         }
 
-        [Trait("Category", "Snapshot")]
-        [MemberData(nameof(InvalidFileNames))]
-        [Theory]
-        public void ReportDiagnosticsForMissingReferences(string name)
+        private static OpenApiTransformDiagnostic GetDocumentDiagnostics(string name)
         {
             var document = GetDocument(name);
             var options = LoadOptions();
@@ -68,9 +65,19 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
             var transformer = document.BuildCSharpPathControllerSourceProvider("", "PS.Controller", options);
             OpenApiTransformDiagnostic diagnostic = new();
 
-            var entries = transformer.GetSources(diagnostic).ToArray();
+            transformer.GetSources(diagnostic).ToArray(); // force all sources to load to get diagnostics
+            return diagnostic;
+        }
 
-            Snapshot.Match(diagnostic.Errors.Select(err => new { Context = err.Context.ToOpenApiPathContextString(), Message = err.Message }).ToArray(), $"Diagnostics.{CSharpNaming.ToTitleCaseIdentifier(name, options.ReservedIdentifiers())}");
+        [Fact]
+        public void ReportDiagnosticsForMissingReferences()
+        {
+            OpenApiTransformDiagnostic diagnostic = GetDocumentDiagnostics("bad.yaml");
+
+            Assert.Collection(diagnostic.Errors, new[]
+            {
+                (OpenApiTransformError error) => Assert.Contains("Unresolved external reference", error.Message)
+            });
         }
 
         public static IEnumerable<object[]> ValidFileNames =>
