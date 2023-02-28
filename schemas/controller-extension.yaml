@@ -12,7 +12,6 @@ paths:
           in: query
           description: base-64 encoded data
           required: false
-          style: form
           schema:
             type: string
             format: byte
