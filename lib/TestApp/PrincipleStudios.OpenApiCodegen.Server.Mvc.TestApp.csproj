@@ -16,6 +16,7 @@
     <OpenApiSchemaMvcServer Include="$(SolutionRoot)schemas\regex-escape.yaml" Link="RegexEscape\regex-escape.yaml" Key="RegexEscape" />
     <OpenApiSchemaMvcServer Include="$(SolutionRoot)schemas\headers.yaml" Link="Headers\headers.yaml" Key="Headers" />
     <OpenApiSchemaMvcServer Include="$(SolutionRoot)schemas\oauth.yaml" Link="OAuth\oauth.yaml" Key="OAuth" />
+    <OpenApiSchemaMvcServer Include="$(SolutionRoot)schemas\form.yaml" Link="Form\form.yaml" Key="Form" />
   </ItemGroup>
 
   <ItemGroup>
