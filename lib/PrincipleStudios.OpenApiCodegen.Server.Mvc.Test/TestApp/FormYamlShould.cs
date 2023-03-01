@@ -1,9 +1,5 @@
-﻿using PrincipleStudios.OpenApiCodegen.Json.Extensions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -14,7 +10,7 @@ using static Utilities;
 public class FormYamlShould
 {
     [Fact]
-    public Task HandleAllOfResponses() =>
+    public Task Handle_FormUrlEncodedContent_requests() =>
         TestSingleRequest<Form.FormBasicControllerBase.PostBasicFormActionResult, (string Name, string Tag, bool HasIdTag)>(new(
             Form.FormBasicControllerBase.PostBasicFormActionResult.Ok(17),
             client => client.PostAsync("/form/basic", new FormUrlEncodedContent(new Dictionary<string, string>
