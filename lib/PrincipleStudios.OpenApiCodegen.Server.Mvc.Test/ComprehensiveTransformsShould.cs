@@ -59,13 +59,5 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
             });
         }
 
-        public static IEnumerable<object[]> ValidFileNames =>
-            from fileIndex in GetValidDocumentIndices()
-            select new object[] { GetDocumentName(fileIndex) };
-
-        public static IEnumerable<object[]> InvalidFileNames =>
-            from fileIndex in GetInvalidDocumentIndices()
-            select new object[] { GetDocumentName(fileIndex) };
-
     }
 }

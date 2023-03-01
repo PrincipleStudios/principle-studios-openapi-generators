@@ -11,41 +11,6 @@ namespace PrincipleStudios.OpenApiCodegen.TestUtils
 {
     public static class DocumentHelpers
     {
-        private static readonly string[] ValidDocumentNames = new[]
-        {
-            "petstore.yaml",
-            "petstore3.json",
-            "power-sample.json",
-            "no-refs.yaml",
-            "oauth.yaml",
-            "headers.yaml",
-            "empty.yaml",
-            "controller-extension.yaml",
-            "dictionary-ref.yaml",
-            "enum.yaml",
-            "array.yaml",
-            "any.yaml",
-            "all-of.yaml",
-            "self-ref.yaml",
-            "regex-escape.yaml",
-            "query-in-path.yaml",
-            "tree.yaml",
-            "nullable-vs-optional.yaml",
-        };
-
-        private static readonly string[] InvalidDocumentNames = new[]
-        {
-            "bad.yaml",
-        };
-
-        public static IEnumerable<int> GetValidDocumentIndices() => Enumerable.Range(0, ValidDocumentNames.Length);
-        public static IEnumerable<int> GetInvalidDocumentIndices() => Enumerable.Range(ValidDocumentNames.Length, InvalidDocumentNames.Length);
-
-        public static OpenApiDocument GetDocument(int index)
-        {
-            return GetDocument(GetDocumentName(index));
-        }
-
         public static OpenApiDocument GetDocument(string name)
         {
             using var documentStream = typeof(DocumentHelpers).Assembly.GetManifestResourceStream($"PrincipleStudios.OpenApiCodegen.TestUtils.schemas.{name}");
@@ -74,18 +39,5 @@ namespace PrincipleStudios.OpenApiCodegen.TestUtils
                     throw new NotSupportedException(inputVersion);
             }
         }
-
-        public static string GetDocumentName(int index)
-        {
-            return index switch
-            {
-                >= 0 when index < ValidDocumentNames.Length => ValidDocumentNames[index],
-                >= 0 when index < ValidDocumentNames.Length + InvalidDocumentNames.Length => InvalidDocumentNames[index - ValidDocumentNames.Length],
-                _ => throw new ArgumentException(nameof(index))
-            };
-        }
-
-
-
     }
 }
