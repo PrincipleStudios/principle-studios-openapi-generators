@@ -43,7 +43,7 @@ export function getInfo(params: RequestParams): RequestOpts {
     if (params.xData !== undefined) headers['X-Data'] = params.xData; 
 
     return {
-        path: '/info',
+        path: '/headers/info',
         method: 'GET',
         headers,
     };
@@ -98,7 +98,7 @@ export function redirect(params: RequestParams): RequestOpts {
     const headers: HttpHeaders = {};
 
     return {
-        path: '/redirect',
+        path: '/headers/redirect',
         method: 'GET',
         headers,
     };

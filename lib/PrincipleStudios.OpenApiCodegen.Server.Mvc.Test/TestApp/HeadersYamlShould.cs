@@ -14,9 +14,9 @@ public class HeadersYamlShould
 {
     [Fact]
     public Task HandleHeaderRequestsAndResponses() =>
-        TestSingleRequest<Headers.InfoControllerBase.GetInfoActionResult, byte[]>(new(
-            Headers.InfoControllerBase.GetInfoActionResult.Ok(new() { ["foo"] = "bar" }, "some-header-data"),
-            client => client.SendAsync(new HttpRequestMessage(HttpMethod.Get, "/info")
+        TestSingleRequest<Headers.HeadersInfoControllerBase.GetInfoActionResult, byte[]>(new(
+            Headers.HeadersInfoControllerBase.GetInfoActionResult.Ok(new() { ["foo"] = "bar" }, "some-header-data"),
+            client => client.SendAsync(new HttpRequestMessage(HttpMethod.Get, "/headers/info")
             {
                 Headers =
                 {
@@ -42,9 +42,9 @@ public class HeadersYamlShould
 
     [Fact]
     public Task HandleRedirectionResponses() =>
-        TestSingleRequest<Headers.RedirectControllerBase._RedirectActionResult, byte[]>(new(
-            Headers.RedirectControllerBase._RedirectActionResult.Redirect("https://google.com"),
-            client => client.GetAsync("/redirect")
+        TestSingleRequest<Headers.HeadersRedirectControllerBase._RedirectActionResult, byte[]>(new(
+            Headers.HeadersRedirectControllerBase._RedirectActionResult.Redirect("https://google.com"),
+            client => client.GetAsync("/headers/redirect")
         )
         {
             AssertResponseMessage = async (responseMessage) => {
