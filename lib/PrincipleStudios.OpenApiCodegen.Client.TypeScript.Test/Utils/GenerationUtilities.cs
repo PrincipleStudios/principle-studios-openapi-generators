@@ -40,7 +40,7 @@ internal static class GenerationUtilities
     {
         await commonDirectory.PrepareOpenApiDirectory(documentName);
 
-        Assert.True(File.Exists(Path.Combine(commonDirectory.DirectoryPath, documentName, "models", $"{modelName}.ts")));
+        Assert.True(File.Exists(Path.Combine(commonDirectory.DirectoryPath, documentName, "models", $"{modelName}.ts")), "The model file does not exist");
 
         var result = await commonDirectory.TsNode($@"
             import {{ {modelName} }} from './{documentName}/models/{modelName}';
