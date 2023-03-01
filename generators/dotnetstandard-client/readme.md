@@ -33,10 +33,5 @@ To build:
     cd nuget
     dotnet pack
 
-To update snapshots:
-
-* Remove all the snapshots in `/lib/PrincipleStudios.OpenApiCodegen.Client.Test/__snapshots__`
-* Run the tests
-
 [1]: https://github.com/microsoft/OpenAPI.NET
 [2]: https://docs.microsoft.com/en-us/nuget/consume-packages/package-references-in-project-files

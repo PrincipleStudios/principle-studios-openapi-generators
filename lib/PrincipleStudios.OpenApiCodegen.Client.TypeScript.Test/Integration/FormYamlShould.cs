@@ -15,7 +15,7 @@ public class FormYamlShould
         this.commonDirectory = commonDirectory;
     }
 
-    [Fact(Skip = "Form support is currenlty very weak; the types in the snapshot do not pass on this.")]
+    [Fact(Skip = "Form support is currenlty very weak; the generated types do not pass.")]
     public async Task Be_able_to_generate_the_request()
     {
         var body = new { name = "Fido", tag = "dog", hasIdTag = true };

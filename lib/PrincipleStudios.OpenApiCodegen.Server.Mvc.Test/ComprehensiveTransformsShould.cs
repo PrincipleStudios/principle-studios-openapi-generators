@@ -1,14 +1,6 @@
-﻿using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
-using PrincipleStudios.OpenApi.CSharp;
+﻿using PrincipleStudios.OpenApi.CSharp;
 using PrincipleStudios.OpenApi.Transformations;
-using Snapshooter.Xunit;
-using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 using static PrincipleStudios.OpenApiCodegen.Server.Mvc.OptionsHelpers;
 using static PrincipleStudios.OpenApiCodegen.TestUtils.DocumentHelpers;

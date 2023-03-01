@@ -2,13 +2,10 @@
 using Microsoft.OpenApi.Readers;
 using PrincipleStudios.OpenApi.CSharp;
 using PrincipleStudios.OpenApi.Transformations;
-using Snapshooter.Xunit;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 using static PrincipleStudios.OpenApiCodegen.TestUtils.DocumentHelpers;
 
@@ -55,7 +52,7 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
         {
             var document = GetDocument(documentName);
             var schema = locateSchema(document);
-            
+
             Assert.NotNull(document);
             Assert.NotNull(schema);
 

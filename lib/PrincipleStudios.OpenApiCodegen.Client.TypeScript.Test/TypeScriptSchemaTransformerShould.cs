@@ -2,7 +2,6 @@ using Microsoft.OpenApi.Models;
 using Xunit;
 using PrincipleStudios.OpenApi.Transformations;
 using System.Linq;
-using Snapshooter.Xunit;
 using PrincipleStudios.OpenApi.TypeScript;
 using static PrincipleStudios.OpenApiCodegen.TestUtils.DocumentHelpers;
 using System.IO;
