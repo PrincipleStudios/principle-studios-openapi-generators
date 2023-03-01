@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 using Xunit;
 using FluentAssertions.Json;
 
-namespace PrincipleStudios.OpenApiCodegen.Client.TypeScript;
+namespace PrincipleStudios.OpenApiCodegen.Client.TypeScript.Integration;
 
 [Collection(CommonDirectoryFixture.CollectionName)]
 public class EnumYamlShould
@@ -18,7 +18,7 @@ public class EnumYamlShould
     private readonly CommonDirectoryFixture commonDirectory;
 
     public EnumYamlShould(CommonDirectoryFixture commonDirectory)
-	{
+    {
         this.commonDirectory = commonDirectory;
     }
 
