@@ -10,10 +10,12 @@
 
 	<ItemGroup>
 	  <None Remove="package.testing.json" />
+	  <None Remove="tsconfig.testing.json" />
 	</ItemGroup>
 
 	<ItemGroup>
 	  <EmbeddedResource Include="package.testing.json" />
+	  <EmbeddedResource Include="tsconfig.testing.json" />
 	</ItemGroup>
 
 	<ItemGroup>
