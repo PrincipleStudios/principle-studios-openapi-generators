@@ -496,14 +496,14 @@ global::PrincipleStudios.OpenApiCodegen.Json.Extensions.Optional<string>? status
         {
             var requestMessage = new global::System.Net.Http.HttpRequestMessage(global::System.Net.Http.HttpMethod.Post, "pet/{petId}"
                         .Replace("{" + "petId" + "}", global::System.Web.HttpUtility.UrlEncode(petId.ToString())));
-            requestMessage.Content = new global::System.Net.Http.MultipartFormDataContent()
+            requestMessage.Content = new global::System.Net.Http.FormUrlEncodedContent(new global::System.Collections.Generic.Dictionary<string, string>
             {
 
-                { new global::System.Net.Http.StringContent(global::PrincipleStudios.OpenApiCodegen.Json.Extensions.Optional.GetValueOrThrow(name).ToString()), "name" },
+                ["name"] = global::PrincipleStudios.OpenApiCodegen.Json.Extensions.Optional.GetValueOrThrow(name).ToString(),
 
-                { new global::System.Net.Http.StringContent(global::PrincipleStudios.OpenApiCodegen.Json.Extensions.Optional.GetValueOrThrow(status).ToString()), "status" },
+                ["status"] = global::PrincipleStudios.OpenApiCodegen.Json.Extensions.Optional.GetValueOrThrow(status).ToString(),
 
-            };
+            });
 
 
             return requestMessage;
