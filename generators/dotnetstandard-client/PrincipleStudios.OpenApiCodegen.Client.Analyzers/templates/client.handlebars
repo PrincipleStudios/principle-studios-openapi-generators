@@ -42,7 +42,7 @@ namespace {{packageName}}
             var requestMessage = new global::System.Net.Http.HttpRequestMessage(
                 global::System.Net.Http.HttpMethod.{{{operation.httpMethod}}},
                 new global::System.Uri("{{{operation.path}}}"{{#each requestBody.allParams}}{{#if isPathParam}}
-                    .Replace("{" + "{{rawName}}" + "}", global::System.Web.HttpUtility.UrlEncode(({{#if required}}{{paramName}}{{else}}global::PrincipleStudios.OpenApiCodegen.Json.Extensions.Optional.GetValueOrThrow({{paramName}}){{/if}}).ToString()){{/if}}{{/each}}
+                    .Replace("{" + "{{rawName}}" + "}", global::System.Web.HttpUtility.UrlEncode(({{#if required}}{{paramName}}{{else}}global::PrincipleStudios.OpenApiCodegen.Json.Extensions.Optional.GetValueOrThrow({{paramName}}){{/if}}).ToString())){{/if}}{{/each}}
                     + {{#if operation.hasQueryStringEmbedded}}"&"{{else}}"?"{{/if}} + query.ToString(),
                     global::System.UriKind.Relative));
 {{else}}

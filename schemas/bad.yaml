@@ -1,8 +1,8 @@
 openapi: "3.0.3"
 info:
   version: 1.0.0
-  title: No Refs Demo
-  description: A sample API that uses no refs
+  title: Bad Demo
+  description: A sample API document that intentionally has issues to see if errors are reported helpfully
 paths:
   /address:
     post:
