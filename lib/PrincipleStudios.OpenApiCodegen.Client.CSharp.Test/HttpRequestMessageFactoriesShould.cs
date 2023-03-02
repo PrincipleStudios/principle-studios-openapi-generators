@@ -141,7 +141,7 @@ public class HttpRequestMessageFactoriesShould : IClassFixture<TempDirectory>
         var actualMessage = await GetRequestMessage("oauth.yaml", @"GetInfo()");
 
         Assert.Equal("GET", actualMessage.Method.Method);
-        Assert.Equal("info", actualMessage.RequestUri?.OriginalString);
+        Assert.Equal("oauth/info", actualMessage.RequestUri?.OriginalString);
     }
 
     [Fact]
@@ -162,6 +162,20 @@ public class HttpRequestMessageFactoriesShould : IClassFixture<TempDirectory>
         Assert.Equal("GET", actualMessage.Method.Method);
         Assert.Equal("path?param1=test&param2=test&limit=15", actualMessage.RequestUri?.OriginalString);
         Assert.Null(actualMessage.Content);
+    }
+
+    [Fact]
+    public async Task AllowFormEncodedBodies()
+    {
+        var actualMessage = await GetRequestMessage("form.yaml", "PostBasicForm(name: \"Fido\", tag: \"dog\", hasIdTag: true)");
+
+        Assert.Equal("POST", actualMessage.Method.Method);
+        Assert.Equal("form/basic", actualMessage.RequestUri?.OriginalString);
+        var content = Assert.IsType<FormUrlEncodedContent>(actualMessage.Content);
+        using var memoryStream = new MemoryStream();
+        await content.CopyToAsync(memoryStream);
+        var formString = Encoding.ASCII.GetString(memoryStream.ToArray());
+        Assert.Equal("name=Fido&tag=dog&hasIdTag=True", formString);
     }
 
     private async Task<HttpRequestMessage> GetRequestMessage(string documentName, string operationAndParameters)

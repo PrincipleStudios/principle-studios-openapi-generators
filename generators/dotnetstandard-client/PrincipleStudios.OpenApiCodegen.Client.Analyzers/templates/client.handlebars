@@ -50,12 +50,12 @@ namespace {{packageName}}
                         .Replace("{" + "{{rawName}}" + "}", global::System.Web.HttpUtility.UrlEncode({{#if required}}{{paramName}}{{else}}global::PrincipleStudios.OpenApiCodegen.Json.Extensions.Optional.GetValueOrThrow({{paramName}}){{/if}}.ToString())){{/if}}{{/each}});
 {{/if}}
 {{#if requestBody.isForm}}
-            requestMessage.Content = new global::System.Net.Http.MultipartFormDataContent()
+            requestMessage.Content = new global::System.Net.Http.FormUrlEncodedContent(new global::System.Collections.Generic.Dictionary<string, string>
             {
 {{#each requestBody.allParams}}{{#if isFormParam}}
-                { new {{#if isFile}}global::System.Net.Http.StreamContent({{#if required}}{{paramName}}{{else}}global::PrincipleStudios.OpenApiCodegen.Json.Extensions.Optional.GetValueOrThrow({{paramName}}){{/if}}){{else}}global::System.Net.Http.StringContent({{#if required}}{{paramName}}{{else}}global::PrincipleStudios.OpenApiCodegen.Json.Extensions.Optional.GetValueOrThrow({{paramName}}){{/if}}.ToString()){{/if}}, "{{rawName}}" },
+                ["{{rawName}}"] = {{#if required}}{{paramName}}{{else}}global::PrincipleStudios.OpenApiCodegen.Json.Extensions.Optional.GetValueOrThrow({{paramName}}){{/if}}.ToString(),
 {{/if}}{{/each}}
-            };
+            });
 {{else}}{{#each requestBody.allParams}}{{#if isBodyParam}}{{#if isFile}}
             requestMessage.Content = new global::System.Net.Http.StreamContent({{#if required}}{{paramName}}{{else}}global::PrincipleStudios.OpenApiCodegen.Json.Extensions.Optional.GetValueOrThrow({{paramName}}){{/if}});
 {{else}}

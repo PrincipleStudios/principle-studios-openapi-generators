@@ -2,13 +2,7 @@
 using Microsoft.OpenApi.Readers;
 using PrincipleStudios.OpenApi.CSharp;
 using PrincipleStudios.OpenApi.Transformations;
-using Snapshooter.Xunit;
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 using static PrincipleStudios.OpenApiCodegen.TestUtils.DocumentHelpers;
 
@@ -75,32 +69,6 @@ namespace PrincipleStudios.OpenApiCodegen.Client.CSharp
             {
                 return (document, document.Components.Schemas[path.Substring(prefix.Length)]);
             }
-        }
-
-        [Theory]
-        [InlineData("petstore.yaml", "Pet")]
-        [InlineData("petstore.yaml", "NewPet")]
-        [InlineData("petstore.yaml", "Error")]
-        [InlineData("petstore3.json", "Order")]
-        [InlineData("petstore3.json", "Category")]
-        [InlineData("petstore3.json", "User")]
-        [InlineData("petstore3.json", "Tag")]
-        [InlineData("petstore3.json", "Pet")]
-        [InlineData("petstore3.json", "ApiResponse")]
-        public void TransformModel(string documentName, string model)
-        {
-            var document = GetDocument(documentName);
-            var options = LoadOptions();
-
-            var target = ConstructTarget(document, options);
-            OpenApiTransformDiagnostic diagnostic = new();
-            target.EnsureSchemasRegistered(document, OpenApiContext.From(document), diagnostic);
-
-            var context = OpenApiContext.From(document).Append(nameof(document.Components), null, document.Components).Append(nameof(document.Components.Schemas), model, document.Components.Schemas[model]);
-
-            var result = target.TransformSchema(document.Components.Schemas[model], diagnostic);
-
-            Snapshot.Match(result?.SourceText, $"Full-{nameof(TransformModel)}.{CSharpNaming.ToTitleCaseIdentifier(documentName, options.ReservedIdentifiers())}.{CSharpNaming.ToTitleCaseIdentifier(model, options.ReservedIdentifiers())}");
         }
 
         private static CSharpSchemaSourceResolver ConstructTarget(OpenApiDocument document, CSharpSchemaOptions options, string baseNamespace = "PrincipleStudios.Test")

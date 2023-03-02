@@ -49,9 +49,9 @@ namespace {{packageName}}
             }}{{#if isHeaderParam}}global::Microsoft.AspNetCore.Mvc.FromHeader(Name = "{{rawName}}"){{/if}}{{!
             }}{{#if required}}, global::System.ComponentModel.DataAnnotations.Required{{/if}}{{!
             }}{{#if pattern}}, global::System.ComponentModel.DataAnnotations.RegularExpression(@"{{{escapeverbatimstring pattern}}}"){{/if}}{{!
-            }}{{#if minLength.HasValue}}, global::System.ComponentModel.DataAnnotations.MinLength({{minLength}}){{/if}}{{!
-            }}{{#if maxLength.HasValue}}, global::System.ComponentModel.DataAnnotations.MaxLength({{maxLength}}){{/if}}{{!
-            }}{{#if minimum.HasValue}}{{#if maximum.HasValue}}, global::System.ComponentModel.DataAnnotations.Range({{minimum}}, {{maximum}}){{/if}}{{/if}}{{!
+            }}{{#if HasMinLength}}, global::System.ComponentModel.DataAnnotations.MinLength({{minLength}}){{/if}}{{!
+            }}{{#if HasMaxLength}}, global::System.ComponentModel.DataAnnotations.MaxLength({{maxLength}}){{/if}}{{!
+            }}{{#if HasMinimum}}{{#if HasMaximum}}, global::System.ComponentModel.DataAnnotations.Range({{minimum}}, {{maximum}}){{/if}}{{/if}}{{!
             }}] {{#unless optional}}{{{dataType}}}{{else
             }}global::PrincipleStudios.OpenApiCodegen.Json.Extensions.Optional<{{{dataType}}}>{{/unless}} {{paramName}}{{#unless @last}},
             {{/unless}}{{/unless}}{{/each}}
