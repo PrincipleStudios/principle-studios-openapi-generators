@@ -160,7 +160,7 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
             return true;
         }
 
-        private CSharpSchemaOptions LoadOptions(string? optionsFiles)
+        private CSharpServerSchemaOptions LoadOptions(string? optionsFiles)
         {
             using var defaultJsonStream = CSharpSchemaOptions.GetDefaultOptionsJson();
             var builder = new ConfigurationBuilder();
@@ -175,7 +175,7 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
                     }
                 }
             }
-            var result = builder.Build().Get<CSharpSchemaOptions>();
+            var result = builder.Build().Get<CSharpServerSchemaOptions>();
             return result;
         }
 

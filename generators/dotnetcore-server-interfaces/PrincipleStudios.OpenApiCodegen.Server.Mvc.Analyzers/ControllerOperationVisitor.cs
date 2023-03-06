@@ -10,7 +10,7 @@ namespace PrincipleStudios.OpenApi.CSharp
     class ControllerOperationVisitor : OpenApiDocumentVisitor<ControllerOperationVisitor.Argument>
     {
         private readonly ISchemaSourceResolver<InlineDataType> csharpSchemaResolver;
-        private readonly CSharpSchemaOptions options;
+        private readonly CSharpServerSchemaOptions options;
         private readonly string controllerClassName;
 
         public record Argument(OpenApiTransformDiagnostic Diagnostic, RegisterControllerOperation RegisterControllerOperation, OperationBuilder? Builder = null);
@@ -32,7 +32,7 @@ namespace PrincipleStudios.OpenApi.CSharp
             public OpenApiOperation Operation { get; }
         }
 
-        public ControllerOperationVisitor(ISchemaSourceResolver<InlineDataType> csharpSchemaResolver, CSharpSchemaOptions options, string controllerClassName)
+        public ControllerOperationVisitor(ISchemaSourceResolver<InlineDataType> csharpSchemaResolver, CSharpServerSchemaOptions options, string controllerClassName)
         {
             this.csharpSchemaResolver = csharpSchemaResolver;
             this.options = options;

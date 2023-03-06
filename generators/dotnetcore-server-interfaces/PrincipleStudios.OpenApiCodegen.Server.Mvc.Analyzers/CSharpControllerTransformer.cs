@@ -16,11 +16,11 @@ namespace PrincipleStudios.OpenApi.CSharp
         private readonly ISchemaSourceResolver<InlineDataType> csharpSchemaResolver;
         private readonly OpenApiDocument document;
         private readonly string baseNamespace;
-        private readonly CSharpSchemaOptions options;
+        private readonly CSharpServerSchemaOptions options;
         private readonly string versionInfo;
         private readonly HandlebarsFactory handlebarsFactory;
 
-        public CSharpControllerTransformer(ISchemaSourceResolver<InlineDataType> csharpSchemaResolver, OpenApiDocument document, string baseNamespace, CSharpSchemaOptions options, string versionInfo, HandlebarsFactory handlebarsFactory)
+        public CSharpControllerTransformer(ISchemaSourceResolver<InlineDataType> csharpSchemaResolver, OpenApiDocument document, string baseNamespace, CSharpServerSchemaOptions options, string versionInfo, HandlebarsFactory handlebarsFactory)
         {
             this.csharpSchemaResolver = csharpSchemaResolver;
             this.document = document;

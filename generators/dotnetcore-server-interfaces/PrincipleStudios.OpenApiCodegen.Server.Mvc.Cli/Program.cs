@@ -43,12 +43,12 @@ Microsoft.OpenApi.Models.OpenApiDocument GetDocument(string path)
     var reader = new Microsoft.OpenApi.Readers.OpenApiStreamReader();
     return reader.Read(documentStream, out var openApiDiagnostic);
 }
-CSharpSchemaOptions LoadOptions(Action<IConfigurationBuilder>? configureBuilder = null)
+CSharpServerSchemaOptions LoadOptions(Action<IConfigurationBuilder>? configureBuilder = null)
 {
     using var defaultJsonStream = CSharpSchemaOptions.GetDefaultOptionsJson();
     var builder = new ConfigurationBuilder();
     builder.AddYamlStream(defaultJsonStream);
     configureBuilder?.Invoke(builder);
-    var result = builder.Build().Get<CSharpSchemaOptions>();
+    var result = builder.Build().Get<CSharpServerSchemaOptions>();
     return result;
 }

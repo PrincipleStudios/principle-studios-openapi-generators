@@ -12,7 +12,6 @@ namespace PrincipleStudios.OpenApi.CSharp
         public string MapType { get; set; } = "global::System.Collections.Generic.Dictionary<string, {}>";
         public string ArrayType { get; set; } = "global::System.Collections.Generic.IEnumerable<{}>";
         public string FallbackType { get; set; } = "object";
-        public string PathPrefix { get; set; } = "";
         public Dictionary<string, OpenApiTypeFormats> Types { get; set; } = new();
 
         internal string Find(string type, string? format)

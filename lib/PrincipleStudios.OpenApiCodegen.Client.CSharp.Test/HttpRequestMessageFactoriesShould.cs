@@ -47,16 +47,6 @@ public class HttpRequestMessageFactoriesShould : IClassFixture<TempDirectory>
     }
 
     [Fact]
-    public async Task AllowOverridesOfPrefixes()
-    {
-        var actualMessage = await GetRequestMessage("dictionary-ref.yaml", @"LookupRecord(lookupRecordBody: new() { [""key1""] = ""value1"", [""key\"":2""] = ""value\n2"" })",
-            options => options.PathPrefix = "foobar");
-
-        Assert.Equal("POST", actualMessage.Method.Method);
-        Assert.Equal("foobar/address", actualMessage.RequestUri?.OriginalString);
-    }
-
-    [Fact]
     public async Task SerializeEnumerations()
     {
         var actualMessage = await GetRequestMessage("enum.yaml", @"PlayRockPaperScissors(playRockPaperScissorsBody: new(Player1: Option.Rock, Player2: Option.Paper))");
