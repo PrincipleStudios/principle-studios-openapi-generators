@@ -11,7 +11,7 @@ public class RegexEscapeYamlShould
     [Theory]
     [InlineData(false, "nope")]
     [InlineData(true, "\"foo\"")]
-    [InlineData(true, "prefix \"foo\" suffix")] // See #98
+    [InlineData(true, "prefix \"foo\" suffix")] 
     public Task Handle_validation_of_regex_parameters(bool expectedIsValid, string content) =>
         TestSingleRequest<RegexEscape.ControllerBase.TestForRegexActionResult, string>(new(
             RegexEscape.ControllerBase.TestForRegexActionResult.Unsafe(new Microsoft.AspNetCore.Mvc.BadRequestResult()),
