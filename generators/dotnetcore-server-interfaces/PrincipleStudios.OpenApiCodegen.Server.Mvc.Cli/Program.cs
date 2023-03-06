@@ -11,11 +11,13 @@ using System.IO;
 var openApiFilePath = args[0];
 var csharpNamespace = args[1];
 var outputFolder = args[2];
+var pathPrefix = args.Length > 3 ? args[3] : "";
 
-Console.WriteLine($"Hello:");
+Console.WriteLine($"Generating with the following settings:");
 Console.WriteLine($"  OpenAPI: {openApiFilePath}");
 Console.WriteLine($"  C# Namespace: {csharpNamespace}");
 Console.WriteLine($"  Output folder: {outputFolder}");
+Console.WriteLine($"  Path prefix: {pathPrefix}");
 
 // empty the directory and then recreate it
 if (Directory.Exists(outputFolder))
@@ -24,6 +26,7 @@ Directory.CreateDirectory(outputFolder);
 
 var document = GetDocument(openApiFilePath);
 var options = LoadOptions();
+options.PathPrefix = pathPrefix;
 
 var transformer = document.BuildCSharpPathControllerSourceProvider("", csharpNamespace, options);
 OpenApiTransformDiagnostic diagnostic = new();

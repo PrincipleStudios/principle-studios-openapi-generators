@@ -27,7 +27,7 @@ namespace {{packageName}}
         /// </remarks>{{/if}}{{#each requestBody.allParams}}
         /// <param name="{{paramName}}">{{description}}</param>{{/each}}
         [global::Microsoft.AspNetCore.Mvc.Http{{operation.httpMethod}}]
-        [global::Microsoft.AspNetCore.Mvc.Route("{{{operation.basePathWithoutHost}}}{{{operation.path}}}")]{{#if requestBody.requestBodyType}}
+        [global::Microsoft.AspNetCore.Mvc.Route("{{{operation.path}}}")]{{#if requestBody.requestBodyType}}
         [global::Microsoft.AspNetCore.Mvc.Consumes("{{{requestBody.requestBodyType}}}")]{{/if}}{{!
         }}{{#if operation.responses.defaultResponse}}
         // {{operation.responses.defaultResponse.description}}

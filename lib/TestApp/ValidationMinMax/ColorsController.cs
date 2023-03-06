@@ -1,6 +1,6 @@
 namespace PrincipleStudios.OpenApiCodegen.Server.Mvc.TestApp.ValidationMinMax;
 
-public class ColorsController : ValidationMinMaxColorsControllerBase
+public class ColorsController : ColorsControllerBase
 {
     protected override Task<GetColorActionResult> GetColor(long id)
     {

@@ -47,6 +47,9 @@ namespace PrincipleStudios.OpenApi.CSharp
             var path = context.Where(c => c.Element is OpenApiPathItem).Last().Key;
             if (path == null)
                 throw new ArgumentException("Context is not initialized properly - key expected for path items", nameof(context));
+            if (options.PathPrefix is { Length: > 1 })
+                path = options.PathPrefix + "/" + path.TrimStart('/');
+            path = "/" + path.TrimStart('/');
 
             var builder = new OperationBuilder(operation);
 

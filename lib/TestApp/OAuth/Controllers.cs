@@ -1,6 +1,6 @@
 ﻿namespace PrincipleStudios.OpenApiCodegen.Server.Mvc.TestApp.OAuth;
 
-public class InfoController : OauthInfoControllerBase
+public class InfoController : InfoControllerBase
 {
     protected override Task<GetInfoActionResult> GetInfo()
     {
@@ -10,7 +10,7 @@ public class InfoController : OauthInfoControllerBase
 
 }
 
-public class AddressController : OauthAddressControllerBase
+public class AddressController : AddressControllerBase
 {
     protected override Task<GetAddressActionResult> GetAddress()
     {

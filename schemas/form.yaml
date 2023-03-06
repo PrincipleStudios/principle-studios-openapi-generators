@@ -4,7 +4,7 @@ info:
   title: Form Sample
   description: A sample API that uses form-encoded requests
 paths:
-  /form/basic:
+  /basic:
     post:
       description: Posts a simple form
       operationId: postBasicForm

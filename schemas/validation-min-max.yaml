@@ -4,7 +4,7 @@ info:
   title: Min Max Validation
   description: A sample API that demonstrates various min/max validation for both numbers and arrays
 paths:
-  /validation-min-max/colors:
+  /colors:
     get:
       operationId: getColor
       parameters:
