@@ -7,10 +7,10 @@
 	</PropertyGroup>
 	<ItemGroup>
 		<PackageReference Include="Handlebars.Net" Version="2.0.7" />
-		<PackageReference Include="Microsoft.OpenApi.Readers" Version="1.2.3" />
-		<PackageReference Include="Microsoft.OpenApi" Version="1.2.3" />
-		<PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-		<PackageReference Include="SharpYaml" Version="1.6.5" />
+		<PackageReference Include="Microsoft.OpenApi.Readers" Version="1.6.2" />
+		<PackageReference Include="Microsoft.OpenApi" Version="1.6.2" />
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
+		<PackageReference Include="SharpYaml" Version="2.1.0" />
 	</ItemGroup>
 	<ItemGroup>
 		<Compile Include="$(RepositoryEngineeringDir)IsExternalInit.cs" Visible="false" />
