@@ -10,7 +10,7 @@ namespace PrincipleStudios.OpenApi.CSharp
     class ControllerOperationVisitor : OpenApiDocumentVisitor<ControllerOperationVisitor.Argument>
     {
         private readonly ISchemaSourceResolver<InlineDataType> csharpSchemaResolver;
-        private readonly CSharpSchemaOptions options;
+        private readonly CSharpServerSchemaOptions options;
         private readonly string controllerClassName;
 
         public record Argument(OpenApiTransformDiagnostic Diagnostic, RegisterControllerOperation RegisterControllerOperation, OperationBuilder? Builder = null);
@@ -32,7 +32,7 @@ namespace PrincipleStudios.OpenApi.CSharp
             public OpenApiOperation Operation { get; }
         }
 
-        public ControllerOperationVisitor(ISchemaSourceResolver<InlineDataType> csharpSchemaResolver, CSharpSchemaOptions options, string controllerClassName)
+        public ControllerOperationVisitor(ISchemaSourceResolver<InlineDataType> csharpSchemaResolver, CSharpServerSchemaOptions options, string controllerClassName)
         {
             this.csharpSchemaResolver = csharpSchemaResolver;
             this.options = options;
@@ -47,6 +47,9 @@ namespace PrincipleStudios.OpenApi.CSharp
             var path = context.Where(c => c.Element is OpenApiPathItem).Last().Key;
             if (path == null)
                 throw new ArgumentException("Context is not initialized properly - key expected for path items", nameof(context));
+            if (options.PathPrefix is { Length: > 1 })
+                path = options.PathPrefix + "/" + path.TrimStart('/');
+            path = "/" + path.TrimStart('/');
 
             var builder = new OperationBuilder(operation);
 

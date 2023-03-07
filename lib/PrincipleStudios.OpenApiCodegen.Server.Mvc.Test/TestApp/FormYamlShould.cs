@@ -11,8 +11,8 @@ public class FormYamlShould
 {
     [Fact]
     public Task Handle_FormUrlEncodedContent_requests() =>
-        TestSingleRequest<Form.FormBasicControllerBase.PostBasicFormActionResult, (string Name, string Tag, bool HasIdTag)>(new(
-            Form.FormBasicControllerBase.PostBasicFormActionResult.Ok(17),
+        TestSingleRequest<Form.BasicControllerBase.PostBasicFormActionResult, (string Name, string Tag, bool HasIdTag)>(new(
+            Form.BasicControllerBase.PostBasicFormActionResult.Ok(17),
             client => client.PostAsync("/form/basic", new FormUrlEncodedContent(new Dictionary<string, string>
             {
                 ["name"] = "Fido",

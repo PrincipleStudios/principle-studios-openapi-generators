@@ -2,6 +2,8 @@
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Scripting;
 using Microsoft.CodeAnalysis.Scripting;
+using PrincipleStudios.OpenApi.CSharp;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -141,7 +143,7 @@ public class HttpRequestMessageFactoriesShould : IClassFixture<TempDirectory>
         var actualMessage = await GetRequestMessage("oauth.yaml", @"GetInfo()");
 
         Assert.Equal("GET", actualMessage.Method.Method);
-        Assert.Equal("oauth/info", actualMessage.RequestUri?.OriginalString);
+        Assert.Equal("info", actualMessage.RequestUri?.OriginalString);
     }
 
     [Fact]
@@ -170,7 +172,7 @@ public class HttpRequestMessageFactoriesShould : IClassFixture<TempDirectory>
         var actualMessage = await GetRequestMessage("form.yaml", "PostBasicForm(name: \"Fido\", tag: \"dog\", hasIdTag: true)");
 
         Assert.Equal("POST", actualMessage.Method.Method);
-        Assert.Equal("form/basic", actualMessage.RequestUri?.OriginalString);
+        Assert.Equal("basic", actualMessage.RequestUri?.OriginalString);
         var content = Assert.IsType<FormUrlEncodedContent>(actualMessage.Content);
         using var memoryStream = new MemoryStream();
         await content.CopyToAsync(memoryStream);
@@ -178,9 +180,9 @@ public class HttpRequestMessageFactoriesShould : IClassFixture<TempDirectory>
         Assert.Equal("name=Fido&tag=dog&hasIdTag=True", formString);
     }
 
-    private async Task<HttpRequestMessage> GetRequestMessage(string documentName, string operationAndParameters)
+    private async Task<HttpRequestMessage> GetRequestMessage(string documentName, string operationAndParameters, Action<CSharpSchemaOptions>? configureOptions = null)
     {
-        var libBytes = DynamicCompilation.GetGeneratedLibrary(documentName);
+        var libBytes = DynamicCompilation.GetGeneratedLibrary(documentName, configureOptions);
 
         var fullPath = Path.Combine(workingDirectory, Path.GetRandomFileName());
         File.WriteAllBytes(fullPath, libBytes);

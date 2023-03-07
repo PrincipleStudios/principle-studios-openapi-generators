@@ -35,10 +35,11 @@ namespace PrincipleStudios.OpenApiCodegen.Client.CSharp
                 typeof(PrincipleStudios.OpenApiCodegen.Json.Extensions.JsonStringEnumPropertyNameConverter).Assembly.Location,
         };
 
-        public static byte[] GetGeneratedLibrary(string documentName)
+        public static byte[] GetGeneratedLibrary(string documentName, Action<CSharpSchemaOptions>? configureOptions = null)
         {
             var document = GetDocument(documentName);
             var options = LoadOptions();
+            configureOptions?.Invoke(options);
 
             var transformer = document.BuildCSharpClientSourceProvider("", "PS.Controller", options);
             OpenApiTransformDiagnostic diagnostic = new();

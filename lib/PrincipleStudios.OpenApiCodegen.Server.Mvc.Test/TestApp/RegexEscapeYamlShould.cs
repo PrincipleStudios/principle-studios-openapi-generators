@@ -15,7 +15,7 @@ public class RegexEscapeYamlShould
     public Task Handle_validation_of_regex_parameters(bool expectedIsValid, string content) =>
         TestSingleRequest<RegexEscape.ControllerBase.TestForRegexActionResult, string>(new(
             RegexEscape.ControllerBase.TestForRegexActionResult.Unsafe(new Microsoft.AspNetCore.Mvc.BadRequestResult()),
-            client => client.PostAsync("/", JsonContent.Create(content))
+            client => client.PostAsync("/regex-escape/", JsonContent.Create(content))
         )
         {
             AssertRequest = (controller, request) =>

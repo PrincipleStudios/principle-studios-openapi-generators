@@ -8,13 +8,14 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
 {
     public static class OptionsHelpers
     {
-        public static CSharpSchemaOptions LoadOptions(Action<IConfigurationBuilder>? configureBuilder = null)
+        public static CSharpServerSchemaOptions LoadOptions(Action<IConfigurationBuilder>? configureBuilder = null)
         {
             using var defaultJsonStream = CSharpSchemaOptions.GetDefaultOptionsJson();
             var builder = new ConfigurationBuilder();
             builder.AddYamlStream(defaultJsonStream);
             configureBuilder?.Invoke(builder);
-            var result = builder.Build().Get<CSharpSchemaOptions>();
+            var result = builder.Build().Get<CSharpServerSchemaOptions>();
+            if (result == null) throw new InvalidOperationException("Could not load default test");
             return result;
         }
     }

@@ -12,7 +12,7 @@ public class AllOfYamlShould
     public Task HandleAllOfResponses() =>
         TestSingleRequest<AllOf.ContactControllerBase.GetContactActionResult>(new(
             AllOf.ContactControllerBase.GetContactActionResult.Ok(new(FirstName: "John", LastName: "Doe", Id: "john-doe-123")),
-            client => client.GetAsync("/contact")
+            client => client.GetAsync("/all-of/contact")
         )
         {
             AssertResponseMessage = VerifyResponse(200, new { firstName = "John", lastName = "Doe", id = "john-doe-123" }),

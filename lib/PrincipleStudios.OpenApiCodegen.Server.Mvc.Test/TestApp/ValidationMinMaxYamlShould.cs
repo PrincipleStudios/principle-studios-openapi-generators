@@ -13,8 +13,8 @@ public class ValidationMinMaxYamlShould
     [InlineData(true, 1)]
     [InlineData(true, 7654L)]
     public Task Handle_validation_of_integer_parameters(bool expectedIsValid, long value) =>
-        TestSingleRequest<ValidationMinMax.ValidationMinMaxColorsControllerBase.GetColorActionResult, long>(new(
-            ValidationMinMax.ValidationMinMaxColorsControllerBase.GetColorActionResult.Ok("red"),
+        TestSingleRequest<ValidationMinMax.ColorsControllerBase.GetColorActionResult, long>(new(
+            ValidationMinMax.ColorsControllerBase.GetColorActionResult.Ok("red"),
             client => client.GetAsync($"/validation-min-max/colors?id={value}")
         )
         {
