@@ -86,8 +86,8 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
         [Theory]
         [InlineData("new PS.Controller.Pet(new PS.Controller.Dog(bark: true, breed: \"Shiba Inu\"))", "{ \"bark\": true, \"breed\": \"Shiba Inu\" }")]
         [InlineData("new PS.Controller.Pet(new PS.Controller.Cat(hunts: false, age: 12))", "{ \"hunts\": false, \"age\": 12 }")]
-        [InlineData("new PS.Controller.GetRandomIdResponse(15)", "15")]
-        [InlineData("new PS.Controller.GetRandomIdResponse(new Guid(\"95c0ea4f-e70d-4fdc-a200-ede4cc70aeea\"))", "\"95c0ea4f-e70d-4fdc-a200-ede4cc70aeea\"")]
+        [InlineData("new PS.Controller.SpecifiedPet(new PS.Controller.Dog(bark: true, breed: \"Shiba Inu\"))", "{ \"petType\": \"dog\", \"bark\": true, \"breed\": \"Shiba Inu\" }")]
+        [InlineData("new PS.Controller.SpecifiedPet(new PS.Controller.Cat(hunts: false, age: 12))", "{ \"petType\": \"cat\", \"hunts\": false, \"age\": 12 }")]
         public Task SerializeAOneOfObject(string csharpScript, string json) =>
             SerializeAsync(
                 "one-of.yaml",
@@ -98,8 +98,8 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
         [Theory]
         [InlineData("PS.Controller.Pet", "{ \"bark\": true, \"breed\": \"Shiba Inu\" }")]
         [InlineData("PS.Controller.Pet", "{ \"hunts\": false, \"age\": 12 }")]
-        [InlineData("PS.Controller.GetRandomIdResponse", "15")]
-        [InlineData("PS.Controller.GetRandomIdResponse", "\"95c0ea4f-e70d-4fdc-a200-ede4cc70aeea\"")]
+        [InlineData("PS.Controller.SpecifiedPet", "{ \"petType\": \"dog\", \"bark\": true, \"breed\": \"Shiba Inu\" }")]
+        [InlineData("PS.Controller.SpecifiedPet", "{ \"petType\": \"cat\", \"hunts\": false, \"age\": 12 }")]
         public Task DeserializeAOneOfObject(string csharpType, string json) =>
             DeserializeAsync(
                 "one-of.yaml",

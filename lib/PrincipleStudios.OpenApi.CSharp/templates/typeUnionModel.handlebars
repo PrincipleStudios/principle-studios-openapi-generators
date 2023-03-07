@@ -1,0 +1,31 @@
+{{>partial_header header}}
+#nullable enable
+#nullable disable warnings
+#pragma warning disable
+
+namespace {{this.packageName}}
+{ {{#with model as |model|}}{{#if Description}}
+    /// <summary>
+    /// {{linewrap Description "
+    /// "}}
+    /// </summary>{{/if}}
+    [global::System.Text.Json.Serialization.JsonConverter(typeof({{ClassName}}.JsonConverter))]
+    public partial record {{ClassName}}({{#each TypeEntries as |TypeEntry|}}
+        {{{TypeEntry.TypeName}}}? {{{TypeEntry.Identifier}}}{{#unless @last}},{{/unless}}{{/each}}
+    ) {
+
+        public partial class JsonConverter : global::System.Text.Json.Serialization.JsonConverter<{{ClassName}}>
+        {
+            public override {{ClassName}}? Read(ref global::System.Text.Json.Utf8JsonReader reader, global::System.Type typeToConvert, global::System.Text.Json.JsonSerializerOptions options)
+            {
+                throw new System.NotImplementedException(); // TODO
+            }
+
+            public override void Write(global::System.Text.Json.Utf8JsonWriter writer, {{ClassName}} value, global::System.Text.Json.JsonSerializerOptions options)
+            {
+                throw new System.NotImplementedException(); // TODO
+            }
+        }
+    }
+{{/with}}
+}

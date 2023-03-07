@@ -23,8 +23,17 @@ components:
       oneOf:
       - $ref: '#/components/schemas/Cat'
       - $ref: '#/components/schemas/Dog'
+    SpecifiedPet:
+      oneOf:
+      - $ref: '#/components/schemas/Cat'
+      - $ref: '#/components/schemas/Dog'
+      discriminator:
+        propertyName: petType
+        mapping:
+          dog: Dog
+          cat: Cat
 paths:
-  /pets:
+  /pet:
     get:
       operationId: getRandomPet
       responses:
@@ -34,16 +43,14 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Pet'
-  /id:
-    get:
-      operationId: getRandomId
+    post:
+      operationId: addPet
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SpecifiedPet'
       responses:
         '200':
           description: OK
-          content:
-            application/json:
-              schema:
-                oneOf:
-                - type: integer
-                - type: string
-                  format: uuid

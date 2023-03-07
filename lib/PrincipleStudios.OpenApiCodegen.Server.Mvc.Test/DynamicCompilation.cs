@@ -73,7 +73,7 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
 
             Assert.All(result.Diagnostics, diagnostic =>
             {
-                Assert.False(diagnostic.IsWarningAsError || diagnostic.Severity == DiagnosticSeverity.Error);
+                Assert.False(diagnostic.IsWarningAsError || diagnostic.Severity == DiagnosticSeverity.Error, diagnostic.GetMessage());
             });
             Assert.True(result.Success);
             return ms.ToArray();

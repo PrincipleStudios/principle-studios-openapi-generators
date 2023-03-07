@@ -26,6 +26,20 @@ namespace PrincipleStudios.OpenApi.CSharp.templates
         EnumVar[] enumVars
     ) : Model(description, className);
 
+    public record TypeUnionModel(
+        string Description,
+        string ClassName,
+        bool AllowAnyOf,
+        string? DiscriminatorProperty,
+        TypeUnionEntry[] TypeEntries
+    ) : Model(Description, ClassName);
+
+    public record TypeUnionEntry(
+        string TypeName,
+        string Identifier,
+        string? DiscriminatorValue
+    );
+
     public record EnumVar(
         string name,
         string value
