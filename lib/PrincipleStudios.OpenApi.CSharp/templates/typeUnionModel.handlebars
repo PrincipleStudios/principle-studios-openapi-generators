@@ -61,7 +61,25 @@ namespace {{this.packageName}}
 
             public override void Write(global::System.Text.Json.Utf8JsonWriter writer, {{ClassName}} value, global::System.Text.Json.JsonSerializerOptions options)
             {
-                throw new System.NotImplementedException(); // TODO
+                var nodes = new[]
+                {
+{{!-- TODO: add discriminator if necessary --}}
+{{#each TypeEntries as |TypeEntry|}}
+                    value.{{{TypeEntry.Identifier}}} == null ? null : global::System.Text.Json.JsonSerializer.SerializeToNode<{{{TypeEntry.TypeName}}}>(value.{{{TypeEntry.Identifier}}}, options).AsObject(),
+{{/each}}
+                };
+                var result = global::System.Linq.Enumerable.Aggregate(nodes, (prev, next) =>
+                {
+                    if (prev == null) return next;
+                    if (next == null) return prev;
+                    foreach (var (key, value) in next)
+                    {
+                        prev[key] = value;
+                    }
+                    return prev;
+                });
+
+                result.WriteTo(writer, options);
             }
         }
     }
