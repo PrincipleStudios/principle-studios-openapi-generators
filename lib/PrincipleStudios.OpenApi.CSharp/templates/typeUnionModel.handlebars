@@ -30,10 +30,15 @@ namespace {{this.packageName}}
                 try
                 {
                     {{{TypeEntry.Identifier}}}Result = global::System.Text.Json.JsonSerializer.Deserialize<{{{TypeEntry.TypeName}}}>(ref {{{TypeEntry.Identifier}}}Reader, options);
-                    {{{TypeEntry.Identifier}}}IsValid = true; {{!-- TODO: check to see if `result` is valid - if not, it could still be another type. --}}
+                    global::System.ComponentModel.DataAnnotations.Validator.ValidateObject(
+                        {{{TypeEntry.Identifier}}}Result,
+                        new global::System.ComponentModel.DataAnnotations.ValidationContext({{{TypeEntry.Identifier}}}Result)
+                    );
+                    {{{TypeEntry.Identifier}}}IsValid = true;
                 }
-                catch (global::System.Text.Json.JsonException ex)
+                catch (global::System.Exception ex)
                 {
+                    {{{TypeEntry.Identifier}}}Result = default;
                     {{{TypeEntry.Identifier}}}Exception = ex;
                     {{{TypeEntry.Identifier}}}IsValid = false;
                 }
