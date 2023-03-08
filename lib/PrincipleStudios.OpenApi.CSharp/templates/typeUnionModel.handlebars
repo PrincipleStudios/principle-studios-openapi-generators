@@ -31,7 +31,9 @@ namespace {{this.packageName}}
                 {
                     {{{TypeEntry.Identifier}}}Result = global::System.Text.Json.JsonSerializer.Deserialize<{{{TypeEntry.TypeName}}}>(ref {{{TypeEntry.Identifier}}}Reader, options);
                     {{{TypeEntry.Identifier}}}IsValid = true; {{!-- TODO: check to see if `result` is valid - if not, it could still be another type. --}}
-                } catch (global::System.Text.Json.JsonException ex) {
+                }
+                catch (global::System.Text.Json.JsonException ex)
+                {
                     {{{TypeEntry.Identifier}}}Exception = ex;
                     {{{TypeEntry.Identifier}}}IsValid = false;
                 }
