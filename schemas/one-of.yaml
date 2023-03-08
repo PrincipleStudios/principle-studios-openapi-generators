@@ -12,6 +12,9 @@ components:
           type: boolean
         breed:
           type: string
+      required:
+        - bark
+        - breed
     Cat:
       type: object
       properties:
@@ -19,6 +22,9 @@ components:
           type: boolean
         age:
           type: integer
+      required:
+        - hunts
+        - age
     Pet:
       oneOf:
       - $ref: '#/components/schemas/Cat'

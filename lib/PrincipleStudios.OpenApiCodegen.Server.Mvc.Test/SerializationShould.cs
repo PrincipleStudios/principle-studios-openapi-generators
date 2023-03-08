@@ -84,10 +84,10 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
             );
 
         [Theory]
-        [InlineData("new PS.Controller.Pet(new PS.Controller.Dog(bark: true, breed: \"Shiba Inu\"))", "{ \"bark\": true, \"breed\": \"Shiba Inu\" }")]
-        [InlineData("new PS.Controller.Pet(new PS.Controller.Cat(hunts: false, age: 12))", "{ \"hunts\": false, \"age\": 12 }")]
-        [InlineData("new PS.Controller.SpecifiedPet(new PS.Controller.Dog(bark: true, breed: \"Shiba Inu\"))", "{ \"petType\": \"dog\", \"bark\": true, \"breed\": \"Shiba Inu\" }")]
-        [InlineData("new PS.Controller.SpecifiedPet(new PS.Controller.Cat(hunts: false, age: 12))", "{ \"petType\": \"cat\", \"hunts\": false, \"age\": 12 }")]
+        [InlineData("new PS.Controller.Pet(Dog: new PS.Controller.Dog(Bark: true, Breed: \"Shiba Inu\"))", "{ \"bark\": true, \"breed\": \"Shiba Inu\" }")]
+        [InlineData("new PS.Controller.Pet(Cat: new PS.Controller.Cat(Hunts: false, Age: 12))", "{ \"hunts\": false, \"age\": 12 }")]
+        [InlineData("new PS.Controller.SpecifiedPet(Dog: new PS.Controller.Dog(Bark: true, Breed: \"Shiba Inu\"))", "{ \"petType\": \"dog\", \"bark\": true, \"breed\": \"Shiba Inu\" }")]
+        [InlineData("new PS.Controller.SpecifiedPet(Cat: new PS.Controller.Cat(Hunts: false, Age: 12))", "{ \"petType\": \"cat\", \"hunts\": false, \"age\": 12 }")]
         public Task SerializeAOneOfObject(string csharpScript, string json) =>
             SerializeAsync(
                 "one-of.yaml",

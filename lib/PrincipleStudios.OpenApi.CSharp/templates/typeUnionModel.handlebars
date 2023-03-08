@@ -11,14 +11,45 @@ namespace {{this.packageName}}
     /// </summary>{{/if}}
     [global::System.Text.Json.Serialization.JsonConverter(typeof({{ClassName}}.JsonConverter))]
     public partial record {{ClassName}}({{#each TypeEntries as |TypeEntry|}}
-        {{{TypeEntry.TypeName}}}? {{{TypeEntry.Identifier}}}{{#unless @last}},{{/unless}}{{/each}}
+        {{{TypeEntry.TypeName}}}? {{{TypeEntry.Identifier}}} = null{{#unless @last}},{{/unless}}{{/each}}
     ) {
 
         public partial class JsonConverter : global::System.Text.Json.Serialization.JsonConverter<{{ClassName}}>
         {
+{{!-- Adapted from https://github.com/jeremyVignelles/ooak/blob/bbc28d0dbde3093d1aff46ac6f8f23e006da9702/Ooak.SystemTextJson/OoakSystemTextJsonConverter.cs#L65 --}}
             public override {{ClassName}}? Read(ref global::System.Text.Json.Utf8JsonReader reader, global::System.Type typeToConvert, global::System.Text.Json.JsonSerializerOptions options)
             {
-                throw new System.NotImplementedException(); // TODO
+                var position = reader.BytesConsumed;
+{{!-- TODO: check discriminator --}}
+{{#each TypeEntries as |TypeEntry|}}
+
+                {{{TypeEntry.TypeName}}} {{{TypeEntry.Identifier}}}Result = default;
+                global::System.Exception? {{{TypeEntry.Identifier}}}Exception = null;
+                global::System.Text.Json.Utf8JsonReader {{{TypeEntry.Identifier}}}Reader = reader;
+                bool {{{TypeEntry.Identifier}}}IsValid;
+                try
+                {
+                    {{{TypeEntry.Identifier}}}Result = global::System.Text.Json.JsonSerializer.Deserialize<{{{TypeEntry.TypeName}}}>(ref {{{TypeEntry.Identifier}}}Reader, options);
+                    {{{TypeEntry.Identifier}}}IsValid = true; {{!-- TODO: check to see if `result` is valid - if not, it could still be another type. --}}
+                } catch (global::System.Text.Json.JsonException ex) {
+                    {{{TypeEntry.Identifier}}}Exception = ex;
+                    {{{TypeEntry.Identifier}}}IsValid = false;
+                }
+{{/each}}
+
+{{!-- TODO: check only OneOf or allow AnyOf --}}
+                {{#each TypeEntries as |TypeEntry|}}
+                if ({{{TypeEntry.Identifier}}}Exception == null)
+                {
+                    reader = {{{TypeEntry.Identifier}}}Reader;
+                    return new {{ClassName}}({{{TypeEntry.Identifier}}}: {{{TypeEntry.Identifier}}}Result);
+                }
+                {{/each}}
+
+                throw new global::System.Text.Json.JsonException(
+                    "Unable to deserialize data as {{{ClassName}}} at position {{{position}}}",
+                    new global::System.AggregateException({{#each TypeEntries as |TypeEntry|}}{{{TypeEntry.Identifier}}}Exception{{#unless @last}}, {{/unless}}{{/each}})
+                );
             }
 
             public override void Write(global::System.Text.Json.Utf8JsonWriter writer, {{ClassName}} value, global::System.Text.Json.JsonSerializerOptions options)
