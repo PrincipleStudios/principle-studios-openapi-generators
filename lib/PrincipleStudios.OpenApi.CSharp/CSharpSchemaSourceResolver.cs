@@ -258,12 +258,15 @@ namespace PrincipleStudios.OpenApi.CSharp
                 DiscriminatorProperty: schema.Discriminator?.PropertyName,
                 TypeEntries: schema.OneOf
                     .Select((e, index) => {
-                        // TODO: discriminator mapping
-                        var id = e.Reference?.Id.Split('/').Last() ?? throw new NotImplementedException("Only refs are supported currently");
+                        var id = e.Reference?.Id.Split('/').Last() ?? throw new NotSupportedException("When using the discriminator, inline schemas will not be considered.") { HelpLink = "https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.2.md#discriminator-object" };
+                        if (schema.Discriminator?.Mapping?.FirstOrDefault(kvp => kvp.Value == id) is { Key: var mapped })
+                        {
+                            id = mapped;
+                        }
                         return new TypeUnionEntry(
                             TypeName: ToInlineDataType(e)().text,
                             Identifier: CSharpNaming.ToPropertyName(id, options.ReservedIdentifiers("object", className)),
-                            DiscriminatorValue: id
+                            DiscriminatorValue: schema.Discriminator == null ? null : id
                         );
                     }).ToArray()
             );
