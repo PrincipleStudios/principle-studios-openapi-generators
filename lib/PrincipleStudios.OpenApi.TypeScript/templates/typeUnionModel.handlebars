@@ -1,0 +1,25 @@
+{{>partial_header header}}
+{{#with model as |model|}}
+{{#each Imports}}
+import {
+{{#each members}}
+    {{{.}}},
+{{/each}}
+} from '{{path}}';
+{{/each}}
+
+/**{{#if Description}}
+ * {{{Description}}}{{/if}}
+ * @export
+ * @interface {{ClassName}}
+ */
+export type {{ClassName}} =
+{{#each TypeEntries as |TypeEntry|}}
+{{#if model.DiscriminatorProperty}}
+    | ({ '{{{model.DiscriminatorProperty}}}': '{{{TypeEntry.DiscriminatorValue}}}' } & {{{TypeEntry.TypeName}}})
+{{else}}
+    | {{{TypeEntry.TypeName}}}
+{{/if}}
+{{/each}}
+;
+{{/with}}

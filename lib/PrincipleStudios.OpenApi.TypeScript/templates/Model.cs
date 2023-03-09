@@ -51,6 +51,20 @@ namespace PrincipleStudios.OpenApi.TypeScript.templates
         ModelVar[] vars
     ) : Model(description, className);
 
+    public record TypeUnionModel(
+        ImportStatement[] Imports,
+        string Description,
+        string ClassName,
+        bool AllowAnyOf,
+        string? DiscriminatorProperty,
+        TypeUnionEntry[] TypeEntries
+    ) : Model(Description, ClassName);
+
+    public record TypeUnionEntry(
+        string TypeName,
+        string? DiscriminatorValue
+    );
+
     public record ModelVar(
         string baseName,
         string dataType,
