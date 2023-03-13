@@ -155,9 +155,9 @@ jobs:
   verify:
     runs-on: ubuntu-latest
     needs: build
+    if: ${{ github.ref != 'refs/heads/main' }}
     steps:
     - name: Test MVC examples build
-      if: ${{ github.ref != 'refs/heads/main' }}
       run: .\examples\dotnetcore-server-interfaces\tooling\build-examples.ps1 -VersionSuffix "sha.$VERSION_SUFFIX" -githubToken $GITHUB_TOKEN
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
