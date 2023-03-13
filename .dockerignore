@@ -1,0 +1,10 @@
+.git/
+*.snk
+*.local.*
+node_modules/
+**/out.local*/
+**/*.tgz
+.vs/
+**/*.user
+**/*.binlog
+artifacts/
