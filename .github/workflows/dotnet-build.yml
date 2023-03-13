@@ -154,6 +154,7 @@ jobs:
     # FINAL VERIFICATIONS
   verify:
     runs-on: ubuntu-latest
+    needs: build
     steps:
     - name: Test MVC examples build
       if: ${{ github.ref != 'refs/heads/main' }}
