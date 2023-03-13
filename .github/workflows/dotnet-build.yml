@@ -158,6 +158,6 @@ jobs:
     if: ${{ github.ref != 'refs/heads/main' }}
     steps:
     - name: Test MVC examples build
-      run: .\examples\dotnetcore-server-interfaces\tooling\build-examples.ps1 -VersionSuffix "sha.$VERSION_SUFFIX" -githubToken $GITHUB_TOKEN
+      run: ./examples/dotnetcore-server-interfaces/tooling/build-examples.ps1 -VersionSuffix "sha.$VERSION_SUFFIX" -githubToken $GITHUB_TOKEN
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
