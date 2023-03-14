@@ -24,6 +24,9 @@
 		<SignAssembly>True</SignAssembly>
 		<AssemblyOriginatorKeyFile Condition="exists('$(SolutionRoot)OpenApiCodegen.snk')">$(SolutionRoot)OpenApiCodegen.snk</AssemblyOriginatorKeyFile>
 		<NoWarn Condition="$(MSBuildProjectName.Contains('Test'))">$(NoWarn);CS8002</NoWarn>
+
+		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+		<WarningsAsErrors />
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(IsWindows)'=='true'">
 		<DefineConstants>Windows</DefineConstants>

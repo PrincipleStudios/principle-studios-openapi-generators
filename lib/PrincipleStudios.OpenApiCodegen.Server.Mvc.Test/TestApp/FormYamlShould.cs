@@ -26,7 +26,7 @@ public class FormYamlShould
                 Assert.True(controller.ModelState.IsValid);
                 Assert.Equal("Fido", request.Name);
                 Assert.Equal("dog", request.Tag);
-                Assert.Equal(true, request.HasIdTag);
+                Assert.True(request.HasIdTag);
             },
             AssertResponseMessage = VerifyResponse(200, 17),
         });
