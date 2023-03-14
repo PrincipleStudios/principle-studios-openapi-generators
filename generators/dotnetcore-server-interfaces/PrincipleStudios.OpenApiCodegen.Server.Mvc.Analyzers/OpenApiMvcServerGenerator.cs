@@ -1,4 +1,5 @@
-﻿using Microsoft.CodeAnalysis;
+﻿using HandlebarsDotNet;
+using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.CodeAnalysis.Text;
 using Microsoft.Extensions.Configuration;
@@ -80,22 +81,7 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
             incremental.RegisterSourceOutput(additionalTexts, static (context, tuple) =>
             {
                 var (file, opt) = tuple;
-                if (!TryParseFile(file, out var document, out var diagnostic))
-                {
-                    if (diagnostic != null)
-                        context.ReportDiagnostic(diagnostic);
-                    return;
-                }
-                var sourceProvider = CreateSourceProvider(document, opt);
-                var openApiDiagnostic = new OpenApiTransformDiagnostic();
-                foreach (var entry in sourceProvider.GetSources(openApiDiagnostic))
-                {
-                    context.AddSource($"PS_{entry.Key}", SourceText.From(entry.SourceText, Encoding.UTF8));
-                }
-                foreach (var error in openApiDiagnostic.Errors)
-                {
-                    // TODO - do something with these errors!
-                }
+                GenerateSources(file, opt, context.AddSource, context.ReportDiagnostic);
             });
         }
 #else
@@ -111,28 +97,34 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
                 .Where(IsMvcServerFile);
             foreach (var (file, opt) in additionalTexts)
             {
-                if (!TryParseFile(file, out var document, out var diagnostic))
-                {
-                    if (diagnostic != null)
-                        context.ReportDiagnostic(diagnostic);
-                    return;
-                }
-                var sourceProvider = CreateSourceProvider(document, opt);
-                var openApiDiagnostic = new OpenApiTransformDiagnostic();
-                foreach (var entry in sourceProvider.GetSources(openApiDiagnostic))
-                {
-                    context.AddSource($"PS_{entry.Key}", SourceText.From(entry.SourceText, Encoding.UTF8));
-                }
-                foreach (var error in openApiDiagnostic.Errors)
-                {
-                    // TODO - do something with these errors!
-                }
+                GenerateSources(file, opt, context.AddSource, context.ReportDiagnostic);
             }
         }
+
         public void Initialize(GeneratorInitializationContext context)
         {
         }
 #endif
+
+        private static void GenerateSources(AdditionalText file, AnalyzerConfigOptions opt, Action<string, SourceText> addSource, Action<Diagnostic> reportDiagnostic)
+        {
+            if (!TryParseFile(file, out var document, out var diagnostic))
+            {
+                if (diagnostic != null)
+                    reportDiagnostic(diagnostic);
+                return;
+            }
+            var sourceProvider = CreateSourceProvider(document, opt);
+            var openApiDiagnostic = new OpenApiTransformDiagnostic();
+            foreach (var entry in sourceProvider.GetSources(openApiDiagnostic))
+            {
+                addSource($"PS_{entry.Key}", SourceText.From(entry.SourceText, Encoding.UTF8));
+            }
+            foreach (var error in openApiDiagnostic.Errors)
+            {
+                // TODO - do something with these errors!
+            }
+        }
 
         private static (AdditionalText File, AnalyzerConfigOptions ConfigOptions) GetOptions(AdditionalText file, AnalyzerConfigOptionsProvider analyzerConfigOptions)
         {
