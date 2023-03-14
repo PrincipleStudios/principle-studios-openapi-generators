@@ -53,7 +53,10 @@ namespace PrincipleStudios.OpenApiCodegen.Client.CSharp
             {
                 using var reader = new StringReader(docContents);
                 var serializer = new SharpYaml.Serialization.Serializer();
-                var documentJObject = Newtonsoft.Json.Linq.JObject.FromObject(serializer.Deserialize(reader));
+                var deserialized = serializer.Deserialize(reader);
+                Newtonsoft.Json.Linq.JToken documentJObject = deserialized == null
+                    ? Newtonsoft.Json.Linq.JValue.CreateNull()
+                    : Newtonsoft.Json.Linq.JObject.FromObject(deserialized);
                 var token = documentJObject.SelectToken(path);
                 if (token == null)
                 {

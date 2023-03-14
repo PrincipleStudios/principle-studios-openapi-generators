@@ -49,6 +49,7 @@ CSharpServerSchemaOptions LoadOptions(Action<IConfigurationBuilder>? configureBu
     var builder = new ConfigurationBuilder();
     builder.AddYamlStream(defaultJsonStream);
     configureBuilder?.Invoke(builder);
-    var result = builder.Build().Get<CSharpServerSchemaOptions>();
+    var result = builder.Build().Get<CSharpServerSchemaOptions>()
+        ?? throw new InvalidOperationException("Could not construct options");
     return result;
 }
