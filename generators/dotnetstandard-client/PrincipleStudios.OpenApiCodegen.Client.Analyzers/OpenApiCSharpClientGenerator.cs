@@ -20,7 +20,12 @@ using System.Text;
 namespace PrincipleStudios.OpenApiCodegen.Client
 {
     [Generator]
-    public class OpenApiCSharpClientGenerator : ISourceGenerator
+    public class OpenApiCSharpClientGenerator :
+#if ROSLYN4_0_OR_GREATER
+    IIncrementalGenerator
+#else
+    ISourceGenerator
+#endif
     {
         private const string sourceItemGroupKey = "SourceItemGroup";
         const string sourceGroup = "OpenApiClientInterface";
@@ -58,24 +63,69 @@ namespace PrincipleStudios.OpenApiCodegen.Client
                                                                                           DiagnosticSeverity.Info,
                                                                                           isEnabledByDefault: true);
 
+#if ROSLYN4_0_OR_GREATER
+        public void Initialize(IncrementalGeneratorInitializationContext incremental)
+        {
+            var hasJsonExtensions = incremental.CompilationProvider.Select(static (compilation, _) => compilation.ReferencedAssemblyNames.Any(ai => ai.Name.Equals("PrincipleStudios.OpenApiCodegen.Json.Extensions", StringComparison.OrdinalIgnoreCase)));
+            incremental.RegisterImplementationSourceOutput(hasJsonExtensions, (context, hasJsonExtensions) =>
+            {
+                if (!hasJsonExtensions)
+                    context.ReportDiagnostic(Diagnostic.Create(IncludeDependentDll, Location.None));
+            });
 
+            var additionalTexts = incremental.AdditionalTextsProvider.Combine(incremental.AnalyzerConfigOptionsProvider)
+                .Select(static (tuple, _) => GetOptions(tuple.Left, tuple.Right))
+                .Where(IsMvcServerFile);
+            incremental.RegisterSourceOutput(additionalTexts, static (context, tuple) =>
+            {
+                var (file, opt) = tuple;
+                if (!TryParseFile(file, out var document, out var diagnostic))
+                {
+                    if (diagnostic != null)
+                        context.ReportDiagnostic(diagnostic);
+                    return;
+                }
+                var sourceProvider = CreateSourceProvider(document, opt);
+                var openApiDiagnostic = new OpenApiTransformDiagnostic();
+                foreach (var entry in sourceProvider.GetSources(openApiDiagnostic))
+                {
+                    context.AddSource($"PS_{entry.Key}", SourceText.From(entry.SourceText, Encoding.UTF8));
+                }
+                foreach (var error in openApiDiagnostic.Errors)
+                {
+                    // TODO - do something with these errors!
+                }
+            });
+        }
+#else
         public virtual void Execute(GeneratorExecutionContext context)
         {
-            // check that the users compilation references the expected library 
+            // check that the users compilation references the expected library
             if (!context.Compilation.ReferencedAssemblyNames.Any(ai => ai.Name.Equals("PrincipleStudios.OpenApiCodegen.Json.Extensions", StringComparison.OrdinalIgnoreCase)))
             {
                 context.ReportDiagnostic(Diagnostic.Create(IncludeDependentDll, Location.None));
             }
 
-            var options = GetLoadOptions(context).ToArray();
-            if (!options.Any())
-                context.ReportDiagnostic(Diagnostic.Create(NoFilesGenerated, Location.None));
-            var diagnostic = new OpenApiTransformDiagnostic();
-            var nameCodeSequence = SourceFilesFromAdditionalFiles(options, diagnostic).ToArray();
-            foreach (var entry in nameCodeSequence)
+            var additionalTexts = context.AdditionalFiles.Select(file => GetOptions(file, context.AnalyzerConfigOptions))
+                .Where(IsMvcServerFile);
+            foreach (var (file, opt) in additionalTexts)
             {
-                context.AddSource($"PS_{entry.Key}", SourceText.From(entry.SourceText, Encoding.UTF8));
-                context.ReportDiagnostic(Diagnostic.Create(FileGenerated, Location.None, $"PS_{entry.Key}"));
+                if (!TryParseFile(file, out var document, out var diagnostic))
+                {
+                    if (diagnostic != null)
+                        context.ReportDiagnostic(diagnostic);
+                    return;
+                }
+                var sourceProvider = CreateSourceProvider(document, opt);
+                var openApiDiagnostic = new OpenApiTransformDiagnostic();
+                foreach (var entry in sourceProvider.GetSources(openApiDiagnostic))
+                {
+                    context.AddSource($"PS_{entry.Key}", SourceText.From(entry.SourceText, Encoding.UTF8));
+                }
+                foreach (var error in openApiDiagnostic.Errors)
+                {
+                    // TODO - do something with these errors!
+                }
             }
         }
 
@@ -83,31 +133,23 @@ namespace PrincipleStudios.OpenApiCodegen.Client
         public virtual void Initialize(GeneratorInitializationContext context)
         {
         }
+#endif
 
-        private IEnumerable<ISourceProvider> GetLoadOptions(GeneratorExecutionContext context)
+        private static (AdditionalText File, AnalyzerConfigOptions ConfigOptions) GetOptions(AdditionalText file, AnalyzerConfigOptionsProvider analyzerConfigOptions)
         {
-            foreach (AdditionalText file in context.AdditionalFiles)
+            var opt = analyzerConfigOptions.GetOptions(file);
+            return (file, opt);
+        }
+
+        private static bool IsMvcServerFile((AdditionalText File, AnalyzerConfigOptions ConfigOptions) tuple)
+        {
+            string? currentSourceGroup = tuple.ConfigOptions.GetAdditionalFilesMetadata(sourceItemGroupKey);
+            if (currentSourceGroup != sourceGroup)
             {
-                var opt = context.AnalyzerConfigOptions.GetOptions(file);
-
-                string? currentSourceGroup = opt.GetAdditionalFilesMetadata(sourceItemGroupKey);
-                if (currentSourceGroup != sourceGroup)
-                {
-                    if (string.IsNullOrEmpty(currentSourceGroup))
-                        context.ReportDiagnostic(Diagnostic.Create(NoSourceGroup, Location.None, file.Path));
-                    continue;
-                }
-
-                if (TryParseFile(file, out var document, out var diagnostic))
-                {
-                    if (TryCreateSourceProvider(file, document!, opt, context, out var sourceProvider))
-                        yield return sourceProvider;
-                }
-                else if (diagnostic != null)
-                {
-                    context.ReportDiagnostic(diagnostic);
-                }
+                return false;
             }
+
+            return true;
         }
 
         private static bool TryParseFile(AdditionalText file, [NotNullWhen(true)] out OpenApiDocument? document, out Diagnostic? diagnostic)
@@ -137,27 +179,17 @@ namespace PrincipleStudios.OpenApiCodegen.Client
             }
         }
 
-        private IEnumerable<SourceEntry> SourceFilesFromAdditionalFiles(IEnumerable<ISourceProvider> options, OpenApiTransformDiagnostic diagnostic) =>
-            options.SelectMany(opt => SourceFilesFromAdditionalFile(opt, diagnostic));
-
-        protected virtual IEnumerable<SourceEntry> SourceFilesFromAdditionalFile(ISourceProvider options, OpenApiTransformDiagnostic diagnostic) =>
-            options.GetSources(diagnostic);
-
-        protected bool TryCreateSourceProvider(AdditionalText file, OpenApiDocument document, AnalyzerConfigOptions opt, GeneratorExecutionContext context, [NotNullWhen(true)] out ISourceProvider? result)
+        protected static ISourceProvider CreateSourceProvider(OpenApiDocument document, AnalyzerConfigOptions opt)
         {
             var options = LoadOptions(opt.GetAdditionalFilesMetadata(propConfig));
             var documentNamespace = opt.GetAdditionalFilesMetadata(propNamespace);
             if (string.IsNullOrEmpty(documentNamespace))
                 documentNamespace = GetStandardNamespace(opt, options);
 
-            context.ReportDiagnostic(Diagnostic.Create(GeneratedNamespace, Location.None, documentNamespace));
-
-            result = document.BuildCSharpClientSourceProvider(GetVersionInfo(), documentNamespace, options);
-
-            return true;
+            return document.BuildCSharpClientSourceProvider(GetVersionInfo(), documentNamespace, options);
         }
 
-        private CSharpSchemaOptions LoadOptions(string? optionsFiles)
+        private static CSharpSchemaOptions LoadOptions(string? optionsFiles)
         {
             using var defaultJsonStream = CSharpSchemaOptions.GetDefaultOptionsJson();
             var builder = new ConfigurationBuilder();
@@ -176,15 +208,12 @@ namespace PrincipleStudios.OpenApiCodegen.Client
             return result;
         }
 
-
-        public record Options(OpenApiDocument Document, string DocumentNamespace);
-
         private static string GetVersionInfo()
         {
             return $"{typeof(CSharpClientTransformer).FullName} v{typeof(CSharpClientTransformer).Assembly.GetName().Version}";
         }
 
-        private string? GetStandardNamespace(AnalyzerConfigOptions opt, CSharpSchemaOptions options)
+        private static string? GetStandardNamespace(AnalyzerConfigOptions opt, CSharpSchemaOptions options)
         {
             var identity = opt.GetAdditionalFilesMetadata("identity");
             var link = opt.GetAdditionalFilesMetadata("link");

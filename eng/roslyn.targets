@@ -1,0 +1,22 @@
+<Project>
+
+	<ItemGroup>
+        <_KnownRoslynVersions Include="3.11" />
+        <_KnownRoslynVersions Include="4.0" />
+	</ItemGroup>
+
+    <PropertyGroup>
+        <RoslynApiVersion Condition=" '$(AnalyzerRoslynVersion)' == '4.0' ">4.0.0</RoslynApiVersion>
+        <RoslynApiVersion Condition=" '$(AnalyzerRoslynVersion)' == '3.11' ">3.11.0</RoslynApiVersion>
+
+        <DefineConstants Condition=" $([MSBuild]::VersionGreaterThanOrEquals($(RoslynApiVersion), 3.11.0)) ">$(DefineConstants);ROSLYN3_11_OR_GREATER</DefineConstants>
+        <DefineConstants Condition=" $([MSBuild]::VersionGreaterThanOrEquals($(RoslynApiVersion), 4.0.0)) ">$(DefineConstants);ROSLYN4_0_OR_GREATER</DefineConstants>
+    </PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="[$(RoslynApiVersion)]" PrivateAssets="all">
+			<IncludeAssets>compile</IncludeAssets>
+		</PackageReference>
+	</ItemGroup>
+
+</Project>
