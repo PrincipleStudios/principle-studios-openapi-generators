@@ -83,6 +83,30 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
                 "PS.Controller.Option"
             );
 
+        [Theory]
+        [InlineData("new PS.Controller.Pet(Dog: new PS.Controller.Dog(Bark: true, Breed: \"Shiba Inu\"))", "{ \"bark\": true, \"breed\": \"Shiba Inu\" }")]
+        [InlineData("new PS.Controller.Pet(Cat: new PS.Controller.Cat(Hunts: false, Age: 12))", "{ \"hunts\": false, \"age\": 12 }")]
+        [InlineData("new PS.Controller.SpecifiedPet(Dog: new PS.Controller.Dog(Bark: true, Breed: \"Shiba Inu\"))", "{ \"petType\": \"dog\", \"bark\": true, \"breed\": \"Shiba Inu\" }")]
+        [InlineData("new PS.Controller.SpecifiedPet(Cat: new PS.Controller.Cat(Hunts: false, Age: 12))", "{ \"petType\": \"cat\", \"hunts\": false, \"age\": 12 }")]
+        public Task SerializeAOneOfObject(string csharpScript, string json) =>
+            SerializeAsync(
+                "one-of.yaml",
+                csharpScript,
+                Newtonsoft.Json.Linq.JToken.Parse(json)
+            );
+
+        [Theory]
+        [InlineData("PS.Controller.Pet", "{ \"bark\": true, \"breed\": \"Shiba Inu\" }")]
+        [InlineData("PS.Controller.Pet", "{ \"hunts\": false, \"age\": 12 }")]
+        [InlineData("PS.Controller.SpecifiedPet", "{ \"petType\": \"dog\", \"bark\": true, \"breed\": \"Shiba Inu\" }")]
+        [InlineData("PS.Controller.SpecifiedPet", "{ \"petType\": \"cat\", \"hunts\": false, \"age\": 12 }")]
+        public Task DeserializeAOneOfObject(string csharpType, string json) =>
+            DeserializeAsync(
+                "one-of.yaml",
+                Newtonsoft.Json.Linq.JToken.Parse(json),
+                csharpType
+            );
+
         private async Task SerializeAsync(string documentName, string csharpInitialization, object comparisonObject)
         {
             var libBytes = DynamicCompilation.GetGeneratedLibrary(documentName);
@@ -97,7 +121,9 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
             var result = (string)await CSharpScript.EvaluateAsync($"System.Text.Json.JsonSerializer.Serialize({csharpInitialization})", scriptOptions);
 
             Newtonsoft.Json.Linq.JToken.Parse(result).Should().BeEquivalentTo(
-                Newtonsoft.Json.Linq.JToken.FromObject(comparisonObject)
+                comparisonObject is Newtonsoft.Json.Linq.JToken token
+                    ? token 
+                    : Newtonsoft.Json.Linq.JToken.FromObject(comparisonObject)
             );
         }
         
@@ -125,7 +151,9 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
             var result = (string)await CSharpScript.EvaluateAsync(script, scriptOptions);
 
             Newtonsoft.Json.Linq.JToken.Parse(result).Should().BeEquivalentTo(
-                Newtonsoft.Json.Linq.JToken.FromObject(targetObject)
+                targetObject is Newtonsoft.Json.Linq.JToken token
+                    ? token
+                    : Newtonsoft.Json.Linq.JToken.FromObject(targetObject)
             );
         }
     }

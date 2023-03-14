@@ -1,0 +1,113 @@
+{{>partial_header header}}
+#nullable enable
+#nullable disable warnings
+#pragma warning disable
+
+namespace {{this.packageName}}
+{ {{#with model as |model|}}{{#if Description}}
+    /// <summary>
+    /// {{linewrap Description "
+    /// "}}
+    /// </summary>{{/if}}
+    [global::System.Text.Json.Serialization.JsonConverter(typeof({{ClassName}}.JsonConverter))]
+    public partial record {{ClassName}}({{#each TypeEntries as |TypeEntry|}}
+        {{{TypeEntry.TypeName}}}? {{{TypeEntry.Identifier}}} = null{{#unless @last}},{{/unless}}{{/each}}
+    ) {
+
+        public partial class JsonConverter : global::System.Text.Json.Serialization.JsonConverter<{{ClassName}}>
+        {
+{{!-- Adapted from https://github.com/jeremyVignelles/ooak/blob/bbc28d0dbde3093d1aff46ac6f8f23e006da9702/Ooak.SystemTextJson/OoakSystemTextJsonConverter.cs#L65 --}}
+            public override {{ClassName}}? Read(ref global::System.Text.Json.Utf8JsonReader reader, global::System.Type typeToConvert, global::System.Text.Json.JsonSerializerOptions options)
+            {
+                var position = reader.BytesConsumed;
+{{#if DiscriminatorProperty}}
+                global::System.Text.Json.Utf8JsonReader discriminatorReader = reader;
+                var baseNode = global::System.Text.Json.Nodes.JsonNode.Parse(ref discriminatorReader).AsObject();
+                var discriminatorValue = baseNode["{{{DiscriminatorProperty}}}"].GetValue<string>();
+{{#each TypeEntries as |TypeEntry|}}
+
+                if (discriminatorValue == "{{{TypeEntry.DiscriminatorValue}}}")
+                {
+                    return new {{ClassName}}(
+                        {{{TypeEntry.Identifier}}}: global::System.Text.Json.JsonSerializer.Deserialize<{{{TypeEntry.TypeName}}}>(ref reader, options)
+                    );
+                }
+{{/each}}
+
+                throw new global::System.Text.Json.JsonException(
+                    $"Unknown discriminator value {discriminatorValue} at position {position}"
+                );
+{{else}}
+{{#each TypeEntries as |TypeEntry|}}
+
+                {{{TypeEntry.TypeName}}} resultFor{{{TypeEntry.Identifier}}} = default;
+                global::System.Exception? exceptionFrom{{{TypeEntry.Identifier}}} = null;
+                global::System.Text.Json.Utf8JsonReader reader{{{TypeEntry.Identifier}}} = reader;
+                bool is{{{TypeEntry.Identifier}}}Valid;
+                try
+                {
+                    resultFor{{{TypeEntry.Identifier}}} = global::System.Text.Json.JsonSerializer.Deserialize<{{{TypeEntry.TypeName}}}>(ref reader{{{TypeEntry.Identifier}}}, options);
+                    global::System.ComponentModel.DataAnnotations.Validator.ValidateObject(
+                        resultFor{{{TypeEntry.Identifier}}},
+                        new global::System.ComponentModel.DataAnnotations.ValidationContext(resultFor{{{TypeEntry.Identifier}}})
+                    );
+                    is{{{TypeEntry.Identifier}}}Valid = true;
+                }
+                catch (global::System.Exception ex)
+                {
+                    resultFor{{{TypeEntry.Identifier}}} = default;
+                    exceptionFrom{{{TypeEntry.Identifier}}} = ex;
+                    is{{{TypeEntry.Identifier}}}Valid = false;
+                }
+{{/each}}
+
+{{!-- TODO: check only OneOf or allow AnyOf --}}
+                {{#each TypeEntries as |TypeEntry|}}
+                if (is{{{TypeEntry.Identifier}}}Valid)
+                {
+                    reader = reader{{{TypeEntry.Identifier}}};
+                    return new {{ClassName}}({{{TypeEntry.Identifier}}}: resultFor{{{TypeEntry.Identifier}}});
+                }
+                {{/each}}
+
+                throw new global::System.Text.Json.JsonException(
+                    "Unable to deserialize data as {{{ClassName}}} at position {position}",
+                    new global::System.AggregateException({{#each TypeEntries as |TypeEntry|}}exceptionFrom{{{TypeEntry.Identifier}}}{{#unless @last}}, {{/unless}}{{/each}})
+                );
+{{/if}}
+            }
+
+            public override void Write(global::System.Text.Json.Utf8JsonWriter writer, {{ClassName}} value, global::System.Text.Json.JsonSerializerOptions options)
+            {
+                var nodes = new[]
+                {
+{{#each TypeEntries as |TypeEntry|}}
+                    value.{{{TypeEntry.Identifier}}} == null ? null : toNode<{{{TypeEntry.TypeName}}}>(value.{{{TypeEntry.Identifier}}}{{#if model.DiscriminatorProperty}}, "{{{TypeEntry.DiscriminatorValue}}}"{{/if}}),
+{{/each}}
+                };
+                var result = global::System.Linq.Enumerable.Aggregate(nodes, (prev, next) =>
+                {
+                    if (prev == null) return next;
+                    if (next == null) return prev;
+                    foreach (var (key, value) in next)
+                    {
+                        prev[key] = value;
+                    }
+                    return prev;
+                });
+
+                result.WriteTo(writer, options);
+
+                global::System.Text.Json.Nodes.JsonObject toNode<T>(T value{{#if DiscriminatorProperty}}, string discriminatorValue{{/if}})
+                {
+                    var obj = global::System.Text.Json.JsonSerializer.SerializeToNode<T>(value, options).AsObject();
+{{#if DiscriminatorProperty}}
+                    obj["{{{DiscriminatorProperty}}}"] = discriminatorValue;
+{{/if}}
+                    return obj;
+                }
+            }
+        }
+    }
+{{/with}}
+}

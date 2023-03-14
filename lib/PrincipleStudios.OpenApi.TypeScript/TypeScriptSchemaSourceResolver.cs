@@ -94,6 +94,7 @@ namespace PrincipleStudios.OpenApi.TypeScript
             {
                 { Items: OpenApiSchema arrayItem, Type: "array" } => ToArrayModel(className, schema),
                 { Enum: { Count: > 0 }, Type: "string" } => ToEnumModel(className, schema),
+                { OneOf: { Count: > 0 } } => ToOneOfModel(className, schema),
                 _ => BuildObjectModel(schema) switch
                 {
                     ObjectModel objectModel => ToObjectModel(className, schema, context, objectModel, diagnostic)(),
@@ -246,6 +247,29 @@ namespace PrincipleStudios.OpenApi.TypeScript
                 isString: schema.Type == "string",
                 enumVars: (from entry in schema.Enum.OfType<Microsoft.OpenApi.Any.IOpenApiPrimitive>()
                            select new templates.EnumVar(PrimitiveToJsonValue.GetPrimitiveValue(entry))).ToArray()
+            );
+        }
+
+        private templates.TypeUnionModel ToOneOfModel(string className, OpenApiSchema schema)
+        {
+            return new templates.TypeUnionModel(
+                Imports: this.GetImportStatements(schema.OneOf, Enumerable.Empty<OpenApiSchema>(), "./models/").ToArray(),
+                Description: schema.Description,
+                ClassName: className,
+                AllowAnyOf: false,
+                DiscriminatorProperty: schema.Discriminator?.PropertyName,
+                TypeEntries: schema.OneOf
+                    .Select((e, index) => {
+                        var id = e.Reference?.Id.Split('/').Last() ?? throw new NotSupportedException("When using the discriminator, inline schemas will not be considered.") { HelpLink = "https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.2.md#discriminator-object" };
+                        if (schema.Discriminator?.Mapping?.FirstOrDefault(kvp => kvp.Value == id) is { Key: var mapped })
+                        {
+                            id = mapped;
+                        }
+                        return new templates.TypeUnionEntry(
+                            TypeName: ToInlineDataType(e)().text,
+                            DiscriminatorValue: schema.Discriminator == null ? null : id
+                        );
+                    }).ToArray()
             );
         }
 

@@ -1,0 +1,62 @@
+openapi: '3.0.2'
+info:
+  title: OneOf Example
+  version: '1.0'
+
+components:
+  schemas:
+    Dog:
+      type: object
+      properties:
+        bark:
+          type: boolean
+        breed:
+          type: string
+      required:
+        - bark
+        - breed
+    Cat:
+      type: object
+      properties:
+        hunts:
+          type: boolean
+        age:
+          type: integer
+      required:
+        - hunts
+        - age
+    Pet:
+      oneOf:
+      - $ref: '#/components/schemas/Cat'
+      - $ref: '#/components/schemas/Dog'
+    SpecifiedPet:
+      oneOf:
+      - $ref: '#/components/schemas/Cat'
+      - $ref: '#/components/schemas/Dog'
+      discriminator:
+        propertyName: petType
+        mapping:
+          dog: Dog
+          cat: Cat
+paths:
+  /pet:
+    get:
+      operationId: getRandomPet
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pet'
+    post:
+      operationId: addPet
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SpecifiedPet'
+      responses:
+        '200':
+          description: OK

@@ -17,6 +17,7 @@
     <OpenApiSchemaMvcServer Include="$(SolutionRoot)schemas\headers.yaml" Link="Headers\headers.yaml" Key="Headers" PathPrefix="/headers" />
     <OpenApiSchemaMvcServer Include="$(SolutionRoot)schemas\oauth.yaml" Link="OAuth\oauth.yaml" Key="OAuth" PathPrefix="/oauth" />
     <OpenApiSchemaMvcServer Include="$(SolutionRoot)schemas\form.yaml" Link="Form\form.yaml" Key="Form" PathPrefix="/form" />
+    <OpenApiSchemaMvcServer Include="$(SolutionRoot)schemas\one-of.yaml" Link="OneOf\one-of.yaml" Key="OneOf" PathPrefix="/one-of" />
   </ItemGroup>
 
   <ItemGroup>
