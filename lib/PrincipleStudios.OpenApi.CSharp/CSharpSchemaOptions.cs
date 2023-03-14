@@ -7,12 +7,12 @@ namespace PrincipleStudios.OpenApi.CSharp
     public class CSharpSchemaOptions
     {
         public string ControllerNameExtension { get; set; } = "dotnet-mvc-server-controller";
-        public List<string> GlobalReservedIdentifiers { get; set; } = new();
-        public Dictionary<string, List<string>> ContextualReservedIdentifiers { get; set; } = new();
+        public List<string> GlobalReservedIdentifiers { get; } = new();
+        public Dictionary<string, List<string>> ContextualReservedIdentifiers { get; } = new();
         public string MapType { get; set; } = "global::System.Collections.Generic.Dictionary<string, {}>";
         public string ArrayType { get; set; } = "global::System.Collections.Generic.IEnumerable<{}>";
         public string FallbackType { get; set; } = "object";
-        public Dictionary<string, OpenApiTypeFormats> Types { get; set; } = new();
+        public Dictionary<string, OpenApiTypeFormats> Types { get; } = new();
 
         internal string Find(string type, string? format)
         {
@@ -38,8 +38,8 @@ namespace PrincipleStudios.OpenApi.CSharp
 
         public IEnumerable<string> ReservedIdentifiers(string? scope = null, params string[] extraReserved) => 
             (
-                scope is not null && ContextualReservedIdentifiers.ContainsKey(scope) 
-                    ? GlobalReservedIdentifiers.Concat(ContextualReservedIdentifiers[scope]) 
+                scope is not null && ContextualReservedIdentifiers.TryGetValue(scope, out var scopedContextualIdentifiers) 
+                    ? GlobalReservedIdentifiers.Concat(scopedContextualIdentifiers) 
                     : GlobalReservedIdentifiers
             ).Concat(
                 extraReserved
@@ -49,6 +49,6 @@ namespace PrincipleStudios.OpenApi.CSharp
     public class OpenApiTypeFormats
     {
         public string Default { get; set; } = "object";
-        public Dictionary<string, string> Formats { get; set; } = new ();
+        public Dictionary<string, string> Formats { get; } = new ();
     }
 }

@@ -20,7 +20,8 @@ namespace PrincipleStudios.OpenApi.Transformations.Configuration
 
             // https://dotnetfiddle.net/rrR2Bb
             var yaml = new YamlStream();
-            yaml.Load(new StreamReader(input, detectEncodingFromByteOrderMarks: true));
+            using var sr = new StreamReader(input, detectEncodingFromByteOrderMarks: true);
+            yaml.Load(sr);
 
             if (yaml.Documents.Any())
             {
@@ -118,7 +119,7 @@ namespace PrincipleStudios.OpenApi.Transformations.Configuration
             _currentPath = ConfigurationPath.Combine(_context.Reverse());
         }
 
-        private bool IsNullValue(YamlScalarNode yamlValue)
+        private static bool IsNullValue(YamlScalarNode yamlValue)
         {
             return yamlValue.Style == SharpYaml.ScalarStyle.Plain
                 && (

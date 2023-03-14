@@ -14,6 +14,7 @@ namespace PrincipleStudios.OpenApi.CSharp.Templates
         TModel Model
     ) where TModel : Model;
 
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Naming", "CA1724:Type names should not match namespaces")]
     public record Model(
         string Description,
         string ClassName
@@ -45,6 +46,7 @@ namespace PrincipleStudios.OpenApi.CSharp.Templates
         string Value
     );
 
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Naming", "CA1724:Type names should not match namespaces")]
     public record ObjectModel(
         string Description,
         string ClassName,

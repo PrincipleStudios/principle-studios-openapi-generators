@@ -49,7 +49,9 @@ public static class OuthYamlPolicyExtensions
     {
     }
 
+#pragma warning disable CA1812 // Avoid uninstantiated internal classes - referenced by services
     private class OauthYamlApiKeyHandler : AuthenticationHandler<OauthYamlApiKeyOptions>
+#pragma warning restore CA1812
     {
         public OauthYamlApiKeyHandler(IOptionsMonitor<OauthYamlApiKeyOptions> options, ILoggerFactory logger, UrlEncoder encoder, ISystemClock clock) : base(options, logger, encoder, clock)
         {

@@ -25,12 +25,10 @@ public abstract class BaseGenerator :
 
     private static readonly object lockHandle = new object();
 
-    private const string sharedAssemblyName = "PrincipleStudios.OpenApiCodegen";
-    private readonly System.Text.RegularExpressions.Regex regex = new(@"^(\.\d+)*\.dll$");
     private readonly Func<IEnumerable<string>> getMetadataKeys;
     private readonly Func<string, IReadOnlyDictionary<string, string?>, object> generate;
 
-    public BaseGenerator(string generatorTypeName, string assemblyName)
+    protected BaseGenerator(string generatorTypeName, string assemblyName)
     {
         var myAsm = this.GetType().Assembly;
 
@@ -96,18 +94,18 @@ public abstract class BaseGenerator :
     }
 
 #if ROSLYN4_0_OR_GREATER
-    public virtual void Initialize(IncrementalGeneratorInitializationContext incremental)
+    public virtual void Initialize(IncrementalGeneratorInitializationContext context)
     {
-        incremental.RegisterImplementationSourceOutput(incremental.CompilationProvider, (context, compilation) =>
+        context.RegisterImplementationSourceOutput(context.CompilationProvider, (context, compilation) =>
         {
             ReportCompilationDiagnostics(compilation, context);
         });
 
-        var additionalTexts = incremental.AdditionalTextsProvider.Combine(incremental.AnalyzerConfigOptionsProvider)
+        var additionalTexts = context.AdditionalTextsProvider.Combine(context.AnalyzerConfigOptionsProvider)
             .Select(static (tuple, _) => GetOptions(tuple.Left, tuple.Right))
             .Where(static (tuple) => tuple.TextContents != null)
             .Where(IsRelevantFile);
-        incremental.RegisterSourceOutput(additionalTexts, (context, tuple) =>
+        context.RegisterSourceOutput(additionalTexts, (context, tuple) =>
         {
             GenerateSources(tuple, context);
         });
@@ -135,6 +133,7 @@ public abstract class BaseGenerator :
     protected record AdditionalTextWithOptions(string TextContents, AnalyzerConfigOptions ConfigOptions);
     protected record CompilerApis(AddSourceText AddSource, ReportDiagnostic ReportDiagnostic)
     {
+#pragma warning disable CA2225 // Operator overloads have named alternates
 #if ROSLYN4_0_OR_GREATER
         public static implicit operator CompilerApis(SourceProductionContext context) =>
             new(context.AddSource, context.ReportDiagnostic);
@@ -142,6 +141,7 @@ public abstract class BaseGenerator :
         public static implicit operator CompilerApis(GeneratorExecutionContext context) =>
             new(context.AddSource, context.ReportDiagnostic);
 #endif
+#pragma warning restore CA2225 // Operator overloads have named alternates
     }
     private static AdditionalTextWithOptions GetOptions(AdditionalText file, AnalyzerConfigOptionsProvider analyzerConfigOptions)
     {

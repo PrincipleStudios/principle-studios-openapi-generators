@@ -19,6 +19,7 @@ namespace PrincipleStudios.OpenApi.TypeScript.Templates
         string Path
     );
 
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Naming", "CA1724:Type names should not match namespaces")]
     public record Model(
         string Description,
         string ClassName
@@ -44,6 +45,7 @@ namespace PrincipleStudios.OpenApi.TypeScript.Templates
         ImportStatement[] Imports
     ) : Model(Description, ClassName);
 
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Naming", "CA1724:Type names should not match namespaces")]
     public record ObjectModel(
         ImportStatement[] Imports,
         string Description,

@@ -41,6 +41,7 @@ namespace PrincipleStudios.OpenApi.Transformations
         void VisitUnknown(IOpenApiElement openApiElement, OpenApiContext context, TArgument argument);
     }
 
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1707:ParameterNameStartsWithUnderscores")]
     public interface IOpenApiAnyVisitor<TArgument>
     {
         void Visit(Microsoft.OpenApi.Any.OpenApiArray _Array, OpenApiContext context, TArgument argument);

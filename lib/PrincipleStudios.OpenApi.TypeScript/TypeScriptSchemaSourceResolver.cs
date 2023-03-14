@@ -61,7 +61,7 @@ namespace PrincipleStudios.OpenApi.TypeScript
             base.EnsureSchemasRegistered(element, context, diagnostic);
         }
 
-        public bool MakeReference(OpenApiSchema schema)
+        public static bool MakeReference(OpenApiSchema schema)
         {
             return schema switch
             {
@@ -148,7 +148,9 @@ namespace PrincipleStudios.OpenApi.TypeScript
             };
         }
 
-        protected readonly Regex _2xxRegex = new Regex("2[0-9]{2}");
+#pragma warning disable CA1707 // Identifiers should not contain underscores
+        protected static readonly Regex _2xxRegex = new Regex("2[0-9]{2}");
+#pragma warning restore CA1707 // Identifiers should not contain underscores
 
         protected virtual string ContextToIdentifier(OpenApiContext context)
         {

@@ -1,0 +1,55 @@
+<Project>
+	<PropertyGroup>
+		<AnalysisMode>AllEnabledByDefault</AnalysisMode>
+		<CodeAnalysisTreatWarningsAsErrors>true</CodeAnalysisTreatWarningsAsErrors>
+		<EnableNETAnalyzers>true</EnableNETAnalyzers>
+		<EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+		<AnalysisLevel>latest</AnalysisLevel>
+		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+		<WarningsAsErrors />
+		<!--
+			CA1852 - seal internal types
+
+			CA1303 - use resource table (TODO: fix this after refactor for error messages)
+			CA1304 - specify CultureInfo
+			CA1305 - specify IFormatProvider
+			CA1307 - specify StringComparison for clarity
+			CA1310 - specify StringComparison for correctness (TODO: may want to fix this)
+			CA1311 - specify a culture or use invariant
+
+			CA1707 - assembly naming
+			CA1716 - identifiers should not match keywords - Optional matched a keyword...
+			CA1805 - do not initialie unnecessarily
+			CA1034 - nested types should not be visible
+			CA1062 - validate parameters (TODO: may want to fix this)
+			CA1508 - variable is never null (.NET Standard 2.0 does not support not-null assertions)
+			CA1002 - use "collection" instead of list
+			CA1815 - should override Equals
+			CA1819 - properties should not return arrays (TODO: may want to fix this to use IReadOnlyList<>)
+
+			CA2007 - ConfigureAwait
+		 -->
+		<NoWarn>$(NoWarn),CA1052,CA1852,CA1303,CA1304,CA1305,CA1307,CA1310,CA1311,CA1707,CA1716,CA1805,CA1034,CA1062,CA1508,CA1002,CA1815,CA1819,CA2007</NoWarn>
+		<!--
+			test project supressions:
+			CA1033 - mark as sealed
+			CA1052 - tests cannot be static types
+			CA1063 - Dispose pattern
+			CA1711 - "Collection" refers to xunit test collections
+			CA2016 - Cancellation token
+			CA1806 - expanding enumerable causes side effects
+			CA1822 - can be marked as static
+			CA1031 - do not catch generic exception types
+			CA1816 - finalizer suppression
+			CA2234 - call with Uri instead of string
+			CA1003 - use EventHandler instead of Action-based `event`
+		 -->
+		<NoWarn Condition=" $(AssemblyName.EndsWith('.Test')) ">$(NoWarn),CA1033,CA1052,CA1063,CA1711,CA2016,CA1806,CA1822,CA1031,CA1816,CA2234,CA1003</NoWarn>
+
+	</PropertyGroup>
+
+	<Target Name="_FormatSourceFiles" BeforeTargets="BeforeBuild" Inputs="@(Compile)" Outputs="@(IntermediateAssembly)">
+		<!-- <Exec WorkingDirectory="$(ProjectDir)" Command="dotnet format" /> -->
+	</Target>
+
+</Project>

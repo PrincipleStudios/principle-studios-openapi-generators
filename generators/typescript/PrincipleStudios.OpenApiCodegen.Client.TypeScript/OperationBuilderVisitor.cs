@@ -133,7 +133,7 @@ namespace PrincipleStudios.OpenApiCodegen.Client.TypeScript
             var result = new OperationResponse(
                 Description: response.Description,
                 Content: (from entry in response.Content.DefaultIfEmpty(new(string.Empty, new OpenApiMediaType()))
-                          where entry.Key == string.Empty || options.AllowedMimeTypes.Contains(entry.Key)
+                          where entry.Key is { Length: 0 } || options.AllowedMimeTypes.Contains(entry.Key)
                           let entryContext = context.Append(nameof(response.Content), entry.Key, entry.Value)
                           let dataType = entry.Value.Schema != null ? typeScriptSchemaResolver.ToInlineDataType(entry.Value.Schema)() : null
                           select new OperationResponseContentOption(

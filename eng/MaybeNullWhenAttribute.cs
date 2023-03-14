@@ -4,6 +4,7 @@ using System.ComponentModel;
 namespace System.Diagnostics.CodeAnalysis;
 
 [EditorBrowsable(EditorBrowsableState.Never)]
+[AttributeUsage(AttributeTargets.Parameter)]
 internal sealed class MaybeNullWhenAttribute : Attribute
 {
     /// <summary>Initializes the attribute with the specified return value condition.</summary>

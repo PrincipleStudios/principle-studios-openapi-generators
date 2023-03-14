@@ -90,6 +90,10 @@ public class CommonDirectoryFixture : IDisposable
             Initialized.Wait();
         }
         catch { }
+        finally
+        {
+            cancellation.Dispose();
+        }
     }
 
     private async Task GenerateTypeScriptFrom(string documentName)

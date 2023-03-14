@@ -26,7 +26,7 @@ public static class ProcessUtility
         using var process = System.Diagnostics.Process.Start(startInfo);
         if (process == null) throw new InvalidOperationException();
 
-        var registration = cancellationToken.Register(() => process.Kill());
+        using var registration = cancellationToken.Register(() => process.Kill());
         try
         {
             var result = await handleProcess(process, cancellationToken);
@@ -39,7 +39,7 @@ public static class ProcessUtility
         }
         finally
         {
-            registration.Dispose();
+            await registration.DisposeAsync();
         }
     }
 }

@@ -71,7 +71,9 @@ namespace PrincipleStudios.OpenApi.Transformations
                 {
                     argument.RegisterSourceEntry(operation, context);
                 }
+#pragma warning disable CA1031 // Do not catch general exception types
                 catch (Exception ex)
+#pragma warning restore CA1031 // Do not catch general exception types
                 {
                     argument.Diagnostic.Errors.Add(new(context, $"Unhandled exception: {ex.Message}"));
                 }

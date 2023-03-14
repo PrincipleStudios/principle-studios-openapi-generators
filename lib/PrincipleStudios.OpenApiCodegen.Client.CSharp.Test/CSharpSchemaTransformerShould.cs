@@ -43,7 +43,7 @@ namespace PrincipleStudios.OpenApiCodegen.Client.CSharp
             Assert.Equal(expectedInline, actual);
         }
 
-        private (OpenApiDocument? document, OpenApiSchema? schema) GetSchema(string docContents, string path)
+        private static (OpenApiDocument? document, OpenApiSchema? schema) GetSchema(string docContents, string path)
         {
             const string prefix = "components.schemas.";
             var openApiReader = new OpenApiStringReader();

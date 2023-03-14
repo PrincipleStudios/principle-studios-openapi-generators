@@ -9,12 +9,12 @@ namespace PrincipleStudios.OpenApi.Transformations
     public delegate void SchemaCallback(OpenApiSchema schema, OpenApiContext context);
     public abstract class SchemaSourceResolver<TInlineDataType> : ISchemaSourceResolver<TInlineDataType>
     {
-        public SchemaSourceResolver()
+        protected SchemaSourceResolver()
             : this(new DefaultSchemaVisitor())
         {
         }
 
-        public SchemaSourceResolver(IOpenApiDocumentVisitor<SchemaCallback> schemaVisitor)
+        protected SchemaSourceResolver(IOpenApiDocumentVisitor<SchemaCallback> schemaVisitor)
         {
             this.schemaVisitor = schemaVisitor;
         }
@@ -51,9 +51,9 @@ namespace PrincipleStudios.OpenApi.Transformations
 
             foreach (var s in newSchemas)
             {
-                if (referencedSchemas.ContainsKey(s.Key))
+                if (referencedSchemas.TryGetValue(s.Key, out var schema))
                 {
-                    referencedSchemas[s.Key].AllContext.AddRange(s.Value);
+                    schema.AllContext.AddRange(s.Value);
                     continue;
                 }
 
@@ -101,10 +101,10 @@ namespace PrincipleStudios.OpenApi.Transformations
 
     public class DefaultSchemaVisitor : OpenApiDocumentVisitor<SchemaCallback>
     {
-        public override void Visit(OpenApiSchema schema, OpenApiContext context, SchemaCallback callback)
+        public override void Visit(OpenApiSchema schema, OpenApiContext context, SchemaCallback argument)
         {
-            callback(schema, context);
-            base.Visit(schema, context, callback);
+            argument(schema, context);
+            base.Visit(schema, context, argument);
         }
     }
 }

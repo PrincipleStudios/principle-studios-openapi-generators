@@ -27,7 +27,7 @@ namespace PrincipleStudios.OpenApiCodegen.Client.TypeScript.Templates
         OperationSecurityRequirement[] SecurityRequirements
     )
     {
-        public bool HasQueryInPath => Path.IndexOf('?') >= 0;
+        public bool HasQueryInPath => Path.Contains('?');
     };
 
     public record OperationParameter(
