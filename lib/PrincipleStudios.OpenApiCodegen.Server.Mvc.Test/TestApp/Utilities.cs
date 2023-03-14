@@ -40,6 +40,19 @@ internal class Utilities
         };
     }
 
+    internal static Task TestValidationError<T>(Func<IActionResult, KeyValuePair<string, string>[], T> unsafeFactory, Func<HttpClient, Task<HttpResponseMessage>> performRequest) =>
+        TestSingleRequest<T>(new(
+            unsafeFactory(new BadRequestResult(), Array.Empty<KeyValuePair<string, string>>()),
+            performRequest
+        )
+        {
+            AssertRequest = (controller, request) =>
+            {
+                Assert.False(controller.ModelState.IsValid);
+            },
+            AssertResponseMessage = VerifyResponse(400)
+        });
+
     internal static Task TestSingleRequest<T>(MvcRequestTest<T, object?> testDefinition) =>
         TestSingleRequest<T, object?>(testDefinition);
 

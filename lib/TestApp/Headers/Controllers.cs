@@ -1,6 +1,6 @@
 ﻿namespace PrincipleStudios.OpenApiCodegen.Server.Mvc.TestApp.Headers;
 
-public class InfoController : HeadersInfoControllerBase
+public class InfoController : InfoControllerBase
 {
     protected override Task<GetInfoActionResult> GetInfo(byte[] xData)
     {
@@ -9,7 +9,7 @@ public class InfoController : HeadersInfoControllerBase
     }
 }
 
-public class RedirectController : HeadersRedirectControllerBase
+public class RedirectController : RedirectControllerBase
 {
     protected override Task<_RedirectActionResult> Redirect()
     {

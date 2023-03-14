@@ -11,7 +11,7 @@ public class ControllerExtensionsYamlShould
     public Task DecodeBase64EncodedQueryData() =>
         TestSingleRequest<ControllerExtensions.InformationControllerBase.GetInfoActionResult>(new(
             ControllerExtensions.InformationControllerBase.GetInfoActionResult.Ok("SomeData"),
-            client => client.GetAsync("/api/info")
+            client => client.GetAsync("/controller-extensions/api/info")
         )
         {
             AssertResponseMessage = VerifyResponse(200, "SomeData"),

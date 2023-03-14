@@ -170,6 +170,8 @@ namespace PrincipleStudios.OpenApi.Transformations
             this.VisitHelper(tag.ExternalDocs, context, nameof(tag.ExternalDocs), argument);
         }
 
+        public virtual void Visit(OpenApiDiscriminator discriminator, OpenApiContext context, TArgument argument) { }
+
         public virtual void Visit(OpenApiXml xml, OpenApiContext context, TArgument argument) { }
         public virtual void Visit(RuntimeExpressionAnyWrapper runtimeExpressionAnyWrapper, OpenApiContext context, TArgument argument)
         {

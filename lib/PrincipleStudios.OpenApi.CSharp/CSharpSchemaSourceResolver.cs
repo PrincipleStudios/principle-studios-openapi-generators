@@ -1,5 +1,6 @@
 ﻿using HandlebarsDotNet;
 using Microsoft.OpenApi.Models;
+using PrincipleStudios.OpenApi.CSharp.templates;
 using PrincipleStudios.OpenApi.Transformations;
 using System;
 using System.Collections.Generic;
@@ -62,6 +63,7 @@ namespace PrincipleStudios.OpenApi.CSharp
                 { UnresolvedReference: true } => throw new ArgumentException("Unable to resolve reference"),
                 { AllOf: { Count: > 1 } } => true,
                 { AnyOf: { Count: > 1 } } => true,
+                { OneOf: { Count: > 1 } } => true,
                 { Type: "string", Enum: { Count: > 1 } } => true,
                 { Type: "array", Items: OpenApiSchema inner } => false,
                 { Type: string type, Format: var format, Properties: { Count: 0 }, Enum: { Count: 0 } } => options.Find(type, format) == "object",
@@ -94,6 +96,7 @@ namespace PrincipleStudios.OpenApi.CSharp
             templates.Model? model = schema switch
             {
                 { Enum: { Count: > 0 }, Type: "string" } => ToEnumModel(className, schema),
+                { OneOf: { Count: > 0 } } => ToOneOfModel(className, schema),
                 _ => BuildObjectModel(schema) switch
                 {
                     ObjectModel objectModel => ToObjectModel(className, schema, context, objectModel, diagnostic)(),
@@ -243,6 +246,29 @@ namespace PrincipleStudios.OpenApi.CSharp
                                Microsoft.OpenApi.Any.OpenApiPrimitive<string> { Value: string name } => new templates.EnumVar(CSharpNaming.ToPropertyName(name, options.ReservedIdentifiers("enum", className)), name),
                                _ => throw new NotSupportedException()
                            }).ToArray()
+            );
+        }
+
+        private templates.TypeUnionModel ToOneOfModel(string className, OpenApiSchema schema)
+        {
+            return new templates.TypeUnionModel(
+                schema.Description,
+                className,
+                AllowAnyOf: false,
+                DiscriminatorProperty: schema.Discriminator?.PropertyName,
+                TypeEntries: schema.OneOf
+                    .Select((e, index) => {
+                        var id = e.Reference?.Id.Split('/').Last() ?? throw new NotSupportedException("When using the discriminator, inline schemas will not be considered.") { HelpLink = "https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.2.md#discriminator-object" };
+                        if (schema.Discriminator?.Mapping?.FirstOrDefault(kvp => kvp.Value == id) is { Key: var mapped })
+                        {
+                            id = mapped;
+                        }
+                        return new TypeUnionEntry(
+                            TypeName: ToInlineDataType(e)().text,
+                            Identifier: CSharpNaming.ToPropertyName(id, options.ReservedIdentifiers("object", className)),
+                            DiscriminatorValue: schema.Discriminator == null ? null : id
+                        );
+                    }).ToArray()
             );
         }
 

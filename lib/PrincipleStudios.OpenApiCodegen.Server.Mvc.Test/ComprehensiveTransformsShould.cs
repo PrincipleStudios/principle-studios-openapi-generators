@@ -22,6 +22,7 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
         [InlineData("headers.yaml")]
         [InlineData("oauth.yaml")]
         [InlineData("form.yaml")]
+        [InlineData("one-of.yaml")]
         [Theory]
         public void Compile_api_documents_included_in_the_TestApp(string name)
         {

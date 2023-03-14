@@ -4,7 +4,7 @@ info:
   title: Headers Sample
   description: A sample API that demonstrates header parameters/responses
 paths:
-  /headers/info:
+  /info:
     get:
       operationId: getInfo
       parameters:
@@ -47,7 +47,7 @@ paths:
               description: error diagnostic
               schema:
                 type: string
-  /headers/redirect:
+  /redirect:
     get:
       operationId: redirect
       responses:

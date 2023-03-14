@@ -160,6 +160,8 @@ contextualReservedIdentifiers:
     - CompareTo
     - GetTypeCode
     - HasFlag
+  object:
+    - JsonConverter
 mapType: global::System.Collections.Generic.Dictionary<string, {}>
 arrayType: global::System.Collections.Generic.IEnumerable<{}>
 fallbackType: object

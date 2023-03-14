@@ -64,7 +64,7 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
             Assert.Equal(expectedName, actual?.text);
         }
 
-        private static IEnumerable<object[]> DetermineSchemaNameList()
+        public static IEnumerable<object[]> DetermineSchemaNameList()
         {
             return new[]
             {

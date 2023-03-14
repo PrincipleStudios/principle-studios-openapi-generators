@@ -2,7 +2,7 @@
 
 namespace PrincipleStudios.OpenApiCodegen.Server.Mvc.TestApp.Form;
 
-public class FormBasicController : FormBasicControllerBase
+public class FormBasicController : BasicControllerBase
 {
     protected override Task<PostBasicFormActionResult> PostBasicForm(string name, string tag, bool hasIdTag)
     {

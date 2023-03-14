@@ -15,8 +15,8 @@ public class OauthYamlShould
 {
     [Fact]
     public Task Handle_anonymous_requests() =>
-        TestSingleRequest<OAuth.OauthInfoControllerBase.GetInfoActionResult>(new(
-            OAuth.OauthInfoControllerBase.GetInfoActionResult.Ok("baadf00d"),
+        TestSingleRequest<OAuth.InfoControllerBase.GetInfoActionResult>(new(
+            OAuth.InfoControllerBase.GetInfoActionResult.Ok("baadf00d"),
             client => client.GetAsync("/oauth/info")
         )
         {
@@ -30,8 +30,8 @@ public class OauthYamlShould
 
     [Fact]
     public Task Handle_api_key_requests() =>
-        TestSingleRequest<OAuth.OauthInfoControllerBase.GetInfoActionResult>(new(
-            OAuth.OauthInfoControllerBase.GetInfoActionResult.Ok("baadf00d"),
+        TestSingleRequest<OAuth.InfoControllerBase.GetInfoActionResult>(new(
+            OAuth.InfoControllerBase.GetInfoActionResult.Ok("baadf00d"),
             client => client.SendAsync(new HttpRequestMessage(HttpMethod.Get, "/oauth/info")
             {
                 Headers =
@@ -64,8 +64,8 @@ public class OauthYamlShould
     [Fact]
     public Task Handles_multiple_authorization_schemes() =>
 
-        TestSingleRequest<OAuth.OauthAddressControllerBase.GetAddressActionResult>(new(
-            OAuth.OauthAddressControllerBase.GetAddressActionResult.Ok("baadf00d"),
+        TestSingleRequest<OAuth.AddressControllerBase.GetAddressActionResult>(new(
+            OAuth.AddressControllerBase.GetAddressActionResult.Ok("baadf00d"),
             client => client.SendAsync(new HttpRequestMessage(HttpMethod.Get, "/oauth/address")
             {
                 Headers =
