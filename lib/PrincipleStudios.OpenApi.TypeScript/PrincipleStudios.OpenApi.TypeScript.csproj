@@ -6,10 +6,10 @@
 		<VersionPrefix>$(SharedAnalyzerLibrariesVersion)</VersionPrefix>
 	</PropertyGroup>
 	<ItemGroup>
-		<PackageReference Include="Handlebars.Net" Version="2.0.7" />
-		<PackageReference Include="Microsoft.OpenApi.Readers" Version="1.6.2" />
-		<PackageReference Include="Microsoft.OpenApi" Version="1.6.2" />
-		<PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
+		<PackageReference Include="Handlebars.Net" Version="2.1.4" />
+		<PackageReference Include="Microsoft.OpenApi.Readers" Version="1.6.3" />
+		<PackageReference Include="Microsoft.OpenApi" Version="1.6.3" />
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
 		<PackageReference Include="SharpYaml" Version="2.1.0" />
 	</ItemGroup>
 	<ItemGroup>
