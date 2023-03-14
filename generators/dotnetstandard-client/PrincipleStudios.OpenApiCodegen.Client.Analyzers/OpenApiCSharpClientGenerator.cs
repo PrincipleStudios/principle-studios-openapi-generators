@@ -20,7 +20,7 @@ using System.Text;
 namespace PrincipleStudios.OpenApiCodegen.Client
 {
     [Generator]
-    public class OpenApiCSharpClientGenerator :
+    public sealed class OpenApiCSharpClientGenerator :
 #if ROSLYN4_0_OR_GREATER
     IIncrementalGenerator
 #else
@@ -37,31 +37,6 @@ namespace PrincipleStudios.OpenApiCodegen.Client
                                                                                                   category: "PrincipleStudios.OpenApiCodegen.Client",
                                                                                                   DiagnosticSeverity.Warning,
                                                                                                   isEnabledByDefault: true);
-
-        private static readonly DiagnosticDescriptor GeneratedNamespace = new DiagnosticDescriptor(id: "PSAPICLNTINFO001",
-                                                                                                  title: "Generated Namespace",
-                                                                                                  messageFormat: "Generated Namespace: {0}",
-                                                                                                  category: "PrincipleStudios.OpenApiCodegen.Client",
-                                                                                                  DiagnosticSeverity.Info,
-                                                                                                  isEnabledByDefault: true);
-        private static readonly DiagnosticDescriptor NoFilesGenerated = new DiagnosticDescriptor(id: "PSAPICLNT002",
-                                                                                          title: "No files found enabled",
-                                                                                          messageFormat: "No files were found; ensure you have added an item for 'OpenApiSchemaClient'",
-                                                                                          category: "PrincipleStudios.OpenApiCodegen",
-                                                                                          DiagnosticSeverity.Warning,
-                                                                                          isEnabledByDefault: true);
-        protected static readonly DiagnosticDescriptor FileGenerated = new DiagnosticDescriptor(id: "PSAPICLNT003",
-                                                                                          title: "File generated",
-                                                                                          messageFormat: "Generated file '{0}'",
-                                                                                          category: "PrincipleStudios.OpenApiCodegen",
-                                                                                          DiagnosticSeverity.Info,
-                                                                                          isEnabledByDefault: true);
-        protected static readonly DiagnosticDescriptor NoSourceGroup = new DiagnosticDescriptor(id: "PSAPICLNT004",
-                                                                                          title: "No source group",
-                                                                                          messageFormat: "No source group for '{0}'",
-                                                                                          category: "PrincipleStudios.OpenApiCodegen",
-                                                                                          DiagnosticSeverity.Info,
-                                                                                          isEnabledByDefault: true);
 
 #if ROSLYN4_0_OR_GREATER
         public void Initialize(IncrementalGeneratorInitializationContext incremental)
@@ -83,7 +58,7 @@ namespace PrincipleStudios.OpenApiCodegen.Client
             });
         }
 #else
-        public virtual void Execute(GeneratorExecutionContext context)
+        public void Execute(GeneratorExecutionContext context)
         {
             // check that the users compilation references the expected library
             if (!context.Compilation.ReferencedAssemblyNames.Any(ai => ai.Name.Equals("PrincipleStudios.OpenApiCodegen.Json.Extensions", StringComparison.OrdinalIgnoreCase)))
@@ -99,7 +74,7 @@ namespace PrincipleStudios.OpenApiCodegen.Client
             }
         }
 
-        public virtual void Initialize(GeneratorInitializationContext context)
+        public void Initialize(GeneratorInitializationContext context)
         {
         }
 #endif
@@ -168,7 +143,7 @@ namespace PrincipleStudios.OpenApiCodegen.Client
             }
         }
 
-        protected static ISourceProvider CreateSourceProvider(OpenApiDocument document, AnalyzerConfigOptions opt)
+        private static ISourceProvider CreateSourceProvider(OpenApiDocument document, AnalyzerConfigOptions opt)
         {
             var options = LoadOptions(opt.GetAdditionalFilesMetadata(propConfig));
             var documentNamespace = opt.GetAdditionalFilesMetadata(propNamespace);

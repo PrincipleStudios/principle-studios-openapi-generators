@@ -22,7 +22,7 @@ using System.Text;
 namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
 {
     [Generator]
-    public class OpenApiMvcServerGenerator :
+    public sealed class OpenApiMvcServerGenerator :
 #if ROSLYN4_0_OR_GREATER
     IIncrementalGenerator
 #else
@@ -40,30 +40,6 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
                                                                                                     category: "PrincipleStudios.OpenApiCodegen.Server.Mvc",
                                                                                                     DiagnosticSeverity.Warning,
                                                                                                     isEnabledByDefault: true);
-        private static readonly DiagnosticDescriptor GeneratedNamespace = new DiagnosticDescriptor(id: "PSAPICTRLINFO001",
-                                                                                                  title: "Generated Namespace",
-                                                                                                  messageFormat: "Generated Namespace: {0}",
-                                                                                                  category: "PrincipleStudios.OpenApiCodegen.Server.Mvc",
-                                                                                                  DiagnosticSeverity.Info,
-                                                                                                  isEnabledByDefault: true);
-        private static readonly DiagnosticDescriptor NoFilesGenerated = new DiagnosticDescriptor(id: "PSAPICTRL002",
-                                                                                          title: "No files found enabled",
-                                                                                          messageFormat: "No files were found; ensure you have added an item for 'OpenApiSchemaMvcServer'",
-                                                                                          category: "PrincipleStudios.OpenApiCodegen",
-                                                                                          DiagnosticSeverity.Warning,
-                                                                                          isEnabledByDefault: true);
-        protected static readonly DiagnosticDescriptor FileGenerated = new DiagnosticDescriptor(id: "PSAPICTRL003",
-                                                                                          title: "File generated",
-                                                                                          messageFormat: "Generated file '{0}'",
-                                                                                          category: "PrincipleStudios.OpenApiCodegen",
-                                                                                          DiagnosticSeverity.Info,
-                                                                                          isEnabledByDefault: true);
-        protected static readonly DiagnosticDescriptor NoSourceGroup = new DiagnosticDescriptor(id: "PSAPICTRL004",
-                                                                                          title: "No source group",
-                                                                                          messageFormat: "No source group for '{0}'",
-                                                                                          category: "PrincipleStudios.OpenApiCodegen",
-                                                                                          DiagnosticSeverity.Info,
-                                                                                          isEnabledByDefault: true);
 
 #if ROSLYN4_0_OR_GREATER
         public void Initialize(IncrementalGeneratorInitializationContext incremental)
@@ -170,7 +146,7 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
             }
         }
 
-        protected static ISourceProvider CreateSourceProvider(OpenApiDocument document, AnalyzerConfigOptions opt)
+        private static ISourceProvider CreateSourceProvider(OpenApiDocument document, AnalyzerConfigOptions opt)
         {
             var options = LoadOptions(opt.GetAdditionalFilesMetadata(propConfig));
             var documentNamespace = opt.GetAdditionalFilesMetadata(propNamespace);
