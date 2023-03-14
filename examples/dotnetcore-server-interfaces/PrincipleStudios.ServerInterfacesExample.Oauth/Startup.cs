@@ -41,8 +41,8 @@ namespace PrincipleStudios.ServerInterfacesExample.Oauth
                 {
                     options.Scope.Add("read:public_key");
                     options.Scope.Add("read:user");
-                    options.ClientId = Configuration["GitHub:ClientId"];
-                    options.ClientSecret = Configuration["GitHub:ClientSecret"];
+                    options.ClientId = Configuration["GitHub:ClientId"] ?? throw new InvalidOperationException("GitHub:ClientId must be provided to run this example");
+                    options.ClientSecret = Configuration["GitHub:ClientSecret"] ?? throw new InvalidOperationException("GitHub:ClientSecret must be provided to run this example");
                     options.CallbackPath = new PathString("/github-oauth");
                     options.AuthorizationEndpoint = "https://github.com/login/oauth/authorize";
                     options.TokenEndpoint = "https://github.com/login/oauth/access_token";
