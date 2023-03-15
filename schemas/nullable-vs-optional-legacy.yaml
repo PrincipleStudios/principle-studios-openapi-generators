@@ -1,7 +1,7 @@
 openapi: "3.0.3"
 info:
   version: 1.0.0
-  title: Nullable vs Optional
+  title: Nullable vs Optional (Legacy)
   description: A sample API that demonstrates the difference between nullable and optional properties
 components:
   schemas:
