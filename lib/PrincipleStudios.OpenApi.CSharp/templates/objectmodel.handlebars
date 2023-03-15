@@ -12,7 +12,7 @@ namespace {{this.packageName}}
     /// </summary>
     {{/if}}public partial record {{ClassName}}({{#each Vars}}
         [property: global::System.Text.Json.Serialization.JsonPropertyName("{{BaseName}}")]{{#if Required
-            }}[param: global::System.ComponentModel.DataAnnotations.Required][property: global::System.Text.Json.Serialization.JsonRequiredAttribute]{{else
+            }}[property: global::System.Text.Json.Serialization.JsonRequiredAttribute]{{else
             }}[property: global::System.Text.Json.Serialization.JsonIgnore(Condition = global::System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]{{/if}}{{!
     data type: }} {{#if Optional}}global::PrincipleStudios.OpenApiCodegen.Json.Extensions.Optional<{{/if}}{{{DataType}}}{{#if Optional}}>?{{/if}}{{!
     name: }} {{Name}}{{#unless @last}}, {{/unless}}{{/each}}

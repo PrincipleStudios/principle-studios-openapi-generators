@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http.Json;
@@ -21,6 +22,7 @@ public class LegacyOptionalYamlShould
         {
             AssertRequest = (controller, request) =>
             {
+                Assert.True(controller.ModelState.IsValid);
                 Assert.Equal<int?>(2, request.NullableOnly);
                 Assert.Equal<int?>(3, request.OptionalOnly);
                 Assert.Equal<int?>(5, request.OptionalOrNullable);
@@ -29,7 +31,7 @@ public class LegacyOptionalYamlShould
         });
 
     [Fact]
-    public Task Handle_mixed_nullable_optional_with_none_provided() =>
+    public Task Handle_mixed_nullable_optional_with_extra_null_values() =>
         TestSingleRequest<LegacyOptional.ContrivedControllerBase.ContrivedActionResult, LegacyOptional.ContrivedRequest>(new(
             LegacyOptional.ContrivedControllerBase.ContrivedActionResult.Ok(new LegacyOptional.ContrivedResponse(null, null, null)),
             client => client.PostAsync("/nullable-vs-optional-legacy/contrived", JsonContent.Create(new { nullableOnly = (object?)null, optionalOnly = (object?)null, optionalOrNullable = (object?)null }))
@@ -37,6 +39,7 @@ public class LegacyOptionalYamlShould
         {
             AssertRequest = (controller, request) =>
             {
+                Assert.True(controller.ModelState.IsValid);
                 Assert.Null(request.NullableOnly);
                 Assert.Null(request.OptionalOnly);
                 Assert.Null(request.OptionalOrNullable);
@@ -44,6 +47,35 @@ public class LegacyOptionalYamlShould
             AssertResponseMessage = VerifyResponse(200, new { nullableOnly = (object?)null }),
         });
 
+    [Fact]
+    public Task Handle_mixed_nullable_optional_with_values_as_intended_by_yaml() =>
+        TestSingleRequest<LegacyOptional.ContrivedControllerBase.ContrivedActionResult, LegacyOptional.ContrivedRequest>(new(
+            LegacyOptional.ContrivedControllerBase.ContrivedActionResult.Ok(new LegacyOptional.ContrivedResponse(null, null, null)),
+            client => client.PostAsync("/nullable-vs-optional-legacy/contrived", JsonContent.Create(new { nullableOnly = (object?)null }))
+        )
+        {
+            AssertRequest = (controller, request) =>
+            {
+                Assert.True(controller.ModelState.IsValid);
+                Assert.Null(request.NullableOnly);
+                Assert.Null(request.OptionalOnly);
+                Assert.Null(request.OptionalOrNullable);
+            },
+            AssertResponseMessage = VerifyResponse(200, new { nullableOnly = (object?)null }),
+        });
 
+    [Fact]
+    public Task Disallow_missing_required_values() =>
+        TestSingleRequest<LegacyOptional.ContrivedControllerBase.ContrivedActionResult, LegacyOptional.ContrivedRequest>(new(
+            LegacyOptional.ContrivedControllerBase.ContrivedActionResult.Unsafe(new BadRequestResult()),
+            client => client.PostAsync("/nullable-vs-optional-legacy/contrived", JsonContent.Create(new { }))
+        )
+        {
+            AssertRequest = (controller, request) =>
+            {
+                Assert.False(controller.ModelState.IsValid);
+            },
+            AssertResponseMessage = VerifyResponse(400),
+        });
 
 }
