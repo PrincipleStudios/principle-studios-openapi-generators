@@ -10,11 +10,7 @@
 		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
 	</PropertyGroup>
 
-	<ItemGroup>
-		<PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="$(RoslynApiVersion)" PrivateAssets="all">
-      		<IncludeAssets>compile</IncludeAssets>
-    	</PackageReference>
-	</ItemGroup>
+	<Import Project="$(RepositoryEngineeringDir)roslyn.targets" />
 
 	<ItemGroup>
 		<None Include="*.props" Pack="true" PackagePath="build" />

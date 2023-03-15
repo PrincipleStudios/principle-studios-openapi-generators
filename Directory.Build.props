@@ -29,7 +29,7 @@
 		<WarningsAsErrors />
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(IsWindows)'=='true'">
-		<DefineConstants>Windows</DefineConstants>
+		<DefineConstants>$(DefineConstants);Windows</DefineConstants>
 	</PropertyGroup>
 
 	<PropertyGroup>
