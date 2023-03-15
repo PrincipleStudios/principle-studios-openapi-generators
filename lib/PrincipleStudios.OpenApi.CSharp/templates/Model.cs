@@ -46,18 +46,19 @@ namespace PrincipleStudios.OpenApi.CSharp.templates
     );
 
     public record ObjectModel(
-        string description,
-        string className,
-        string? parent,
-        ModelVar[] vars
-    ) : Model(description, className);
+        string Description,
+        string ClassName,
+        string? Parent,
+        ModelVar[] Vars
+    ) : Model(Description, ClassName);
 
     public record ModelVar(
-        string baseName,
-        string dataType,
-        bool nullable,
-        bool isContainer,
-        string name,
-        bool required
+        string BaseName,
+        string DataType,
+        bool Nullable,
+        bool IsContainer,
+        string Name,
+        bool Required,
+        bool Optional
     );
 }

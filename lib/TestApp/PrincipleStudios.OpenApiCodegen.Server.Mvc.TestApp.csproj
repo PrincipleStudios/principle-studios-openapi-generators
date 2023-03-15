@@ -18,6 +18,7 @@
     <OpenApiSchemaMvcServer Include="$(SolutionRoot)schemas\oauth.yaml" Link="OAuth\oauth.yaml" Key="OAuth" PathPrefix="/oauth" />
     <OpenApiSchemaMvcServer Include="$(SolutionRoot)schemas\form.yaml" Link="Form\form.yaml" Key="Form" PathPrefix="/form" />
     <OpenApiSchemaMvcServer Include="$(SolutionRoot)schemas\one-of.yaml" Link="OneOf\one-of.yaml" Key="OneOf" PathPrefix="/one-of" />
+    <OpenApiSchemaMvcServer Include="$(SolutionRoot)schemas\nullable-vs-optional-legacy.yaml" Link="LegacyOptional\nullable-vs-optional-legacy.yaml" Key="LegacyOptional" PathPrefix="/nullable-vs-optional-legacy" />
   </ItemGroup>
 
   <ItemGroup>

@@ -211,26 +211,28 @@ namespace PrincipleStudios.OpenApi.CSharp
         {
             if (objectModel == null)
                 throw new ArgumentNullException(nameof(objectModel));
-            var properties = objectModel.properties();
-            var required = new HashSet<string>(objectModel.required());
+            var properties = objectModel.Properties();
+            var required = new HashSet<string>(objectModel.Required());
 
             Func<templates.ModelVar>[] vars = (from entry in properties
                                                let req = required.Contains(entry.Key)
                                                let dataType = ToInlineDataType(entry.Value)
+                                               let resolved = objectModel.LegacyOptionalBehavior && !req ? dataType().MakeNullable() : dataType()
                                                select (Func<templates.ModelVar>)(() => new templates.ModelVar(
-                                                   baseName: entry.Key,
-                                                   dataType: dataType().text,
-                                                   nullable: dataType().nullable,
-                                                   isContainer: dataType().isEnumerable,
-                                                   name: CSharpNaming.ToPropertyName(entry.Key, options.ReservedIdentifiers("object", className)),
-                                                   required: req
+                                                   BaseName: entry.Key,
+                                                   DataType: resolved.text,
+                                                   Nullable: resolved.nullable,
+                                                   IsContainer: resolved.isEnumerable,
+                                                   Name: CSharpNaming.ToPropertyName(entry.Key, options.ReservedIdentifiers("object", className)),
+                                                   Required: req,
+                                                   Optional: !req && !objectModel.LegacyOptionalBehavior
                                                 ))).ToArray();
 
             return () => new templates.ObjectModel(
-                description: schema.Description,
-                className: className,
-                parent: null, // TODO - if "all of" and only one was a reference, we should be able to use inheritance.
-                vars: vars.Select(v => v()).ToArray()
+                Description: schema.Description,
+                ClassName: className,
+                Parent: null, // TODO - if "all of" and only one was a reference, we should be able to use inheritance.
+                Vars: vars.Select(v => v()).ToArray()
             );
         }
 
@@ -272,7 +274,7 @@ namespace PrincipleStudios.OpenApi.CSharp
             );
         }
 
-        record ObjectModel(Func<IDictionary<string, OpenApiSchema>> properties, Func<IEnumerable<string>> required);
+        record ObjectModel(Func<IDictionary<string, OpenApiSchema>> Properties, Func<IEnumerable<string>> Required, bool LegacyOptionalBehavior);
 
         private ObjectModel? BuildObjectModel(OpenApiSchema schema) =>
             schema switch
@@ -281,16 +283,22 @@ namespace PrincipleStudios.OpenApi.CSharp
                 {
                     ObjectModel[] models when models.All(v => v != null) =>
                         new ObjectModel(
-                            properties: () => models.SelectMany(m => m!.properties()).Aggregate(new Dictionary<string, OpenApiSchema>(), (prev, kvp) =>
+                            Properties: () => models.SelectMany(m => m!.Properties()).Aggregate(new Dictionary<string, OpenApiSchema>(), (prev, kvp) =>
                             {
                                 prev[kvp.Key] = kvp.Value;
                                 return prev;
                             }),
-                            required: () => models.SelectMany(m => m!.required()).Distinct()
+                            Required: () => models.SelectMany(m => m!.Required()).Distinct(),
+                            LegacyOptionalBehavior: models.Any(m => m!.LegacyOptionalBehavior)
                         ),
                     _ => null
                 },
-                { Type: "object" } or { Properties: { Count: > 0 } } => new ObjectModel(properties: () => schema.Properties, required: () => schema.Required),
+                { Type: "object" } or { Properties: { Count: > 0 } } => 
+                    new ObjectModel(
+                        Properties: () => schema.Properties, 
+                        Required: () => schema.Required, 
+                        LegacyOptionalBehavior: schema.UseOptionalAsNullable()
+                    ),
                 _ => null,
             };
 
