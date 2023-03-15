@@ -9,7 +9,7 @@ public static class SharedOpenApiExtensions
 {
     public static bool UseOptionalAsNullable(this OpenApiSchema objectSchema, bool useLegacyByDefault = false)
     {
-        if (!objectSchema.Extensions.TryGetValue("x-PS-Optional-As-Nullable", out var optionalAsNullable) || optionalAsNullable is not Microsoft.OpenApi.Any.OpenApiBoolean { Value: var result })
+        if (!objectSchema.Extensions.TryGetValue("x-ps-optional-as-nullable", out var optionalAsNullable) || optionalAsNullable is not Microsoft.OpenApi.Any.OpenApiBoolean { Value: var result })
             return useLegacyByDefault;
 
         return result;

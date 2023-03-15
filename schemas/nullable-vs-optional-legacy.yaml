@@ -7,7 +7,7 @@ components:
   schemas:
     Error:
       type: object
-      x-PS-Optional-As-Nullable: true
+      x-ps-optional-as-nullable: true
       required:
         - errorCode
         - errorMessage
@@ -25,7 +25,7 @@ paths:
           application/json:
             schema:
               type: object
-              x-PS-Optional-As-Nullable: true
+              x-ps-optional-as-nullable: true
               required:
                 - name
               properties:
@@ -42,7 +42,7 @@ paths:
                 type: array
                 items:
                   type: object
-                  x-PS-Optional-As-Nullable: true
+                  x-ps-optional-as-nullable: true
                   required:
                     - id
                     - name
@@ -66,7 +66,7 @@ paths:
           application/json:
             schema:
               type: object
-              x-PS-Optional-As-Nullable: true
+              x-ps-optional-as-nullable: true
               required:
                 - nullableOnly
               properties:
@@ -80,7 +80,7 @@ paths:
             application/json:
               schema:
                 type: object
-                x-PS-Optional-As-Nullable: true
+                x-ps-optional-as-nullable: true
                 required:
                   - nullableOnly
                 properties:
