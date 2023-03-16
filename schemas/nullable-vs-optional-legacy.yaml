@@ -1,0 +1,89 @@
+openapi: "3.0.3"
+info:
+  version: 1.0.0
+  title: Nullable vs Optional (Legacy)
+  description: A sample API that demonstrates the difference between nullable and optional properties
+components:
+  schemas:
+    Error:
+      type: object
+      x-ps-optional-as-nullable: true
+      required:
+        - errorCode
+        - errorMessage
+      properties:
+        errorCode: { type: string }
+        errorMessage: { type: string, nullable: true }
+        referenceCode: { type: string }
+paths:
+  /search:
+    post:
+      operationId: search
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              x-ps-optional-as-nullable: true
+              required:
+                - name
+              properties:
+                name:
+                  type: string
+                department:
+                  type: string
+      responses:
+        '200':
+          description: List of results
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  x-ps-optional-as-nullable: true
+                  required:
+                    - id
+                    - name
+                    - department
+                  properties:
+                    id: { type: string }
+                    name: { type: string }
+                    department: { type: string, nullable: true }
+        '400':
+          description: An error occurred processing the request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /contrived:
+    post:
+      operationId: contrived
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              x-ps-optional-as-nullable: true
+              required:
+                - nullableOnly
+              properties:
+                nullableOnly: { type: integer, nullable: true }
+                optionalOnly: { type: integer }
+                optionalOrNullable: { type: integer, nullable: true }
+      responses:
+        '200':
+          description: Contrived response
+          content:
+            application/json:
+              schema:
+                type: object
+                x-ps-optional-as-nullable: true
+                required:
+                  - nullableOnly
+                properties:
+                  nullableOnly: { type: integer, nullable: true }
+                  optionalOnly: { type: integer }
+                  optionalOrNullable: { type: integer, nullable: true }

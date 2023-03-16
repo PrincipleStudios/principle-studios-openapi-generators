@@ -17,7 +17,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PrincipleStudios.OpenApiCod
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Server.Mvc", "Server.Mvc", "{C800B3FC-9890-4858-B2F3-4DA9B6957415}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Client.TypeScriptRxJs", "Client.TypeScriptRxJs", "{6425AC08-57C0-4453-A78A-537E9514CE7B}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Client.TypeScript", "Client.TypeScript", "{6425AC08-57C0-4453-A78A-537E9514CE7B}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PrincipleStudios.OpenApiCodegen.Client.TypeScript", "generators\typescript\PrincipleStudios.OpenApiCodegen.Client.TypeScript\PrincipleStudios.OpenApiCodegen.Client.TypeScript.csproj", "{C0E47301-8CB1-44F6-8321-BCB9C09219BB}"
 EndProject

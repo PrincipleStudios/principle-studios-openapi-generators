@@ -1,4 +1,5 @@
 ﻿using HandlebarsDotNet;
+using HandlebarsDotNet.Runtime;
 using Microsoft.OpenApi.Models;
 using PrincipleStudios.OpenApi.Transformations;
 using System;
@@ -203,28 +204,29 @@ namespace PrincipleStudios.OpenApi.TypeScript
         {
             if (objectModel == null)
                 throw new ArgumentNullException(nameof(objectModel));
-            var properties = objectModel.properties();
-            var required = new HashSet<string>(objectModel.required());
+            var properties = objectModel.Properties();
+            var required = new HashSet<string>(objectModel.Required());
 
             Func<templates.ModelVar>[] vars = (from entry in properties
                                                let req = required.Contains(entry.Key)
-                                               let dataType= ToInlineDataType(entry.Value)
+                                               let dataType = ToInlineDataType(entry.Value)
+                                               let resolved = objectModel.LegacyOptionalBehavior && !req ? dataType().MakeNullable() : dataType()
                                                select (Func<templates.ModelVar>)(() => new templates.ModelVar(
-                                                   baseName: entry.Key,
-                                                   dataType: dataType().text,
-                                                   nullable: dataType().nullable,
-                                                   isContainer: dataType().isEnumerable,
-                                                   name: entry.Key,
-                                                   required: req
+                                                   BaseName: entry.Key,
+                                                   DataType: resolved.text,
+                                                   Nullable: resolved.nullable,
+                                                   IsContainer: resolved.isEnumerable,
+                                                   Name: entry.Key,
+                                                   Required: req,
+                                                   Optional: !req
                                                 ))).ToArray();
 
-
             return () => new templates.ObjectModel(
-                imports: this.GetImportStatements(properties.Values, new[] { schema }, "./models/").ToArray(),
-                description: schema.Description,
-                className: className,
-                parent: null, // TODO - if "all of" and only one was a reference, we should be able to use inheritance.
-                vars: vars.Select(v => v()).ToArray()
+                Imports: this.GetImportStatements(properties.Values, new[] { schema }, "./models/").ToArray(),
+                Description: schema.Description,
+                ClassName: className,
+                Parent: null, // TODO - if "all of" and only one was a reference, we should be able to use inheritance.
+                Vars: vars.Select(v => v()).ToArray()
             );
         }
 
@@ -273,7 +275,7 @@ namespace PrincipleStudios.OpenApi.TypeScript
             );
         }
 
-        record ObjectModel(Func<IDictionary<string, OpenApiSchema>> properties, Func<IEnumerable<string>> required);
+        record ObjectModel(Func<IDictionary<string, OpenApiSchema>> Properties, Func<IEnumerable<string>> Required, bool LegacyOptionalBehavior);
 
         private ObjectModel? BuildObjectModel(OpenApiSchema schema) =>
             schema switch
@@ -282,16 +284,21 @@ namespace PrincipleStudios.OpenApi.TypeScript
                 {
                     ObjectModel[] models when models.All(v => v != null) =>
                         new ObjectModel(
-                            properties: () => models.SelectMany(m => m!.properties()).Aggregate(new Dictionary<string, OpenApiSchema>(), (prev, kvp) =>
+                            Properties: () => models.SelectMany(m => m!.Properties()).Aggregate(new Dictionary<string, OpenApiSchema>(), (prev, kvp) =>
                             {
                                 prev[kvp.Key] = kvp.Value;
                                 return prev;
                             }),
-                            required: () => models.SelectMany(m => m!.required()).Distinct()
+                            Required: () => models.SelectMany(m => m!.Required()).Distinct(),
+                            LegacyOptionalBehavior: models.Any(m => m!.LegacyOptionalBehavior)
                         ),
                     _ => null
                 },
-                { Type: "object" } or { Properties: { Count: > 0 } } => new ObjectModel(properties: () => schema.Properties, required: () => schema.Required),
+                { Type: "object" } or { Properties: { Count: > 0 } } => new ObjectModel(
+                    Properties: () => schema.Properties,
+                    Required: () => schema.Required,
+                    LegacyOptionalBehavior: schema.UseOptionalAsNullable()
+                ),
                 _ => null,
             };
 
@@ -319,7 +326,7 @@ namespace PrincipleStudios.OpenApi.TypeScript
                 _ when ProduceSourceEntry(schema) =>
                     new(UseReferenceName(schema), new[] { ToImportReference(schema) }),
                 { Type: "object", Format: null, Properties: IDictionary<string, OpenApiSchema> properties, AdditionalProperties: null, Required: var requiredProperties } =>
-                    ObjectToInline(properties, requiredProperties),
+                    ObjectToInline(properties, requiredProperties, schema.UseOptionalAsNullable()),
                 { Enum: { Count: > 0 } and IList<Microsoft.OpenApi.Any.IOpenApiAny> enumValues } =>
                     EnumToInline(enumValues),
                 { Type: string type, Format: var format } =>
@@ -340,13 +347,15 @@ namespace PrincipleStudios.OpenApi.TypeScript
                 var inline = ToInlineDataType(items)();
                 return new(options.ToArrayType(inline.text), inline.Imports, isEnumerable: true);
             }
-            InlineDataType ObjectToInline(IDictionary<string, OpenApiSchema> properties, ISet<string> requiredProperties)
+            InlineDataType ObjectToInline(IDictionary<string, OpenApiSchema> properties, ISet<string> requiredProperties, bool useOptionalAsNullable)
             {
                 var props = (from prop in properties
                              let inline = ToInlineDataType(prop.Value)()
+                             let resolved = useOptionalAsNullable && !requiredProperties.Contains(prop.Key) ? inline.MakeNullable() : inline
+                             let optional = !requiredProperties.Contains(prop.Key)
                              select (
-                                 text: $"\"{prop.Key}\"{(requiredProperties.Contains(prop.Key) ? "" : "?")}: {inline.text}",
-                                 imports: inline.Imports
+                                 text: $"\"{prop.Key}\"{(optional ? "?" : "")}: {resolved.text}",
+                                 imports: resolved.Imports
                              )).ToArray();
                 return new($"{{ { string.Join("; ", props.Select(p => p.text))} }}", props.SelectMany(p => p.imports).ToArray());
             }

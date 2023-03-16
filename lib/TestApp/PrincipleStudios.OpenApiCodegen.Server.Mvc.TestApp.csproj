@@ -18,6 +18,8 @@
     <OpenApiSchemaMvcServer Include="$(SolutionRoot)schemas\oauth.yaml" Link="OAuth\oauth.yaml" Key="OAuth" PathPrefix="/oauth" />
     <OpenApiSchemaMvcServer Include="$(SolutionRoot)schemas\form.yaml" Link="Form\form.yaml" Key="Form" PathPrefix="/form" />
     <OpenApiSchemaMvcServer Include="$(SolutionRoot)schemas\one-of.yaml" Link="OneOf\one-of.yaml" Key="OneOf" PathPrefix="/one-of" />
+    <OpenApiSchemaMvcServer Include="$(SolutionRoot)schemas\nullable-vs-optional-legacy.yaml" Link="LegacyOptional\nullable-vs-optional-legacy.yaml" Key="LegacyOptional" PathPrefix="/nullable-vs-optional-legacy" />
+    <OpenApiSchemaMvcServer Include="$(SolutionRoot)schemas\nullable-vs-optional.yaml" Link="NullableVsOptional\nullable-vs-optional.yaml" Key="NullableVsOptional" PathPrefix="/nullable-vs-optional" />
   </ItemGroup>
 
   <ItemGroup>
@@ -46,9 +48,9 @@
       </CodegenCliFiles>
 		<CodegenOutputFiles Include="$(MSBuildProjectDirectory)/generated/**/*.cs" />
     </ItemGroup>
-		
+
 	</Target>
-	
+
     <Target Name="_GenerateServerOpenApiCodegen" DependsOnTargets="_PrepareCodegenFiles" Inputs="%(CodegenCliFiles.FullPath);$(ProjectPath)" Outputs="@(CodegenCliFiles->'$(MSBuildProjectDirectory)/generated/%(Key)/_._')">
         <PropertyGroup>
           <CodegenCliPath>%(CodegenCli.Identity)</CodegenCliPath>
