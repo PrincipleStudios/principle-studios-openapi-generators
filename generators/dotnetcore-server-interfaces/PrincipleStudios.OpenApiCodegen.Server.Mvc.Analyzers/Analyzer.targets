@@ -26,6 +26,8 @@
 		<EmbeddedResource Include="templates\*.handlebars" />
 		<Compile Include="$(RepositoryEngineeringDir)IsExternalInit.cs" Visible="false" />
 		<Compile Include="$(RepositoryEngineeringDir)MaybeNullWhenAttribute.cs" Visible="false" />
+		<Compile Include="$(RepositoryEngineeringDir)NotNullWhenAttribute.cs" Visible="false" />
+		<Compile Include="$(RepositoryEngineeringDir)BaseGenerator.cs" Link="Shared/BaseGenerator.cs" />
 	</ItemGroup>
 
 	<ItemGroup>
