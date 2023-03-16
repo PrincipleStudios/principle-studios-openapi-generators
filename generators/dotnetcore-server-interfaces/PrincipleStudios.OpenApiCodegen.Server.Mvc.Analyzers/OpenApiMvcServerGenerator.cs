@@ -24,8 +24,6 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
     public sealed class OpenApiMvcServerGenerator : BaseGenerator
     {
         const string sourceGroup = "OpenApiServerInterface";
-        const string propNamespace = "Namespace";
-        const string propConfig = "Configuration";
 
         private const string sourceItemGroupKey = "SourceItemGroup";
         private static readonly DiagnosticDescriptor IncludeDependentDll = new DiagnosticDescriptor(id: "PSAPICTRL001",
@@ -35,32 +33,17 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
                                                                                                     DiagnosticSeverity.Warning,
                                                                                                     isEnabledByDefault: true);
 
+        public OpenApiMvcServerGenerator() : base(new MvcServerGenerator())
+        {
+            
+        }
+
         protected override void ReportCompilationDiagnostics(Compilation compilation, CompilerApis apis)
         {
             // check that the users compilation references the expected library
             if (!compilation.ReferencedAssemblyNames.Any(static ai => ai.Name.Equals("PrincipleStudios.OpenApiCodegen.Json.Extensions", StringComparison.OrdinalIgnoreCase)))
             {
                 apis.ReportDiagnostic(Diagnostic.Create(IncludeDependentDll, Location.None));
-            }
-        }
-
-        protected override void GenerateSources(AdditionalTextWithOptions additionalText, CompilerApis apis)
-        {
-            if (!TryParseFile(additionalText.TextContents, out var document, out var diagnostic))
-            {
-                if (diagnostic != null)
-                    apis.ReportDiagnostic(diagnostic);
-                return;
-            }
-            var sourceProvider = CreateSourceProvider(document, additionalText.ConfigOptions);
-            var openApiDiagnostic = new OpenApiTransformDiagnostic();
-            foreach (var entry in sourceProvider.GetSources(openApiDiagnostic))
-            {
-                apis.AddSource($"PS_{entry.Key}", SourceText.From(entry.SourceText, Encoding.UTF8));
-            }
-            foreach (var error in openApiDiagnostic.Errors)
-            {
-                // TODO - do something with these errors!
             }
         }
 
@@ -75,74 +58,5 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
             return true;
         }
 
-        private static bool TryParseFile(string openapiTextContent, [NotNullWhen(true)] out OpenApiDocument? document, out Diagnostic? diagnostic)
-        {
-            document = null;
-            diagnostic = null;
-            try
-            {
-                var reader = new OpenApiStringReader();
-                document = reader.Read(openapiTextContent, out var openApiDiagnostic);
-                if (openApiDiagnostic.Errors.Any())
-                {
-                    // TODO - report issues
-                    // diagnostic = Diagnostic.Create();
-
-                    return false;
-                }
-
-                return true;
-            }
-            catch
-            {
-                // TODO - report invalid files
-                // diagnostic = Diagnostic.Create();
-                return false;
-            }
-        }
-
-        private static ISourceProvider CreateSourceProvider(OpenApiDocument document, AnalyzerConfigOptions opt)
-        {
-            var options = LoadOptions(opt.GetAdditionalFilesMetadata(propConfig));
-            var documentNamespace = opt.GetAdditionalFilesMetadata(propNamespace);
-            if (string.IsNullOrEmpty(documentNamespace))
-                documentNamespace = GetStandardNamespace(opt, options);
-
-            return document.BuildCSharpPathControllerSourceProvider(GetVersionInfo(), documentNamespace, options);
-        }
-
-        private static CSharpServerSchemaOptions LoadOptions(string? optionsFiles)
-        {
-            using var defaultJsonStream = CSharpSchemaOptions.GetDefaultOptionsJson();
-            var builder = new ConfigurationBuilder();
-            builder.AddYamlStream(defaultJsonStream);
-            if (optionsFiles is { Length: > 0 })
-            {
-                foreach (var file in optionsFiles.Split(';'))
-                {
-                    if (System.IO.File.Exists(file))
-                    {
-                        builder.AddYamlFile(file);
-                    }
-                }
-            }
-            var result = builder.Build().Get<CSharpServerSchemaOptions>();
-            return result;
-        }
-
-        private static string GetVersionInfo()
-        {
-            return $"{typeof(CSharpControllerTransformer).FullName} v{typeof(CSharpControllerTransformer).Assembly.GetName().Version}";
-        }
-
-        private static string? GetStandardNamespace(AnalyzerConfigOptions opt, CSharpSchemaOptions options)
-        {
-            var identity = opt.GetAdditionalFilesMetadata("identity");
-            var link = opt.GetAdditionalFilesMetadata("link");
-            opt.TryGetValue("build_property.projectdir", out var projectDir);
-            opt.TryGetValue("build_property.rootnamespace", out var rootNamespace);
-
-            return CSharpNaming.ToNamespace(rootNamespace, projectDir, identity, link, options.ReservedIdentifiers());
-        }
     }
 }

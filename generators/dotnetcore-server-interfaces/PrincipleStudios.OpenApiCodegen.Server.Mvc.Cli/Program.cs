@@ -6,7 +6,6 @@
 using Microsoft.Extensions.Configuration;
 using PrincipleStudios.OpenApi.CSharp;
 using PrincipleStudios.OpenApi.Transformations;
-using System.IO;
 
 var openApiFilePath = args[0];
 var csharpNamespace = args[1];

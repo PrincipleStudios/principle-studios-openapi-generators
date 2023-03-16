@@ -3,6 +3,7 @@ using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.CodeAnalysis.Text;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 
@@ -18,6 +19,18 @@ public abstract class BaseGenerator :
     ISourceGenerator
 #endif
 {
+    private readonly IOpenApiCodeGenerator? generator;
+
+    [Obsolete]
+    public BaseGenerator()
+    {
+        generator = null;
+    }
+
+    public BaseGenerator(IOpenApiCodeGenerator generator)
+    {
+        this.generator = generator;
+    }
 
 #if ROSLYN4_0_OR_GREATER
     public virtual void Initialize(IncrementalGeneratorInitializationContext incremental)
@@ -75,7 +88,27 @@ public abstract class BaseGenerator :
 
     protected abstract void ReportCompilationDiagnostics(Compilation compilation, CompilerApis apis);
     protected abstract bool IsRelevantFile(AdditionalTextWithOptions additionalText);
-    protected abstract void GenerateSources(AdditionalTextWithOptions additionalText, CompilerApis apis);
+    protected virtual void GenerateSources(AdditionalTextWithOptions additionalText, CompilerApis apis)
+    {
+        // TODO - remove this check
+        if (generator == null) throw new NotImplementedException();
+
+        var document = new OpenApiDocumentConfiguration(
+            additionalText.TextContents,
+            new ReadOnlyDictionary<string, string?>(
+                generator.MetadataKeys.ToDictionary(key => key, additionalText.ConfigOptions.GetAdditionalFilesMetadata)
+            )
+        );
+        var result = generator.Generate(document);
+        foreach (var entry in result.Sources)
+        {
+            apis.AddSource($"PS_{entry.Key}", SourceText.From(entry.SourceText, Encoding.UTF8));
+        }
+        foreach (var diagnostic in result.Diagnostics)
+        {
+            // TODO: diagnostics
+        }
+    }
 
 
 }

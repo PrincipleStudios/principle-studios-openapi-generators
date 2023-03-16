@@ -19,6 +19,7 @@ using System.Text;
 
 namespace PrincipleStudios.OpenApiCodegen.Client
 {
+    [Obsolete("TODO: use IOpenApiCodeGenerator constructor")]
     [Generator]
     public sealed class OpenApiCSharpClientGenerator : BaseGenerator
     {
