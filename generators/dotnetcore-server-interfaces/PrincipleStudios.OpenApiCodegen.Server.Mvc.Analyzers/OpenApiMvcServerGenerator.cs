@@ -35,7 +35,6 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
 
         public OpenApiMvcServerGenerator() : base(new MvcServerGenerator())
         {
-            
         }
 
         protected override void ReportCompilationDiagnostics(Compilation compilation, CompilerApis apis)

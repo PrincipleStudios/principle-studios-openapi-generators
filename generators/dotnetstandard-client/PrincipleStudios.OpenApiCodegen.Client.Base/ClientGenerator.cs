@@ -12,7 +12,7 @@ using System.Linq;
 
 namespace PrincipleStudios.OpenApi.CSharp;
 
-public class MvcServerGenerator : IOpenApiCodeGenerator
+public class ClientGenerator : IOpenApiCodeGenerator
 {
     const string propNamespace = "Namespace";
     const string propConfig = "Configuration";
@@ -25,14 +25,16 @@ public class MvcServerGenerator : IOpenApiCodeGenerator
         propIdentity,
         propLink,
     };
-
     public IEnumerable<string> MetadataKeys => metadataKeys;
 
     public GenerationResult Generate(OpenApiDocumentConfiguration documentConfiguration)
     {
         if (!TryParseFile(documentConfiguration.DocumentContents, out var document, out var diagnostic))
         {
-            return new GenerationResult(Array.Empty<OpenApiCodegen.SourceEntry>(), diagnostic);
+            if (diagnostic != null)
+                return new GenerationResult(Array.Empty<OpenApiCodegen.SourceEntry>(), diagnostic.ToArray());
+            // TODO - should never happen
+            return new GenerationResult(Array.Empty<OpenApiCodegen.SourceEntry>(), Array.Empty<DiagnosticInfo>());
         }
         var sourceProvider = CreateSourceProvider(document, documentConfiguration.AdditionalTextMetadata);
         var openApiDiagnostic = new OpenApiTransformDiagnostic();
@@ -58,7 +60,6 @@ public class MvcServerGenerator : IOpenApiCodeGenerator
             if (openApiDiagnostic.Errors.Any())
             {
                 // TODO - report issues
-                // diagnostic = Diagnostic.Create();
 
                 return false;
             }
@@ -68,7 +69,6 @@ public class MvcServerGenerator : IOpenApiCodeGenerator
         catch
         {
             // TODO - report invalid files
-            // diagnostic = Diagnostic.Create();
             return false;
         }
     }
@@ -80,10 +80,10 @@ public class MvcServerGenerator : IOpenApiCodeGenerator
         if (string.IsNullOrEmpty(documentNamespace))
             documentNamespace = GetStandardNamespace(opt, options);
 
-        return document.BuildCSharpPathControllerSourceProvider(GetVersionInfo(), documentNamespace, options);
+        return document.BuildCSharpClientSourceProvider(GetVersionInfo(), documentNamespace, options);
     }
 
-    private static CSharpServerSchemaOptions LoadOptions(string? optionsFiles)
+    private static CSharpSchemaOptions LoadOptions(string? optionsFiles)
     {
         using var defaultJsonStream = CSharpSchemaOptions.GetDefaultOptionsJson();
         var builder = new ConfigurationBuilder();
@@ -98,7 +98,7 @@ public class MvcServerGenerator : IOpenApiCodeGenerator
                 }
             }
         }
-        var result = builder.Build().Get<CSharpServerSchemaOptions>();
+        var result = builder.Build().Get<CSharpSchemaOptions>();
         // TODO - generate diagnostic instead of throwing exception
         if (result == null) throw new InvalidOperationException("Could not build schema options");
         return result;
@@ -106,13 +106,13 @@ public class MvcServerGenerator : IOpenApiCodeGenerator
 
     private static string GetVersionInfo()
     {
-        return $"{typeof(CSharpControllerTransformer).FullName} v{typeof(CSharpControllerTransformer).Assembly.GetName().Version}";
+        return $"{typeof(CSharpClientTransformer).FullName} v{typeof(CSharpClientTransformer).Assembly.GetName().Version}";
     }
 
     private static string? GetStandardNamespace(IReadOnlyDictionary<string, string?> opt, CSharpSchemaOptions options)
     {
-        var identity = opt[propIdentity];
-        var link = opt[propLink];
+        var identity = opt["identity"];
+        var link = opt["link"];
         opt.TryGetValue("build_property.projectdir", out var projectDir);
         opt.TryGetValue("build_property.rootnamespace", out var rootNamespace);
 

@@ -28,6 +28,7 @@
 		<Compile Include="$(RepositoryEngineeringDir)MaybeNullWhenAttribute.cs" Visible="false" />
 		<Compile Include="$(RepositoryEngineeringDir)NotNullWhenAttribute.cs" Visible="false" />
 		<Compile Include="$(RepositoryEngineeringDir)BaseGenerator.cs" Link="Shared/BaseGenerator.cs" />
+		<Compile Include="$(RepositoryEngineeringDir)AnalyzerConfigOptionsExtensions.cs" Link="Shared/AnalyzerConfigOptionsExtensions.cs" />
 	</ItemGroup>
 
 	<ItemGroup>

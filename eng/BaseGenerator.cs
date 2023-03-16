@@ -19,17 +19,11 @@ public abstract class BaseGenerator :
     ISourceGenerator
 #endif
 {
-    private readonly IOpenApiCodeGenerator? generator;
-
-    [Obsolete]
-    public BaseGenerator()
-    {
-        generator = null;
-    }
+    private readonly IOpenApiCodeGenerator generator;
 
     public BaseGenerator(IOpenApiCodeGenerator generator)
     {
-        this.generator = generator;
+        this.generator = generator ?? throw new ArgumentNullException(nameof(generator), message: "Must provide a generator implementation");
     }
 
 #if ROSLYN4_0_OR_GREATER
@@ -88,11 +82,8 @@ public abstract class BaseGenerator :
 
     protected abstract void ReportCompilationDiagnostics(Compilation compilation, CompilerApis apis);
     protected abstract bool IsRelevantFile(AdditionalTextWithOptions additionalText);
-    protected virtual void GenerateSources(AdditionalTextWithOptions additionalText, CompilerApis apis)
+    private void GenerateSources(AdditionalTextWithOptions additionalText, CompilerApis apis)
     {
-        // TODO - remove this check
-        if (generator == null) throw new NotImplementedException();
-
         var document = new OpenApiDocumentConfiguration(
             additionalText.TextContents,
             new ReadOnlyDictionary<string, string?>(
