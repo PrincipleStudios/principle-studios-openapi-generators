@@ -4,6 +4,7 @@
 		<AssemblyName>PrincipleStudios.OpenApiCodegen.Client.Base</AssemblyName>
 		<TargetFramework>netstandard2.0</TargetFramework>
 		<VersionPrefix>$(SharedAnalyzerLibrariesVersion)</VersionPrefix>
+		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
 	</PropertyGroup>
 
 	<ItemGroup>

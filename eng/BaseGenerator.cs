@@ -4,7 +4,9 @@ using Microsoft.CodeAnalysis.Text;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 
 namespace PrincipleStudios.OpenApiCodegen;
@@ -20,6 +22,25 @@ public abstract class BaseGenerator :
 #endif
 {
     private readonly IOpenApiCodeGenerator generator;
+
+    public BaseGenerator(string generatorTypeName)
+    {
+        var myAsm = this.GetType().Assembly;
+        List<Assembly> loadedAssemblies = new();
+        foreach (var resource in myAsm.GetManifestResourceNames().Where(r => r.EndsWith(".dll")))
+        {
+            using var stream = myAsm.GetManifestResourceStream(resource);
+            var dllBytes = new byte[stream.Length];
+            stream.Read(dllBytes, 0, (int)stream.Length);
+            loadedAssemblies.Add(Assembly.Load(dllBytes));
+        }
+
+        var generatorType = loadedAssemblies.Select(asm => asm.GetType(generatorTypeName, false)).FirstOrDefault();
+        if (generatorType == null)
+            throw new InvalidOperationException($"Could not find generator {generatorType}");
+
+        generator = (IOpenApiCodeGenerator)Activator.CreateInstance(generatorType);
+    }
 
     public BaseGenerator(IOpenApiCodeGenerator generator)
     {

@@ -9,13 +9,17 @@
 
 	<ItemGroup>
 		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="3.1.20" />
-		<PackageReference Include="PrincipleStudios.OpenApiCodegen.Client" Condition=" '$(OpenApiCSharpClientFullVersion)' != '' " Version="$(OpenApiCSharpClientFullVersion)" />
-		<PackageReference Include="PrincipleStudios.OpenApiCodegen.Client" Condition=" '$(OpenApiCSharpClientFullVersion)' == '' and '$(VersionSuffix)' == '' " Version="$(OpenApiCSharpClientVersion)" />
-		<PackageReference Include="PrincipleStudios.OpenApiCodegen.Client" Condition=" '$(OpenApiCSharpClientFullVersion)' == '' and '$(VersionSuffix)' != '' " Version="$(OpenApiCSharpClientVersion)-$(VersionSuffix)" />
+		<PackageReference Include="PrincipleStudios.OpenApiCodegen.Client" Condition=" '$(OpenApiCSharpClientExternalVersion)' != '' " Version="$(OpenApiCSharpClientExternalVersion)" PrivateAssets="All" />
+		<ProjectReference
+			Include="$(SolutionRoot)generators\dotnetstandard-client\PrincipleStudios.OpenApiCodegen.Client.Analyzers\PrincipleStudios.OpenApiCodegen.Client.Roslyn4.0.csproj"
+			Condition=" '$(OpenApiCSharpClientExternalVersion)' == '' "
+			OutputItemType="Analyzer"
+			ReferenceOutputAssembly="false" />
 
-		<PackageReference Include="PrincipleStudios.OpenApiCodegen.Json.Extensions" Condition=" '$(OpenApiJsonExtensionsFullVersion)' != '' " Version="$(OpenApiJsonExtensionsFullVersion)" />
-		<PackageReference Include="PrincipleStudios.OpenApiCodegen.Json.Extensions" Condition=" '$(OpenApiJsonExtensionsFullVersion)' == '' and '$(VersionSuffix)' == '' " Version="$(OpenApiJsonExtensionsVersion)" />
-		<PackageReference Include="PrincipleStudios.OpenApiCodegen.Json.Extensions" Condition=" '$(OpenApiJsonExtensionsFullVersion)' == '' and '$(VersionSuffix)' != '' " Version="$(OpenApiJsonExtensionsVersion)-$(VersionSuffix)" />
+		<!-- <PackageReference Include="PrincipleStudios.OpenApiCodegen.Json.Extensions" Condition=" '$(OpenApiJsonExtensionsExternalVersion)' != '' " Version="$(OpenApiJsonExtensionsExternalVersion)" />
+		<ProjectReference
+			Include="$(SolutionRoot)lib\PrincipleStudios.OpenApiCodegen.Json.Extensions\PrincipleStudios.OpenApiCodegen.Json.Extensions.csproj"
+			Condition=" '$(OpenApiJsonExtensionsExternalVersion)' == '' " /> -->
 	</ItemGroup>
 
 	<ItemGroup>

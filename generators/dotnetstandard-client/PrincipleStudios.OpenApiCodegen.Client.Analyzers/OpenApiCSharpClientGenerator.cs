@@ -1,11 +1,6 @@
 ﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.CodeAnalysis.Text;
-using Microsoft.Extensions.Configuration;
-using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Readers;
-using PrincipleStudios.OpenApi.CSharp;
-using PrincipleStudios.OpenApi.Transformations;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
@@ -31,7 +26,7 @@ namespace PrincipleStudios.OpenApiCodegen.Client
                                                                                                   DiagnosticSeverity.Warning,
                                                                                                   isEnabledByDefault: true);
 
-        public OpenApiCSharpClientGenerator() : base(new ClientGenerator())
+        public OpenApiCSharpClientGenerator() : base("PrincipleStudios.OpenApi.CSharp.ClientGenerator")
         {
         }
 
