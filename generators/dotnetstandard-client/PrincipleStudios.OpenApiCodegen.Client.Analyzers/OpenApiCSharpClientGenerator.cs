@@ -26,7 +26,7 @@ namespace PrincipleStudios.OpenApiCodegen.Client
                                                                                                   DiagnosticSeverity.Warning,
                                                                                                   isEnabledByDefault: true);
 
-        public OpenApiCSharpClientGenerator() : base("PrincipleStudios.OpenApi.CSharp.ClientGenerator")
+        public OpenApiCSharpClientGenerator() : base("PrincipleStudios.OpenApi.CSharp.ClientGenerator, PrincipleStudios.OpenApiCodegen.Client.Base")
         {
         }
 

@@ -32,6 +32,11 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="$(SolutionRoot)generators\dotnetcore-server-interfaces\PrincipleStudios.OpenApiCodegen.Server.Mvc.Base\PrincipleStudios.OpenApiCodegen.Server.Mvc.Base.csproj" SpecificVersion="true" />
+		<ProjectReference Include="$(SolutionRoot)lib\PrincipleStudios.OpenApiCodegen\PrincipleStudios.OpenApiCodegen.csproj" SpecificVersion="true" />
+		<ProjectReference
+			Include="$(SolutionRoot)generators\dotnetcore-server-interfaces\PrincipleStudios.OpenApiCodegen.Server.Mvc.Base\PrincipleStudios.OpenApiCodegen.Server.Mvc.Base.csproj"
+			SpecificVersion="true"
+			AnalyzerDynamicContext="true"
+			ReferenceOutputAssembly="false" />
 	</ItemGroup>
 </Project>

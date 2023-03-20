@@ -32,7 +32,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<!-- ? https://github.com/dotnet/roslyn/blob/main/docs/features/source-generators.cookbook.md#use-functionality-from-nuget-packages -->
 		<ProjectReference Include="$(SolutionRoot)lib\PrincipleStudios.OpenApiCodegen\PrincipleStudios.OpenApiCodegen.csproj" SpecificVersion="true" />
 		<ProjectReference
 			Include="$(SolutionRoot)generators\dotnetstandard-client\PrincipleStudios.OpenApiCodegen.Client.Base\PrincipleStudios.OpenApiCodegen.Client.Base.csproj"

@@ -25,26 +25,35 @@ public abstract class BaseGenerator :
 
     public BaseGenerator(string generatorTypeName)
     {
+        Debugger.Launch();
         var myAsm = this.GetType().Assembly;
-        List<Assembly> loadedAssemblies = new();
-        foreach (var resource in myAsm.GetManifestResourceNames().Where(r => r.EndsWith(".dll")))
-        {
-            using var stream = myAsm.GetManifestResourceStream(resource);
-            var dllBytes = new byte[stream.Length];
-            stream.Read(dllBytes, 0, (int)stream.Length);
-            loadedAssemblies.Add(Assembly.Load(dllBytes));
-        }
 
-        var generatorType = loadedAssemblies.Select(asm => asm.GetType(generatorTypeName, false)).FirstOrDefault();
+        List<Assembly> loadedAssemblies = new();
+        AppDomain.CurrentDomain.AssemblyResolve += (sender, ev) =>
+        {
+            if (AppDomain.CurrentDomain.GetAssemblies().FirstOrDefault(asm => asm.FullName == ev.Name) is Assembly currentDomainAsm)
+                return currentDomainAsm;
+            if (loadedAssemblies.FirstOrDefault(asm => asm.FullName == ev.Name) is Assembly preloaded)
+                return preloaded;
+
+            using var stream = myAsm.GetManifestResourceStream(ev.Name.Split(',')[0] + ".dll");
+            if (stream != null)
+            {
+                var dllBytes = new byte[stream.Length];
+                stream.Read(dllBytes, 0, (int)stream.Length);
+                var resultAsm = Assembly.Load(dllBytes);
+                loadedAssemblies.Add(resultAsm);
+                return resultAsm;
+            }
+
+            return null;
+        };
+
+        var generatorType = Type.GetType(generatorTypeName, false);
         if (generatorType == null)
             throw new InvalidOperationException($"Could not find generator {generatorType}");
 
         generator = (IOpenApiCodeGenerator)Activator.CreateInstance(generatorType);
-    }
-
-    public BaseGenerator(IOpenApiCodeGenerator generator)
-    {
-        this.generator = generator ?? throw new ArgumentNullException(nameof(generator), message: "Must provide a generator implementation");
     }
 
 #if ROSLYN4_0_OR_GREATER

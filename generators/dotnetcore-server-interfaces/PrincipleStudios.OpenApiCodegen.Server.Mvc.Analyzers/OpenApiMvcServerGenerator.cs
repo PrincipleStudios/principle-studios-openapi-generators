@@ -1,11 +1,6 @@
 ﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.CodeAnalysis.Text;
-using Microsoft.Extensions.Configuration;
-using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Readers;
-using PrincipleStudios.OpenApi.CSharp;
-using PrincipleStudios.OpenApi.Transformations;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -33,7 +28,7 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
                                                                                                     DiagnosticSeverity.Warning,
                                                                                                     isEnabledByDefault: true);
 
-        public OpenApiMvcServerGenerator() : base(new MvcServerGenerator())
+        public OpenApiMvcServerGenerator() : base("PrincipleStudios.OpenApi.CSharp.MvcServerGenerator, PrincipleStudios.OpenApiCodegen.Server.Mvc.Base")
         {
         }
 
