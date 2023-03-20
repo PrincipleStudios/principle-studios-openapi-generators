@@ -22,16 +22,11 @@ more information.
 _Note:_ Not implementing the classes will allow you to share a DLL that would
 act as the starting point for a server.
 
-# Working with this source code
+## Working with this source code
 
 Prerequisites:
 
-    .NET CLI 6.0 or higher
-
-To build:
-
-    cd nuget
-    dotnet pack
+    .NET 7.0 SDK
 
 [1]: https://github.com/microsoft/OpenAPI.NET
 [2]: https://docs.microsoft.com/en-us/nuget/consume-packages/package-references-in-project-files

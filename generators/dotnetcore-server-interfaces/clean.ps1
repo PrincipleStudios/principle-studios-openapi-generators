@@ -1,1 +1,0 @@
-Remove-Item -r ~/.nuget/packages/principlestudios.openapicodegen.server.mvc

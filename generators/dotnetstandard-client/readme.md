@@ -1,37 +1,16 @@
-# OpenAPI Codegen for .NET Core Server Interfaces
+# OpenAPI Codegen for .NET Standard HttpClient
 
-Uses [OpenAPI.NET][1] with msbuild targets in a nuget package
+## Testing locally
 
-Adding the nuget package `PrincipleStudios.OpenApiCodegen.Client` to your
-project will enable a new "Build Action" on files in that project called
-"OpenApiSchemaMvcServer". (Versions of Visual Studio older than 2019 may need to be
-restarted after adding the package.) Setting a valid OpenAPI schema file (YAML
-or JSON), up to v3, will generate new classes within the project. (These classes
-will be in the namespace according to where the file is located.) Implementing
-the controllers in a project with default `UseMvc()` configuration will allow
-the project to function as an OpenAPI server for that API.
+1. Add `Debugger.Launch();` into the generator to ensure you get prompted to attach the debugger
+2. Run `dotnet build-server shutdown`
+3. Run `dotnet build examples\dotnetstandard-client\PrincipleStudios.ClientInterfacesExample\PrincipleStudios.ClientInterfacesExample.csproj --no-incremental`
 
-A helper method is added along the lines of
-`services.AddOpenApi<name-of-api-file>()` is added to help you ensure all
-controllers are implemented with any upcoming changes.
+You must repeat step 2 each time the code changes; this should detatch your debugger.
 
-This package can be marked as a "development only" package in your nuspec if you
-are planning on re-publishing this as a library. See [Package references][2] for
-more information.
+Consider:
 
-_Note:_ Not implementing the classes will allow you to share a DLL that would
-act as the starting point for a server.
+- Adding binary log to the build command.
 
-# Working with this source code
+        dotnet build examples\dotnetstandard-client\PrincipleStudios.ClientInterfacesExample\PrincipleStudios.ClientInterfacesExample.csproj -bl:..\binlogs\client-examples.binlog --no-incremental; start ..\binlogs\client-examples.binlog
 
-Prerequisites:
-
-    .NET CLI 6.0 or higher
-
-To build:
-
-    cd nuget
-    dotnet pack
-
-[1]: https://github.com/microsoft/OpenAPI.NET
-[2]: https://docs.microsoft.com/en-us/nuget/consume-packages/package-references-in-project-files
