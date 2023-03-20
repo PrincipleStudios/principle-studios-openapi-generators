@@ -27,10 +27,17 @@ public abstract class BaseGenerator :
     {
         var myAsm = this.GetType().Assembly;
 
+        var references = myAsm.GetReferencedAssemblies();
+
+        List<Assembly> loadedAssemblies = new() { myAsm };
         AppDomain.CurrentDomain.AssemblyResolve += (sender, ev) =>
         {
-            if (AppDomain.CurrentDomain.GetAssemblies().FirstOrDefault(asm => asm.FullName == ev.Name) is Assembly currentDomainAsm)
+            if (!loadedAssemblies.Contains(ev.RequestingAssembly))
+                return null;
+            if (references.Any(asm => asm.FullName == ev.Name) && AppDomain.CurrentDomain.GetAssemblies().FirstOrDefault(asm => asm.FullName == ev.Name) is Assembly currentDomainAsm)
                 return currentDomainAsm;
+            if (loadedAssemblies.FirstOrDefault(asm => asm.FullName == ev.Name) is Assembly preloaded)
+                return preloaded;
 
             using var stream = myAsm.GetManifestResourceStream(ev.Name.Split(',')[0] + ".dll");
             if (stream != null)
@@ -38,6 +45,7 @@ public abstract class BaseGenerator :
                 var dllBytes = new byte[stream.Length];
                 stream.Read(dllBytes, 0, (int)stream.Length);
                 var resultAsm = Assembly.Load(dllBytes);
+                loadedAssemblies.Add(resultAsm);
                 return resultAsm;
             }
 

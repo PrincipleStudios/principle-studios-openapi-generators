@@ -1,0 +1,30 @@
+<Project>
+
+	<ItemGroup Condition=" '$(UseProjectReferences)' == '' ">
+		<PackageReference Include="PrincipleStudios.OpenApiCodegen.Server.Mvc" Condition=" '$(OpenApiMvcServerFullVersion)' != '' " Version="$(OpenApiMvcServerFullVersion)" />
+		<PackageReference Include="PrincipleStudios.OpenApiCodegen.Server.Mvc" Condition=" '$(OpenApiMvcServerFullVersion)' == '' and '$(VersionSuffix)' == '' " Version="$(OpenApiMvcServerVersion)" />
+		<PackageReference Include="PrincipleStudios.OpenApiCodegen.Server.Mvc" Condition=" '$(OpenApiMvcServerFullVersion)' == '' and '$(VersionSuffix)' != '' " Version="$(OpenApiMvcServerVersion)-$(VersionSuffix)" />
+
+		<PackageReference Include="PrincipleStudios.OpenApiCodegen.Json.Extensions" Condition=" '$(OpenApiJsonExtensionsFullVersion)' != '' " Version="$(OpenApiJsonExtensionsFullVersion)" />
+		<PackageReference Include="PrincipleStudios.OpenApiCodegen.Json.Extensions" Condition=" '$(OpenApiJsonExtensionsFullVersion)' == '' and '$(VersionSuffix)' == '' " Version="$(OpenApiJsonExtensionsVersion)" />
+		<PackageReference Include="PrincipleStudios.OpenApiCodegen.Json.Extensions" Condition=" '$(OpenApiJsonExtensionsFullVersion)' == '' and '$(VersionSuffix)' != '' " Version="$(OpenApiJsonExtensionsVersion)-$(VersionSuffix)" />
+	</ItemGroup>
+	<ItemGroup Condition=" '$(UseProjectReferences)' != '' ">
+		<ProjectReference Include="$(SolutionRoot)lib\PrincipleStudios.OpenApiCodegen.Json.Extensions\PrincipleStudios.OpenApiCodegen.Json.Extensions.csproj" />
+
+		<ProjectReference
+			Include="$(SolutionRoot)generators\dotnetcore-server-interfaces\PrincipleStudios.OpenApiCodegen.Server.Mvc.Analyzers\PrincipleStudios.OpenApiCodegen.Server.Mvc.Roslyn3.11.csproj"
+			OutputItemType="Analyzer"
+			ReferenceOutputAssembly="false" />
+		<!-- Not an analyzer, but the project-reference analyzer needs all child dependencies, too -->
+		<ProjectReference
+			Include="$(SolutionRoot)lib\PrincipleStudios.OpenApiCodegen\PrincipleStudios.OpenApiCodegen.csproj"
+			OutputItemType="Analyzer"
+			ReferenceOutputAssembly="false" />
+	</ItemGroup>
+
+	<!-- When using project references, props/targets that are in the NuGet package don't get automatically picked up -->
+	<Import Condition=" '$(UseProjectReferences)' != '' "
+		Project="$(SolutionRoot)generators\dotnetcore-server-interfaces\PrincipleStudios.OpenApiCodegen.Server.Mvc\PrincipleStudios.OpenApiCodegen.Server.Mvc.props" />
+
+</Project>
