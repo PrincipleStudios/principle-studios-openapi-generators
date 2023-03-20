@@ -37,7 +37,7 @@
 		<OpenApiMvcServerVersion>0.13.1</OpenApiMvcServerVersion>
 		<OpenApiCSharpClientVersion>0.13.2</OpenApiCSharpClientVersion>
 		<!-- Should be incremented anytime one of the internal libraries changes -->
-		<SharedAnalyzerLibrariesVersion>0.3.0</SharedAnalyzerLibrariesVersion>
+		<SharedAnalyzerLibrariesVersion>0.4.0</SharedAnalyzerLibrariesVersion>
 	</PropertyGroup>
 
 	<Import Project="Directory.Build.local.props" Condition="exists('$(MSBuildThisFileDirectory)Directory.Build.local.props')" />
