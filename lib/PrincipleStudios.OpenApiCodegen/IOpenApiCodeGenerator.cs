@@ -11,12 +11,10 @@ public record DiagnosticInfo(string Id);
 
 public record GenerationResult(IReadOnlyList<SourceEntry> Sources, IReadOnlyList<DiagnosticInfo> Diagnostics);
 
-// TODO: options contents? external ref files contents?
-public record OpenApiDocumentConfiguration(string DocumentContents, IReadOnlyDictionary<string, string?> AdditionalTextMetadata);
-
+// Note: This interface is not used directly, but is used by the `BaseGenerator` via reflection/compiled lambdas
 public interface IOpenApiCodeGenerator
 {
     IEnumerable<string> MetadataKeys { get; }
 
-    GenerationResult Generate(OpenApiDocumentConfiguration document);
+    GenerationResult Generate(string documentContents, IReadOnlyDictionary<string, string?> additionalTextMetadata);
 }

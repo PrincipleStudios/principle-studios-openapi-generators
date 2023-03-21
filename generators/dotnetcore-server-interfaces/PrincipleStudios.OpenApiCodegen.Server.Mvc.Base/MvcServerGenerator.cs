@@ -28,13 +28,13 @@ public class MvcServerGenerator : IOpenApiCodeGenerator
 
     public IEnumerable<string> MetadataKeys => metadataKeys;
 
-    public GenerationResult Generate(OpenApiDocumentConfiguration documentConfiguration)
+    public GenerationResult Generate(string documentContents, IReadOnlyDictionary<string, string?> additionalTextMetadata)
     {
-        if (!TryParseFile(documentConfiguration.DocumentContents, out var document, out var diagnostic))
+        if (!TryParseFile(documentContents, out var document, out var diagnostic))
         {
             return new GenerationResult(Array.Empty<OpenApiCodegen.SourceEntry>(), diagnostic);
         }
-        var sourceProvider = CreateSourceProvider(document, documentConfiguration.AdditionalTextMetadata);
+        var sourceProvider = CreateSourceProvider(document, additionalTextMetadata);
         var openApiDiagnostic = new OpenApiTransformDiagnostic();
 
         var sources = (from entry in sourceProvider.GetSources(openApiDiagnostic)

@@ -27,16 +27,16 @@ public class ClientGenerator : IOpenApiCodeGenerator
     };
     public IEnumerable<string> MetadataKeys => metadataKeys;
 
-    public GenerationResult Generate(OpenApiDocumentConfiguration documentConfiguration)
+    public GenerationResult Generate(string documentContents, IReadOnlyDictionary<string, string?> additionalTextMetadata)
     {
-        if (!TryParseFile(documentConfiguration.DocumentContents, out var document, out var diagnostic))
+        if (!TryParseFile(documentContents, out var document, out var diagnostic))
         {
             if (diagnostic != null)
                 return new GenerationResult(Array.Empty<OpenApiCodegen.SourceEntry>(), diagnostic.ToArray());
             // TODO - should never happen
             return new GenerationResult(Array.Empty<OpenApiCodegen.SourceEntry>(), Array.Empty<DiagnosticInfo>());
         }
-        var sourceProvider = CreateSourceProvider(document, documentConfiguration.AdditionalTextMetadata);
+        var sourceProvider = CreateSourceProvider(document, additionalTextMetadata);
         var openApiDiagnostic = new OpenApiTransformDiagnostic();
 
         var sources = (from entry in sourceProvider.GetSources(openApiDiagnostic)

@@ -15,6 +15,7 @@
     </PropertyGroup>
 
 	<ItemGroup>
+        <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
 		<PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="[$(RoslynApiVersion)]" PrivateAssets="all">
 			<IncludeAssets>compile</IncludeAssets>
 		</PackageReference>

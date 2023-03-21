@@ -1,4 +1,6 @@
-﻿using Microsoft.CodeAnalysis;
+﻿//#define FULL_WRITE_FILE
+//#define PARTIAL_WRITE_FILE
+using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.CodeAnalysis.Text;
 using System;
@@ -6,6 +8,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
+using static System.Linq.Expressions.Expression;
 using System.Reflection;
 using System.Text;
 
@@ -21,7 +24,32 @@ public abstract class BaseGenerator :
     ISourceGenerator
 #endif
 {
-    private readonly IOpenApiCodeGenerator generator;
+#if PARTIAL_WRITE_FILE
+#if Windows
+    private const string filepath = "C:\\Users\\mattd\\Source\\openapi-codegen\\examples\\dotnetcore-server-interfaces\\openapiwashere.txt";
+#else
+    private const string filepath = "/openapiwashere";
+#endif
+#endif
+
+    private static readonly object lockHandle = new object();
+
+    private const string sharedAssemblyName = "PrincipleStudios.OpenApiCodegen";
+    private readonly object generator;
+    private readonly System.Text.RegularExpressions.Regex regex = new(@"^(\.\d+)*\.dll$");
+    private readonly Func<object, IEnumerable<string>> getMetadataKeys;
+    private readonly Func<object, string, IReadOnlyDictionary<string, string?>, object> generate;
+
+#if PARTIAL_WRITE_FILE
+    private void TryAppend(params string[] contents)
+    {
+        try
+        {
+            System.IO.File.AppendAllLines(filepath, contents);
+        }
+        catch { }
+    }
+#endif
 
     public BaseGenerator(string generatorTypeName)
     {
@@ -29,34 +57,90 @@ public abstract class BaseGenerator :
 
         var references = myAsm.GetReferencedAssemblies();
 
+#if FULL_WRITE_FILE
+        TryAppend(AppDomain.CurrentDomain.GetAssemblies().Select(asm => asm.FullName).ToArray());
+#endif
+
         List<Assembly> loadedAssemblies = new() { myAsm };
-        AppDomain.CurrentDomain.AssemblyResolve += (sender, ev) =>
+        AppDomain.CurrentDomain.ReflectionOnlyAssemblyResolve += ResolveAssembly;
+        AppDomain.CurrentDomain.AssemblyResolve += ResolveAssembly;
+
+#if PARTIAL_WRITE_FILE
+        try
+#endif
         {
-            if (!loadedAssemblies.Contains(ev.RequestingAssembly))
-                return null;
-            if (references.Any(asm => asm.FullName == ev.Name) && AppDomain.CurrentDomain.GetAssemblies().FirstOrDefault(asm => asm.FullName == ev.Name) is Assembly currentDomainAsm)
-                return currentDomainAsm;
-            if (loadedAssemblies.FirstOrDefault(asm => asm.FullName == ev.Name) is Assembly preloaded)
-                return preloaded;
+            var generatorType = Type.GetType(generatorTypeName, throwOnError: false)
+                ?? throw new InvalidOperationException($"Could not find generator {generatorTypeName}");
 
-            using var stream = myAsm.GetManifestResourceStream(ev.Name.Split(',')[0] + ".dll");
-            if (stream != null)
+            var generateMethod = generatorType.GetMethod("Generate");
+            var generatorParameter = Parameter(typeof(object));
+            var generatorExpression = Convert(generatorParameter, generatorType);
+            var compilerApisParameter = Parameter(typeof(CompilerApis));
+            var textParameter = Parameter(typeof(string));
+            var dictionaryParameter = Parameter(typeof(IReadOnlyDictionary<string, string?>));
+            getMetadataKeys = Lambda<Func<object, IEnumerable<string>>>(Property(generatorExpression, "MetadataKeys"), generatorParameter).Compile();
+            generate = Lambda<Func<object, string, IReadOnlyDictionary<string, string?>, object>>(
+                Convert(Call(generatorExpression, generateMethod, textParameter, dictionaryParameter), typeof(object))
+                , generatorParameter, textParameter, dictionaryParameter).Compile();
+
+#if FULL_WRITE_FILE
+            TryAppend(AppDomain.CurrentDomain.GetAssemblies().Select(asm => "  " + asm.FullName).ToArray());
+#endif
+
+            generator = Activator.CreateInstance(generatorType);
+        }
+#if PARTIAL_WRITE_FILE
+        catch (Exception ex)
+        {
+            TryAppend(ex.ToString());
+            throw;
+        }
+#endif
+
+        Assembly? ResolveAssembly(object sender, ResolveEventArgs ev)
+        {
+            // I'm not sure why this lock makes a difference; maybe by preventing multiple loads of the same assembly.
+            lock (lockHandle)
             {
-                var dllBytes = new byte[stream.Length];
-                stream.Read(dllBytes, 0, (int)stream.Length);
-                var resultAsm = Assembly.Load(dllBytes);
-                loadedAssemblies.Add(resultAsm);
-                return resultAsm;
+#if PARTIAL_WRITE_FILE
+            TryAppend($"{ev.Name}");
+#endif
+                if (references.Any(asm => asm.FullName == ev.Name) && AppDomain.CurrentDomain.GetAssemblies().FirstOrDefault(asm => asm.FullName == ev.Name) is Assembly currentDomainAsm)
+                {
+#if FULL_WRITE_FILE
+                TryAppend($"... reusing from domain");
+#endif
+                    return currentDomainAsm;
+                }
+                if (ev.RequestingAssembly != null && !loadedAssemblies.Contains(ev.RequestingAssembly))
+                {
+#if FULL_WRITE_FILE
+                TryAppend($"... but was requested by {ev.RequestingAssembly.FullName}, so ignoring");
+#endif
+                    return null;
+                }
+                if (loadedAssemblies.FirstOrDefault(asm => asm.FullName == ev.Name) is Assembly preloaded)
+                    return preloaded;
+#if PARTIAL_WRITE_FILE
+            TryAppend($"... loading embedded");
+#endif
+
+                using var stream = myAsm.GetManifestResourceStream(ev.Name.Split(',')[0] + ".dll");
+                if (stream != null)
+                {
+                    var dllBytes = new byte[stream.Length];
+                    stream.Read(dllBytes, 0, (int)stream.Length);
+                    var resultAsm = Assembly.Load(dllBytes);
+                    loadedAssemblies.Add(resultAsm);
+                    return resultAsm;
+                }
+#if FULL_WRITE_FILE
+            TryAppend($"... but failed.");
+#endif
+
+                return null;
             }
-
-            return null;
-        };
-
-        var generatorType = Type.GetType(generatorTypeName, false);
-        if (generatorType == null)
-            throw new InvalidOperationException($"Could not find generator {generatorType}");
-
-        generator = (IOpenApiCodeGenerator)Activator.CreateInstance(generatorType);
+        }
     }
 
 #if ROSLYN4_0_OR_GREATER
@@ -110,28 +194,41 @@ public abstract class BaseGenerator :
     private static AdditionalTextWithOptions GetOptions(AdditionalText file, AnalyzerConfigOptionsProvider analyzerConfigOptions)
     {
         var opt = analyzerConfigOptions.GetOptions(file);
-        return new (file.GetText()?.ToString()!, opt);
+        return new(file.GetText()?.ToString()!, opt);
     }
 
     protected abstract void ReportCompilationDiagnostics(Compilation compilation, CompilerApis apis);
     protected abstract bool IsRelevantFile(AdditionalTextWithOptions additionalText);
     private void GenerateSources(AdditionalTextWithOptions additionalText, CompilerApis apis)
     {
-        var document = new OpenApiDocumentConfiguration(
-            additionalText.TextContents,
-            new ReadOnlyDictionary<string, string?>(
-                generator.MetadataKeys.ToDictionary(key => key, additionalText.ConfigOptions.GetAdditionalFilesMetadata)
-            )
-        );
-        var result = generator.Generate(document);
-        foreach (var entry in result.Sources)
+#if PARTIAL_WRITE_FILE
+        try
+#endif
         {
-            apis.AddSource($"PS_{entry.Key}", SourceText.From(entry.SourceText, Encoding.UTF8));
+            IEnumerable<string> metadataKeys = getMetadataKeys(generator);
+            dynamic result = generate(
+                generator,
+                additionalText.TextContents,
+                new ReadOnlyDictionary<string, string?>(
+                    metadataKeys.ToDictionary(key => key, additionalText.ConfigOptions.GetAdditionalFilesMetadata)
+                )
+            );
+            foreach (var entry in result.Sources)
+            {
+                apis.AddSource($"PS_{entry.Key}", SourceText.From(entry.SourceText, Encoding.UTF8));
+            }
+            foreach (var diagnostic in result.Diagnostics)
+            {
+                // TODO: diagnostics
+            }
         }
-        foreach (var diagnostic in result.Diagnostics)
+#if PARTIAL_WRITE_FILE
+        catch (Exception ex)
         {
-            // TODO: diagnostics
+            TryAppend(ex.ToString());
+            throw;
         }
+#endif
     }
 
 
