@@ -26,10 +26,9 @@ public abstract class BaseGenerator :
     private static readonly object lockHandle = new object();
 
     private const string sharedAssemblyName = "PrincipleStudios.OpenApiCodegen";
-    private readonly object generator;
     private readonly System.Text.RegularExpressions.Regex regex = new(@"^(\.\d+)*\.dll$");
-    private readonly Func<object, IEnumerable<string>> getMetadataKeys;
-    private readonly Func<object, string, IReadOnlyDictionary<string, string?>, object> generate;
+    private readonly Func<IEnumerable<string>> getMetadataKeys;
+    private readonly Func<string, IReadOnlyDictionary<string, string?>, object> generate;
 
     public BaseGenerator(string generatorTypeName)
     {
@@ -44,18 +43,17 @@ public abstract class BaseGenerator :
         var generatorType = Type.GetType(generatorTypeName, throwOnError: false)
             ?? throw new InvalidOperationException($"Could not find generator {generatorTypeName}");
 
+        var generator = Activator.CreateInstance(generatorType);
+
         var generateMethod = generatorType.GetMethod("Generate");
-        var generatorParameter = Parameter(typeof(object));
-        var generatorExpression = Convert(generatorParameter, generatorType);
+        var generatorExpression = Constant(generator);
         var compilerApisParameter = Parameter(typeof(CompilerApis));
         var textParameter = Parameter(typeof(string));
         var dictionaryParameter = Parameter(typeof(IReadOnlyDictionary<string, string?>));
-        getMetadataKeys = Lambda<Func<object, IEnumerable<string>>>(Property(generatorExpression, "MetadataKeys"), generatorParameter).Compile();
-        generate = Lambda<Func<object, string, IReadOnlyDictionary<string, string?>, object>>(
+        getMetadataKeys = Lambda<Func<IEnumerable<string>>>(Property(generatorExpression, "MetadataKeys")).Compile();
+        generate = Lambda<Func<string, IReadOnlyDictionary<string, string?>, object>>(
             Convert(Call(generatorExpression, generateMethod, textParameter, dictionaryParameter), typeof(object))
-            , generatorParameter, textParameter, dictionaryParameter).Compile();
-
-        generator = Activator.CreateInstance(generatorType);
+            , textParameter, dictionaryParameter).Compile();
 
         Assembly? ResolveAssembly(object sender, ResolveEventArgs ev)
         {
@@ -146,9 +144,8 @@ public abstract class BaseGenerator :
     protected abstract bool IsRelevantFile(AdditionalTextWithOptions additionalText);
     private void GenerateSources(AdditionalTextWithOptions additionalText, CompilerApis apis)
     {
-        IEnumerable<string> metadataKeys = getMetadataKeys(generator);
+        IEnumerable<string> metadataKeys = getMetadataKeys();
         dynamic result = generate(
-            generator,
             additionalText.TextContents,
             new ReadOnlyDictionary<string, string?>(
                 metadataKeys.ToDictionary(key => key, additionalText.ConfigOptions.GetAdditionalFilesMetadata)
