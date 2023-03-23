@@ -30,7 +30,7 @@ public abstract class BaseGenerator :
     private readonly Func<IEnumerable<string>> getMetadataKeys;
     private readonly Func<string, IReadOnlyDictionary<string, string?>, object> generate;
 
-    public BaseGenerator(string generatorTypeName)
+    public BaseGenerator(string generatorTypeName, string assemblyName)
     {
         var myAsm = this.GetType().Assembly;
 
@@ -40,7 +40,9 @@ public abstract class BaseGenerator :
         AppDomain.CurrentDomain.ReflectionOnlyAssemblyResolve += ResolveAssembly;
         AppDomain.CurrentDomain.AssemblyResolve += ResolveAssembly;
 
-        var generatorType = Type.GetType(generatorTypeName, throwOnError: false)
+        // When using Type.GetType, the `RequestingAssembly` ends up null. If a generic is passed to Assembly.GetType, it also comes through as null.
+        // See https://github.com/dotnet/runtime/issues/11895, https://github.com/dotnet/runtime/issues/12668
+        var generatorType = GetEmbeddedAssemblyByName(assemblyName)?.GetType(generatorTypeName, throwOnError: false)
             ?? throw new InvalidOperationException($"Could not find generator {generatorTypeName}");
 
         var generator = Activator.CreateInstance(generatorType);
@@ -61,26 +63,35 @@ public abstract class BaseGenerator :
             // As a result, this maybe can be moved.
             lock (lockHandle)
             {
-                if (ev.RequestingAssembly == null || !loadedAssemblies.Contains(ev.RequestingAssembly))
+                if (ev.RequestingAssembly == null)
+                    // Someone loaded something through Type.GetType or a generic in Assembly.GetType.
+                    // This project shouldn't do that, so we can safely ignore it.
+                    return null;
+                if (!loadedAssemblies.Contains(ev.RequestingAssembly))
                     // If it wasn't one of our assemblies requesting the DLL, do not respond, let something else handle it
                     return null;
                 if (references.Any(asm => asm.FullName == ev.Name) && AppDomain.CurrentDomain.GetAssemblies().FirstOrDefault(asm => asm.FullName == ev.Name) is Assembly currentDomainAsm)
                     // If it's something this assembly references (which is only core Roslyn files), return it from the app domain.
                     return currentDomainAsm;
-                if (loadedAssemblies.FirstOrDefault(asm => asm.FullName == ev.Name) is Assembly preloaded)
-                    return preloaded;
-
-                using var stream = myAsm.GetManifestResourceStream(ev.Name.Split(',')[0] + ".dll");
-                if (stream != null)
-                {
-                    var dllBytes = new byte[stream.Length];
-                    stream.Read(dllBytes, 0, (int)stream.Length);
-                    var resultAsm = Assembly.Load(dllBytes);
-                    loadedAssemblies.Add(resultAsm);
-                    return resultAsm;
-                }
-                return null;
+                return GetEmbeddedAssemblyByName(ev.Name);
             }
+        }
+
+        Assembly? GetEmbeddedAssemblyByName(string name)
+        {
+            if (loadedAssemblies.FirstOrDefault(asm => asm.FullName == name) is Assembly preloaded)
+                return preloaded;
+
+            using var stream = myAsm.GetManifestResourceStream(name.Split(',')[0] + ".dll");
+            if (stream != null)
+            {
+                var dllBytes = new byte[stream.Length];
+                stream.Read(dllBytes, 0, (int)stream.Length);
+                var resultAsm = Assembly.Load(dllBytes);
+                loadedAssemblies.Add(resultAsm);
+                return resultAsm;
+            }
+            return null;
         }
     }
 

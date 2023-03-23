@@ -28,7 +28,7 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
                                                                                                     DiagnosticSeverity.Warning,
                                                                                                     isEnabledByDefault: true);
 
-        public OpenApiMvcServerGenerator() : base("PrincipleStudios.OpenApi.CSharp.MvcServerGenerator, PrincipleStudios.OpenApiCodegen.Server.Mvc.Base")
+        public OpenApiMvcServerGenerator() : base("PrincipleStudios.OpenApi.CSharp.MvcServerGenerator", "PrincipleStudios.OpenApiCodegen.Server.Mvc.Base")
         {
         }
 
