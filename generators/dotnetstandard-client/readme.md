@@ -1,5 +1,7 @@
 # OpenAPI Codegen for .NET Standard HttpClient
 
+See the Readme in /generators/dotnetcore-server-interfaces/PrincipleStudios.OpenApiCodegen.Server.Mvc for usage details.
+
 ## Testing locally
 
 1. Add `Debugger.Launch();` into the generator to ensure you get prompted to attach the debugger
@@ -15,7 +17,7 @@ You must repeat step 2 each time the code changes; this should detatch your debu
 
 Consider:
 
-- Adding binary log to the build command.
+- Adding binary log to the build command and use the [MSBuild Binary and Structured Log Viewer](https://msbuildlog.com/)
 
         dotnet build examples\dotnetstandard-client\PrincipleStudios.ClientInterfacesExample\PrincipleStudios.ClientInterfacesExample.csproj -bl:..\binlogs\client-examples.binlog --no-incremental -p:UseProjectReferences=true; start ..\binlogs\client-examples.binlog
 

@@ -1,32 +1,34 @@
 # OpenAPI Codegen for .NET Core Server Interfaces
 
-Uses [OpenAPI.NET][1] with msbuild targets in a nuget package
-
-Adding the nuget package `PrincipleStudios.OpenApiCodegen.Server.Mvc` to your
-project will enable a new "Build Action" on files in that project called
-"OpenApiSchemaMvcServer". (Versions of Visual Studio older than 2019 may need to be
-restarted after adding the package.) Setting a valid OpenAPI schema file (YAML
-or JSON), up to v3, will generate new classes within the project. (These classes
-will be in the namespace according to where the file is located.) Implementing
-the controllers in a project with default `UseMvc()` configuration will allow
-the project to function as an OpenAPI server for that API.
-
-A helper method is added along the lines of
-`services.AddOpenApi<name-of-api-file>()` is added to help you ensure all
-controllers are implemented with any upcoming changes.
-
-This package can be marked as a "development only" package in your nuspec if you
-are planning on re-publishing this as a library. See [Package references][2] for
-more information.
-
-_Note:_ Not implementing the classes will allow you to share a DLL that would
-act as the starting point for a server.
+See the Readme in /generators/dotnetcore-server-interfaces/PrincipleStudios.OpenApiCodegen.Server.Mvc for usage details.
 
 ## Working with this source code
 
 Prerequisites:
 
     .NET 7.0 SDK
+
+## Testing locally
+
+1. Add `Debugger.Launch();` into the generator to ensure you get prompted to attach the debugger
+2. Run:
+
+        dotnet build-server shutdown
+
+3. Run one of the following:
+
+        dotnet build examples\dotnetcore-server-interfaces\PrincipleStudios.ServerInterfacesExample\PrincipleStudios.ServerInterfacesExample.csproj -p:UseProjectReferences=true --no-incremental
+        dotnet build examples\dotnetcore-server-interfaces\PrincipleStudios.ServerInterfacesExample.Oauth\PrincipleStudios.ServerInterfacesExample.Oauth.csproj -p:UseProjectReferences=true --no-incremental
+
+You must repeat step 2 each time the code changes; this should detatch your debugger.
+
+Consider:
+
+- Adding binary log to the build command and use the [MSBuild Binary and Structured Log Viewer](https://msbuildlog.com/)
+
+        dotnet build examples\dotnetcore-server-interfaces\PrincipleStudios.ServerInterfacesExample\PrincipleStudios.ServerInterfacesExample.csproj -bl:..\binlogs\server-examples.binlog --no-incremental -p:UseProjectReferences=true; start ..\binlogs\server-examples.binlog
+        dotnet build examples\dotnetcore-server-interfaces\PrincipleStudios.ServerInterfacesExample.Oauth\PrincipleStudios.ServerInterfacesExample.Oauth.csproj -p:UseProjectReferences=true --no-incremental -bl:..\binlogs\server-examples-oauth.binlog --no-incremental -p:UseProjectReferences=true; start ..\binlogs\server-examples-oauth.binlog
+
 
 [1]: https://github.com/microsoft/OpenAPI.NET
 [2]: https://docs.microsoft.com/en-us/nuget/consume-packages/package-references-in-project-files
