@@ -61,14 +61,12 @@ public abstract class BaseGenerator :
             // As a result, this maybe can be moved.
             lock (lockHandle)
             {
-                if (references.Any(asm => asm.FullName == ev.Name) && AppDomain.CurrentDomain.GetAssemblies().FirstOrDefault(asm => asm.FullName == ev.Name) is Assembly currentDomainAsm)
-                {
-                    return currentDomainAsm;
-                }
-                if (ev.RequestingAssembly != null && !loadedAssemblies.Contains(ev.RequestingAssembly))
-                {
+                if (ev.RequestingAssembly == null || !loadedAssemblies.Contains(ev.RequestingAssembly))
+                    // If it wasn't one of our assemblies requesting the DLL, do not respond, let something else handle it
                     return null;
-                }
+                if (references.Any(asm => asm.FullName == ev.Name) && AppDomain.CurrentDomain.GetAssemblies().FirstOrDefault(asm => asm.FullName == ev.Name) is Assembly currentDomainAsm)
+                    // If it's something this assembly references (which is only core Roslyn files), return it from the app domain.
+                    return currentDomainAsm;
                 if (loadedAssemblies.FirstOrDefault(asm => asm.FullName == ev.Name) is Assembly preloaded)
                     return preloaded;
 
