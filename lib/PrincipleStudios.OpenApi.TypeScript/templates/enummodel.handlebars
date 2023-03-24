@@ -1,13 +1,12 @@
 {{>partial_header header}}
 {{#with model}}
 
-/**{{#if description}}
- * {{{description}}}{{/if}}
- * @export
- * @interface {{className}}
- */
-export type {{className}} =
-{{#each enumVars}}
-    | {{{value}}}
-{{/each}};
+    /**{{#if description}}
+        * {{{description}}}{{/if}}
+    * @export
+    * @interface {{className}}
+    */
+
+    export const {{camelCase className}} = [{{#each enumVars}}"{{{value}}}",{{/each}}];
+    export type {{className}} = typeof {{className}}[number];
 {{/with}}
