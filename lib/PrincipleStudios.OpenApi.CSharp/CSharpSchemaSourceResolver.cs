@@ -241,8 +241,9 @@ namespace PrincipleStudios.OpenApi.CSharp
             return new templates.EnumModel(
                 schema.Description,
                 className,
-                isString: schema.Type == "string",
-                enumVars: (from entry in schema.Enum
+                char.ToLowerInvariant(className[0]) + className.Substring(1), 
+                IsString: schema.Type == "string",
+                EnumVars: (from entry in schema.Enum
                            select entry switch
                            {
                                Microsoft.OpenApi.Any.OpenApiPrimitive<string> { Value: string name } => new templates.EnumVar(CSharpNaming.ToPropertyName(name, options.ReservedIdentifiers("enum", className)), name),
