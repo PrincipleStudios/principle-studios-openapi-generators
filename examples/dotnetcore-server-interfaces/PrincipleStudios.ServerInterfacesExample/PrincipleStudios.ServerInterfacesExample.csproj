@@ -4,22 +4,14 @@
 		<TargetFramework>net7.0</TargetFramework>
 	</PropertyGroup>
 
+	<Import Project="$(SolutionRoot)examples\dotnetcore-server-interfaces\tooling\server-generator-references.props" />
+
 	<ItemGroup>
 		<None Remove="csharp.config.yaml" />
 	</ItemGroup>
 
 	<ItemGroup>
 		<OpenApiSchemaCSharpServerOptions Include="csharp.config.yaml" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<PackageReference Include="PrincipleStudios.OpenApiCodegen.Server.Mvc" Condition=" '$(OpenApiMvcServerFullVersion)' != '' " Version="$(OpenApiMvcServerFullVersion)" />
-		<PackageReference Include="PrincipleStudios.OpenApiCodegen.Server.Mvc" Condition=" '$(OpenApiMvcServerFullVersion)' == '' and '$(VersionSuffix)' == '' " Version="$(OpenApiMvcServerVersion)" />
-		<PackageReference Include="PrincipleStudios.OpenApiCodegen.Server.Mvc" Condition=" '$(OpenApiMvcServerFullVersion)' == '' and '$(VersionSuffix)' != '' " Version="$(OpenApiMvcServerVersion)-$(VersionSuffix)" />
-
-		<PackageReference Include="PrincipleStudios.OpenApiCodegen.Json.Extensions" Condition=" '$(OpenApiJsonExtensionsFullVersion)' != '' " Version="$(OpenApiJsonExtensionsFullVersion)" />
-		<PackageReference Include="PrincipleStudios.OpenApiCodegen.Json.Extensions" Condition=" '$(OpenApiJsonExtensionsFullVersion)' == '' and '$(VersionSuffix)' == '' " Version="$(OpenApiJsonExtensionsVersion)" />
-		<PackageReference Include="PrincipleStudios.OpenApiCodegen.Json.Extensions" Condition=" '$(OpenApiJsonExtensionsFullVersion)' == '' and '$(VersionSuffix)' != '' " Version="$(OpenApiJsonExtensionsVersion)-$(VersionSuffix)" />
 	</ItemGroup>
 
 	<ItemGroup>
