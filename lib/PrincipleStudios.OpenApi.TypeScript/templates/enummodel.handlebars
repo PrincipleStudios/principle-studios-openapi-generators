@@ -7,6 +7,6 @@
     * @interface {{className}}
     */
 
-    export const {{camelCase className}} = [{{#each enumVars}}"{{{value}}}",{{/each}}];
+    export const {{CamelCase className}} = [{{#each enumVars}}"{{{value}}}",{{/each}}];
     export type {{className}} = typeof {{className}}[number];
 {{/with}}
