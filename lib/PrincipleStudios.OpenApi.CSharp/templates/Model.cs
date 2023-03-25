@@ -20,12 +20,12 @@ namespace PrincipleStudios.OpenApi.CSharp.templates
     );
 
     public record EnumModel(
-        string Description,
-        string ClassName,
-        string ConstName,
+        string description,
+        string className,
+        string constName,
         bool IsString,
         EnumVar[] EnumVars
-    ) : Model(Description, ClassName);
+    ) : Model(description, className);
 
     public record TypeUnionModel(
         string Description,
