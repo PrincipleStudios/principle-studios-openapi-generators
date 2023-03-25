@@ -23,7 +23,7 @@ namespace PrincipleStudios.OpenApi.CSharp.templates
         string description,
         string className,
         string constName,
-        bool IsString,
+        bool isString,
         EnumVar[] EnumVars
     ) : Model(description, className);
 

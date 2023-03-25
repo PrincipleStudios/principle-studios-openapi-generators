@@ -242,7 +242,7 @@ namespace PrincipleStudios.OpenApi.CSharp
                 schema.Description,
                 className,
                 char.ToLowerInvariant(className[0]) + className.Substring(1), 
-                IsString: schema.Type == "string",
+                isString: schema.Type == "string",
                 EnumVars: (from entry in schema.Enum
                            select entry switch
                            {
