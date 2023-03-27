@@ -25,11 +25,12 @@ namespace PrincipleStudios.OpenApi.TypeScript.templates
     );
 
     public record EnumModel(
-        string description,
-        string className,
-        bool isString,
-        EnumVar[] enumVars
-    ) : Model(description, className);
+        string Description,
+        string ClassName,
+        string ConstName,
+        bool IsString,
+        EnumVar[] EnumVars
+    ) : Model(Description, ClassName);
 
 
     public record EnumVar(
