@@ -1,6 +1,0 @@
-﻿[
-  {
-    "Context": "#/Paths/~1photo~1{id}/Operations/Get/Responses/404/Content/application~1json/Schema",
-    "Message": "Unresolved external reference: Pet @ petstore.yaml"
-  }
-]

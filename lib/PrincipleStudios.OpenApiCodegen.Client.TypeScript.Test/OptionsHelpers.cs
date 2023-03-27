@@ -18,7 +18,8 @@ namespace PrincipleStudios.OpenApiCodegen.Client.TypeScript
             var builder = new ConfigurationBuilder();
             builder.AddYamlStream(defaultJsonStream);
             configureBuilder?.Invoke(builder);
-            var result = builder.Build().Get<TypeScriptSchemaOptions>();
+            var result = builder.Build().Get<TypeScriptSchemaOptions>()
+                    ?? throw new InvalidOperationException("Could not construct options");
             return result;
         }
 

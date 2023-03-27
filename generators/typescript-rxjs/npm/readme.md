@@ -5,10 +5,7 @@ Provides a conversion method for
 
     npm i -D @principlestudios/openapi-codegen-typescript-rxjs
 
-You must also have `dotnet` 3.1 or newer installed on your machine. You may
-install this via npm:
-
-    npm i -D dotnet-3.1
+You must also have `dotnet` 7.0 runtime installed on your machine.
 
 This will provide a corresponding bin to generate the typescript files.
 

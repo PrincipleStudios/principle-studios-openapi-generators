@@ -25,11 +25,12 @@ namespace PrincipleStudios.OpenApi.TypeScript.templates
     );
 
     public record EnumModel(
-        string description,
-        string className,
-        bool isString,
-        EnumVar[] enumVars
-    ) : Model(description, className);
+        string Description,
+        string ClassName,
+        string ConstName,
+        bool IsString,
+        EnumVar[] EnumVars
+    ) : Model(Description, ClassName);
 
 
     public record EnumVar(
@@ -44,19 +45,34 @@ namespace PrincipleStudios.OpenApi.TypeScript.templates
     ) : Model(Description, ClassName);
 
     public record ObjectModel(
-        ImportStatement[] imports,
-        string description,
-        string className,
-        string? parent,
-        ModelVar[] vars
-    ) : Model(description, className);
+        ImportStatement[] Imports,
+        string Description,
+        string ClassName,
+        string? Parent,
+        ModelVar[] Vars
+    ) : Model(Description, ClassName);
+
+    public record TypeUnionModel(
+        ImportStatement[] Imports,
+        string Description,
+        string ClassName,
+        bool AllowAnyOf,
+        string? DiscriminatorProperty,
+        TypeUnionEntry[] TypeEntries
+    ) : Model(Description, ClassName);
+
+    public record TypeUnionEntry(
+        string TypeName,
+        string? DiscriminatorValue
+    );
 
     public record ModelVar(
-        string baseName,
-        string dataType,
-        bool nullable,
-        bool isContainer,
-        string name,
-        bool required
+        string BaseName,
+        string DataType,
+        bool Nullable,
+        bool IsContainer,
+        string Name,
+        bool Required,
+        bool Optional
     );
 }

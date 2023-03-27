@@ -1,5 +1,6 @@
 ﻿using HandlebarsDotNet;
 using Microsoft.OpenApi.Models;
+using PrincipleStudios.OpenApi.CSharp.templates;
 using PrincipleStudios.OpenApi.Transformations;
 using System;
 using System.Collections.Generic;
@@ -62,6 +63,7 @@ namespace PrincipleStudios.OpenApi.CSharp
                 { UnresolvedReference: true } => throw new ArgumentException("Unable to resolve reference"),
                 { AllOf: { Count: > 1 } } => true,
                 { AnyOf: { Count: > 1 } } => true,
+                { OneOf: { Count: > 1 } } => true,
                 { Type: "string", Enum: { Count: > 1 } } => true,
                 { Type: "array", Items: OpenApiSchema inner } => false,
                 { Type: string type, Format: var format, Properties: { Count: 0 }, Enum: { Count: 0 } } => options.Find(type, format) == "object",
@@ -94,6 +96,7 @@ namespace PrincipleStudios.OpenApi.CSharp
             templates.Model? model = schema switch
             {
                 { Enum: { Count: > 0 }, Type: "string" } => ToEnumModel(className, schema),
+                { OneOf: { Count: > 0 } } => ToOneOfModel(className, schema),
                 _ => BuildObjectModel(schema) switch
                 {
                     ObjectModel objectModel => ToObjectModel(className, schema, context, objectModel, diagnostic)(),
@@ -208,26 +211,28 @@ namespace PrincipleStudios.OpenApi.CSharp
         {
             if (objectModel == null)
                 throw new ArgumentNullException(nameof(objectModel));
-            var properties = objectModel.properties();
-            var required = new HashSet<string>(objectModel.required());
+            var properties = objectModel.Properties();
+            var required = new HashSet<string>(objectModel.Required());
 
             Func<templates.ModelVar>[] vars = (from entry in properties
                                                let req = required.Contains(entry.Key)
                                                let dataType = ToInlineDataType(entry.Value)
+                                               let resolved = objectModel.LegacyOptionalBehavior && !req ? dataType().MakeNullable() : dataType()
                                                select (Func<templates.ModelVar>)(() => new templates.ModelVar(
-                                                   baseName: entry.Key,
-                                                   dataType: dataType().text,
-                                                   nullable: dataType().nullable,
-                                                   isContainer: dataType().isEnumerable,
-                                                   name: CSharpNaming.ToPropertyName(entry.Key, options.ReservedIdentifiers("object", className)),
-                                                   required: req
+                                                   BaseName: entry.Key,
+                                                   DataType: resolved.text,
+                                                   Nullable: resolved.nullable,
+                                                   IsContainer: resolved.isEnumerable,
+                                                   Name: CSharpNaming.ToPropertyName(entry.Key, options.ReservedIdentifiers("object", className)),
+                                                   Required: req,
+                                                   Optional: !req && !objectModel.LegacyOptionalBehavior
                                                 ))).ToArray();
 
             return () => new templates.ObjectModel(
-                description: schema.Description,
-                className: className,
-                parent: null, // TODO - if "all of" and only one was a reference, we should be able to use inheritance.
-                vars: vars.Select(v => v()).ToArray()
+                Description: schema.Description,
+                ClassName: className,
+                Parent: null, // TODO - if "all of" and only one was a reference, we should be able to use inheritance.
+                Vars: vars.Select(v => v()).ToArray()
             );
         }
 
@@ -246,7 +251,30 @@ namespace PrincipleStudios.OpenApi.CSharp
             );
         }
 
-        record ObjectModel(Func<IDictionary<string, OpenApiSchema>> properties, Func<IEnumerable<string>> required);
+        private templates.TypeUnionModel ToOneOfModel(string className, OpenApiSchema schema)
+        {
+            return new templates.TypeUnionModel(
+                schema.Description,
+                className,
+                AllowAnyOf: false,
+                DiscriminatorProperty: schema.Discriminator?.PropertyName,
+                TypeEntries: schema.OneOf
+                    .Select((e, index) => {
+                        var id = e.Reference?.Id.Split('/').Last() ?? throw new NotSupportedException("When using the discriminator, inline schemas will not be considered.") { HelpLink = "https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.2.md#discriminator-object" };
+                        if (schema.Discriminator?.Mapping?.FirstOrDefault(kvp => kvp.Value == id) is { Key: var mapped })
+                        {
+                            id = mapped;
+                        }
+                        return new TypeUnionEntry(
+                            TypeName: ToInlineDataType(e)().text,
+                            Identifier: CSharpNaming.ToPropertyName(id, options.ReservedIdentifiers("object", className)),
+                            DiscriminatorValue: schema.Discriminator == null ? null : id
+                        );
+                    }).ToArray()
+            );
+        }
+
+        record ObjectModel(Func<IDictionary<string, OpenApiSchema>> Properties, Func<IEnumerable<string>> Required, bool LegacyOptionalBehavior);
 
         private ObjectModel? BuildObjectModel(OpenApiSchema schema) =>
             schema switch
@@ -255,16 +283,22 @@ namespace PrincipleStudios.OpenApi.CSharp
                 {
                     ObjectModel[] models when models.All(v => v != null) =>
                         new ObjectModel(
-                            properties: () => models.SelectMany(m => m!.properties()).Aggregate(new Dictionary<string, OpenApiSchema>(), (prev, kvp) =>
+                            Properties: () => models.SelectMany(m => m!.Properties()).Aggregate(new Dictionary<string, OpenApiSchema>(), (prev, kvp) =>
                             {
                                 prev[kvp.Key] = kvp.Value;
                                 return prev;
                             }),
-                            required: () => models.SelectMany(m => m!.required()).Distinct()
+                            Required: () => models.SelectMany(m => m!.Required()).Distinct(),
+                            LegacyOptionalBehavior: models.Any(m => m!.LegacyOptionalBehavior)
                         ),
                     _ => null
                 },
-                { Type: "object" } or { Properties: { Count: > 0 } } => new ObjectModel(properties: () => schema.Properties, required: () => schema.Required),
+                { Type: "object" } or { Properties: { Count: > 0 } } => 
+                    new ObjectModel(
+                        Properties: () => schema.Properties, 
+                        Required: () => schema.Required, 
+                        LegacyOptionalBehavior: schema.UseOptionalAsNullable()
+                    ),
                 _ => null,
             };
 

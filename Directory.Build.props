@@ -3,7 +3,7 @@
 
 	<PropertyGroup>
 		<Nullable>enable</Nullable>
-		<LangVersion>10</LangVersion>
+		<LangVersion>11</LangVersion>
 
 		<IsWindows Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Windows)))' == 'true'">true</IsWindows>
 		<SolutionRoot>$(MSBuildThisFileDirectory)</SolutionRoot>
@@ -24,30 +24,33 @@
 		<SignAssembly>True</SignAssembly>
 		<AssemblyOriginatorKeyFile Condition="exists('$(SolutionRoot)OpenApiCodegen.snk')">$(SolutionRoot)OpenApiCodegen.snk</AssemblyOriginatorKeyFile>
 		<NoWarn Condition="$(MSBuildProjectName.Contains('Test'))">$(NoWarn);CS8002</NoWarn>
+
+		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+		<WarningsAsErrors />
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(IsWindows)'=='true'">
-		<DefineConstants>Windows</DefineConstants>
+		<DefineConstants>$(DefineConstants);Windows</DefineConstants>
 	</PropertyGroup>
 
 	<PropertyGroup>
-		<OpenApiJsonExtensionsVersion>0.13.1</OpenApiJsonExtensionsVersion>
-		<OpenApiMvcServerVersion>0.13.1</OpenApiMvcServerVersion>
-		<OpenApiCSharpClientVersion>0.13.2</OpenApiCSharpClientVersion>
+		<OpenApiJsonExtensionsVersion>0.14.0</OpenApiJsonExtensionsVersion>
+		<OpenApiMvcServerVersion>0.14.0</OpenApiMvcServerVersion>
+		<OpenApiCSharpClientVersion>0.14.0</OpenApiCSharpClientVersion>
 		<!-- Should be incremented anytime one of the internal libraries changes -->
-		<SharedAnalyzerLibrariesVersion>0.3.0</SharedAnalyzerLibrariesVersion>
+		<SharedAnalyzerLibrariesVersion>0.4.0</SharedAnalyzerLibrariesVersion>
 	</PropertyGroup>
 
 	<Import Project="Directory.Build.local.props" Condition="exists('$(MSBuildThisFileDirectory)Directory.Build.local.props')" />
 
 	<PropertyGroup>
-		<Authors>Matt DeKrey</Authors>
+		<Authors>Principle Studios, Matt DeKrey, Tony Mishler, Chris Lees</Authors>
 		<PackageProjectUrl>https://github.com/PrincipleStudios/principle-studios-openapi-generators</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/PrincipleStudios/principle-studios-openapi-generators.git</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
-		<RepositoryBranch>master</RepositoryBranch>
+		<RepositoryBranch>main</RepositoryBranch>
 		<PublishRepositoryUrl>true</PublishRepositoryUrl>
 		<PackageIcon>logo_black_small.png</PackageIcon>
-		<Copyright>2021 Matt DeKrey &amp; Principle Studios</Copyright>
+		<Copyright>2023 Matt DeKrey &amp; Principle Studios</Copyright>
 	</PropertyGroup>
 
 	<ItemGroup>

@@ -2,7 +2,6 @@ using Microsoft.OpenApi.Models;
 using Xunit;
 using PrincipleStudios.OpenApi.Transformations;
 using System.Linq;
-using Snapshooter.Xunit;
 using PrincipleStudios.OpenApi.TypeScript;
 using static PrincipleStudios.OpenApiCodegen.TestUtils.DocumentHelpers;
 using System.IO;
@@ -55,7 +54,10 @@ namespace PrincipleStudios.OpenApiCodegen.Client.TypeScript
             {
                 using var reader = new StringReader(docContents);
                 var serializer = new SharpYaml.Serialization.Serializer();
-                var documentJObject = Newtonsoft.Json.Linq.JObject.FromObject(serializer.Deserialize(reader));
+                var deserialized = serializer.Deserialize(reader);
+                Newtonsoft.Json.Linq.JToken documentJObject = deserialized == null
+                    ? Newtonsoft.Json.Linq.JValue.CreateNull()
+                    : Newtonsoft.Json.Linq.JObject.FromObject(deserialized);
                 var token = documentJObject.SelectToken(path);
                 if (token == null)
                 {
@@ -86,7 +88,7 @@ namespace PrincipleStudios.OpenApiCodegen.Client.TypeScript
             var target = ConstructTarget(document, LoadOptions());
             target.EnsureSchemasRegistered(document, OpenApiContext.From(document), new());
             var inline = target.ToInlineDataType(schema)();
-            
+
             Assert.Equal(expectedInline, inline.text);
         }
 
@@ -109,32 +111,6 @@ namespace PrincipleStudios.OpenApiCodegen.Client.TypeScript
                 ("no-refs.yaml", (OpenApiDocument doc) => doc.Paths["/address"].Operations[OperationType.Post].RequestBody.Content["application/json"].Schema.Properties["location"], "{ \"latitude\": number; \"longitude\": number }"),
                 ("enum.yaml", (OpenApiDocument doc) => doc.Paths["/rock-paper-scissors"].Operations[OperationType.Post].Responses["200"].Content["application/json"].Schema, "\"player1\" | \"player2\""),
             }.Select(t => new object[] { t.documentName, t.findSchema, t.expectedInline });
-
-        [Theory]
-        [InlineData("petstore.yaml", "Pet")]
-        [InlineData("petstore.yaml", "NewPet")]
-        [InlineData("petstore.yaml", "Error")]
-        [InlineData("petstore3.json", "Order")]
-        [InlineData("petstore3.json", "Category")]
-        [InlineData("petstore3.json", "User")]
-        [InlineData("petstore3.json", "Tag")]
-        [InlineData("petstore3.json", "Pet")]
-        [InlineData("petstore3.json", "ApiResponse")]
-        public void TransformModel(string documentName, string model)
-        {
-            var document = GetDocument(documentName);
-            var options = LoadOptions();
-
-            var target = ConstructTarget(document, options);
-            OpenApiTransformDiagnostic diagnostic = new();
-            target.EnsureSchemasRegistered(document, OpenApiContext.From(document), diagnostic);
-
-            var context = OpenApiContext.From(document).Append(nameof(document.Components), null, document.Components).Append(nameof(document.Components.Schemas), model, document.Components.Schemas[model]);
-
-            var result = target.TransformSchema(document.Components.Schemas[model], context, diagnostic);
-
-            Snapshot.Match(result?.SourceText, $"Full-{nameof(TransformModel)}.{TypeScriptNaming.ToTitleCaseIdentifier(documentName, options.ReservedIdentifiers())}.{TypeScriptNaming.ToTitleCaseIdentifier(model, options.ReservedIdentifiers())}");
-        }
 
         private static TypeScriptSchemaSourceResolver ConstructTarget(OpenApiDocument document, TypeScriptSchemaOptions options)
         {

@@ -1,0 +1,41 @@
+openapi: "3.0.3"
+info:
+  version: 1.0.0
+  title: Min Max Validation
+  description: A sample API that demonstrates various min/max validation for both numbers and arrays
+paths:
+  /colors:
+    get:
+      operationId: getColor
+      parameters:
+        - name: id
+          in: query
+          description: id of the color to retrieve
+          required: true
+          schema:
+            type: integer
+            format: int64
+            minimum: 1 # ids are 1-based
+            maximum: 10000
+      responses:
+        '200':
+          description: Adds one or more colors
+          content:
+            'application/json':
+              schema:
+                type: string
+    # post:
+    #   operationId: addColors
+    #   requestBody:
+    #     required: true
+    #     content:
+    #       'application/json':
+    #         schema:
+    #           type: array
+    #           items:
+    #             type: string
+    #           minLength: 1
+    #           maxLength: 3 # Only allow up to 3 at a time
+    #   responses:
+    #     '200':
+    #       description: Adds one or more colors

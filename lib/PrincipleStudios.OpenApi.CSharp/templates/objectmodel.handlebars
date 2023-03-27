@@ -6,16 +6,16 @@
 namespace {{this.packageName}}
 {
     {{#with model}}
-    {{#if description}}/// <summary>
-    /// {{linewrap description "
+    {{#if Description}}/// <summary>
+    /// {{linewrap Description "
     /// "}}
     /// </summary>
-    {{/if}}public partial record {{className}}({{#each vars}}
-        [property: global::System.Text.Json.Serialization.JsonPropertyName("{{baseName}}")]{{#if required
-            }}[param: global::System.ComponentModel.DataAnnotations.Required]{{else
+    {{/if}}public partial record {{ClassName}}({{#each Vars}}
+        [property: global::System.Text.Json.Serialization.JsonPropertyName("{{BaseName}}")]{{#if Required
+            }}[property: global::System.Text.Json.Serialization.JsonRequiredAttribute]{{else
             }}[property: global::System.Text.Json.Serialization.JsonIgnore(Condition = global::System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]{{/if}}{{!
-    data type: }} {{#unless required}}global::PrincipleStudios.OpenApiCodegen.Json.Extensions.Optional<{{/unless}}{{{dataType}}}{{#unless required}}>?{{/unless}}{{!
-    name: }} {{name}}{{#unless @last}}, {{/unless}}{{/each}}
+    data type: }} {{#if Optional}}global::PrincipleStudios.OpenApiCodegen.Json.Extensions.Optional<{{/if}}{{{DataType}}}{{#if Optional}}>?{{/if}}{{!
+    name: }} {{Name}}{{#unless @last}}, {{/unless}}{{/each}}
     );
     {{/with}}
 }

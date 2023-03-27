@@ -9,9 +9,17 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <OpenApiSchemaMvcServer Include="$(SolutionRoot)schemas\all-of.yaml" Link="AllOf\all-of.yaml" Key="AllOf" />
-    <OpenApiSchemaMvcServer Include="$(SolutionRoot)schemas\enum.yaml" Link="Enum\enum.yaml" Key="Enum" />
-    <OpenApiSchemaMvcServer Include="$(SolutionRoot)schemas\controller-extension.yaml" Link="ControllerExtensions\controller-extension.yaml" Key="ControllerExtensions" />
+    <OpenApiSchemaMvcServer Include="$(SolutionRoot)schemas\all-of.yaml" Link="AllOf\all-of.yaml" Key="AllOf" PathPrefix="/all-of" />
+    <OpenApiSchemaMvcServer Include="$(SolutionRoot)schemas\enum.yaml" Link="Enum\enum.yaml" Key="Enum" PathPrefix="/enum" />
+    <OpenApiSchemaMvcServer Include="$(SolutionRoot)schemas\controller-extension.yaml" Link="ControllerExtensions\controller-extension.yaml" Key="ControllerExtensions" PathPrefix="/controller-extensions" />
+    <OpenApiSchemaMvcServer Include="$(SolutionRoot)schemas\validation-min-max.yaml" Link="ValidationMinMax\validation-min-max.yaml" Key="ValidationMinMax" PathPrefix="/validation-min-max" />
+    <OpenApiSchemaMvcServer Include="$(SolutionRoot)schemas\regex-escape.yaml" Link="RegexEscape\regex-escape.yaml" Key="RegexEscape" PathPrefix="/regex-escape" />
+    <OpenApiSchemaMvcServer Include="$(SolutionRoot)schemas\headers.yaml" Link="Headers\headers.yaml" Key="Headers" PathPrefix="/headers" />
+    <OpenApiSchemaMvcServer Include="$(SolutionRoot)schemas\oauth.yaml" Link="OAuth\oauth.yaml" Key="OAuth" PathPrefix="/oauth" />
+    <OpenApiSchemaMvcServer Include="$(SolutionRoot)schemas\form.yaml" Link="Form\form.yaml" Key="Form" PathPrefix="/form" />
+    <OpenApiSchemaMvcServer Include="$(SolutionRoot)schemas\one-of.yaml" Link="OneOf\one-of.yaml" Key="OneOf" PathPrefix="/one-of" />
+    <OpenApiSchemaMvcServer Include="$(SolutionRoot)schemas\nullable-vs-optional-legacy.yaml" Link="LegacyOptional\nullable-vs-optional-legacy.yaml" Key="LegacyOptional" PathPrefix="/nullable-vs-optional-legacy" />
+    <OpenApiSchemaMvcServer Include="$(SolutionRoot)schemas\nullable-vs-optional.yaml" Link="NullableVsOptional\nullable-vs-optional.yaml" Key="NullableVsOptional" PathPrefix="/nullable-vs-optional" />
   </ItemGroup>
 
   <ItemGroup>
@@ -32,6 +40,7 @@
         <WorkingOutputPath Condition=" '%(OpenApiSchemaMvcServer.Link)' != '' ">$([System.Text.RegularExpressions.Regex]::Replace(%(OpenApiSchemaMvcServer.Link), '(?&lt;=^|\\|/)..(?=$|\\|/)', '__'))</WorkingOutputPath>
         <WorkingOutputPath Condition=" '%(OpenApiSchemaMvcServer.Link)' == '' ">$([System.Text.RegularExpressions.Regex]::Replace(%(OpenApiSchemaMvcServer.Identity), '(?&lt;=^|\\|/)..(?=$|\\|/)', '__'))</WorkingOutputPath>
         <Namespace Condition=" '%(OpenApiSchemaMvcServer.Namespace)' != '' ">%(OpenApiSchemaMvcServer.Namespace)</Namespace>
+        <PathPrefix>%(OpenApiSchemaMvcServer.PathPrefix)</PathPrefix>
         <Key>%(OpenApiSchemaMvcServer.Key)</Key>
       </CodegenCliFiles>
       <CodegenCliFiles>
@@ -39,15 +48,15 @@
       </CodegenCliFiles>
 		<CodegenOutputFiles Include="$(MSBuildProjectDirectory)/generated/**/*.cs" />
     </ItemGroup>
-		
+
 	</Target>
-	
-    <Target Name="_GenerateServerOpenApiCodegen" DependsOnTargets="_PrepareCodegenFiles" Inputs="%(CodegenCliFiles.FullPath)" Outputs="@(CodegenCliFiles->'$(MSBuildProjectDirectory)/generated/%(Key)/_._')">
+
+    <Target Name="_GenerateServerOpenApiCodegen" DependsOnTargets="_PrepareCodegenFiles" Inputs="%(CodegenCliFiles.FullPath);$(ProjectPath)" Outputs="@(CodegenCliFiles->'$(MSBuildProjectDirectory)/generated/%(Key)/_._')">
         <PropertyGroup>
           <CodegenCliPath>%(CodegenCli.Identity)</CodegenCliPath>
         </PropertyGroup>
 
-		<Exec Command="dotnet &quot;$(CodegenCliPath)&quot; &quot;%(CodegenCliFiles.FullPath)&quot; &quot;%(CodegenCliFiles.Namespace)&quot; &quot;$(MSBuildProjectDirectory)/generated/%(CodegenCliFiles.Key)&quot;" Outputs="CodegenOutputs" />
+		<Exec Command="dotnet &quot;$(CodegenCliPath)&quot; &quot;%(CodegenCliFiles.FullPath)&quot; &quot;%(CodegenCliFiles.Namespace)&quot; &quot;$(MSBuildProjectDirectory)/generated/%(CodegenCliFiles.Key)&quot; &quot;%(CodegenCliFiles.PathPrefix)&quot;" Outputs="CodegenOutputs" />
 		<Touch Files="$(MSBuildProjectDirectory)/generated/%(CodegenCliFiles.Key)/_._" AlwaysCreate="true" />
 	</Target>
 

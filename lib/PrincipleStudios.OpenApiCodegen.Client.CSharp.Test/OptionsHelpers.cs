@@ -14,7 +14,8 @@ namespace PrincipleStudios.OpenApiCodegen.Client.CSharp
             var builder = new ConfigurationBuilder();
             builder.AddYamlStream(defaultJsonStream);
             configureBuilder?.Invoke(builder);
-            var result = builder.Build().Get<CSharpSchemaOptions>();
+            var result = builder.Build().Get<CSharpSchemaOptions>()
+                    ?? throw new InvalidOperationException("Could not construct options");
             return result;
         }
     }

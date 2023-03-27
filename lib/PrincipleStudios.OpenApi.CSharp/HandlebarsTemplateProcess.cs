@@ -59,6 +59,7 @@ namespace PrincipleStudios.OpenApi.CSharp
             {
                 ObjectModel m => ("objectmodel", ToTemplate(m)),
                 EnumModel m => ("enumModel", ToTemplate(m)),
+                TypeUnionModel m => ("typeUnionModel", ToTemplate(m)),
                 _ => throw new NotImplementedException()
             };
             var template = handlebars.Configuration.RegisteredTemplates[templateName];

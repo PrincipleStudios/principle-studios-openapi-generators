@@ -2,6 +2,7 @@
   <PropertyGroup>
     <PackDependsOn>IncludeAnalyzersInPackage;$(PackDependsOn)</PackDependsOn>
     <BeforePack>IncludeAnalyzersInPackage;$(BeforePack)</BeforePack>
+    <AssignTargetPathsDependsOn>IncludeDynamicLoadInAssembly;$(AssignTargetPathsDependsOn)</AssignTargetPathsDependsOn>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -37,7 +38,7 @@
     </ItemGroup>
     <Error Condition="'%(_AnalyzerPackFile.TargetFramework)' != 'netstandard2.0'"
            Text="Analyzers must only target netstandard2.0 since they run in the compiler which targets netstandard2.0. The following files were found to target '%(_AnalyzerPackFile.TargetFramework)': @(_AnalyzerPackFile)" />
-    
+
     <ItemGroup>
       <_AnalyzerFilesWithoutRoslyn Include="@(ReferenceCopyLocalPaths)"
                          TargetPath="%(ReferenceCopyLocalPaths.DestinationSubDirectory)%(Filename)%(Extension)"
@@ -59,7 +60,40 @@
     </ItemGroup>
   </Target>
 
-  
+  <Target Name="GetDynamicLoadPackFiles"
+          DependsOnTargets="$(GenerateNuspecDependsOn);ResolveAssemblyReferences"
+          Returns="@(_DynamicLoadPackFile)">
+    <PropertyGroup>
+      <_dynamicLoadPath>dynamic</_dynamicLoadPath>
+    </PropertyGroup>
+    <ItemGroup>
+      <_DynamicLoadPackFile Include="@(_BuildOutputInPackage)" IsSymbol="false" />
+      <_DynamicLoadPackFile Include="@(_TargetPathsToSymbols)" IsSymbol="true" />
+    </ItemGroup>
+    <Error Condition="'%(_DynamicLoadPackFile.TargetFramework)' != 'netstandard2.0'"
+           Text="Analyzers must only target netstandard2.0 since they run in the compiler which targets netstandard2.0. The following files were found to target '%(_DynamicLoadPackFile.TargetFramework)': @(_DynamicLoadPackFile)" />
+
+    <ItemGroup>
+      <_DynamicFilesWithoutRoslyn Include="@(ReferenceCopyLocalPaths)"
+                         TargetPath="%(ReferenceCopyLocalPaths.DestinationSubDirectory)%(Filename)%(Extension)"
+                         Condition="'%(ReferenceCopyLocalPaths.NuGetPackageId)'!='System.Runtime.CompilerServices.Unsafe'
+                            and '%(ReferenceCopyLocalPaths.NuGetPackageId)'!='System.Collections.Immutable'
+                            and '%(ReferenceCopyLocalPaths.NuGetPackageId)'!='System.Numerics.Vectors'
+                            and '%(ReferenceCopyLocalPaths.NuGetPackageId)'!='System.Memory'
+                            and '%(ReferenceCopyLocalPaths.NuGetPackageId)'!='Microsoft.CSharp'" />
+    </ItemGroup>
+    <ItemGroup>
+      <_DynamicLoadPackFile Include="@(_DynamicFilesWithoutRoslyn)"
+                         Condition="'%(_DynamicFilesWithoutRoslyn.Extension)'!='.pdb'"
+                         IsSymbol="false" />
+      <!-- TODO: I'm not sure how to provide symbols here, or if I should since it's only for the analyzer -->
+      <!-- <_DynamicLoadPackFile Include="@(_DynamicFilesWithoutRoslyn)"
+                         Condition="'%(_DynamicFilesWithoutRoslyn.Extension)'=='.pdb'"
+                         IsSymbol="true" /> -->
+      <_DynamicLoadPackFile PackagePath="$(_dynamicLoadPath)/%(TargetPath)" />
+    </ItemGroup>
+  </Target>
+
   <Target Name="IncludeAnalyzersInPackage" Condition="'@(AnalyzerReference)' != ''">
     <!-- Call a target in the analyzer project to get all the files it would normally place in a package.
          These will be returned as items with identity pointing to the built file, and PackagePath metadata
@@ -76,6 +110,51 @@
            so a rooted path value for TargetPath will override lib.
            https://github.com/NuGet/Home/issues/10860 -->
       <_TargetPathsToSymbols Include="@(_AnalyzerFile)" TargetPath="/%(_AnalyzerFile.PackagePath)" Condition="%(_AnalyzerFile.IsSymbol)" />
+    </ItemGroup>
+  </Target>
+
+  <Target Name="IncludeDynamicLoadInPackage" Condition="'@(ProjectReference)' != ''">
+    <PropertyGroup>
+      <!-- Ignore the warning that we're putting the DLLs in the wrong spot -->
+      <NoWarn>$(NoWarn);NU5100</NoWarn>
+    </PropertyGroup>
+    <!-- Call a target in the common dynamically-loaded project to get all the files it would normally place in a package.
+         These will be returned as items with identity pointing to the built file, and PackagePath metadata
+         set to their location in the package.  IsSymbol metadata will be set to distinguish symbols. -->
+    <MSBuild Projects="@(ProjectReference)"
+             Condition=" %(ProjectReference.AnalyzerDynamicContext) == 'true' "
+             Targets="GetDynamicLoadPackFiles">
+      <Output TaskParameter="TargetOutputs" ItemName="_DynamicLoadPackFile" />
+    </MSBuild>
+
+    <ItemGroup>
+      <Content Include="@(_DynamicLoadPackFile)" Pack="True" Condition=" '%(_DynamicLoadPackFile.IsSymbol)' != 'true' " />
+      <!-- Symbols don't honor PackagePath.  By default they are placed in lib/%(TargetFramework).
+           Pack does honor TargetPath and does Path.Combine("lib/%(TargetFramework)", "%(TargetPath)"),
+           so a rooted path value for TargetPath will override lib.
+           https://github.com/NuGet/Home/issues/10860 -->
+      <_TargetPathsToSymbols Include="@(_DynamicLoadPackFile)" TargetPath="/%(_DynamicLoadPackFile.PackagePath)" Condition=" '%(_DynamicLoadPackFile.IsSymbol)' == 'true' " />
+    </ItemGroup>
+  </Target>
+
+  <Target Name="IncludeDynamicLoadInAssembly" Condition="'@(ProjectReference)' != ''">
+    <PropertyGroup>
+      <!-- Ignore the warning that we're putting the DLLs in the wrong spot -->
+      <NoWarn>$(NoWarn);NU5100</NoWarn>
+    </PropertyGroup>
+    <!-- Call a target in the common dynamically-loaded project to get all the files it would normally place in a package.
+         These will be returned as items with identity pointing to the built file, and PackagePath metadata
+         set to their location in the package.  IsSymbol metadata will be set to distinguish symbols. -->
+    <MSBuild Projects="@(ProjectReference)"
+             Condition=" %(ProjectReference.AnalyzerDynamicContext) == 'true' "
+             Targets="GetAnalyzerPackFiles">
+      <Output TaskParameter="TargetOutputs" ItemName="_DynamicLoadPackFile" />
+    </MSBuild>
+
+    <ItemGroup>
+      <EmbeddedResource Include="@(_DynamicLoadPackFile)"
+        Condition=" '%(_DynamicLoadPackFile.IsSymbol)' != 'true' "
+        LogicalName="%(_DynamicLoadPackFile.TargetPath)" />
     </ItemGroup>
   </Target>
 

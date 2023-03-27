@@ -5,7 +5,3 @@
 Rule ID | Category | Severity | Notes
 --------|----------|----------|-------
 PSAPICLNT001 | PrincipleStudios.OpenApiCodegen.Client | Warning | ClientGenerator
-PSAPICLNT002 | PrincipleStudios.OpenApiCodegen | Warning | OpenApiGeneratorBase
-PSAPICLNT003 | PrincipleStudios.OpenApiCodegen | Info | OpenApiGeneratorBase
-PSAPICLNT004 | PrincipleStudios.OpenApiCodegen | Info | OpenApiGeneratorBase
-PSAPICLNTINFO001 | PrincipleStudios.OpenApiCodegen.Client | Info | ClientGenerator
