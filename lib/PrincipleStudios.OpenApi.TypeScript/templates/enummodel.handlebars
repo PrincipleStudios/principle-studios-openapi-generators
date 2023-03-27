@@ -1,17 +1,17 @@
 {{>partial_header header}}
-
 {{#with model}}
-    /**{{#if Description}}
-        * {{{Description}}}
-    {{/if}}
-    * @export
-    * @interface {{ClassName}}
-    */
-    export const {{ConstName}} = [
-    {{#each EnumVars}}
-        {{{value}}},
-    {{/each}}
-    ] as const;
-    export type {{ClassName}} = typeof {{ConstName}}[number];
-    
+
+export const {{ConstName}} = [
+{{#each EnumVars}}
+    {{{value}}},
+{{/each}}
+] as const;
+/**{{#if Description}}
+    * {{{Description}}}
+{{/if}}
+* @export
+* @interface {{ClassName}}
+*/
+export type {{ClassName}} = typeof {{ConstName}}[number];
+
 {{/with}}

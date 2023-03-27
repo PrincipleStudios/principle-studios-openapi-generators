@@ -12,7 +12,7 @@ namespace {{this.packageName}}
     {{#if model.isString}}[global::System.Text.Json.Serialization.JsonConverter(typeof(global::PrincipleStudios.OpenApiCodegen.Json.Extensions.JsonStringEnumPropertyNameConverter))]{{/if}}
     public enum {{className}}
     {
-        {{#each EnumVars as |enumVar|}}
+        {{#each enumVars as |enumVar|}}
         /// <summary>
         /// Enum {{enumVar.name}} for {{{enumVar.value}}}
         /// </summary>{{#if model.isString}}

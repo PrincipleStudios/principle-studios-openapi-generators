@@ -246,7 +246,7 @@ namespace PrincipleStudios.OpenApi.TypeScript
             return new templates.EnumModel(
                 schema.Description,
                 className,
-                char.ToLowerInvariant(className[0]) + className.Substring(1), 
+                TypeScriptNaming.ToPropertyName(className, options.ReservedIdentifiers()),
                 IsString: schema.Type == "string",
                 EnumVars: (from entry in schema.Enum.OfType<Microsoft.OpenApi.Any.IOpenApiPrimitive>()
                            select new templates.EnumVar(PrimitiveToJsonValue.GetPrimitiveValue(entry))).ToArray()

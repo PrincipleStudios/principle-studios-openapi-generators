@@ -7,8 +7,4 @@ node_modules/
 **/*.user
 **/*.binlog
 artifacts/
-.idea/.idea.openapi-codegen/.idea/workspace.xml
-.idea/.idea.openapi-codegen/.idea/indexLayout.xml
-lib/PrincipleStudios.OpenApi.TypeScript/templates/enummodel.handlebars
-.idea/.idea.openapi-codegen/.idea/.name
-.idea/.idea.openapi-codegen/.idea/vcs.xml
+.idea/
