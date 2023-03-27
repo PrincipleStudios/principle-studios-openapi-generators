@@ -119,6 +119,7 @@ jobs:
     - name: Publish NuGet packages to GitHub registry if new version number
       if: ${{ github.ref != 'refs/heads/main' }}
       run: dotnet nuget push ./artifacts/packages/Release/*.nupkg -k ${GITHUB_TOKEN} -s https://nuget.pkg.github.com/$GITHUB_REPOSITORY_OWNER/index.json --skip-duplicate --no-symbols
+      continue-on-error: true # Dependabot and other outside contributors can't push to our GitHub packages
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - name: Publish NuGet packages to NuGet registry if new version number
