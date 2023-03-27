@@ -5,7 +5,3 @@
 Rule ID | Category | Severity | Notes
 --------|----------|----------|-------
 PSAPICTRL001 | PrincipleStudios.OpenApiCodegen.Server.Mvc | Warning | ControllerGenerator
-PSAPICTRL002 | PrincipleStudios.OpenApiCodegen | Warning | OpenApiGeneratorBase
-PSAPICTRL003 | PrincipleStudios.OpenApiCodegen | Info | OpenApiGeneratorBase
-PSAPICTRL004 | PrincipleStudios.OpenApiCodegen | Info | OpenApiGeneratorBase
-PSAPICTRLINFO001 | PrincipleStudios.OpenApiCodegen.Server.Mvc | Info | ControllerGenerator

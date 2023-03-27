@@ -8,6 +8,6 @@
   </PropertyGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="$(SolutionRoot)generators\dotnetcore-server-interfaces\PrincipleStudios.OpenApiCodegen.Server.Mvc.Analyzers\PrincipleStudios.OpenApiCodegen.Server.Mvc.Roslyn3.11.csproj" />
+		<ProjectReference Include="$(SolutionRoot)generators\dotnetcore-server-interfaces\PrincipleStudios.OpenApiCodegen.Server.Mvc.Base\PrincipleStudios.OpenApiCodegen.Server.Mvc.Base.csproj" />
 	</ItemGroup>
 </Project>

@@ -1,0 +1,40 @@
+openapi: "3.0.3"
+info:
+  version: 1.0.0
+  title: Form Sample
+  description: A sample API that uses form-encoded requests
+paths:
+  /basic:
+    post:
+      description: Posts a simple form
+      operationId: postBasicForm
+      requestBody:
+        description: Pet to add
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/NewPet'
+      responses:
+        '200':
+          description: pet response
+          content:
+            application/json:
+              schema:
+                type: integer
+components:
+  schemas:
+    NewPet:
+      type: object
+      required:
+        - name
+        # TODO: forms don't support Optional
+        - tag
+        - hasIdTag
+      properties:
+        name:
+          type: string
+        tag:
+          type: string
+        hasIdTag:
+          type: boolean

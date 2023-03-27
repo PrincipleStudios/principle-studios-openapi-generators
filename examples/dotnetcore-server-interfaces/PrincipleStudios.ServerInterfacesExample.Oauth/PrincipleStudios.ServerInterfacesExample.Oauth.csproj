@@ -1,18 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
 	<PropertyGroup>
-		<TargetFramework>net6.0</TargetFramework>
+		<TargetFramework>net7.0</TargetFramework>
 	</PropertyGroup>
 
-	<ItemGroup>
-		<PackageReference Include="PrincipleStudios.OpenApiCodegen.Server.Mvc" Condition=" '$(OpenApiMvcServerFullVersion)' != '' " Version="$(OpenApiMvcServerFullVersion)" />
-		<PackageReference Include="PrincipleStudios.OpenApiCodegen.Server.Mvc" Condition=" '$(OpenApiMvcServerFullVersion)' == '' and '$(VersionSuffix)' == '' " Version="$(OpenApiMvcServerVersion)" />
-		<PackageReference Include="PrincipleStudios.OpenApiCodegen.Server.Mvc" Condition=" '$(OpenApiMvcServerFullVersion)' == '' and '$(VersionSuffix)' != '' " Version="$(OpenApiMvcServerVersion)-$(VersionSuffix)" />
-
-		<PackageReference Include="PrincipleStudios.OpenApiCodegen.Json.Extensions" Condition=" '$(OpenApiJsonExtensionsFullVersion)' != '' " Version="$(OpenApiJsonExtensionsFullVersion)" />
-		<PackageReference Include="PrincipleStudios.OpenApiCodegen.Json.Extensions" Condition=" '$(OpenApiJsonExtensionsFullVersion)' == '' and '$(VersionSuffix)' == '' " Version="$(OpenApiJsonExtensionsVersion)" />
-		<PackageReference Include="PrincipleStudios.OpenApiCodegen.Json.Extensions" Condition=" '$(OpenApiJsonExtensionsFullVersion)' == '' and '$(VersionSuffix)' != '' " Version="$(OpenApiJsonExtensionsVersion)-$(VersionSuffix)" />
-	</ItemGroup>
+	<Import Project="$(SolutionRoot)examples\dotnetcore-server-interfaces\tooling\server-generator-references.props" />
 
 	<ItemGroup>
 		<OpenApiSchemaMvcServer Include="$(SolutionRoot)schemas\oauth.yaml" Link="Controllers\oauth.yaml" />

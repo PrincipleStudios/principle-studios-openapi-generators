@@ -2,6 +2,8 @@
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Scripting;
 using Microsoft.CodeAnalysis.Scripting;
+using PrincipleStudios.OpenApi.CSharp;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -164,9 +166,23 @@ public class HttpRequestMessageFactoriesShould : IClassFixture<TempDirectory>
         Assert.Null(actualMessage.Content);
     }
 
-    private async Task<HttpRequestMessage> GetRequestMessage(string documentName, string operationAndParameters)
+    [Fact]
+    public async Task AllowFormEncodedBodies()
     {
-        var libBytes = DynamicCompilation.GetGeneratedLibrary(documentName);
+        var actualMessage = await GetRequestMessage("form.yaml", "PostBasicForm(name: \"Fido\", tag: \"dog\", hasIdTag: true)");
+
+        Assert.Equal("POST", actualMessage.Method.Method);
+        Assert.Equal("basic", actualMessage.RequestUri?.OriginalString);
+        var content = Assert.IsType<FormUrlEncodedContent>(actualMessage.Content);
+        using var memoryStream = new MemoryStream();
+        await content.CopyToAsync(memoryStream);
+        var formString = Encoding.ASCII.GetString(memoryStream.ToArray());
+        Assert.Equal("name=Fido&tag=dog&hasIdTag=True", formString);
+    }
+
+    private async Task<HttpRequestMessage> GetRequestMessage(string documentName, string operationAndParameters, Action<CSharpSchemaOptions>? configureOptions = null)
+    {
+        var libBytes = DynamicCompilation.GetGeneratedLibrary(documentName, configureOptions);
 
         var fullPath = Path.Combine(workingDirectory, Path.GetRandomFileName());
         File.WriteAllBytes(fullPath, libBytes);

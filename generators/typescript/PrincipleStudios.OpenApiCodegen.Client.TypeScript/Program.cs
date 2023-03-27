@@ -89,7 +89,8 @@ namespace PrincipleStudios.OpenApiCodegen.Client.TypeScript
             builder.AddYamlStream(defaultJsonStream);
             if (optionsPath is { Length: > 0 })
                 builder.AddYamlFile(optionsPath);
-            var result = builder.Build().Get<TypeScriptSchemaOptions>();
+            var result = builder.Build().Get<TypeScriptSchemaOptions>()
+                ?? throw new InvalidOperationException("Could not construct options");
             return result;
         }
 

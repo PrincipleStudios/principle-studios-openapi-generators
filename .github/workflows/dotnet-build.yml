@@ -12,22 +12,22 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Setup .NET
-      uses: actions/setup-dotnet@v1
+      uses: actions/setup-dotnet@v3
       with:
             dotnet-version: |
               6.0.x
               7.0.x
     - name: Setup Node
-      uses: actions/setup-node@v2
+      uses: actions/setup-node@v3
       with:
         node-version: 16
         registry-url: ${{ github.ref != 'refs/heads/main' && 'https://npm.pkg.github.com/' || 'https://registry.npmjs.org/' }}
         scope: '@principlestudios'
 
     - name: Cache nuget packages
-      uses: actions/cache@v2
+      uses: actions/cache@v3
       with:
         path: ~/.nuget/packages
         # Look to see if there is a cache hit for the corresponding requirements file
@@ -35,7 +35,7 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-nuget
     - name: Cache node modules
-      uses: actions/cache@v2
+      uses: actions/cache@v3
       env:
         cache-name: cache-node-modules
       with:
@@ -95,7 +95,7 @@ jobs:
     - name: Test
       run: dotnet test --no-build --verbosity normal --configuration Release --collect:"XPlat Code Coverage"
     - name: 'Upload Code Coverage'
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: code-coverage
         path: ./lib/*/TestResults/*/coverage.cobertura.xml
@@ -151,3 +151,17 @@ jobs:
       env:
         IS_PRERELEASE: ${{ github.ref != 'refs/heads/main' && github.sha || '' }}
         NODE_AUTH_TOKEN: "${{ github.ref == 'refs/heads/main' && secrets.NPM_TOKEN || secrets.GITHUB_TOKEN }}"
+
+    ######################
+    # FINAL VERIFICATIONS
+  verify:
+    runs-on: ubuntu-latest
+    needs: build
+    if: ${{ github.ref != 'refs/heads/main' }}
+    steps:
+    - uses: actions/checkout@v3
+    - name: Test MVC examples build
+      run: ./examples/dotnetcore-server-interfaces/tooling/build-examples.ps1 -VersionSuffix "sha.$VERSION_SUFFIX" -githubToken $GITHUB_TOKEN
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        VERSION_SUFFIX: ${{ github.ref != 'refs/heads/main' && github.sha || '' }}

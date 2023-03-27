@@ -2,9 +2,8 @@
 
 	<PropertyGroup>
 		<AssemblyName>PrincipleStudios.OpenApiCodegen.Server.Mvc.Roslyn4_0</AssemblyName>
-		
+
 		<AnalyzerRoslynVersion>4.0</AnalyzerRoslynVersion>
-		<RoslynApiVersion>4.0.0</RoslynApiVersion>
 	</PropertyGroup>
 
 	<Import Project="Analyzer.targets" />
