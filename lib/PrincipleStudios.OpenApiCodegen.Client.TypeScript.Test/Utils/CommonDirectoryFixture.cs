@@ -48,13 +48,13 @@ public class CommonDirectoryFixture : IDisposable
         }
 
         // Ensure our common package was built
-        var tscResult = await NodeUtility.Tsc(psi => psi.WorkingDirectory = SolutionConfiguration.TypeScriptPackagePath, CancellationToken);
+        var tscResult = await NodeUtility.TscOpenApiCodegenTypeScriptPackage(psi => psi.WorkingDirectory = SolutionConfiguration.TypeScriptPackagePath, CancellationToken);
         if (tscResult.ExitCode != 0) throw new InvalidOperationException("tsc failed!") { Data = { ["error"] = tscResult.Error } };
 
         await WritePackageJson();
         await WriteTsconfigJson();
 
-        var exitCode = await NodeUtility.NpmInstall(SetupProcess, CancellationToken);
+        var exitCode = await NodeUtility.NpmInstall("typescript@latest", SetupProcess, CancellationToken);
         if (exitCode != 0) throw new InvalidOperationException("npm install failed!");
     }
 
@@ -110,6 +110,19 @@ public class CommonDirectoryFixture : IDisposable
             Directory.CreateDirectory(Path.GetDirectoryName(Path.Combine(generatedFolder, entry.Key))!);
 
             File.WriteAllText(Path.Combine(generatedFolder, entry.Key), contents: entry.SourceText);
+        }
+
+        // Ensure the codegenerated files build
+        var tscResult = await NodeUtility.Tsc(SetupProcess, CancellationToken);
+        if (tscResult.ExitCode != 0)
+        {
+            var tsconfig = Path.Combine(DirectoryPath, "tsconfig.json");
+            var tsconfigContents = System.Text.Json.JsonSerializer.Deserialize<System.Text.Json.Nodes.JsonObject>(File.ReadAllText(tsconfig));
+            var exclude = (System.Text.Json.Nodes.JsonArray)(tsconfigContents!["exclude"] ??= new System.Text.Json.Nodes.JsonArray());
+            exclude.Add(documentName + "/");
+            File.WriteAllText(tsconfig, tsconfigContents.ToJsonString());
+
+            throw new InvalidOperationException($"tsc failed!\n\n{tscResult.Output}");
         }
     }
 
