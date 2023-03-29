@@ -1,0 +1,25 @@
+{{>partial_header Header}}
+#nullable enable
+#nullable disable warnings
+#pragma warning disable
+
+namespace {{this.PackageName}}
+{ {{#with Model as |Model|}}{{#if Description}}
+    /// <summary>
+    /// {{linewrap Description "
+    /// "}}
+    /// </summary>{{/if}}
+    {{#if Model.IsString}}[global::System.Text.Json.Serialization.JsonConverter(typeof(global::PrincipleStudios.OpenApiCodegen.Json.Extensions.JsonStringEnumPropertyNameConverter))]{{/if}}
+    public enum {{ClassName}}
+    {
+        {{#each EnumVars as |EnumVar|}}
+        /// <summary>
+        /// Enum {{EnumVar.Name}} for {{{EnumVar.Value}}}
+        /// </summary>{{#if Model.IsString}}
+        [global::System.Text.Json.Serialization.JsonPropertyName("{{{EnumVar.Value}}}")]{{/if}}
+        {{EnumVar.Name}} = {{#if Model.IsString}}{{@index}}{{else}}{{{EnumVar.Value}}}{{/if}},
+
+        {{/each}}
+    }
+{{/with}}
+}

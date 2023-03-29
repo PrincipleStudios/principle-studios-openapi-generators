@@ -1,5 +1,5 @@
 ﻿using Microsoft.OpenApi.Models;
-using PrincipleStudios.OpenApi.CSharp.templates;
+using PrincipleStudios.OpenApi.CSharp.Templates;
 using PrincipleStudios.OpenApi.Transformations;
 using System;
 using System.Collections.Generic;
@@ -42,22 +42,22 @@ namespace PrincipleStudios.OpenApi.CSharp
             foreach (var (operation, context) in operations)
                 visitor.Visit(operation, context, new ControllerOperationVisitor.Argument(diagnostic, resultOperations.Add));
 
-            var template = new templates.ControllerTemplate(
-                header: new templates.PartialHeader(
-                    appName: document.Info.Title,
-                    appDescription: document.Info.Description,
-                    version: document.Info.Version,
-                    infoEmail: document.Info.Contact?.Email,
-                    codeGeneratorVersionInfo: versionInfo
+            var template = new Templates.ControllerTemplate(
+                Header: new Templates.PartialHeader(
+                    AppName: document.Info.Title,
+                    AppDescription: document.Info.Description,
+                    Version: document.Info.Version,
+                    InfoEmail: document.Info.Contact?.Email,
+                    CodeGeneratorVersionInfo: versionInfo
                 ),
 
-                packageName: baseNamespace,
-                className: className,
-                hasDescriptionOrSummary: (summary?.Trim() + description?.Trim()) is { Length: > 0 },
-                summary: summary,
-                description: description,
+                PackageName: baseNamespace,
+                ClassName: className,
+                HasDescriptionOrSummary: (summary?.Trim() + description?.Trim()) is { Length: > 0 },
+                Summary: summary,
+                Description: description,
 
-                operations: resultOperations.ToArray()
+                Operations: resultOperations.ToArray()
             );
 
             var entry = handlebarsFactory.Handlebars.ProcessController(template);
@@ -78,20 +78,20 @@ namespace PrincipleStudios.OpenApi.CSharp
             return new SourceEntry
             {
                 Key = $"{baseNamespace}.AddServicesExtensions.cs",
-                SourceText = handlebarsFactory.Handlebars.ProcessAddServices(new templates.AddServicesModel(
-                    header: new templates.PartialHeader(
-                        appName: document.Info.Title,
-                        appDescription: document.Info.Description,
-                        version: document.Info.Version,
-                        infoEmail: document.Info.Contact?.Email,
-                        codeGeneratorVersionInfo: versionInfo
+                SourceText = handlebarsFactory.Handlebars.ProcessAddServices(new Templates.AddServicesModel(
+                    Header: new Templates.PartialHeader(
+                        AppName: document.Info.Title,
+                        AppDescription: document.Info.Description,
+                        Version: document.Info.Version,
+                        InfoEmail: document.Info.Contact?.Email,
+                        CodeGeneratorVersionInfo: versionInfo
                     ),
-                    methodName: CSharpNaming.ToMethodName(document.Info.Title, options.ReservedIdentifiers()),
-                    packageName: baseNamespace,
-                    controllers: (from p in groups
+                    MethodName: CSharpNaming.ToMethodName(document.Info.Title, options.ReservedIdentifiers()),
+                    PackageName: baseNamespace,
+                    Controllers: (from p in groups
                                   let genericTypeName = CSharpNaming.ToClassName($"T {p}", options.ReservedIdentifiers())
                                   let className = CSharpNaming.ToClassName(p + " base", options.ReservedIdentifiers())
-                                  select new templates.ControllerReference(genericTypeName, className)
+                                  select new Templates.ControllerReference(genericTypeName, className)
                                   ).ToArray()
                 )),
             };

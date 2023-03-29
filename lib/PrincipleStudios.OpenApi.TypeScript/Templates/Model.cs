@@ -4,24 +4,24 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PrincipleStudios.OpenApi.TypeScript.templates
+namespace PrincipleStudios.OpenApi.TypeScript.Templates
 {
     public record ModelTemplate<TModel>(
-        PartialHeader header,
+        PartialHeader Header,
 
-        string packageName,
+        string PackageName,
 
-        TModel model
+        TModel Model
     ) where TModel : Model;
 
     public record ImportStatement(
-        string[] members,
-        string path
+        string[] Members,
+        string Path
     );
 
     public record Model(
-        string description,
-        string className
+        string Description,
+        string ClassName
     );
 
     public record EnumModel(
@@ -34,7 +34,7 @@ namespace PrincipleStudios.OpenApi.TypeScript.templates
 
 
     public record EnumVar(
-        string value
+        string Value
     );
 
     public record ArrayModel(

@@ -1,5 +1,5 @@
 ﻿using HandlebarsDotNet;
-using PrincipleStudios.OpenApi.CSharp.templates;
+using PrincipleStudios.OpenApi.CSharp.Templates;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -18,9 +18,9 @@ namespace PrincipleStudios.OpenApi.CSharp
             var result = Handlebars.Create();
 
             result.RegisterHelper(
-                "linewrap", 
-                (context, parameters) => 
-                    parameters[0] is string s 
+                "linewrap",
+                (context, parameters) =>
+                    parameters[0] is string s
                         ? s.ToString().Replace("\r", "").Replace("\n", parameters[1].ToString())
                         : parameters[0]
             );
@@ -71,7 +71,7 @@ namespace PrincipleStudios.OpenApi.CSharp
             IDictionary<string, object?> ToTemplate<TModel>(TModel m)
                 where TModel : Model
             {
-                return ToDictionary<ModelTemplate<TModel>>(new(header: header, packageName: packageName, model: m));
+                return ToDictionary<ModelTemplate<TModel>>(new(Header: header, PackageName: packageName, Model: m));
             }
         }
 

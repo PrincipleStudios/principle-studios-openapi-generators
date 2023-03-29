@@ -1,0 +1,28 @@
+{{>partial_header Header}}
+{{#with Model}}
+{{#each Imports}}
+import {
+{{#each Members}}
+    {{{.}}},
+{{/each}}
+} from '{{Path}}';
+{{/each}}
+
+/**{{#if Description}}
+ * {{{Description}}}{{/if}}
+ * @export
+ * @interface {{ClassName}}
+ */
+export type {{ClassName}} = {{#if Parent}}{{{Parent}}} &amp; {{/if}}{
+{{!-- {{#if AdditionalPropertiesType}}
+    [key: string]: {{{AdditionalPropertiesType}}}{{#if Vars.Length}} | any{{/if}}; {{! TODO - we really don't want `| any` here... see if TypeScript has an update for us. }}
+{{/if}} --}}
+{{#each Vars}}
+    /**{{#if Description}}
+     * {{{Description}}}{{/if}}
+     * @type {{{DataType}}}
+     */
+    {{#if IsReadOnly}}readonly {{/if}}{{Name}}{{#if Optional}}?{{/if}}: {{{DataType}}};
+{{/each}}
+};
+{{/with}}

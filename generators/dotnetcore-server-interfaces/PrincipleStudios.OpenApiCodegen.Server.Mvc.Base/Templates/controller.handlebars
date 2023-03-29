@@ -1,0 +1,141 @@
+{{>partial_header Header}}
+#nullable enable
+#nullable disable warnings
+#pragma warning disable
+
+namespace {{PackageName}}
+{ {{#if Operations}}{{#if Summary}}
+    /// <summary>
+    /// {{linewrap Summary "
+    /// "}}
+    /// </summary>{{/if}}{{#if Description}}
+    /// <remarks>
+    /// {{linewrap Description "
+    /// "}}
+    /// </remarks>{{/if}}{{#if Description}}
+    [Description("{{Description}}")]{{/if}}
+    public abstract class {{ClassName}} : global::Microsoft.AspNetCore.Mvc.ControllerBase
+    {
+        {{#each Operations as |Operation|}}{{#each RequestBodies as |RequestBody|}}{{#if Operation.Summary}}
+        /// <summary>
+        /// {{linewrap Operation.Summary "
+        /// "}}
+        /// </summary>{{/if}}{{#if Operation.Description}}
+        /// <remarks>
+        /// {{linewrap Operation.Description "
+        /// "}}
+        /// </remarks>{{/if}}{{#each RequestBody.AllParams}}
+        /// <param name="{{ParamName}}">{{Description}}</param>{{/each}}
+        [global::Microsoft.AspNetCore.Mvc.Http{{Operation.HttpMethod}}]
+        [global::Microsoft.AspNetCore.Mvc.Route("{{{Operation.Path}}}")]{{#if RequestBody.RequestBodyType}}
+        [global::Microsoft.AspNetCore.Mvc.Consumes("{{{RequestBody.RequestBodyType}}}")]{{/if}}{{!
+        }}{{#if Operation.Responses.DefaultResponse}}
+        // {{Operation.Responses.DefaultResponse.Description}}
+        {{#each Operation.Responses.DefaultResponse.Content}}
+        [global::Microsoft.AspNetCore.Mvc.ProducesDefaultResponseType({{#if DataType}}typeof({{{DataType}}}){{/if}})] // {{MediaType}}{{/each}}{{/if}}{{!
+        }}{{#each Operation.Responses.StatusResponse as |Response StatusCode|}}
+        // {{Response.Description}}
+        {{#each Response.Content}}
+        [global::Microsoft.AspNetCore.Mvc.ProducesResponseType({{StatusCode}}{{#if DataType}}, Type = typeof({{{DataType}}}){{/if}})] // {{MediaType}}{{/each}}{{/each}}{{!
+        }}{{#each Operation.SecurityRequirements}}{{#if Schemes.Length}}
+        [global::Microsoft.AspNetCore.Authorization.Authorize(Policy = "{{#each Schemes}}{{SchemeName}}{{#unless @last}},{{/unless}}{{/each}}")]{{else}}
+        [global::Microsoft.AspNetCore.Authorization.AllowAnonymous]{{/if}}{{/each}}
+        public async global::System.Threading.Tasks.Task<global::Microsoft.AspNetCore.Mvc.IActionResult> {{RequestBody.Name}}TypeSafeEntry(
+            {{#each RequestBody.AllParams}}{{#unless IsCookieParam}}[{{!
+            }}{{#if IsPathParam}}global::Microsoft.AspNetCore.Mvc.FromRoute(Name = "{{RawName}}"){{/if}}{{!
+            }}{{#if IsQueryParam}}global::Microsoft.AspNetCore.Mvc.FromQuery(Name = "{{RawName}}"){{/if}}{{!
+            }}{{#if IsBodyParam}}global::Microsoft.AspNetCore.Mvc.FromBody{{/if}}{{!
+            }}{{#if IsFormParam}}global::Microsoft.AspNetCore.Mvc.FromForm(Name = "{{RawName}}"){{/if}}{{!
+            }}{{#if IsHeaderParam}}global::Microsoft.AspNetCore.Mvc.FromHeader(Name = "{{RawName}}"){{/if}}{{!
+            }}{{#if Required}}, global::System.ComponentModel.DataAnnotations.Required{{/if}}{{!
+            }}{{#if Pattern}}, global::System.ComponentModel.DataAnnotations.RegularExpression(@".*{{{escapeverbatimstring Pattern}}}.*"){{/if}}{{!
+            }}{{#if HasMinLength}}, global::System.ComponentModel.DataAnnotations.MinLength({{MinLength}}){{/if}}{{!
+            }}{{#if HasMaxLength}}, global::System.ComponentModel.DataAnnotations.MaxLength({{MaxLength}}){{/if}}{{!
+            }}{{#if HasMinimum}}{{#if HasMaximum}}, global::System.ComponentModel.DataAnnotations.Range({{Minimum}}, {{Maximum}}){{/if}}{{/if}}{{!
+            }}] {{#unless Optional}}{{{DataType}}}{{else
+            }}global::PrincipleStudios.OpenApiCodegen.Json.Extensions.Optional<{{{DataType}}}>{{/unless}} {{ParamName}}{{#unless @last}},
+            {{/unless}}{{/unless}}{{/each}}
+        ) => (await {{RequestBody.Name}}({{#each RequestBody.AllParams}}{{ParamName}}{{#unless @last}},{{/unless}}{{/each}})).ActionResult;
+        {{!--
+            TODO - check scopes
+            {{#each Operation.SecurityRequirements}}{{#if Schemes.Length}}{{#if }}
+            if (User.Identity?.AuthenticationType == "OAuth2" && !await VerifyScopes(User, "read:user", "user:email"))
+                return Forbid();{{/if}}{{/if}}{{/each}}
+            return --}}
+
+        protected abstract global::System.Threading.Tasks.Task<{{Operation.Name}}ActionResult> {{RequestBody.Name}}({{#each RequestBody.AllParams}}
+            {{#unless Optional}}{{{DataType}}}{{else
+            }}global::PrincipleStudios.OpenApiCodegen.Json.Extensions.Optional<{{{DataType}}}>{{/unless}} {{ParamName}}{{#unless @last}}, {{/unless}}{{/each}});
+        {{/each}}
+
+        public readonly struct {{Name}}ActionResult
+        {
+            public readonly global::Microsoft.AspNetCore.Mvc.IActionResult ActionResult;
+
+            private class HeaderActionResult : global::Microsoft.AspNetCore.Mvc.IActionResult
+            {
+                private readonly global::Microsoft.AspNetCore.Mvc.IActionResult original;
+                private readonly global::System.Collections.Generic.IEnumerable<global::System.Collections.Generic.KeyValuePair<string, string>> headers;
+
+                public HeaderActionResult(global::Microsoft.AspNetCore.Mvc.IActionResult original, global::System.Collections.Generic.IEnumerable<global::System.Collections.Generic.KeyValuePair<string, string>> headers)
+                {
+                    this.original = original;
+                    this.headers = headers;
+                }
+
+                public global::System.Threading.Tasks.Task ExecuteResultAsync(global::Microsoft.AspNetCore.Mvc.ActionContext context)
+                {
+                    foreach (var header in headers)
+                        context.HttpContext.Response.Headers[header.Key] = global::Microsoft.Extensions.Primitives.StringValues.Concat(context.HttpContext.Response.Headers[header.Key], header.Value);
+                    return original.ExecuteResultAsync(context);
+                }
+            }
+
+            private {{Name}}ActionResult(global::Microsoft.AspNetCore.Mvc.IActionResult ActionResult, global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
+            {
+                this.ActionResult = new HeaderActionResult(ActionResult, headers);
+            }
+
+            private {{Name}}ActionResult(int statusCode, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
+                : this(new global::Microsoft.AspNetCore.Mvc.StatusCodeResult(statusCode), headers)
+            {
+            }
+
+            private {{Name}}ActionResult(int statusCode, string mediaType, global::System.Type declaredType, object? resultObject, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers)
+                : this(new global::Microsoft.AspNetCore.Mvc.ObjectResult(resultObject)
+                {
+                    ContentTypes = new global::Microsoft.AspNetCore.Mvc.Formatters.MediaTypeCollection { { new global::Microsoft.Net.Http.Headers.MediaTypeHeaderValue(mediaType) } },
+                    DeclaredType = declaredType,
+                    StatusCode = statusCode
+                }, headers)
+            {
+            }
+            {{#each Responses.StatusResponse as |Response Code|}}{{#each Content}}
+            {{#if Response.Description}}/// <summary>
+            /// {{linewrap Response.Description "
+            /// "}}
+            /// </summary>{{/if}}
+            public static {{../../Name}}ActionResult {{ResponseMethodName}}({{#if DataType}}{{{DataType}}} result{{#if ../Headers.Length}},
+                {{/if}}{{/if}}{{#each ../Headers}}{{#unless @first}},
+                {{/unless}}string {{ParamName}}{{/each}}) =>
+                new {{../../Name}}ActionResult({{Code}}{{#if DataType}}, "{{MediaType}}", typeof({{{DataType}}}), result{{/if}}{{#each ../Headers}},
+                    new global::System.Collections.Generic.KeyValuePair<string, string>("{{RawName}}", {{ParamName}}){{/each}});
+            {{/each}}{{/each}}{{#if Responses.DefaultResponse}}{{#each Responses.DefaultResponse.Content}}
+            {{#if Responses.DefaultResponse.Description}}/// <summary>
+            /// {{linewrap Responses.DefaultResponse.Description "
+            /// "}}
+            /// </summary>{{/if}}
+            public static {{../Name}}ActionResult {{ResponseMethodName}}(int statusCode{{#if DataType}}, {{{DataType}}} result{{/if}}{{#each ../Responses.DefaultResponse.Headers}},
+                string {{ParamName}}{{/each}}) =>
+                new {{../Name}}ActionResult(statusCode{{#if DataType}}, "{{MediaType}}", typeof({{{DataType}}}), result{{/if}}{{#each ../Responses.DefaultResponse.Headers}},
+                    new global::System.Collections.Generic.KeyValuePair<string, string>("{{RawName}}", {{ParamName}}){{/each}});
+            {{/each}}{{/if}}
+
+            /// <summary>Allows for action results not specified in the API</summary>
+            public static {{Name}}ActionResult Unsafe(global::Microsoft.AspNetCore.Mvc.IActionResult actionResult, params global::System.Collections.Generic.KeyValuePair<string, string>[] headers) =>
+                new {{Name}}ActionResult(actionResult, headers);
+        }
+        {{/each}}
+    }
+{{/if}}
+}

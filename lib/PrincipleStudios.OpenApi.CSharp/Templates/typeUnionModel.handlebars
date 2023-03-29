@@ -1,10 +1,10 @@
-{{>partial_header header}}
+{{>partial_header Header}}
 #nullable enable
 #nullable disable warnings
 #pragma warning disable
 
-namespace {{this.packageName}}
-{ {{#with model as |model|}}{{#if Description}}
+namespace {{this.PackageName}}
+{ {{#with Model as |Model|}}{{#if Description}}
     /// <summary>
     /// {{linewrap Description "
     /// "}}
@@ -82,7 +82,7 @@ namespace {{this.packageName}}
                 var nodes = new[]
                 {
 {{#each TypeEntries as |TypeEntry|}}
-                    value.{{{TypeEntry.Identifier}}} == null ? null : toNode<{{{TypeEntry.TypeName}}}>(value.{{{TypeEntry.Identifier}}}{{#if model.DiscriminatorProperty}}, "{{{TypeEntry.DiscriminatorValue}}}"{{/if}}),
+                    value.{{{TypeEntry.Identifier}}} == null ? null : toNode<{{{TypeEntry.TypeName}}}>(value.{{{TypeEntry.Identifier}}}{{#if Model.DiscriminatorProperty}}, "{{{TypeEntry.DiscriminatorValue}}}"{{/if}}),
 {{/each}}
                 };
                 var result = global::System.Linq.Enumerable.Aggregate(nodes, (prev, next) =>

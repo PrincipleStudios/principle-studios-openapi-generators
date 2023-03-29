@@ -1,6 +1,6 @@
 ﻿using HandlebarsDotNet;
 using Microsoft.OpenApi.Models;
-using PrincipleStudios.OpenApi.CSharp.templates;
+using PrincipleStudios.OpenApi.CSharp.Templates;
 using PrincipleStudios.OpenApi.Transformations;
 using System;
 using System.Collections.Generic;
@@ -86,14 +86,14 @@ namespace PrincipleStudios.OpenApi.CSharp
             var info = context.Select(v => v.Element).OfType<OpenApiDocument>().Last().Info;
             var className = GetClassName(schema);
 
-            var header = new templates.PartialHeader(
-                appName: info.Title,
-                appDescription: info.Description,
-                version: info.Version,
-                infoEmail: info.Contact?.Email,
-                codeGeneratorVersionInfo: versionInfo
+            var header = new Templates.PartialHeader(
+                AppName: info.Title,
+                AppDescription: info.Description,
+                Version: info.Version,
+                InfoEmail: info.Contact?.Email,
+                CodeGeneratorVersionInfo: versionInfo
             );
-            templates.Model? model = schema switch
+            Templates.Model? model = schema switch
             {
                 { Enum: { Count: > 0 }, Type: "string" } => ToEnumModel(className, schema),
                 { OneOf: { Count: > 0 } } => ToOneOfModel(className, schema),
@@ -207,18 +207,18 @@ namespace PrincipleStudios.OpenApi.CSharp
             }
         }
 
-        private Func<templates.ObjectModel> ToObjectModel(string className, OpenApiSchema schema, OpenApiContext context, ObjectModel objectModel, OpenApiTransformDiagnostic diagnostic)
+        private Func<Templates.ObjectModel> ToObjectModel(string className, OpenApiSchema schema, OpenApiContext context, ObjectModel objectModel, OpenApiTransformDiagnostic diagnostic)
         {
             if (objectModel == null)
                 throw new ArgumentNullException(nameof(objectModel));
             var properties = objectModel.Properties();
             var required = new HashSet<string>(objectModel.Required());
 
-            Func<templates.ModelVar>[] vars = (from entry in properties
+            Func<Templates.ModelVar>[] vars = (from entry in properties
                                                let req = required.Contains(entry.Key)
                                                let dataType = ToInlineDataType(entry.Value)
                                                let resolved = objectModel.LegacyOptionalBehavior && !req ? dataType().MakeNullable() : dataType()
-                                               select (Func<templates.ModelVar>)(() => new templates.ModelVar(
+                                               select (Func<Templates.ModelVar>)(() => new Templates.ModelVar(
                                                    BaseName: entry.Key,
                                                    DataType: resolved.text,
                                                    Nullable: resolved.nullable,
@@ -228,7 +228,7 @@ namespace PrincipleStudios.OpenApi.CSharp
                                                    Optional: !req && !objectModel.LegacyOptionalBehavior
                                                 ))).ToArray();
 
-            return () => new templates.ObjectModel(
+            return () => new Templates.ObjectModel(
                 Description: schema.Description,
                 ClassName: className,
                 Parent: null, // TODO - if "all of" and only one was a reference, we should be able to use inheritance.
@@ -236,24 +236,24 @@ namespace PrincipleStudios.OpenApi.CSharp
             );
         }
 
-        private templates.EnumModel ToEnumModel(string className, OpenApiSchema schema)
+        private Templates.EnumModel ToEnumModel(string className, OpenApiSchema schema)
         {
-            return new templates.EnumModel(
+            return new Templates.EnumModel(
                 schema.Description,
                 className,
-                isString: schema.Type == "string",
-                enumVars: (from entry in schema.Enum
+                IsString: schema.Type == "string",
+                EnumVars: (from entry in schema.Enum
                            select entry switch
                            {
-                               Microsoft.OpenApi.Any.OpenApiPrimitive<string> { Value: string name } => new templates.EnumVar(CSharpNaming.ToPropertyName(name, options.ReservedIdentifiers("enum", className)), name),
+                               Microsoft.OpenApi.Any.OpenApiPrimitive<string> { Value: string name } => new Templates.EnumVar(CSharpNaming.ToPropertyName(name, options.ReservedIdentifiers("enum", className)), name),
                                _ => throw new NotSupportedException()
                            }).ToArray()
             );
         }
 
-        private templates.TypeUnionModel ToOneOfModel(string className, OpenApiSchema schema)
+        private Templates.TypeUnionModel ToOneOfModel(string className, OpenApiSchema schema)
         {
-            return new templates.TypeUnionModel(
+            return new Templates.TypeUnionModel(
                 schema.Description,
                 className,
                 AllowAnyOf: false,
@@ -293,10 +293,10 @@ namespace PrincipleStudios.OpenApi.CSharp
                         ),
                     _ => null
                 },
-                { Type: "object" } or { Properties: { Count: > 0 } } => 
+                { Type: "object" } or { Properties: { Count: > 0 } } =>
                     new ObjectModel(
-                        Properties: () => schema.Properties, 
-                        Required: () => schema.Required, 
+                        Properties: () => schema.Properties,
+                        Required: () => schema.Required,
                         LegacyOptionalBehavior: schema.UseOptionalAsNullable()
                     ),
                 _ => null,

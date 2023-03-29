@@ -6,13 +6,13 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<None Remove="templates\operation.handlebars" />
-		<None Remove="templates\operationBarrelFile.handlebars" />
+		<None Remove="Templates\operation.handlebars" />
+		<None Remove="Templates\operationBarrelFile.handlebars" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<EmbeddedResource Include="templates\operation.handlebars" />
-		<EmbeddedResource Include="templates\operationBarrelFile.handlebars" />
+		<EmbeddedResource Include="Templates\operation.handlebars" />
+		<EmbeddedResource Include="Templates\operationBarrelFile.handlebars" />
 	</ItemGroup>
 
 	<ItemGroup>

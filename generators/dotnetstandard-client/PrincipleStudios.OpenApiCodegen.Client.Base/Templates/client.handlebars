@@ -1,0 +1,137 @@
+{{>partial_header Header}}
+#nullable enable
+#nullable disable warnings
+#pragma warning disable
+
+namespace {{PackageName}}
+{ {{#if Operations}}
+    public static class {{ClassName}}
+    {
+        {{#each Operations as |Operation|}}{{#each RequestBodies as |RequestBody|}}{{#if Operation.Summary}}
+        /// <summary>
+        /// {{linewrap Operation.Summary "
+        /// "}}
+        /// </summary>{{/if}}{{#if Operation.Description}}
+        /// <remarks>
+        /// {{linewrap Operation.Description "
+        /// "}}
+        /// </remarks>{{/if}}{{#each RequestBody.AllParams}}
+        /// <param name="{{ParamName}}">{{Description}}</param>{{/each}}
+        public static async global::System.Threading.Tasks.Task<{{Operation.Name}}ReturnType> {{Operation.Name}}(
+            this global::System.Net.Http.HttpClient client,
+            {{#each RequestBody.AllParams}}{{#unless Required}}global::PrincipleStudios.OpenApiCodegen.Json.Extensions.Optional<{{/unless}}{{{DataType}}}{{#unless Required}}>?{{/unless}} {{ParamName}},
+            {{/each}}
+            global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken)
+        ) => await (await client.SendAsync({{Operation.Name}}({{#each RequestBody.AllParams}}{{ParamName}}{{#unless @last}},{{/unless}}{{/each}})).ConfigureAwait(false))
+            .Parse{{Operation.Name}}().ConfigureAwait(false);
+
+        public static global::System.Net.Http.HttpRequestMessage {{Operation.Name}}(
+            {{#each RequestBody.AllParams}}{{#unless Required}}global::PrincipleStudios.OpenApiCodegen.Json.Extensions.Optional<{{/unless}}{{{DataType}}}{{#unless Required}}>?{{/unless}} {{ParamName}}{{#unless @last}},{{/unless}}
+            {{/each}})
+        {
+{{#if RequestBody.HasQueryParam}}
+            var query = global::System.Web.HttpUtility.ParseQueryString(string.Empty); {{!-- This is a weird way to get the internal NameValueCollection that properly serializes query strings --}}
+{{#each RequestBody.AllParams}}{{#if IsQueryParam}}{{#if DataTypeEnumerable}}
+            if ({{ParamName}} != null)
+                foreach (var entry in {{#if Required}}{{ParamName}}{{else}}global::PrincipleStudios.OpenApiCodegen.Json.Extensions.Optional.GetValueOrThrow({{ParamName}}){{/if}})
+                    query.Add("{{RawName}}", global::System.Convert.ToString(entry));
+{{else}}
+            if ({{ParamName}} != null)
+                query.Add("{{RawName}}", global::System.Convert.ToString({{#if Required}}{{ParamName}}{{else}}global::PrincipleStudios.OpenApiCodegen.Json.Extensions.Optional.GetValueOrThrow({{ParamName}}){{/if}}));
+{{/if}}{{/if}}{{/each}}
+            var requestMessage = new global::System.Net.Http.HttpRequestMessage(
+                global::System.Net.Http.HttpMethod.{{{Operation.HttpMethod}}},
+                new global::System.Uri("{{{Operation.Path}}}"{{#each RequestBody.AllParams}}{{#if IsPathParam}}
+                    .Replace("{" + "{{RawName}}" + "}", global::System.Web.HttpUtility.UrlEncode(({{#if Required}}{{ParamName}}{{else}}global::PrincipleStudios.OpenApiCodegen.Json.Extensions.Optional.GetValueOrThrow({{ParamName}}){{/if}}).ToString())){{/if}}{{/each}}
+                    + {{#if Operation.HasQueryStringEmbedded}}"&"{{else}}"?"{{/if}} + query.ToString(),
+                    global::System.UriKind.Relative));
+{{else}}
+            var requestMessage = new global::System.Net.Http.HttpRequestMessage(
+                global::System.Net.Http.HttpMethod.{{{Operation.HttpMethod}}},
+                "{{{Operation.Path}}}"{{#each RequestBody.AllParams}}{{#if IsPathParam}}
+                        .Replace("{" + "{{RawName}}" + "}", global::System.Web.HttpUtility.UrlEncode({{#if Required}}{{ParamName}}{{else}}global::PrincipleStudios.OpenApiCodegen.Json.Extensions.Optional.GetValueOrThrow({{ParamName}}){{/if}}.ToString())){{/if}}{{/each}});
+{{/if}}
+{{#if RequestBody.IsForm}}
+            requestMessage.Content = new global::System.Net.Http.FormUrlEncodedContent(new global::System.Collections.Generic.Dictionary<string, string>
+            {
+{{#each RequestBody.AllParams}}{{#if IsFormParam}}
+                ["{{RawName}}"] = {{#if Required}}{{ParamName}}{{else}}global::PrincipleStudios.OpenApiCodegen.Json.Extensions.Optional.GetValueOrThrow({{ParamName}}){{/if}}.ToString(),
+{{/if}}{{/each}}
+            });
+{{else}}{{#each RequestBody.AllParams}}{{#if IsBodyParam}}{{#if IsFile}}
+            requestMessage.Content = new global::System.Net.Http.StreamContent({{#if Required}}{{ParamName}}{{else}}global::PrincipleStudios.OpenApiCodegen.Json.Extensions.Optional.GetValueOrThrow({{ParamName}}){{/if}});
+{{else}}
+            requestMessage.Content = global::System.Net.Http.Json.JsonContent.Create<{{{DataType}}}>({{ParamName}}, global::System.Net.Http.Headers.MediaTypeHeaderValue.Parse("{{{RequestBody.RequestBodyType}}}"));
+{{/if}}{{/if}}{{/each}}{{/if}}
+{{#each RequestBody.AllParams}}{{#if IsHeaderParam}}
+            requestMessage.Headers.Add("{{BaseName}}", {{#if Required}}{{ParamName}}{{else}}global::PrincipleStudios.OpenApiCodegen.Json.Extensions.Optional.GetValueOrThrow({{ParamName}}){{/if}}{{#if DataTypeEnumerable}}.Select(v => v.ToString()){{else}}.ToString(){{/if}});{{/if}}{{/each}}
+            return requestMessage;
+        }
+
+        {{/each}}
+        public static async global::System.Threading.Tasks.Task<{{Operation.Name}}ReturnType?> Parse{{Operation.Name}}(this global::System.Net.Http.HttpResponseMessage response)
+        {
+            switch ((int)response.StatusCode)
+            { {{#each Responses.StatusResponse as |Response Code|}}
+                case {{Code}}:
+                    {{#each Response.Content}}
+                    {{#if MediaType}} if (response.Content.Headers.ContentType.MediaType == "{{MediaType}}") {{/if}}
+                        return new {{Operation.Name}}ReturnType.{{ResponseMethodName}}
+                        {
+                            Response = response,{{#if DataType}}
+                            Body = await global::System.Text.Json.JsonSerializer.DeserializeAsync<{{{DataType}}}>(await response.Content.ReadAsStreamAsync()), {{/if}}
+                        };
+                    {{/each}}
+                    break;
+                {{/each}}{{#if Responses.DefaultResponse}}
+                default: {{#each Responses.DefaultResponse.Content}}
+                    {{#if MediaType}} if (response.Content.Headers.ContentType.MediaType == "{{MediaType}}") {{/if}}
+                        return new {{Operation.Name}}ReturnType.{{ResponseMethodName}}
+                        {
+                            Response = response,{{#if DataType}}
+                            Body = await global::System.Text.Json.JsonSerializer.DeserializeAsync<{{{DataType}}}>(await response.Content.ReadAsStreamAsync()), {{/if}}
+                        }; {{/each}}
+                    break;{{/if}}
+            }
+            return new {{Operation.Name}}ReturnType
+            {
+                Response = response,
+            };
+        }
+
+        public class {{Name}}ReturnType : global::System.IDisposable
+        {
+            public global::System.Net.Http.HttpResponseMessage Response { get; set; }
+
+            void global::System.IDisposable.Dispose()
+            {
+                Response?.Dispose();
+            }
+
+            {{#each Responses.StatusResponse as |Response Code|}}{{#each Content}}
+            {{#if Response.Description}}/// <summary>
+            /// {{linewrap Response.Description "
+            /// "}}
+            /// </summary>{{/if}}
+            public class {{ResponseMethodName}} : {{../../Name}}ReturnType
+            {
+                {{#if DataType}}public {{{DataType}}} Body { get; set; }
+                {{/if}}
+            }
+            {{/each}}{{/each}}{{#if Responses.DefaultResponse}}{{#each Responses.DefaultResponse.Content}}
+            {{#if Responses.DefaultResponse.Description}}/// <summary>
+            /// {{linewrap Responses.DefaultResponse.Description "
+            /// "}}
+            /// </summary>{{/if}}
+            public class {{ResponseMethodName}} : {{../Name}}ReturnType
+            {
+                {{#if DataType}}public {{{DataType}}} Body { get; set; }
+                {{/if}}{{!-- {{#each ../Responses.DefaultResponse.Headers}}
+                public string {{ParamName}} { get; }{{/each}} --}}
+            }
+            {{/each}}{{/if}}
+        }
+        {{/each}}
+    }
+{{/if}}
+}

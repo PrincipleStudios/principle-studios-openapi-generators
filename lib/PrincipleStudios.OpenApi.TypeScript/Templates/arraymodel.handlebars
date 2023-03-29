@@ -1,11 +1,11 @@
-{{>partial_header header}}
-{{#with model}}
+{{>partial_header Header}}
+{{#with Model}}
 {{#each Imports}}
 import {
-{{#each members}}
+{{#each Members}}
     {{{.}}},
 {{/each}}
-} from '{{path}}';
+} from '{{Path}}';
 {{/each}}
 
 /**{{#if Description}}

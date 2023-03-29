@@ -1,7 +1,7 @@
 ﻿using Microsoft.OpenApi.Models;
 using PrincipleStudios.OpenApi.Transformations;
 using PrincipleStudios.OpenApi.TypeScript;
-using PrincipleStudios.OpenApi.TypeScript.templates;
+using PrincipleStudios.OpenApi.TypeScript.Templates;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -38,16 +38,16 @@ namespace PrincipleStudios.OpenApiCodegen.Client.TypeScript
             typeScriptSchemaResolver.EnsureSchemasRegistered(document, OpenApiContext.From(document), diagnostic);
 
 
-            var template = new templates.OperationTemplate(
-                header: new PartialHeader(
-                    appName: document.Info.Title,
-                    appDescription: document.Info.Description,
-                    version: document.Info.Version,
-                    infoEmail: document.Info.Contact?.Email,
-                    codeGeneratorVersionInfo: versionInfo
+            var template = new Templates.OperationTemplate(
+                Header: new PartialHeader(
+                    AppName: document.Info.Title,
+                    AppDescription: document.Info.Description,
+                    Version: document.Info.Version,
+                    InfoEmail: document.Info.Contact?.Email,
+                    CodeGeneratorVersionInfo: versionInfo
                 ),
 
-                operation: ToOperation(operation, context, diagnostic)
+                Operation: ToOperation(operation, context, diagnostic)
             );
 
             var entry = handlebarsFactory.Handlebars.ProcessOperation(template);
@@ -58,7 +58,7 @@ namespace PrincipleStudios.OpenApiCodegen.Client.TypeScript
             };
         }
 
-        private templates.Operation ToOperation(OpenApiOperation operation, OpenApiContext context, OpenApiTransformDiagnostic diagnostic)
+        private Templates.Operation ToOperation(OpenApiOperation operation, OpenApiContext context, OpenApiTransformDiagnostic diagnostic)
         {
             var httpMethod = context.GetLastKeyFor(operation);
             if (httpMethod == null)
@@ -80,16 +80,16 @@ namespace PrincipleStudios.OpenApiCodegen.Client.TypeScript
             return new SourceEntry
             {
                 Key = thisPath,
-                SourceText = handlebarsFactory.Handlebars.ProcessBarrelFile(new templates.OperationBarrelFileModel(
-                    header: new PartialHeader(
-                        appName: document.Info.Title,
-                        appDescription: document.Info.Description,
-                        version: document.Info.Version,
-                        infoEmail: document.Info.Contact?.Email,
-                        codeGeneratorVersionInfo: versionInfo
+                SourceText = handlebarsFactory.Handlebars.ProcessBarrelFile(new Templates.OperationBarrelFileModel(
+                    Header: new PartialHeader(
+                        AppName: document.Info.Title,
+                        AppDescription: document.Info.Description,
+                        Version: document.Info.Version,
+                        InfoEmail: document.Info.Contact?.Email,
+                        CodeGeneratorVersionInfo: versionInfo
                     ),
-                    operations: (from op in operations
-                                 select new templates.OperationReference(OperationFileName(op).ToNodePath(thisPath), TypeScriptNaming.ToMethodName(op.OperationId, options.ReservedIdentifiers()))
+                    Operations: (from op in operations
+                                 select new Templates.OperationReference(OperationFileName(op).ToNodePath(thisPath), TypeScriptNaming.ToMethodName(op.OperationId, options.ReservedIdentifiers()))
                                  ).ToArray()
                 )),
             };

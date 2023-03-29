@@ -22,22 +22,22 @@ namespace PrincipleStudios.OpenApi.CSharp
             return result;
         }
 
-        public static string ProcessController(this IHandlebars handlebars, templates.ControllerTemplate controllerTemplate)
+        public static string ProcessController(this IHandlebars handlebars, Templates.ControllerTemplate controllerTemplate)
         {
             var template = handlebars.Configuration.RegisteredTemplates["controller"];
 
             using var sr = new StringWriter();
-            var dict = HandlebarsTemplateProcess.ToDictionary<templates.ControllerTemplate>(controllerTemplate);
+            var dict = HandlebarsTemplateProcess.ToDictionary<Templates.ControllerTemplate>(controllerTemplate);
             template(sr, dict);
             return sr.ToString();
         }
 
-        public static string ProcessAddServices(this IHandlebars handlebars, templates.AddServicesModel addServices)
+        public static string ProcessAddServices(this IHandlebars handlebars, Templates.AddServicesModel addServices)
         {
             var template = handlebars.Configuration.RegisteredTemplates["addServices"];
 
             using var sr = new StringWriter();
-            var dict = HandlebarsTemplateProcess.ToDictionary<templates.AddServicesModel>(addServices);
+            var dict = HandlebarsTemplateProcess.ToDictionary<Templates.AddServicesModel>(addServices);
             template(sr, dict);
             return sr.ToString();
         }
