@@ -85,11 +85,11 @@ namespace PrincipleStudios.OpenApi.TypeScript
             var className = UseReferenceName(schema);
 
             var header = new Templates.PartialHeader(
-                appName: info.Title,
-                appDescription: info.Description,
-                version: info.Version,
-                infoEmail: info.Contact?.Email,
-                codeGeneratorVersionInfo: versionInfo
+                AppName: info.Title,
+                AppDescription: info.Description,
+                Version: info.Version,
+                InfoEmail: info.Contact?.Email,
+                CodeGeneratorVersionInfo: versionInfo
             );
             Templates.Model? model = schema switch
             {

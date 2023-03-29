@@ -6,87 +6,87 @@ using System.Text;
 namespace PrincipleStudios.OpenApiCodegen.Client.TypeScript.Templates
 {
     public record OperationTemplate(
-        PartialHeader header,
+        PartialHeader Header,
 
-        Operation operation
+        Operation Operation
     );
 
     public record Operation(
-        string httpMethod,
-        string summary,
-        string description,
-        string name,
-        string path,
-        bool allowNoBody,
-        bool hasFormRequest,
-        bool hasQueryParams,
-        IEnumerable<OperationParameter> sharedParams,
-        ImportStatement[] imports,
-        OperationRequestBody[] requestBodies,
-        OperationResponses responses,
-        OperationSecurityRequirement[] securityRequirements
+        string HttpMethod,
+        string Summary,
+        string Description,
+        string Name,
+        string Path,
+        bool AllowNoBody,
+        bool HasFormRequest,
+        bool HasQueryParams,
+        IEnumerable<OperationParameter> SharedParams,
+        ImportStatement[] Imports,
+        OperationRequestBody[] RequestBodies,
+        OperationResponses Responses,
+        OperationSecurityRequirement[] SecurityRequirements
     );
 
     public record OperationParameter(
-        string? rawName,
-        string? rawNameWithCurly,
-        string paramName,
-        string? description,
-        string dataType,
-        bool dataTypeEnumerable,
-        bool dataTypeNullable,
-        bool isPathParam,
-        bool isQueryParam,
-        bool isHeaderParam,
-        bool isCookieParam,
-        bool isBodyParam,
-        bool isFormParam,
-        bool required,
-        string pattern,
-        int? minLength,
-        int? maxLength,
-        decimal? minimum,
-        decimal? maximum
+        string? RawName,
+        string? RawNameWithCurly,
+        string ParamName,
+        string? Description,
+        string DataType,
+        bool DataTypeEnumerable,
+        bool DataTypeNullable,
+        bool IsPathParam,
+        bool IsQueryParam,
+        bool IsHeaderParam,
+        bool IsCookieParam,
+        bool IsBodyParam,
+        bool IsFormParam,
+        bool Required,
+        string Pattern,
+        int? MinLength,
+        int? MaxLength,
+        decimal? Minimum,
+        decimal? Maximum
     );
 
     public record OperationResponses(
-        OperationResponse? defaultResponse,
-        Dictionary<int, OperationResponse> statusResponse
+        OperationResponse? DefaultResponse,
+        Dictionary<int, OperationResponse> StatusResponse
     );
 
     public record OperationResponse(
-        string description,
-        OperationResponseContentOption[] content,
-        OperationResponseHeader[] headers
+        string Description,
+        OperationResponseContentOption[] Content,
+        OperationResponseHeader[] Headers
     );
 
     public record OperationResponseContentOption(
-        string mediaType,
-        string responseMethodName,
-        string? dataType
+        string MediaType,
+        string ResponseMethodName,
+        string? DataType
     );
 
-    public record OperationRequestBody(string? requestBodyType, bool isForm, IEnumerable<OperationParameter> allParams);
+    public record OperationRequestBody(string? RequestBodyType, bool IsForm, IEnumerable<OperationParameter> AllParams);
 
     public record OperationSecurityRequirement(
-        OperationSecuritySchemeRequirement[] schemes
+        OperationSecuritySchemeRequirement[] Schemes
     );
     public record OperationSecuritySchemeRequirement(
-        string schemeName,
-        string[] scopeNames
+        string SchemeName,
+        string[] ScopeNames
     );
 
     public record OperationResponseHeader(
-        string? rawName,
-        string paramName,
-        string? description,
-        string dataType,
-        bool dataTypeNullable,
-        bool required,
-        string pattern,
-        int? minLength,
-        int? maxLength,
-        decimal? minimum,
-        decimal? maximum
+        string? RawName,
+        string ParamName,
+        string? Description,
+        string DataType,
+        bool DataTypeNullable,
+        bool Required,
+        string Pattern,
+        int? MinLength,
+        int? MaxLength,
+        decimal? Minimum,
+        decimal? Maximum
     );
 }

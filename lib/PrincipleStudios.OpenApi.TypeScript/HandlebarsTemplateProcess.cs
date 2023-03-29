@@ -64,7 +64,7 @@ namespace PrincipleStudios.OpenApi.TypeScript
             IDictionary<string, object?> ToTemplate<TModel>(TModel m)
                 where TModel : Model
             {
-                return ToDictionary<ModelTemplate<TModel>>(new(header: header, packageName: packageName, model: m));
+                return ToDictionary<ModelTemplate<TModel>>(new(Header: header, PackageName: packageName, Model: m));
             }
         }
 

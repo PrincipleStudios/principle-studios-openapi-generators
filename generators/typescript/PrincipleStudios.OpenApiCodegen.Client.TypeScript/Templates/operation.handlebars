@@ -1,128 +1,128 @@
-{{>partial_header header}}
-{{#with operation}}
+{{>partial_header Header}}
+{{#with Operation}}
 import { HttpHeaders, HttpQuery, RequestOpts, ResponseArgs, throwIfNullOrUndefined, encodeURI, RequestConversion, StandardResponse, TransformRequest } from '@principlestudios/openapi-codegen-typescript';
-{{#each imports}}
+{{#each Imports}}
 import {
-{{#each members}}
+{{#each Members}}
     {{{.}}},
 {{/each}}
-} from '{{path}}';
+} from '{{Path}}';
 {{/each}}
 
 export type RequestParams = {
-    {{#sharedParams}}
-    {{paramName}}{{#unless required}}?{{/unless}}: {{{dataType}}}{{#isNullable}} | null{{/isNullable}};
-    {{/sharedParams}}
+    {{#each SharedParams}}
+    {{ParamName}}{{#unless Required}}?{{/unless}}: {{{DataType}}}{{#IsNullable}} | null{{/IsNullable}};
+    {{/each}}
 };
 export type RequestBodies = {
-    {{#each requestBodies}}
-    '{{requestBodyType}}': {{#unless isForm}}{{#allParams}}{{{dataType}}}{{#isNullable}} | null{{/isNullable}}{{/allParams}}{{else}}{
-        {{#allParams}}
-        {{paramName}}{{#unless required}}?{{/unless}}: {{{dataType}}}{{#isNullable}} | null{{/isNullable}};
-        {{/allParams}}
+    {{#each RequestBodies}}
+    '{{RequestBodyType}}': {{#unless IsForm}}{{#each AllParams}}{{{DataType}}}{{#IsNullable}} | null{{/IsNullable}}{{/each}}{{else}}{
+        {{#each AllParams}}
+        {{ParamName}}{{#unless Required}}?{{/unless}}: {{{DataType}}}{{#IsNullable}} | null{{/IsNullable}};
+        {{/each}}
     }{{/unless}};
     {{/each}}
 };
 
 export type StructuredResponses = {
-    {{#if responses.defaultResponse}}
-    {{#if responses.defaultResponse.description}}
-    /** {{responses.defaultResponse.description}} */
+    {{#if Responses.DefaultResponse}}
+    {{#if Responses.DefaultResponse.Description}}
+    /** {{Responses.DefaultResponse.Description}} */
     {{/if}}
     'other': {
-        {{#each responses.defaultResponse.content}}
-        '{{mediaType}}': {{#if dataType}}{{{dataType}}}{{else}}undefined{{/if}};
+        {{#each Responses.DefaultResponse.Content}}
+        '{{MediaType}}': {{#if DataType}}{{{DataType}}}{{else}}undefined{{/if}};
         {{/each}}
     };
     {{/if}}
-    {{#each responses.statusResponse as |response statusCode|}}
-    {{#if response.description}}
-    /** {{response.description}} */
+    {{#each Responses.StatusResponse as |Response StatusCode|}}
+    {{#if Response.Description}}
+    /** {{Response.Description}} */
     {{/if}}
-    {{statusCode}}: {
-        {{#each response.content}}
-        '{{mediaType}}': {{#if dataType}}{{{dataType}}}{{else}}undefined{{/if}};
+    {{StatusCode}}: {
+        {{#each Response.Content}}
+        '{{MediaType}}': {{#if DataType}}{{{DataType}}}{{else}}undefined{{/if}};
         {{/each}}
     };
     {{/each}}
 };
-export type Responses = {{#if responses.defaultResponse}}{{#each responses.defaultResponse.content}}
-    | StandardResponse<'other', '{{mediaType}}', {{#if dataType}}{{{dataType}}}{{else}}undefined{{/if}}>{{/each}}{{/if}}{{!--
-    --}}{{#each responses.statusResponse as |response statusCode|}}{{#each response.content}}
-    | StandardResponse<{{statusCode}}, '{{mediaType}}', {{#if dataType}}{{{dataType}}}{{else}}undefined{{/if}}>{{/each}}{{/each}};
+export type Responses = {{#if Responses.DefaultResponse}}{{#each Responses.DefaultResponse.Content}}
+    | StandardResponse<'other', '{{MediaType}}', {{#if DataType}}{{{DataType}}}{{else}}undefined{{/if}}>{{/each}}{{/if}}{{!--
+    --}}{{#each Responses.StatusResponse as |Response StatusCode|}}{{#each Response.Content}}
+    | StandardResponse<{{StatusCode}}, '{{MediaType}}', {{#if DataType}}{{{DataType}}}{{else}}undefined{{/if}}>{{/each}}{{/each}};
 
-{{#if allowNoBody}}
-export function {{{name}}}(params: RequestParams): RequestOpts;
+{{#if AllowNoBody}}
+export function {{{Name}}}(params: RequestParams): RequestOpts;
 {{/if}}
-{{#if requestBodies.length}}
-export function {{{name}}}<K extends keyof RequestBodies>(params: RequestParams, body: RequestBodies[K], mimeType: K): RequestOpts;
+{{#if RequestBodies.length}}
+export function {{{Name}}}<K extends keyof RequestBodies>(params: RequestParams, body: RequestBodies[K], mimeType: K): RequestOpts;
 {{/if}}
-export function {{{name}}}(params: RequestParams{{#if requestBodies.length}}, body: RequestBodies[keyof RequestBodies] | null = null, mimeType: keyof RequestBodies | null = null{{/if}}): RequestOpts {
+export function {{{Name}}}(params: RequestParams{{#if RequestBodies.length}}, body: RequestBodies[keyof RequestBodies] | null = null, mimeType: keyof RequestBodies | null = null{{/if}}): RequestOpts {
     throwIfNullOrUndefined(params, 'params');
-    {{#if requestBodies.length}}
-    {{#if allowNoBody}}if (mimeType) {{/if}}throwIfNullOrUndefined(body, 'body');
-    {{#if allowNoBody}}if (body)  {{/if}}throwIfNullOrUndefined(mimeType, 'mimeType');
+    {{#if RequestBodies.length}}
+    {{#if AllowNoBody}}if (mimeType) {{/if}}throwIfNullOrUndefined(body, 'body');
+    {{#if AllowNoBody}}if (body)  {{/if}}throwIfNullOrUndefined(mimeType, 'mimeType');
     {{/if}}
-    {{#each sharedParams}}
-    {{#if required}}
-    throwIfNullOrUndefined(params.{{{paramName}}}, '{{rawName}}');
+    {{#each SharedParams}}
+    {{#if Required}}
+    throwIfNullOrUndefined(params.{{{ParamName}}}, '{{RawName}}');
     {{/if}}
     {{/each}}
 
     const headers: HttpHeaders = {};
-    {{#if requestBodies.length}}
+    {{#if RequestBodies.length}}
     if (mimeType) headers['Content-Type'] = mimeType;
     {{/if}}
-    {{#each sharedParams}}
-    {{#if isHeaderParam}}
-    if (params.{{{paramName}}} !== undefined) headers['{{{rawName}}}'] = params.{{{paramName}}}; {{!-- TODO - openapi style/explode combo --}}
+    {{#each SharedParams}}
+    {{#if IsHeaderParam}}
+    if (params.{{{ParamName}}} !== undefined) headers['{{{RawName}}}'] = params.{{{ParamName}}}; {{!-- TODO - openapi style/explode combo --}}
     {{/if}}
     {{/each}}
 
-    {{#if hasQueryParams}}
+    {{#if HasQueryParams}}
     const query: HttpQuery = { {{!-- required parameters are used directly since they are already checked by throwIfNullOrUndefined  --}}
-        {{#each sharedParams}}
-        {{#if isQueryParam}}
-        {{#if required}}
-        {{#if dataTypeEnumerable}}
-        '{{rawName}}': params.{{{paramName}}},
+        {{#each SharedParams}}
+        {{#if IsQueryParam}}
+        {{#if Required}}
+        {{#if DataTypeEnumerable}}
+        '{{RawName}}': params.{{{ParamName}}},
         {{else}}
-        '{{rawName}}': params.{{{paramName}}},
+        '{{RawName}}': params.{{{ParamName}}},
         {{/if}}
         {{/if}}
         {{/if}}
         {{/each}}
     };
-    {{#each sharedParams}}
-    {{#if isQueryParam}}
-    {{#unless required}}
-    {{#if dataTypeEnumerable}}
+    {{#each SharedParams}}
+    {{#if IsQueryParam}}
+    {{#unless Required}}
+    {{#if DataTypeEnumerable}}
     {{!-- TODO - openapi style/explode combo --}}
-    if (params.{{{paramName}}} !== undefined) { query['{{rawName}}'] = params.{{{paramName}}}; }
+    if (params.{{{ParamName}}} !== undefined) { query['{{RawName}}'] = params.{{{ParamName}}}; }
     {{else}}
-    if (params.{{{paramName}}} !== undefined) { query['{{rawName}}'] = params.{{{paramName}}}; }
+    if (params.{{{ParamName}}} !== undefined) { query['{{RawName}}'] = params.{{{ParamName}}}; }
     {{/if}}
     {{/unless}}
     {{/if}}
     {{/each}}
 
     {{/if}}
-    {{#if hasFormRequest}}
+    {{#if HasFormRequest}}
     let actualBody: RequestBodies[keyof RequestBodies] | FormData = body;
     if (mimeType === 'application/x-www-form-urlencoded')
     {
         let formData = new FormData();
-        {{#each requestBodies}}
-        {{#each allParams}}
-        {{#if isFormParam}}
-        {{#if dataTypeEnumerable}}
-        if (body!.{{{paramName}}} !== undefined) {
+        {{#each RequestBodies}}
+        {{#each AllParams}}
+        {{#if IsFormParam}}
+        {{#if DataTypeEnumerable}}
+        if (body!.{{{ParamName}}} !== undefined) {
             {{!-- TODO - openapi style/explode combo --}}
-            body!.{{{paramName}}}.forEach((element) => formData.append('{{rawName}}', element as any))
-            {{!-- formData.append('{{rawName}}', body!.{{{paramName}}}.join(COLLECTION_FORMATS['{{collectionFormat}}'])); --}}
+            body!.{{{ParamName}}}.forEach((element) => formData.append('{{RawName}}', element as any))
+            {{!-- formData.append('{{rawName}}', body!.{{{ParamName}}}.join(COLLECTION_FORMATS['{{collectionFormat}}'])); --}}
         }
         {{else}}
-        if (body!.{{{paramName}}} !== undefined) { formData.append('{{rawName}}', body!.{{{paramName}}} as any); }
+        if (body!.{{{ParamName}}} !== undefined) { formData.append('{{RawName}}', body!.{{{ParamName}}} as any); }
         {{/if}}
         {{/if}}
         {{/each}}
@@ -132,14 +132,14 @@ export function {{{name}}}(params: RequestParams{{#if requestBodies.length}}, bo
 
     {{/if}}
     return {
-        path: '{{{path}}}'{{#each sharedParams}}{{#if isPathParam}}.replace('{{{rawNameWithCurly}}}', encodeURI(params.{{{paramName}}})){{/if}}{{/each}},
-        method: '{{httpMethod}}',
+        path: '{{{Path}}}'{{#each SharedParams}}{{#if IsPathParam}}.replace('{{{RawNameWithCurly}}}', encodeURI(params.{{{ParamName}}})){{/if}}{{/each}},
+        method: '{{HttpMethod}}',
         headers,
-        {{#if hasQueryParams}}
+        {{#if HasQueryParams}}
         query,
         {{/if}}
-        {{#if requestBodies.length}}
-        {{#if hasFormRequest}}
+        {{#if RequestBodies.length}}
+        {{#if HasFormRequest}}
         body: actualBody,
         {{else}}
         body,
@@ -152,8 +152,8 @@ export function {{{name}}}(params: RequestParams{{#if requestBodies.length}}, bo
 }
 
 export const responseConversion = (res: ResponseArgs) => ({
-        statusCode: [{{#each responses.statusResponse as |response statusCode|}}
-            {{statusCode}},{{/each}}
+        statusCode: [{{#each Responses.StatusResponse as |Response StatusCode|}}
+            {{StatusCode}},{{/each}}
         ].indexOf(res.status) === -1 ? 'other' : res.status,
         mimeType: res.getResponseHeader("Content-Type"),
         data: res.response,
@@ -161,8 +161,8 @@ export const responseConversion = (res: ResponseArgs) => ({
         {{!-- TODO - we need response headers in this, etc. --}}
     }) as Responses;
 
-export const conversion: RequestConversion<RequestParams, {{#if requestBodies.length}}RequestBodies{{else}}{}{{/if}}, Responses, {{#if requestBodies.length}}{{#unless allowNoBody}}'body'{{else}}'optional'{{/unless}}{{else}}'no-body'{{/if}}> = {
-    request: {{{name}}},
+export const conversion: RequestConversion<RequestParams, {{#if RequestBodies.length}}RequestBodies{{else}}{}{{/if}}, Responses, {{#if RequestBodies.length}}{{#unless allowNoBody}}'body'{{else}}'optional'{{/unless}}{{else}}'no-body'{{/if}}> = {
+    request: {{{Name}}},
     response: responseConversion,
 };
 

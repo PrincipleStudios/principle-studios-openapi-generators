@@ -1,11 +1,11 @@
-{{>partial_header header}}
-{{#with model}}
+{{>partial_header Header}}
+{{#with Model}}
 {{#each Imports}}
 import {
-{{#each members}}
+{{#each Members}}
     {{{.}}},
 {{/each}}
-} from '{{path}}';
+} from '{{Path}}';
 {{/each}}
 
 /**{{#if Description}}
@@ -22,7 +22,7 @@ export type {{ClassName}} = {{#if Parent}}{{{Parent}}} &amp; {{/if}}{
      * {{{Description}}}{{/if}}
      * @type {{{DataType}}}
      */
-    {{#if IsReadOnly}}readonly {{/if}}{{Name}}{{#if Optional}}?{{/if}}: {{{dataType}}};
+    {{#if IsReadOnly}}readonly {{/if}}{{Name}}{{#if Optional}}?{{/if}}: {{{DataType}}};
 {{/each}}
 };
 {{/with}}

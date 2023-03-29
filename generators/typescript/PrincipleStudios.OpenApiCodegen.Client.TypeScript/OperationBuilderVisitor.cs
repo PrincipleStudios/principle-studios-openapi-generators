@@ -58,25 +58,25 @@ namespace PrincipleStudios.OpenApiCodegen.Client.TypeScript
         {
             var dataType = typeScriptSchemaResolver.ToInlineDataType(param.Schema)();
             argument.Builder?.SharedParameters.Add(new Templates.OperationParameter(
-                rawName: param.Name,
-                rawNameWithCurly: $"{{{param.Name}}}",
-                paramName: TypeScriptNaming.ToParameterName(param.Name, options.ReservedIdentifiers()),
-                description: param.Description,
-                dataType: dataType.text,
-                dataTypeEnumerable: dataType.isEnumerable,
-                dataTypeNullable: dataType.nullable,
-                isPathParam: param.In == ParameterLocation.Path,
-                isQueryParam: param.In == ParameterLocation.Query,
-                isHeaderParam: param.In == ParameterLocation.Header,
-                isCookieParam: param.In == ParameterLocation.Cookie,
-                isBodyParam: false,
-                isFormParam: false,
-                required: param.Required,
-                pattern: param.Schema.Pattern,
-                minLength: param.Schema.MinLength,
-                maxLength: param.Schema.MaxLength,
-                minimum: param.Schema.Minimum,
-                maximum: param.Schema.Maximum
+                RawName: param.Name,
+                RawNameWithCurly: $"{{{param.Name}}}",
+                ParamName: TypeScriptNaming.ToParameterName(param.Name, options.ReservedIdentifiers()),
+                Description: param.Description,
+                DataType: dataType.text,
+                DataTypeEnumerable: dataType.isEnumerable,
+                DataTypeNullable: dataType.nullable,
+                IsPathParam: param.In == ParameterLocation.Path,
+                IsQueryParam: param.In == ParameterLocation.Query,
+                IsHeaderParam: param.In == ParameterLocation.Header,
+                IsCookieParam: param.In == ParameterLocation.Cookie,
+                IsBodyParam: false,
+                IsFormParam: false,
+                Required: param.Required,
+                Pattern: param.Schema.Pattern,
+                MinLength: param.Schema.MinLength,
+                MaxLength: param.Schema.MaxLength,
+                Minimum: param.Schema.Minimum,
+                Maximum: param.Schema.Maximum
             ));
         }
 
@@ -85,22 +85,22 @@ namespace PrincipleStudios.OpenApiCodegen.Client.TypeScript
             var sharedParameters = builder.SharedParameters.ToArray();
             return (
                 new Templates.Operation(
-                    httpMethod: httpMethod,
-                    summary: operation.Summary,
-                    description: operation.Description,
-                    name: TypeScriptNaming.ToMethodName(operation.OperationId, options.ReservedIdentifiers()),
-                    path: path,
-                    allowNoBody: operation.RequestBody == null || !operation.RequestBody.Required || !operation.RequestBody.Content.Any(),
-                    hasFormRequest: operation.RequestBody?.Content.Any(kvp => kvp.Key == formMimeType) ?? false,
-                    imports: typeScriptSchemaResolver.GetImportStatements(GetSchemas(), Enumerable.Empty<OpenApiSchema>(), "./operation/").ToArray(),
-                    sharedParams: sharedParameters,
-                    requestBodies: builder.RequestBodies.ToArray(),
-                    responses: new Templates.OperationResponses(
-                        defaultResponse: builder.DefaultResponse,
-                        statusResponse: new(builder.StatusResponses)
+                    HttpMethod: httpMethod,
+                    Summary: operation.Summary,
+                    Description: operation.Description,
+                    Name: TypeScriptNaming.ToMethodName(operation.OperationId, options.ReservedIdentifiers()),
+                    Path: path,
+                    AllowNoBody: operation.RequestBody == null || !operation.RequestBody.Required || !operation.RequestBody.Content.Any(),
+                    HasFormRequest: operation.RequestBody?.Content.Any(kvp => kvp.Key == formMimeType) ?? false,
+                    Imports: typeScriptSchemaResolver.GetImportStatements(GetSchemas(), Enumerable.Empty<OpenApiSchema>(), "./operation/").ToArray(),
+                    SharedParams: sharedParameters,
+                    RequestBodies: builder.RequestBodies.ToArray(),
+                    Responses: new Templates.OperationResponses(
+                        DefaultResponse: builder.DefaultResponse,
+                        StatusResponse: new(builder.StatusResponses)
                     ),
-                    securityRequirements: builder.SecurityRequirements.ToArray(),
-                    hasQueryParams: operation.Parameters.Any(p => p.In == ParameterLocation.Query)
+                    SecurityRequirements: builder.SecurityRequirements.ToArray(),
+                    HasQueryParams: operation.Parameters.Any(p => p.In == ParameterLocation.Query)
                 ));
 
             IEnumerable<OpenApiSchema> GetSchemas()
@@ -131,32 +131,32 @@ namespace PrincipleStudios.OpenApiCodegen.Client.TypeScript
                 statusCodeName = $"status code {statusCode}";
 
             var result = new OperationResponse(
-                description: response.Description,
-                content: (from entry in response.Content.DefaultIfEmpty(new(string.Empty, new OpenApiMediaType()))
+                Description: response.Description,
+                Content: (from entry in response.Content.DefaultIfEmpty(new(string.Empty, new OpenApiMediaType()))
                           where entry.Key == string.Empty || options.AllowedMimeTypes.Contains(entry.Key)
                           let entryContext = context.Append(nameof(response.Content), entry.Key, entry.Value)
                           let dataType = entry.Value.Schema != null ? typeScriptSchemaResolver.ToInlineDataType(entry.Value.Schema)() : null
                           select new OperationResponseContentOption(
-                              mediaType: entry.Key,
-                              responseMethodName: TypeScriptNaming.ToTitleCaseIdentifier($"{(response.Content.Count > 1 ? entry.Key : "")} {statusCodeName}", options.ReservedIdentifiers()),
-                              dataType: dataType?.text
+                              MediaType: entry.Key,
+                              ResponseMethodName: TypeScriptNaming.ToTitleCaseIdentifier($"{(response.Content.Count > 1 ? entry.Key : "")} {statusCodeName}", options.ReservedIdentifiers()),
+                              DataType: dataType?.text
                           )).ToArray(),
-                headers: (from entry in response.Headers
+                Headers: (from entry in response.Headers
                           let entryContext = context.Append(nameof(response.Headers), entry.Key, entry.Value)
                           let required = entry.Value.Required
                           let dataType = typeScriptSchemaResolver.ToInlineDataType(entry.Value.Schema)()
                           select new Templates.OperationResponseHeader(
-                              rawName: entry.Key,
-                              paramName: TypeScriptNaming.ToParameterName("header " + entry.Key, options.ReservedIdentifiers()),
-                              description: entry.Value.Description,
-                              dataType: dataType.text,
-                              dataTypeNullable: dataType.nullable,
-                              required: entry.Value.Required,
-                              pattern: entry.Value.Schema.Pattern,
-                              minLength: entry.Value.Schema.MinLength,
-                              maxLength: entry.Value.Schema.MaxLength,
-                              minimum: entry.Value.Schema.Minimum,
-                              maximum: entry.Value.Schema.Maximum
+                              RawName: entry.Key,
+                              ParamName: TypeScriptNaming.ToParameterName("header " + entry.Key, options.ReservedIdentifiers()),
+                              Description: entry.Value.Description,
+                              DataType: dataType.text,
+                              DataTypeNullable: dataType.nullable,
+                              Required: entry.Value.Required,
+                              Pattern: entry.Value.Schema.Pattern,
+                              MinLength: entry.Value.Schema.MinLength,
+                              MaxLength: entry.Value.Schema.MaxLength,
+                              Minimum: entry.Value.Schema.Minimum,
+                              Maximum: entry.Value.Schema.Maximum
                           )).ToArray()
             );
 
@@ -188,58 +188,58 @@ namespace PrincipleStudios.OpenApiCodegen.Client.TypeScript
                 let required = mediaType.Schema.Required.Contains(param.Key)
                 let dataType = typeScriptSchemaResolver.ToInlineDataType(param.Value)()
                 select new Templates.OperationParameter(
-                    rawName: param.Key,
-                    rawNameWithCurly: $"{{{param.Key}}}",
-                    paramName: TypeScriptNaming.ToParameterName(param.Key, options.ReservedIdentifiers()),
-                    description: null,
-                    dataType: dataType.text,
-                    dataTypeEnumerable: dataType.isEnumerable,
-                    dataTypeNullable: dataType.nullable,
-                    isPathParam: false,
-                    isQueryParam: false,
-                    isHeaderParam: false,
-                    isCookieParam: false,
-                    isBodyParam: false,
-                    isFormParam: true,
-                    required: mediaType.Schema.Required.Contains(param.Key),
-                    pattern: param.Value.Pattern,
-                    minLength: param.Value.MinLength,
-                    maxLength: param.Value.MaxLength,
-                    minimum: param.Value.Minimum,
-                    maximum: param.Value.Maximum
+                    RawName: param.Key,
+                    RawNameWithCurly: $"{{{param.Key}}}",
+                    ParamName: TypeScriptNaming.ToParameterName(param.Key, options.ReservedIdentifiers()),
+                    Description: null,
+                    DataType: dataType.text,
+                    DataTypeEnumerable: dataType.isEnumerable,
+                    DataTypeNullable: dataType.nullable,
+                    IsPathParam: false,
+                    IsQueryParam: false,
+                    IsHeaderParam: false,
+                    IsCookieParam: false,
+                    IsBodyParam: false,
+                    IsFormParam: true,
+                    Required: mediaType.Schema.Required.Contains(param.Key),
+                    Pattern: param.Value.Pattern,
+                    MinLength: param.Value.MinLength,
+                    MaxLength: param.Value.MaxLength,
+                    Minimum: param.Value.Minimum,
+                    Maximum: param.Value.Maximum
                 );
             IEnumerable<OperationParameter> GetStandardParams() =>
                 from ct in new[] { mediaType }
                 let dataType = typeScriptSchemaResolver.ToInlineDataType(ct.Schema)()
                 select new Templates.OperationParameter(
-                   rawName: null,
-                   rawNameWithCurly: null,
-                   paramName: TypeScriptNaming.ToParameterName("body", options.ReservedIdentifiers()),
-                   description: null,
-                   dataType: dataType.text,
-                   dataTypeEnumerable: dataType.isEnumerable,
-                   dataTypeNullable: dataType.nullable,
-                   isPathParam: false,
-                   isQueryParam: false,
-                   isHeaderParam: false,
-                   isCookieParam: false,
-                   isBodyParam: true,
-                   isFormParam: false,
-                   required: true,
-                   pattern: mediaType.Schema.Pattern,
-                   minLength: mediaType.Schema.MinLength,
-                   maxLength: mediaType.Schema.MaxLength,
-                   minimum: mediaType.Schema.Minimum,
-                   maximum: mediaType.Schema.Maximum
+                   RawName: null,
+                   RawNameWithCurly: null,
+                   ParamName: TypeScriptNaming.ToParameterName("body", options.ReservedIdentifiers()),
+                   Description: null,
+                   DataType: dataType.text,
+                   DataTypeEnumerable: dataType.isEnumerable,
+                   DataTypeNullable: dataType.nullable,
+                   IsPathParam: false,
+                   IsQueryParam: false,
+                   IsHeaderParam: false,
+                   IsCookieParam: false,
+                   IsBodyParam: true,
+                   IsFormParam: false,
+                   Required: true,
+                   Pattern: mediaType.Schema.Pattern,
+                   MinLength: mediaType.Schema.MinLength,
+                   MaxLength: mediaType.Schema.MaxLength,
+                   Minimum: mediaType.Schema.Minimum,
+                   Maximum: mediaType.Schema.Maximum
                );
         }
 
         public static OperationRequestBody OperationRequestBody(string requestBodyMimeType, bool isForm, IEnumerable<OperationParameter> parameters)
         {
             return new Templates.OperationRequestBody(
-                 requestBodyType: requestBodyMimeType,
-                 isForm: isForm,
-                 allParams: parameters
+                 RequestBodyType: requestBodyMimeType,
+                 IsForm: isForm,
+                 AllParams: parameters
              );
         }
 

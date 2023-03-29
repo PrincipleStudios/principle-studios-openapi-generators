@@ -1,11 +1,11 @@
-{{>partial_header header}}
-{{#with model as |model|}}
+{{>partial_header Meader}}
+{{#with Model as |Model|}}
 {{#each Imports}}
 import {
-{{#each members}}
+{{#each Members}}
     {{{.}}},
 {{/each}}
-} from '{{path}}';
+} from '{{Path}}';
 {{/each}}
 
 /**{{#if Description}}
@@ -15,8 +15,8 @@ import {
  */
 export type {{ClassName}} =
 {{#each TypeEntries as |TypeEntry|}}
-{{#if model.DiscriminatorProperty}}
-    | ({ '{{{model.DiscriminatorProperty}}}': '{{{TypeEntry.DiscriminatorValue}}}' } & {{{TypeEntry.TypeName}}})
+{{#if Model.DiscriminatorProperty}}
+    | ({ '{{{Model.DiscriminatorProperty}}}': '{{{TypeEntry.DiscriminatorValue}}}' } & {{{TypeEntry.TypeName}}})
 {{else}}
     | {{{TypeEntry.TypeName}}}
 {{/if}}

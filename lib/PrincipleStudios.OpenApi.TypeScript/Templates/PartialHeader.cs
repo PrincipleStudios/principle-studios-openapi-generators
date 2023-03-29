@@ -1,10 +1,10 @@
 ﻿namespace PrincipleStudios.OpenApi.TypeScript.Templates
 {
     public record PartialHeader(
-        string? appName,
-        string? appDescription,
-        string? version,
-        string? infoEmail,
-        string codeGeneratorVersionInfo
+        string? AppName,
+        string? AppDescription,
+        string? Version,
+        string? InfoEmail,
+        string CodeGeneratorVersionInfo
     );
 }
