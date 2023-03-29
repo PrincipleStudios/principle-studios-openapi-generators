@@ -17,7 +17,7 @@
 		<Compile Include="$(RepositoryEngineeringDir)MaybeNullWhenAttribute.cs" Visible="false" />
 	</ItemGroup>
 	<ItemGroup>
-		<EmbeddedResource Include="$(MSBuildThisFileDirectory)templates\*.handlebars">
+		<EmbeddedResource Include="$(MSBuildThisFileDirectory)Templates\*.handlebars">
 			<LogicalName>PrincipleStudios.OpenApi.TypeScript.Templates.%(Filename)%(Extension)</LogicalName>
 		</EmbeddedResource>
 		<EmbeddedResource Include="$(MSBuildThisFileDirectory)typescript.config.yaml">
