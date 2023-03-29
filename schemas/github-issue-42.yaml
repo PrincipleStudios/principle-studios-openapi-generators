@@ -1,0 +1,24 @@
+openapi: "3.0.3"
+info:
+  version: 1.0.0
+  title: TypeScript array model escapes inline objects
+  description: "See GitHub issue #42"
+paths:
+  /:
+    get:
+      operationId: testPath
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SomeArray'
+components:
+  schemas:
+    SomeArray:
+      type: array
+      items:
+        type: object
+        properties:
+          id: { type: string }
