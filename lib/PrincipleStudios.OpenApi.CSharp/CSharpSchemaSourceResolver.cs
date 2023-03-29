@@ -87,11 +87,11 @@ namespace PrincipleStudios.OpenApi.CSharp
             var className = GetClassName(schema);
 
             var header = new Templates.PartialHeader(
-                appName: info.Title,
-                appDescription: info.Description,
-                version: info.Version,
-                infoEmail: info.Contact?.Email,
-                codeGeneratorVersionInfo: versionInfo
+                AppName: info.Title,
+                AppDescription: info.Description,
+                Version: info.Version,
+                InfoEmail: info.Contact?.Email,
+                CodeGeneratorVersionInfo: versionInfo
             );
             Templates.Model? model = schema switch
             {
@@ -241,8 +241,8 @@ namespace PrincipleStudios.OpenApi.CSharp
             return new Templates.EnumModel(
                 schema.Description,
                 className,
-                isString: schema.Type == "string",
-                enumVars: (from entry in schema.Enum
+                IsString: schema.Type == "string",
+                EnumVars: (from entry in schema.Enum
                            select entry switch
                            {
                                Microsoft.OpenApi.Any.OpenApiPrimitive<string> { Value: string name } => new Templates.EnumVar(CSharpNaming.ToPropertyName(name, options.ReservedIdentifiers("enum", className)), name),

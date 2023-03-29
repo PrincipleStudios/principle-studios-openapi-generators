@@ -8,95 +8,95 @@ using System.Threading.Tasks;
 namespace PrincipleStudios.OpenApi.CSharp.Templates
 {
     public record ControllerTemplate(
-        PartialHeader header,
+        PartialHeader Header,
 
-        string packageName,
-        string className,
+        string PackageName,
+        string ClassName,
 
-        bool hasDescriptionOrSummary,
-        string? summary,
-        string? description,
+        bool HasDescriptionOrSummary,
+        string? Summary,
+        string? Description,
 
-        ControllerOperation[] operations
+        ControllerOperation[] Operations
     );
 
     public record ControllerOperation(
-        string httpMethod,
-        string summary,
-        string description,
-        string name,
-        string path,
-        OperationRequestBody[] requestBodies,
-        OperationResponses responses,
-        OperationSecurityRequirement[] securityRequirements
+        string HttpMethod,
+        string Summary,
+        string Description,
+        string Name,
+        string Path,
+        OperationRequestBody[] RequestBodies,
+        OperationResponses Responses,
+        OperationSecurityRequirement[] SecurityRequirements
     );
 
     public record OperationParameter(
-        string? rawName,
-        string paramName,
-        string? description,
-        string dataType,
-        bool dataTypeNullable,
-        bool isPathParam,
-        bool isQueryParam,
-        bool isHeaderParam,
-        bool isCookieParam,
-        bool isBodyParam,
-        bool isFormParam,
-        bool required,
-        bool optional,
-        string pattern,
-        int? minLength,
-        int? maxLength,
-        decimal? minimum,
-        decimal? maximum
+        string? RawName,
+        string ParamName,
+        string? Description,
+        string DataType,
+        bool DataTypeNullable,
+        bool IsPathParam,
+        bool IsQueryParam,
+        bool IsHeaderParam,
+        bool IsCookieParam,
+        bool IsBodyParam,
+        bool IsFormParam,
+        bool Required,
+        bool Optional,
+        string Pattern,
+        int? MinLength,
+        int? MaxLength,
+        decimal? Minimum,
+        decimal? Maximum
     )
     {
-        public bool HasMinLength => minLength.HasValue;
-        public bool HasMaxLength => maxLength.HasValue;
+        public bool HasMinLength => MinLength.HasValue;
+        public bool HasMaxLength => MaxLength.HasValue;
 
-        public bool HasMinimum => minimum.HasValue;
-        public bool HasMaximum => maximum.HasValue;
+        public bool HasMinimum => Minimum.HasValue;
+        public bool HasMaximum => Maximum.HasValue;
     }
 
     public record OperationResponses(
-        OperationResponse? defaultResponse,
-        Dictionary<int, OperationResponse> statusResponse
+        OperationResponse? DefaultResponse,
+        Dictionary<int, OperationResponse> StatusResponse
     );
 
     public record OperationResponse(
-        string description,
-        OperationResponseContentOption[] content,
-        OperationResponseHeader[] headers
+        string Description,
+        OperationResponseContentOption[] Content,
+        OperationResponseHeader[] Headers
     );
 
     public record OperationResponseContentOption(
-        string mediaType,
-        string responseMethodName,
-        string? dataType
+        string MediaType,
+        string ResponseMethodName,
+        string? DataType
     );
 
-    public record OperationRequestBody(string name, string? requestBodyType, IEnumerable<OperationParameter> allParams);
+    public record OperationRequestBody(string Name, string? RequestBodyType, IEnumerable<OperationParameter> AllParams);
 
     public record OperationSecurityRequirement(
-        OperationSecuritySchemeRequirement[] schemes
+        OperationSecuritySchemeRequirement[] Schemes
     );
     public record OperationSecuritySchemeRequirement(
-        string schemeName,
-        string[] scopeNames
+        string SchemeName,
+        string[] ScopeNames
     );
 
     public record OperationResponseHeader(
-        string? rawName,
-        string paramName,
-        string? description,
-        string dataType,
-        bool dataTypeNullable,
-        bool required,
-        string pattern,
-        int? minLength,
-        int? maxLength,
-        decimal? minimum,
-        decimal? maximum
+        string? RawName,
+        string ParamName,
+        string? Description,
+        string DataType,
+        bool DataTypeNullable,
+        bool Required,
+        string Pattern,
+        int? MinLength,
+        int? MaxLength,
+        decimal? Minimum,
+        decimal? Maximum
     );
 }

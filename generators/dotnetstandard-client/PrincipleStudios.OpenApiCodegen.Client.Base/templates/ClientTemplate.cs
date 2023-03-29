@@ -8,88 +8,88 @@ using System.Threading.Tasks;
 namespace PrincipleStudios.OpenApi.CSharp.Templates
 {
     public record FullTemplate(
-        PartialHeader header,
+        PartialHeader Header,
 
-        string packageName,
-        string className,
+        string PackageName,
+        string ClassName,
 
-        Operation[] operations
+        Operation[] Operations
     );
 
     public record Operation(
-        string httpMethod,
-        string summary,
-        string description,
-        string name,
-        string path,
-        bool hasQueryStringEmbedded,
-        OperationRequestBody[] requestBodies,
-        OperationResponses responses,
-        OperationSecurityRequirement[] securityRequirements
+        string HttpMethod,
+        string Summary,
+        string Description,
+        string Name,
+        string Path,
+        bool HasQueryStringEmbedded,
+        OperationRequestBody[] RequestBodies,
+        OperationResponses Responses,
+        OperationSecurityRequirement[] SecurityRequirements
     );
 
     public record OperationParameter(
-        string? rawName,
-        string paramName,
-        string? description,
-        string dataType,
-        bool dataTypeNullable,
-        bool dataTypeEnumerable,
-        bool isPathParam,
-        bool isQueryParam,
-        bool isHeaderParam,
-        bool isCookieParam,
-        bool isBodyParam,
-        bool isFormParam,
-        bool required,
-        string pattern,
-        int? minLength,
-        int? maxLength,
-        decimal? minimum,
-        decimal? maximum
+        string? RawName,
+        string ParamName,
+        string? Description,
+        string DataType,
+        bool DataTypeNullable,
+        bool DataTypeEnumerable,
+        bool IsPathParam,
+        bool IsQueryParam,
+        bool IsHeaderParam,
+        bool IsCookieParam,
+        bool IsBodyParam,
+        bool IsFormParam,
+        bool Required,
+        string Pattern,
+        int? MinLength,
+        int? MaxLength,
+        decimal? Minimum,
+        decimal? Maximum
     )
     {
-        public bool isFile => dataType is "global::System.IO.Stream" or "global::System.IO.Stream?";
+        public bool IsFile => DataType is "global::System.IO.Stream" or "global::System.IO.Stream?";
     }
 
     public record OperationResponses(
-        OperationResponse? defaultResponse,
-        Dictionary<int, OperationResponse> statusResponse
+        OperationResponse? DefaultResponse,
+        Dictionary<int, OperationResponse> StatusResponse
     );
 
     public record OperationResponse(
-        string description,
-        OperationResponseContentOption[] content,
-        OperationResponseHeader[] headers
+        string Description,
+        OperationResponseContentOption[] Content,
+        OperationResponseHeader[] Headers
     );
 
     public record OperationResponseContentOption(
-        string mediaType,
-        string responseMethodName,
-        string? dataType
+        string MediaType,
+        string ResponseMethodName,
+        string? DataType
     );
 
-    public record OperationRequestBody(string name, bool isForm, bool isFile, bool hasQueryParam, string? requestBodyType, IEnumerable<OperationParameter> allParams);
+    public record OperationRequestBody(string Name, bool IsForm, bool IsFile, bool HasQueryParam, string? RequestBodyType, IEnumerable<OperationParameter> AllParams);
 
     public record OperationSecurityRequirement(
-        OperationSecuritySchemeRequirement[] schemes
+        OperationSecuritySchemeRequirement[] Schemes
     );
     public record OperationSecuritySchemeRequirement(
-        string schemeName,
-        string[] scopeNames
+        string SchemeName,
+        string[] ScopeNames
     );
 
     public record OperationResponseHeader(
-        string? rawName,
-        string paramName,
-        string? description,
-        string dataType,
-        bool dataTypeNullable,
-        bool required,
-        string pattern,
-        int? minLength,
-        int? maxLength,
-        decimal? minimum,
-        decimal? maximum
+        string? RawName,
+        string ParamName,
+        string? Description,
+        string DataType,
+        bool DataTypeNullable,
+        bool Required,
+        string Pattern,
+        int? MinLength,
+        int? MaxLength,
+        decimal? Minimum,
+        decimal? Maximum
     );
 }

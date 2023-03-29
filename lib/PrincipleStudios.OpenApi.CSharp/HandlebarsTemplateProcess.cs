@@ -71,7 +71,7 @@ namespace PrincipleStudios.OpenApi.CSharp
             IDictionary<string, object?> ToTemplate<TModel>(TModel m)
                 where TModel : Model
             {
-                return ToDictionary<ModelTemplate<TModel>>(new(header: header, packageName: packageName, model: m));
+                return ToDictionary<ModelTemplate<TModel>>(new(Header: header, PackageName: packageName, Model: m));
             }
         }
 

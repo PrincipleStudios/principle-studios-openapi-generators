@@ -1,11 +1,11 @@
-{{>partial_header header}}
+{{>partial_header Header}}
 #pragma warning disable
 #nullable enable
 #nullable disable warnings
 
-namespace {{this.packageName}}
+namespace {{this.PackageName}}
 {
-    {{#with model}}
+    {{#with Model}}
     {{#if Description}}/// <summary>
     /// {{linewrap Description "
     /// "}}

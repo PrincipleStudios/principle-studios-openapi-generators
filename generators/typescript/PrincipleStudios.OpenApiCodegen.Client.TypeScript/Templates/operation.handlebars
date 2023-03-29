@@ -119,7 +119,7 @@ export function {{{Name}}}(params: RequestParams{{#if RequestBodies.length}}, bo
         if (body!.{{{ParamName}}} !== undefined) {
             {{!-- TODO - openapi style/explode combo --}}
             body!.{{{ParamName}}}.forEach((element) => formData.append('{{RawName}}', element as any))
-            {{!-- formData.append('{{rawName}}', body!.{{{ParamName}}}.join(COLLECTION_FORMATS['{{collectionFormat}}'])); --}}
+            {{!-- formData.append('{{RawName}}', body!.{{{ParamName}}}.join(COLLECTION_FORMATS['{{CollectionFormat}}'])); --}}
         }
         {{else}}
         if (body!.{{{ParamName}}} !== undefined) { formData.append('{{RawName}}', body!.{{{ParamName}}} as any); }
@@ -161,7 +161,7 @@ export const responseConversion = (res: ResponseArgs) => ({
         {{!-- TODO - we need response headers in this, etc. --}}
     }) as Responses;
 
-export const conversion: RequestConversion<RequestParams, {{#if RequestBodies.length}}RequestBodies{{else}}{}{{/if}}, Responses, {{#if RequestBodies.length}}{{#unless allowNoBody}}'body'{{else}}'optional'{{/unless}}{{else}}'no-body'{{/if}}> = {
+export const conversion: RequestConversion<RequestParams, {{#if RequestBodies.length}}RequestBodies{{else}}{}{{/if}}, Responses, {{#if RequestBodies.length}}{{#unless AllowNoBody}}'body'{{else}}'optional'{{/unless}}{{else}}'no-body'{{/if}}> = {
     request: {{{Name}}},
     response: responseConversion,
 };

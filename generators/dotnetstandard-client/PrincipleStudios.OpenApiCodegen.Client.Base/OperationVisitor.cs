@@ -58,24 +58,24 @@ namespace PrincipleStudios.OpenApi.CSharp
 
             var sharedParameters = builder.SharedParameters.ToArray();
             var requestBodies = builder.RequestBodies.DefaultIfEmpty(noBody).Select(transform => transform(sharedParameters))
-                .Where(body => body.requestBodyType != "application/xml") // exclude xml, since we don't support it
+                .Where(body => body.RequestBodyType != "application/xml") // exclude xml, since we don't support it
                 .ToArray();
             if (requestBodies.Any())
             {
                 argument.RegisterControllerOperation(
                     new Templates.Operation(
-                     httpMethod: httpMethod,
-                     summary: operation.Summary,
-                     description: operation.Description,
-                     name: CSharpNaming.ToTitleCaseIdentifier(operation.OperationId, options.ReservedIdentifiers("ControllerBase", controllerClassName)),
-                     path: path,
-                     requestBodies: requestBodies,
-                     hasQueryStringEmbedded: path.Contains("?"),
-                     responses: new Templates.OperationResponses(
-                         defaultResponse: builder.DefaultResponse,
-                         statusResponse: new(builder.StatusResponses)
+                     HttpMethod: httpMethod,
+                     Summary: operation.Summary,
+                     Description: operation.Description,
+                     Name: CSharpNaming.ToTitleCaseIdentifier(operation.OperationId, options.ReservedIdentifiers("ControllerBase", controllerClassName)),
+                     Path: path,
+                     RequestBodies: requestBodies,
+                     HasQueryStringEmbedded: path.Contains("?"),
+                     Responses: new Templates.OperationResponses(
+                         DefaultResponse: builder.DefaultResponse,
+                         StatusResponse: new(builder.StatusResponses)
                      ),
-                     securityRequirements: builder.SecurityRequirements.ToArray()
+                     SecurityRequirements: builder.SecurityRequirements.ToArray()
                  ));
             }
         }
@@ -84,24 +84,24 @@ namespace PrincipleStudios.OpenApi.CSharp
         {
             var dataType = csharpSchemaResolver.ToInlineDataType(param.Schema)();
             argument.Builder?.SharedParameters.Add(new Templates.OperationParameter(
-                rawName: param.Name,
-                paramName: CSharpNaming.ToParameterName(param.Name, options.ReservedIdentifiers()),
-                description: param.Description,
-                dataType: dataType.text,
-                dataTypeNullable: dataType.nullable,
-                dataTypeEnumerable: dataType.isEnumerable,
-                isPathParam: param.In == ParameterLocation.Path,
-                isQueryParam: param.In == ParameterLocation.Query,
-                isHeaderParam: param.In == ParameterLocation.Header,
-                isCookieParam: param.In == ParameterLocation.Cookie,
-                isBodyParam: false,
-                isFormParam: false,
-                required: param.Required,
-                pattern: param.Schema.Pattern,
-                minLength: param.Schema.MinLength,
-                maxLength: param.Schema.MaxLength,
-                minimum: param.Schema.Minimum,
-                maximum: param.Schema.Maximum
+                RawName: param.Name,
+                ParamName: CSharpNaming.ToParameterName(param.Name, options.ReservedIdentifiers()),
+                Description: param.Description,
+                DataType: dataType.text,
+                DataTypeNullable: dataType.nullable,
+                DataTypeEnumerable: dataType.isEnumerable,
+                IsPathParam: param.In == ParameterLocation.Path,
+                IsQueryParam: param.In == ParameterLocation.Query,
+                IsHeaderParam: param.In == ParameterLocation.Header,
+                IsCookieParam: param.In == ParameterLocation.Cookie,
+                IsBodyParam: false,
+                IsFormParam: false,
+                Required: param.Required,
+                Pattern: param.Schema.Pattern,
+                MinLength: param.Schema.MinLength,
+                MaxLength: param.Schema.MaxLength,
+                Minimum: param.Schema.Minimum,
+                Maximum: param.Schema.Maximum
             ));
         }
         public override void Visit(OpenApiResponse response, OpenApiContext context, Argument argument)
@@ -114,32 +114,32 @@ namespace PrincipleStudios.OpenApi.CSharp
                 statusCodeName = $"status code {statusCode}";
 
             var result = new OperationResponse(
-                description: response.Description,
-                content: (from entry in response.Content.DefaultIfEmpty(new("", new OpenApiMediaType()))
+                Description: response.Description,
+                Content: (from entry in response.Content.DefaultIfEmpty(new("", new OpenApiMediaType()))
                           let entryContext = context.Append(nameof(response.Content), entry.Key, entry.Value)
                           let dataType = entry.Value.Schema != null ? csharpSchemaResolver.ToInlineDataType(entry.Value.Schema)() : null
                           where entry.Key != "application/xml" // exclude xml, since we don't support it
                           select new OperationResponseContentOption(
-                              mediaType: entry.Key,
-                              responseMethodName: CSharpNaming.ToTitleCaseIdentifier($"{(response.Content.Count > 1 ? entry.Key : "")} {statusCodeName}", options.ReservedIdentifiers()),
-                              dataType: dataType?.text
+                              MediaType: entry.Key,
+                              ResponseMethodName: CSharpNaming.ToTitleCaseIdentifier($"{(response.Content.Count > 1 ? entry.Key : "")} {statusCodeName}", options.ReservedIdentifiers()),
+                              DataType: dataType?.text
                           )).ToArray(),
-                headers: (from entry in response.Headers
+                Headers: (from entry in response.Headers
                           let entryContext = context.Append(nameof(response.Headers), entry.Key, entry.Value)
                           let required = entry.Value.Required
                           let dataType = csharpSchemaResolver.ToInlineDataType(entry.Value.Schema)()
                           select new Templates.OperationResponseHeader(
-                              rawName: entry.Key,
-                              paramName: CSharpNaming.ToParameterName("header " + entry.Key, options.ReservedIdentifiers()),
-                              description: entry.Value.Description,
-                              dataType: dataType.text,
-                              dataTypeNullable: dataType.nullable,
-                              required: entry.Value.Required,
-                              pattern: entry.Value.Schema.Pattern,
-                              minLength: entry.Value.Schema.MinLength,
-                              maxLength: entry.Value.Schema.MaxLength,
-                              minimum: entry.Value.Schema.Minimum,
-                              maximum: entry.Value.Schema.Maximum
+                              RawName: entry.Key,
+                              ParamName: CSharpNaming.ToParameterName("header " + entry.Key, options.ReservedIdentifiers()),
+                              Description: entry.Value.Description,
+                              DataType: dataType.text,
+                              DataTypeNullable: dataType.nullable,
+                              Required: entry.Value.Required,
+                              Pattern: entry.Value.Schema.Pattern,
+                              MinLength: entry.Value.Schema.MinLength,
+                              MaxLength: entry.Value.Schema.MaxLength,
+                              Minimum: entry.Value.Schema.Minimum,
+                              Maximum: entry.Value.Schema.Maximum
                           )).ToArray()
             );
 
@@ -169,59 +169,59 @@ namespace PrincipleStudios.OpenApi.CSharp
                 let required = mediaType.Schema.Required.Contains(param.Key)
                 let dataType = csharpSchemaResolver.ToInlineDataType(param.Value)()
                 select new Templates.OperationParameter(
-                    rawName: param.Key,
-                    paramName: CSharpNaming.ToParameterName(param.Key, options.ReservedIdentifiers()),
-                    description: null,
-                    dataType: dataType.text,
-                    dataTypeNullable: dataType.nullable,
-                    dataTypeEnumerable: dataType.isEnumerable,
-                    isPathParam: false,
-                    isQueryParam: false,
-                    isHeaderParam: false,
-                    isCookieParam: false,
-                    isBodyParam: false,
-                    isFormParam: true,
-                    required: mediaType.Schema.Required.Contains(param.Key),
-                    pattern: param.Value.Pattern,
-                    minLength: param.Value.MinLength,
-                    maxLength: param.Value.MaxLength,
-                    minimum: param.Value.Minimum,
-                    maximum: param.Value.Maximum
+                    RawName: param.Key,
+                    ParamName: CSharpNaming.ToParameterName(param.Key, options.ReservedIdentifiers()),
+                    Description: null,
+                    DataType: dataType.text,
+                    DataTypeNullable: dataType.nullable,
+                    DataTypeEnumerable: dataType.isEnumerable,
+                    IsPathParam: false,
+                    IsQueryParam: false,
+                    IsHeaderParam: false,
+                    IsCookieParam: false,
+                    IsBodyParam: false,
+                    IsFormParam: true,
+                    Required: mediaType.Schema.Required.Contains(param.Key),
+                    Pattern: param.Value.Pattern,
+                    MinLength: param.Value.MinLength,
+                    MaxLength: param.Value.MaxLength,
+                    Minimum: param.Value.Minimum,
+                    Maximum: param.Value.Maximum
                 );
             IEnumerable<OperationParameter> GetStandardParams() =>
                 from ct in new[] { mediaType }
                 let dataType = csharpSchemaResolver.ToInlineDataType(ct.Schema)()
                 select new Templates.OperationParameter(
-                   rawName: null,
-                   paramName: CSharpNaming.ToParameterName(argument.Builder?.Operation.OperationId + " body", options.ReservedIdentifiers()),
-                   description: null,
-                   dataType: dataType.text,
-                   dataTypeNullable: dataType.nullable,
-                   dataTypeEnumerable: dataType.isEnumerable,
-                   isPathParam: false,
-                   isQueryParam: false,
-                   isHeaderParam: false,
-                   isCookieParam: false,
-                   isBodyParam: true,
-                   isFormParam: false,
-                   required: true,
-                   pattern: mediaType.Schema.Pattern,
-                   minLength: mediaType.Schema.MinLength,
-                   maxLength: mediaType.Schema.MaxLength,
-                   minimum: mediaType.Schema.Minimum,
-                   maximum: mediaType.Schema.Maximum
+                   RawName: null,
+                   ParamName: CSharpNaming.ToParameterName(argument.Builder?.Operation.OperationId + " body", options.ReservedIdentifiers()),
+                   Description: null,
+                   DataType: dataType.text,
+                   DataTypeNullable: dataType.nullable,
+                   DataTypeEnumerable: dataType.isEnumerable,
+                   IsPathParam: false,
+                   IsQueryParam: false,
+                   IsHeaderParam: false,
+                   IsCookieParam: false,
+                   IsBodyParam: true,
+                   IsFormParam: false,
+                   Required: true,
+                   Pattern: mediaType.Schema.Pattern,
+                   MinLength: mediaType.Schema.MinLength,
+                   MaxLength: mediaType.Schema.MaxLength,
+                   Minimum: mediaType.Schema.Minimum,
+                   Maximum: mediaType.Schema.Maximum
                );
         }
 
         private Func<OperationParameter[], OperationRequestBody> OperationRequestBodyFactory(string operationName, string? requestBodyMimeType, IEnumerable<OperationParameter> parameters, bool isForm)
         {
             return sharedParams => new Templates.OperationRequestBody(
-                 name: CSharpNaming.ToTitleCaseIdentifier(operationName, options.ReservedIdentifiers()),
-                 isForm: isForm,
-                 isFile: parameters.Any(t => t.isFile),
-                 hasQueryParam: sharedParams.Concat(parameters).Any(p => p.isQueryParam),
-                 requestBodyType: requestBodyMimeType,
-                 allParams: sharedParams.Concat(parameters)
+                 Name: CSharpNaming.ToTitleCaseIdentifier(operationName, options.ReservedIdentifiers()),
+                 IsForm: isForm,
+                 IsFile: parameters.Any(t => t.IsFile),
+                 HasQueryParam: sharedParams.Concat(parameters).Any(p => p.IsQueryParam),
+                 RequestBodyType: requestBodyMimeType,
+                 AllParams: sharedParams.Concat(parameters)
              );
         }
 

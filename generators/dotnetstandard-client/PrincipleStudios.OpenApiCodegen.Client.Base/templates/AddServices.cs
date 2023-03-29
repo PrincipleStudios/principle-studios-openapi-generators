@@ -4,5 +4,5 @@ using System.Text;
 
 namespace PrincipleStudios.OpenApi.CSharp.Templates
 {
-    public record AddServicesModel(Templates.PartialHeader header, string methodName, string packageName);
+    public record AddServicesModel(Templates.PartialHeader Header, string MethodName, string PackageName);
 }

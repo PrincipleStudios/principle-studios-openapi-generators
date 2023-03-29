@@ -41,21 +41,21 @@ namespace PrincipleStudios.OpenApi.CSharp
             visitor.Visit(document, OpenApiContext.From(document), new OperationVisitor.Argument(diagnostic, resultOperations.Add));
 
             resultOperations = (from operation in resultOperations
-                                select operation with { path = operation.path.Substring(1) }).ToList();
+                                select operation with { Path = operation.Path.Substring(1) }).ToList();
 
             var template = new Templates.FullTemplate(
-                header: new Templates.PartialHeader(
-                    appName: document.Info.Title,
-                    appDescription: document.Info.Description,
-                    version: document.Info.Version,
-                    infoEmail: document.Info.Contact?.Email,
-                    codeGeneratorVersionInfo: versionInfo
+                Header: new Templates.PartialHeader(
+                    AppName: document.Info.Title,
+                    AppDescription: document.Info.Description,
+                    Version: document.Info.Version,
+                    InfoEmail: document.Info.Contact?.Email,
+                    CodeGeneratorVersionInfo: versionInfo
                 ),
 
-                packageName: baseNamespace,
-                className: className,
+                PackageName: baseNamespace,
+                ClassName: className,
 
-                operations: resultOperations.ToArray()
+                Operations: resultOperations.ToArray()
             );
 
             var entry = handlebarsFactory.Handlebars.ProcessController(template);
@@ -77,15 +77,15 @@ namespace PrincipleStudios.OpenApi.CSharp
             {
                 Key = $"{baseNamespace}.AddServicesExtensions.cs",
                 SourceText = handlebarsFactory.Handlebars.ProcessAddServices(new Templates.AddServicesModel(
-                    header: new Templates.PartialHeader(
-                        appName: document.Info.Title,
-                        appDescription: document.Info.Description,
-                        version: document.Info.Version,
-                        infoEmail: document.Info.Contact?.Email,
-                        codeGeneratorVersionInfo: versionInfo
+                    Header: new Templates.PartialHeader(
+                        AppName: document.Info.Title,
+                        AppDescription: document.Info.Description,
+                        Version: document.Info.Version,
+                        InfoEmail: document.Info.Contact?.Email,
+                        CodeGeneratorVersionInfo: versionInfo
                     ),
-                    methodName: CSharpNaming.ToMethodName(document.Info.Title, options.ReservedIdentifiers()),
-                    packageName: baseNamespace
+                    MethodName: CSharpNaming.ToMethodName(document.Info.Title, options.ReservedIdentifiers()),
+                    PackageName: baseNamespace
                 )),
             };
         }

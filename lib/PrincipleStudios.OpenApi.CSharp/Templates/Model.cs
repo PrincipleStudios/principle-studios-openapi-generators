@@ -7,24 +7,24 @@ using System.Threading.Tasks;
 namespace PrincipleStudios.OpenApi.CSharp.Templates
 {
     public record ModelTemplate<TModel>(
-        PartialHeader header,
+        PartialHeader Header,
 
-        string packageName,
+        string PackageName,
 
-        TModel model
+        TModel Model
     ) where TModel : Model;
 
     public record Model(
-        string description,
-        string className
+        string Description,
+        string ClassName
     );
 
     public record EnumModel(
-        string description,
-        string className,
-        bool isString,
-        EnumVar[] enumVars
-    ) : Model(description, className);
+        string Description,
+        string ClassName,
+        bool IsString,
+        EnumVar[] EnumVars
+    ) : Model(Description, ClassName);
 
     public record TypeUnionModel(
         string Description,
@@ -41,8 +41,8 @@ namespace PrincipleStudios.OpenApi.CSharp.Templates
     );
 
     public record EnumVar(
-        string name,
-        string value
+        string Name,
+        string Value
     );
 
     public record ObjectModel(

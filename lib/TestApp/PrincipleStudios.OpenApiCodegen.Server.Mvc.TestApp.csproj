@@ -20,6 +20,8 @@
     <OpenApiSchemaMvcServer Include="$(SolutionRoot)schemas\one-of.yaml" Link="OneOf\one-of.yaml" Key="OneOf" PathPrefix="/one-of" />
     <OpenApiSchemaMvcServer Include="$(SolutionRoot)schemas\nullable-vs-optional-legacy.yaml" Link="LegacyOptional\nullable-vs-optional-legacy.yaml" Key="LegacyOptional" PathPrefix="/nullable-vs-optional-legacy" />
     <OpenApiSchemaMvcServer Include="$(SolutionRoot)schemas\nullable-vs-optional.yaml" Link="NullableVsOptional\nullable-vs-optional.yaml" Key="NullableVsOptional" PathPrefix="/nullable-vs-optional" />
+
+	<Clean Include="generated/**/*" />
   </ItemGroup>
 
   <ItemGroup>

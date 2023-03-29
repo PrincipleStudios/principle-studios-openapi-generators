@@ -14,8 +14,8 @@ import {
  * @interface {{ClassName}}
  */
 export type {{ClassName}} = {{#if Parent}}{{{Parent}}} &amp; {{/if}}{
-{{!-- {{#if additionalPropertiesType}}
-    [key: string]: {{{additionalPropertiesType}}}{{#if vars.Length}} | any{{/if}}; {{! TODO - we really don't want `| any` here... see if TypeScript has an update for us. }}
+{{!-- {{#if AdditionalPropertiesType}}
+    [key: string]: {{{AdditionalPropertiesType}}}{{#if Vars.Length}} | any{{/if}}; {{! TODO - we really don't want `| any` here... see if TypeScript has an update for us. }}
 {{/if}} --}}
 {{#each Vars}}
     /**{{#if Description}}
