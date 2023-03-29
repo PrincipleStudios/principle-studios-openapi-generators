@@ -39,9 +39,9 @@ static class NodeUtility
         return new ProcessResult(ExitCode: exitCode, Output: output, Error: error);
     }
 
-    public static async Task<int> NpmInstall(Action<System.Diagnostics.ProcessStartInfo>? configureStartInfo = null, CancellationToken cancellationToken = default)
+    public static async Task<int> NpmInstall(string additionalPackages, Action<System.Diagnostics.ProcessStartInfo>? configureStartInfo = null, CancellationToken cancellationToken = default)
     {
-        var startInfo = new System.Diagnostics.ProcessStartInfo(npmCli, "install");
+        var startInfo = new System.Diagnostics.ProcessStartInfo(npmCli, $"install {additionalPackages}");
         configureStartInfo?.Invoke(startInfo);
         var (exitCode, (output, error)) = await ExecuteProcess(startInfo, async (process, cancellationToken) =>
         {
@@ -53,9 +53,25 @@ static class NodeUtility
         return exitCode;
     }
 
-    public static async Task<ProcessResult> Tsc(Action<System.Diagnostics.ProcessStartInfo>? configureStartInfo = null, CancellationToken cancellationToken = default)
+    public static async Task<ProcessResult> TscOpenApiCodegenTypeScriptPackage(Action<System.Diagnostics.ProcessStartInfo>? configureStartInfo = null, CancellationToken cancellationToken = default)
     {
         var startInfo = new System.Diagnostics.ProcessStartInfo(npxCli, "tsc --project tsconfig.build.json");
+        configureStartInfo?.Invoke(startInfo);
+        var (exitCode, (output, error)) = await ExecuteProcess(startInfo, async (process, cancellationToken) =>
+        {
+            var sw = process.StandardInput;
+            sw.Close();
+
+            var result = await Task.WhenAll(process.StandardOutput.ReadToEndAsync(), process.StandardError.ReadToEndAsync());
+            return (Output: result[0], Error: result[1]);
+        }, cancellationToken);
+
+        return new ProcessResult(ExitCode: exitCode, Output: output, Error: error);
+    }
+
+    public static async Task<ProcessResult> Tsc(Action<System.Diagnostics.ProcessStartInfo>? configureStartInfo = null, CancellationToken cancellationToken = default)
+    {
+        var startInfo = new System.Diagnostics.ProcessStartInfo(npxCli, "tsc --project tsconfig.json");
         configureStartInfo?.Invoke(startInfo);
         var (exitCode, (output, error)) = await ExecuteProcess(startInfo, async (process, cancellationToken) =>
         {

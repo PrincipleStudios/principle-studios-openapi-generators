@@ -5,6 +5,7 @@
             "DOM"
         ],
         "strict": true,
-        "moduleResolution": "node"
+        "moduleResolution": "node",
+        "noEmit": true
     }
 }
