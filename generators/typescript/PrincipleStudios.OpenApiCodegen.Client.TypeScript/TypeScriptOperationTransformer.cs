@@ -1,7 +1,7 @@
 ﻿using Microsoft.OpenApi.Models;
 using PrincipleStudios.OpenApi.Transformations;
 using PrincipleStudios.OpenApi.TypeScript;
-using PrincipleStudios.OpenApi.TypeScript.templates;
+using PrincipleStudios.OpenApi.TypeScript.Templates;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -38,7 +38,7 @@ namespace PrincipleStudios.OpenApiCodegen.Client.TypeScript
             typeScriptSchemaResolver.EnsureSchemasRegistered(document, OpenApiContext.From(document), diagnostic);
 
 
-            var template = new templates.OperationTemplate(
+            var template = new Templates.OperationTemplate(
                 header: new PartialHeader(
                     appName: document.Info.Title,
                     appDescription: document.Info.Description,
@@ -58,7 +58,7 @@ namespace PrincipleStudios.OpenApiCodegen.Client.TypeScript
             };
         }
 
-        private templates.Operation ToOperation(OpenApiOperation operation, OpenApiContext context, OpenApiTransformDiagnostic diagnostic)
+        private Templates.Operation ToOperation(OpenApiOperation operation, OpenApiContext context, OpenApiTransformDiagnostic diagnostic)
         {
             var httpMethod = context.GetLastKeyFor(operation);
             if (httpMethod == null)
@@ -80,7 +80,7 @@ namespace PrincipleStudios.OpenApiCodegen.Client.TypeScript
             return new SourceEntry
             {
                 Key = thisPath,
-                SourceText = handlebarsFactory.Handlebars.ProcessBarrelFile(new templates.OperationBarrelFileModel(
+                SourceText = handlebarsFactory.Handlebars.ProcessBarrelFile(new Templates.OperationBarrelFileModel(
                     header: new PartialHeader(
                         appName: document.Info.Title,
                         appDescription: document.Info.Description,
@@ -89,7 +89,7 @@ namespace PrincipleStudios.OpenApiCodegen.Client.TypeScript
                         codeGeneratorVersionInfo: versionInfo
                     ),
                     operations: (from op in operations
-                                 select new templates.OperationReference(OperationFileName(op).ToNodePath(thisPath), TypeScriptNaming.ToMethodName(op.OperationId, options.ReservedIdentifiers()))
+                                 select new Templates.OperationReference(OperationFileName(op).ToNodePath(thisPath), TypeScriptNaming.ToMethodName(op.OperationId, options.ReservedIdentifiers()))
                                  ).ToArray()
                 )),
             };

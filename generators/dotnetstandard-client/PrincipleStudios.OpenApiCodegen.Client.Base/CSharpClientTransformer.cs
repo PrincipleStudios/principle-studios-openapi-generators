@@ -1,5 +1,5 @@
 ﻿using Microsoft.OpenApi.Models;
-using PrincipleStudios.OpenApi.CSharp.templates;
+using PrincipleStudios.OpenApi.CSharp.Templates;
 using PrincipleStudios.OpenApi.Transformations;
 using System;
 using System.Collections.Generic;
@@ -43,8 +43,8 @@ namespace PrincipleStudios.OpenApi.CSharp
             resultOperations = (from operation in resultOperations
                                 select operation with { path = operation.path.Substring(1) }).ToList();
 
-            var template = new templates.FullTemplate(
-                header: new templates.PartialHeader(
+            var template = new Templates.FullTemplate(
+                header: new Templates.PartialHeader(
                     appName: document.Info.Title,
                     appDescription: document.Info.Description,
                     version: document.Info.Version,
@@ -76,8 +76,8 @@ namespace PrincipleStudios.OpenApi.CSharp
             return new SourceEntry
             {
                 Key = $"{baseNamespace}.AddServicesExtensions.cs",
-                SourceText = handlebarsFactory.Handlebars.ProcessAddServices(new templates.AddServicesModel(
-                    header: new templates.PartialHeader(
+                SourceText = handlebarsFactory.Handlebars.ProcessAddServices(new Templates.AddServicesModel(
+                    header: new Templates.PartialHeader(
                         appName: document.Info.Title,
                         appDescription: document.Info.Description,
                         version: document.Info.Version,

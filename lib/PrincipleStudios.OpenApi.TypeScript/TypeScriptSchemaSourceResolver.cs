@@ -84,14 +84,14 @@ namespace PrincipleStudios.OpenApi.TypeScript
             var info = context.Select(v => v.Element).OfType<OpenApiDocument>().Last().Info;
             var className = UseReferenceName(schema);
 
-            var header = new templates.PartialHeader(
+            var header = new Templates.PartialHeader(
                 appName: info.Title,
                 appDescription: info.Description,
                 version: info.Version,
                 infoEmail: info.Contact?.Email,
                 codeGeneratorVersionInfo: versionInfo
             );
-            templates.Model? model = schema switch
+            Templates.Model? model = schema switch
             {
                 { Items: OpenApiSchema arrayItem, Type: "array" } => ToArrayModel(className, schema),
                 { Enum: { Count: > 0 }, Type: "string" } => ToEnumModel(className, schema),
@@ -200,18 +200,18 @@ namespace PrincipleStudios.OpenApi.TypeScript
             }
         }
 
-        private Func<templates.ObjectModel> ToObjectModel(string className, OpenApiSchema schema, OpenApiContext context, ObjectModel objectModel, OpenApiTransformDiagnostic diagnostic)
+        private Func<Templates.ObjectModel> ToObjectModel(string className, OpenApiSchema schema, OpenApiContext context, ObjectModel objectModel, OpenApiTransformDiagnostic diagnostic)
         {
             if (objectModel == null)
                 throw new ArgumentNullException(nameof(objectModel));
             var properties = objectModel.Properties();
             var required = new HashSet<string>(objectModel.Required());
 
-            Func<templates.ModelVar>[] vars = (from entry in properties
+            Func<Templates.ModelVar>[] vars = (from entry in properties
                                                let req = required.Contains(entry.Key)
                                                let dataType = ToInlineDataType(entry.Value)
                                                let resolved = objectModel.LegacyOptionalBehavior && !req ? dataType().MakeNullable() : dataType()
-                                               select (Func<templates.ModelVar>)(() => new templates.ModelVar(
+                                               select (Func<Templates.ModelVar>)(() => new Templates.ModelVar(
                                                    BaseName: entry.Key,
                                                    DataType: resolved.text,
                                                    Nullable: resolved.nullable,
@@ -221,7 +221,7 @@ namespace PrincipleStudios.OpenApi.TypeScript
                                                    Optional: !req
                                                 ))).ToArray();
 
-            return () => new templates.ObjectModel(
+            return () => new Templates.ObjectModel(
                 Imports: this.GetImportStatements(properties.Values, new[] { schema }, "./models/").ToArray(),
                 Description: schema.Description,
                 ClassName: className,
@@ -230,10 +230,10 @@ namespace PrincipleStudios.OpenApi.TypeScript
             );
         }
 
-        private templates.ArrayModel ToArrayModel(string className, OpenApiSchema schema)
+        private Templates.ArrayModel ToArrayModel(string className, OpenApiSchema schema)
         {
             var dataType = ToInlineDataType(schema.Items)();
-            return new templates.ArrayModel(
+            return new Templates.ArrayModel(
                 schema.Description,
                 className,
                 Item: dataType.text,
@@ -241,21 +241,21 @@ namespace PrincipleStudios.OpenApi.TypeScript
             );
         }
 
-        private templates.EnumModel ToEnumModel(string className, OpenApiSchema schema)
+        private Templates.EnumModel ToEnumModel(string className, OpenApiSchema schema)
         {
-            return new templates.EnumModel(
+            return new Templates.EnumModel(
                 schema.Description,
                 className,
                 TypeScriptNaming.ToPropertyName(className, options.ReservedIdentifiers()),
                 IsString: schema.Type == "string",
                 EnumVars: (from entry in schema.Enum.OfType<Microsoft.OpenApi.Any.IOpenApiPrimitive>()
-                           select new templates.EnumVar(PrimitiveToJsonValue.GetPrimitiveValue(entry))).ToArray()
+                           select new Templates.EnumVar(PrimitiveToJsonValue.GetPrimitiveValue(entry))).ToArray()
             );
         }
 
-        private templates.TypeUnionModel ToOneOfModel(string className, OpenApiSchema schema)
+        private Templates.TypeUnionModel ToOneOfModel(string className, OpenApiSchema schema)
         {
-            return new templates.TypeUnionModel(
+            return new Templates.TypeUnionModel(
                 Imports: this.GetImportStatements(schema.OneOf, Enumerable.Empty<OpenApiSchema>(), "./models/").ToArray(),
                 Description: schema.Description,
                 ClassName: className,
@@ -268,7 +268,7 @@ namespace PrincipleStudios.OpenApi.TypeScript
                         {
                             id = mapped;
                         }
-                        return new templates.TypeUnionEntry(
+                        return new Templates.TypeUnionEntry(
                             TypeName: ToInlineDataType(e)().text,
                             DiscriminatorValue: schema.Discriminator == null ? null : id
                         );

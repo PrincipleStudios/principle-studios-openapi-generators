@@ -1,4 +1,4 @@
-﻿namespace PrincipleStudios.OpenApi.TypeScript.templates
+﻿namespace PrincipleStudios.OpenApi.TypeScript.Templates
 {
     public record PartialHeader(
         string? appName,

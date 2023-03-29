@@ -1,8 +1,8 @@
 ﻿using Microsoft.OpenApi.Models;
 using PrincipleStudios.OpenApi.Transformations;
 using PrincipleStudios.OpenApi.TypeScript;
-using PrincipleStudios.OpenApi.TypeScript.templates;
-using PrincipleStudios.OpenApiCodegen.Client.TypeScript.templates;
+using PrincipleStudios.OpenApi.TypeScript.Templates;
+using PrincipleStudios.OpenApiCodegen.Client.TypeScript.Templates;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -57,7 +57,7 @@ namespace PrincipleStudios.OpenApiCodegen.Client.TypeScript
         public override void Visit(OpenApiParameter param, OpenApiContext context, Argument argument)
         {
             var dataType = typeScriptSchemaResolver.ToInlineDataType(param.Schema)();
-            argument.Builder?.SharedParameters.Add(new templates.OperationParameter(
+            argument.Builder?.SharedParameters.Add(new Templates.OperationParameter(
                 rawName: param.Name,
                 rawNameWithCurly: $"{{{param.Name}}}",
                 paramName: TypeScriptNaming.ToParameterName(param.Name, options.ReservedIdentifiers()),
@@ -84,7 +84,7 @@ namespace PrincipleStudios.OpenApiCodegen.Client.TypeScript
         {
             var sharedParameters = builder.SharedParameters.ToArray();
             return (
-                new templates.Operation(
+                new Templates.Operation(
                     httpMethod: httpMethod,
                     summary: operation.Summary,
                     description: operation.Description,
@@ -95,7 +95,7 @@ namespace PrincipleStudios.OpenApiCodegen.Client.TypeScript
                     imports: typeScriptSchemaResolver.GetImportStatements(GetSchemas(), Enumerable.Empty<OpenApiSchema>(), "./operation/").ToArray(),
                     sharedParams: sharedParameters,
                     requestBodies: builder.RequestBodies.ToArray(),
-                    responses: new templates.OperationResponses(
+                    responses: new Templates.OperationResponses(
                         defaultResponse: builder.DefaultResponse,
                         statusResponse: new(builder.StatusResponses)
                     ),
@@ -145,7 +145,7 @@ namespace PrincipleStudios.OpenApiCodegen.Client.TypeScript
                           let entryContext = context.Append(nameof(response.Headers), entry.Key, entry.Value)
                           let required = entry.Value.Required
                           let dataType = typeScriptSchemaResolver.ToInlineDataType(entry.Value.Schema)()
-                          select new templates.OperationResponseHeader(
+                          select new Templates.OperationResponseHeader(
                               rawName: entry.Key,
                               paramName: TypeScriptNaming.ToParameterName("header " + entry.Key, options.ReservedIdentifiers()),
                               description: entry.Value.Description,
@@ -187,7 +187,7 @@ namespace PrincipleStudios.OpenApiCodegen.Client.TypeScript
                 from param in mediaType.Schema.Properties
                 let required = mediaType.Schema.Required.Contains(param.Key)
                 let dataType = typeScriptSchemaResolver.ToInlineDataType(param.Value)()
-                select new templates.OperationParameter(
+                select new Templates.OperationParameter(
                     rawName: param.Key,
                     rawNameWithCurly: $"{{{param.Key}}}",
                     paramName: TypeScriptNaming.ToParameterName(param.Key, options.ReservedIdentifiers()),
@@ -211,7 +211,7 @@ namespace PrincipleStudios.OpenApiCodegen.Client.TypeScript
             IEnumerable<OperationParameter> GetStandardParams() =>
                 from ct in new[] { mediaType }
                 let dataType = typeScriptSchemaResolver.ToInlineDataType(ct.Schema)()
-                select new templates.OperationParameter(
+                select new Templates.OperationParameter(
                    rawName: null,
                    rawNameWithCurly: null,
                    paramName: TypeScriptNaming.ToParameterName("body", options.ReservedIdentifiers()),
@@ -236,7 +236,7 @@ namespace PrincipleStudios.OpenApiCodegen.Client.TypeScript
 
         public static OperationRequestBody OperationRequestBody(string requestBodyMimeType, bool isForm, IEnumerable<OperationParameter> parameters)
         {
-            return new templates.OperationRequestBody(
+            return new Templates.OperationRequestBody(
                  requestBodyType: requestBodyMimeType,
                  isForm: isForm,
                  allParams: parameters
@@ -247,7 +247,7 @@ namespace PrincipleStudios.OpenApiCodegen.Client.TypeScript
         {
             argument.Builder?.SecurityRequirements.Add(new OperationSecurityRequirement(
                                  (from scheme in securityRequirement
-                                  select new templates.OperationSecuritySchemeRequirement(scheme.Key.Reference.Id, scheme.Value.ToArray())).ToArray())
+                                  select new Templates.OperationSecuritySchemeRequirement(scheme.Key.Reference.Id, scheme.Value.ToArray())).ToArray())
                              );
         }
     }

@@ -1,5 +1,5 @@
 ﻿using Microsoft.OpenApi.Models;
-using PrincipleStudios.OpenApi.CSharp.templates;
+using PrincipleStudios.OpenApi.CSharp.Templates;
 using PrincipleStudios.OpenApi.Transformations;
 using System;
 using System.Collections.Generic;
@@ -14,7 +14,7 @@ namespace PrincipleStudios.OpenApi.CSharp
         private readonly string controllerClassName;
 
         public record Argument(OpenApiTransformDiagnostic Diagnostic, RegisterControllerOperation RegisterControllerOperation, OperationBuilder? Builder = null);
-        public delegate void RegisterControllerOperation(templates.ControllerOperation operation);
+        public delegate void RegisterControllerOperation(Templates.ControllerOperation operation);
 
         public class OperationBuilder
         {
@@ -57,14 +57,14 @@ namespace PrincipleStudios.OpenApi.CSharp
 
             var sharedParameters = builder.SharedParameters.ToArray();
             argument.RegisterControllerOperation(
-                new templates.ControllerOperation(
+                new Templates.ControllerOperation(
                  httpMethod: httpMethod,
                  summary: operation.Summary,
                  description: operation.Description,
                  name: CSharpNaming.ToTitleCaseIdentifier(operation.OperationId, options.ReservedIdentifiers("ControllerBase", controllerClassName)),
                  path: path,
                  requestBodies: builder.RequestBodies.DefaultIfEmpty(OperationRequestBodyFactory(operation.OperationId, null, Enumerable.Empty<OperationParameter>())).Select(transform => transform(sharedParameters)).ToArray(),
-                 responses: new templates.OperationResponses(
+                 responses: new Templates.OperationResponses(
                      defaultResponse: builder.DefaultResponse,
                      statusResponse: new(builder.StatusResponses)
                  ),
@@ -80,7 +80,7 @@ namespace PrincipleStudios.OpenApi.CSharp
                 // Path/Query/Header/Cookie parameters can't really be nullable, but rather than using custom ModelBinding on Optional<T>, we use nullability.
                 dataType = dataType.MakeNullable();
             }
-            argument.Builder?.SharedParameters.Add(new templates.OperationParameter(
+            argument.Builder?.SharedParameters.Add(new Templates.OperationParameter(
                 rawName: param.Name,
                 paramName: CSharpNaming.ToParameterName(param.Name, options.ReservedIdentifiers()),
                 description: param.Description,
@@ -124,7 +124,7 @@ namespace PrincipleStudios.OpenApi.CSharp
                           let entryContext = context.Append(nameof(response.Headers), entry.Key, entry.Value)
                           let required = entry.Value.Required
                           let dataType = csharpSchemaResolver.ToInlineDataType(entry.Value.Schema)()
-                          select new templates.OperationResponseHeader(
+                          select new Templates.OperationResponseHeader(
                               rawName: entry.Key,
                               paramName: CSharpNaming.ToParameterName("header " + entry.Key, options.ReservedIdentifiers()),
                               description: entry.Value.Description,
@@ -164,7 +164,7 @@ namespace PrincipleStudios.OpenApi.CSharp
                 from param in mediaType.Schema.Properties
                 let required = mediaType.Schema.Required.Contains(param.Key)
                 let dataType = csharpSchemaResolver.ToInlineDataType(param.Value)()
-                select new templates.OperationParameter(
+                select new Templates.OperationParameter(
                     rawName: param.Key,
                     paramName: CSharpNaming.ToParameterName(param.Key, options.ReservedIdentifiers()),
                     description: null,
@@ -187,7 +187,7 @@ namespace PrincipleStudios.OpenApi.CSharp
             IEnumerable<OperationParameter> GetStandardParams() =>
                 from ct in new[] { mediaType }
                 let dataType = csharpSchemaResolver.ToInlineDataType(ct.Schema)()
-                select new templates.OperationParameter(
+                select new Templates.OperationParameter(
                    rawName: null,
                    paramName: CSharpNaming.ToParameterName(argument.Builder?.Operation.OperationId + " body", options.ReservedIdentifiers()),
                    description: null,
@@ -211,7 +211,7 @@ namespace PrincipleStudios.OpenApi.CSharp
 
         private Func<OperationParameter[], OperationRequestBody> OperationRequestBodyFactory(string operationName, string? requestBodyMimeType, IEnumerable<OperationParameter> parameters)
         {
-            return sharedParams => new templates.OperationRequestBody(
+            return sharedParams => new Templates.OperationRequestBody(
                  name: CSharpNaming.ToTitleCaseIdentifier(operationName, options.ReservedIdentifiers()),
                  requestBodyType: requestBodyMimeType,
                  allParams: sharedParams.Concat(parameters)
@@ -222,7 +222,7 @@ namespace PrincipleStudios.OpenApi.CSharp
         {
             argument.Builder?.SecurityRequirements.Add(new OperationSecurityRequirement(
                                  (from scheme in securityRequirement
-                                  select new templates.OperationSecuritySchemeRequirement(scheme.Key.Reference.Id, scheme.Value.ToArray())).ToArray())
+                                  select new Templates.OperationSecuritySchemeRequirement(scheme.Key.Reference.Id, scheme.Value.ToArray())).ToArray())
                              );
         }
     }

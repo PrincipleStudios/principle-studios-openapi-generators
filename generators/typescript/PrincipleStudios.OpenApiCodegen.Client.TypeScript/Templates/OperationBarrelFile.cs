@@ -1,9 +1,9 @@
-﻿using PrincipleStudios.OpenApi.TypeScript.templates;
+﻿using PrincipleStudios.OpenApi.TypeScript.Templates;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace PrincipleStudios.OpenApiCodegen.Client.TypeScript.templates
+namespace PrincipleStudios.OpenApiCodegen.Client.TypeScript.Templates
 {
     public record OperationBarrelFileModel(PartialHeader header, OperationReference[] operations);
 

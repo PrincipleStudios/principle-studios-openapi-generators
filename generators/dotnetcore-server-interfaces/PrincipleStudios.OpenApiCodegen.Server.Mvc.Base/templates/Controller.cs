@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PrincipleStudios.OpenApi.CSharp.templates
+namespace PrincipleStudios.OpenApi.CSharp.Templates
 {
     public record ControllerTemplate(
         PartialHeader header,

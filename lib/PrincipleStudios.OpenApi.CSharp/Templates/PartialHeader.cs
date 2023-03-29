@@ -1,4 +1,4 @@
-﻿namespace PrincipleStudios.OpenApi.CSharp.templates
+﻿namespace PrincipleStudios.OpenApi.CSharp.Templates
 {
     public record PartialHeader(
         string? appName,

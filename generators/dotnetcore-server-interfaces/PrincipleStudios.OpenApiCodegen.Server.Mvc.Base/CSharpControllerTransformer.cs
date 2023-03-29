@@ -1,5 +1,5 @@
 ﻿using Microsoft.OpenApi.Models;
-using PrincipleStudios.OpenApi.CSharp.templates;
+using PrincipleStudios.OpenApi.CSharp.Templates;
 using PrincipleStudios.OpenApi.Transformations;
 using System;
 using System.Collections.Generic;
@@ -42,8 +42,8 @@ namespace PrincipleStudios.OpenApi.CSharp
             foreach (var (operation, context) in operations)
                 visitor.Visit(operation, context, new ControllerOperationVisitor.Argument(diagnostic, resultOperations.Add));
 
-            var template = new templates.ControllerTemplate(
-                header: new templates.PartialHeader(
+            var template = new Templates.ControllerTemplate(
+                header: new Templates.PartialHeader(
                     appName: document.Info.Title,
                     appDescription: document.Info.Description,
                     version: document.Info.Version,
@@ -78,8 +78,8 @@ namespace PrincipleStudios.OpenApi.CSharp
             return new SourceEntry
             {
                 Key = $"{baseNamespace}.AddServicesExtensions.cs",
-                SourceText = handlebarsFactory.Handlebars.ProcessAddServices(new templates.AddServicesModel(
-                    header: new templates.PartialHeader(
+                SourceText = handlebarsFactory.Handlebars.ProcessAddServices(new Templates.AddServicesModel(
+                    header: new Templates.PartialHeader(
                         appName: document.Info.Title,
                         appDescription: document.Info.Description,
                         version: document.Info.Version,
@@ -91,7 +91,7 @@ namespace PrincipleStudios.OpenApi.CSharp
                     controllers: (from p in groups
                                   let genericTypeName = CSharpNaming.ToClassName($"T {p}", options.ReservedIdentifiers())
                                   let className = CSharpNaming.ToClassName(p + " base", options.ReservedIdentifiers())
-                                  select new templates.ControllerReference(genericTypeName, className)
+                                  select new Templates.ControllerReference(genericTypeName, className)
                                   ).ToArray()
                 )),
             };

@@ -1,5 +1,5 @@
 ﻿using HandlebarsDotNet;
-using PrincipleStudios.OpenApi.TypeScript.templates;
+using PrincipleStudios.OpenApi.TypeScript.Templates;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -18,9 +18,9 @@ namespace PrincipleStudios.OpenApi.TypeScript
             var result = Handlebars.Create();
 
             result.RegisterHelper(
-                "linewrap", 
-                (context, parameters) => 
-                    parameters[0] is string s 
+                "linewrap",
+                (context, parameters) =>
+                    parameters[0] is string s
                         ? s.ToString().Replace("\r", "").Replace("\n", parameters[1].ToString())
                         : parameters[0]
             );

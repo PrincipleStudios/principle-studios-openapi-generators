@@ -10,7 +10,7 @@ namespace PrincipleStudios.OpenApi.TypeScript
     public static class TypeScriptSchemaSourceResolverExtensions
     {
 
-        public static IEnumerable<templates.ImportStatement> GetImportStatements(this ISchemaSourceResolver<InlineDataType> sourceResolver, IEnumerable<OpenApiSchema> schemasReferenced, IEnumerable<OpenApiSchema> excludedSchemas, string path)
+        public static IEnumerable<Templates.ImportStatement> GetImportStatements(this ISchemaSourceResolver<InlineDataType> sourceResolver, IEnumerable<OpenApiSchema> schemasReferenced, IEnumerable<OpenApiSchema> excludedSchemas, string path)
         {
             return from entry in schemasReferenced.Except(excludedSchemas)
                    let t = sourceResolver.ToInlineDataType(entry)()
@@ -21,7 +21,7 @@ namespace PrincipleStudios.OpenApi.TypeScript
                    group refName by fileName into imports
                    let nodePath = imports.Key.ToNodePath(path)
                    orderby nodePath
-                   select new templates.ImportStatement(imports.Distinct().OrderBy(a => a).ToArray(), nodePath);
+                   select new Templates.ImportStatement(imports.Distinct().OrderBy(a => a).ToArray(), nodePath);
         }
 
         public static string ToNodePath(this string path, string fromPath)

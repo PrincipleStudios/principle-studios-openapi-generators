@@ -17,22 +17,22 @@ namespace PrincipleStudios.OpenApiCodegen.Client.TypeScript
             return result;
         }
 
-        public static string ProcessOperation(this IHandlebars handlebars, templates.OperationTemplate operationTemplate)
+        public static string ProcessOperation(this IHandlebars handlebars, Templates.OperationTemplate operationTemplate)
         {
             var template = handlebars.Configuration.RegisteredTemplates["operation"];
 
             using var sr = new StringWriter();
-            var dict = HandlebarsTemplateProcess.ToDictionary<templates.OperationTemplate>(operationTemplate);
+            var dict = HandlebarsTemplateProcess.ToDictionary<Templates.OperationTemplate>(operationTemplate);
             template(sr, dict);
             return sr.ToString();
         }
 
-        public static string ProcessBarrelFile(this IHandlebars handlebars, templates.OperationBarrelFileModel barrelFileModel)
+        public static string ProcessBarrelFile(this IHandlebars handlebars, Templates.OperationBarrelFileModel barrelFileModel)
         {
             var template = handlebars.Configuration.RegisteredTemplates["operationBarrelFile"];
 
             using var sr = new StringWriter();
-            var dict = HandlebarsTemplateProcess.ToDictionary<templates.OperationBarrelFileModel>(barrelFileModel);
+            var dict = HandlebarsTemplateProcess.ToDictionary<Templates.OperationBarrelFileModel>(barrelFileModel);
             template(sr, dict);
             return sr.ToString();
         }
