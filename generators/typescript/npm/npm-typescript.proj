@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.Build.NoTargets/3.7.0">
+    <PropertyGroup>
+        <VersionPrefix>$(OpenApiTypeScriptClientVersion)</VersionPrefix>
+    </PropertyGroup>
+    <Import Project="$(RepositoryEngineeringDir)npm.targets" />
+
+    <ItemGroup>
+        <ProjectReference Include="$(SolutionRoot)generators/typescript/PrincipleStudios.OpenApiCodegen.Client.TypeScript/PrincipleStudios.OpenApiCodegen.Client.TypeScript.csproj" SpecificVersion="true" />
+    </ItemGroup>
+
+    <Target Name="_CleanDotnet" BeforeTargets="CoreClean">
+        <ItemGroup>
+            <Clean Include="dotnet/**" />
+        </ItemGroup>
+    </Target>
+
+    <Target Name="_CopyProjectReferencesToNpmPackage" BeforeTargets="NpmPack">
+        <MSBuild Projects="@(ProjectReference)"
+                Targets="PublishItemsOutputGroup">
+            <Output TaskParameter="TargetOutputs" ItemName="_DotnetFiles" />
+        </MSBuild>
+
+        <Copy SourceFiles="@(_DotnetFiles)"
+                Condition="'%(_DotnetFiles.Extension)'!='.pdb'"
+                DestinationFiles="@(_DotnetFiles->'$(ProjectDir)dotnet/%(filename)%(extension)')"
+                SkipUnchangedFiles="true"
+                OverwriteReadOnlyFiles="true" />
+    </Target>
+
+</Project>

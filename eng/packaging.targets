@@ -60,6 +60,16 @@
     </ItemGroup>
   </Target>
 
+  <Target Name="GetPublishedFiles"
+          DependsOnTargets="$(GenerateNuspecDependsOn);ResolveAssemblyReferences"
+          Returns="@(_PublishedFiles)">
+    <ItemGroup>
+      <_PublishedFiles Include="@(ReferenceCopyLocalPaths)"
+              Condition="'%(ReferenceCopyLocalPaths.Extension)'!='.pdb'" />
+      <_PublishedFiles Include="$(TargetPath)" />
+    </ItemGroup>
+  </Target>
+
   <Target Name="GetDynamicLoadPackFiles"
           DependsOnTargets="$(GenerateNuspecDependsOn);ResolveAssemblyReferences"
           Returns="@(_DynamicLoadPackFile)">

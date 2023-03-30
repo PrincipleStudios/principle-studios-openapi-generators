@@ -36,6 +36,7 @@
 		<OpenApiJsonExtensionsVersion>0.14.0</OpenApiJsonExtensionsVersion>
 		<OpenApiMvcServerVersion>0.14.0</OpenApiMvcServerVersion>
 		<OpenApiCSharpClientVersion>0.14.0</OpenApiCSharpClientVersion>
+		<OpenApiTypeScriptClientVersion>0.5.0</OpenApiTypeScriptClientVersion>
 		<!-- Should be incremented anytime one of the internal libraries changes -->
 		<SharedAnalyzerLibrariesVersion>0.4.0</SharedAnalyzerLibrariesVersion>
 	</PropertyGroup>

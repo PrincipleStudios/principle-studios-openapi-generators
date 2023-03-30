@@ -1,0 +1,42 @@
+<Project>
+    <PropertyGroup>
+        <TargetFramework>net7.0</TargetFramework>
+        <ImportByWildcardAfterMicrosoftCommonTargets>false</ImportByWildcardAfterMicrosoftCommonTargets>
+        <GenerateBindingRedirectsOutputType>true</GenerateBindingRedirectsOutputType>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <Compile Include="src/**" />
+        <CompileConfig Include="tsconfig.build.json" />
+        <CompileConfig Include="package.json" />
+        <CompileConfig Include="package-lock.json" />
+    </ItemGroup>
+
+    <Target Name="_PrepareClean" BeforeTargets="CoreClean">
+        <ItemGroup>
+            <Clean Include="@(Compile->'$(ProjectDir)lib/%(filename).js');@(Compile->'$(ProjectDir)lib/%(filename).d.ts')" />
+        </ItemGroup>
+    </Target>
+
+    <Target Name="NpmInstall" BeforeTargets="Restore" Inputs="$(ProjectDir)package.json;$(ProjectDir)package-lock.json" Outputs="$(ProjectDir)node_modules\_._">
+        <Exec WorkingDirectory="$(ProjectDir)" Command="npm install" />
+        <Touch AlwaysCreate="true" ForceTouch="true" Files="$(ProjectDir)node_modules\_._" />
+    </Target>
+
+    <Target Name="NodeBuild" BeforeTargets="Build" Inputs="@(Compile);@(CompileConfig)" Outputs="@(Compile->'$(ProjectDir)/lib/%(filename).js');@(Compile->'$(ProjectDir)/lib/%(filename).d.ts')">
+        <Exec WorkingDirectory="$(ProjectDir)" Command="npm run build" />
+    </Target>
+
+    <Target Name="SetNpmVersion">
+        <Exec WorkingDirectory="$(ProjectDir)" Command="npm version $(Version)" IgnoreExitCode="true" />
+    </Target>
+
+    <Target Name="NpmPack" BeforeTargets="Publish" DependsOnTargets="NodeBuild;SetNpmVersion">
+        <Exec WorkingDirectory="$(ProjectDir)" Command="npm pack --pack-destination $(PackageOutputPath)" />
+    </Target>
+
+    <Target Name="VSTest" DependsOnTargets="Build">
+        <Exec WorkingDirectory="$(ProjectDir)" Command="npm test" />
+    </Target>
+
+</Project>
