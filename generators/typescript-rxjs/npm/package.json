@@ -1,6 +1,6 @@
 {
   "name": "@principlestudios/openapi-codegen-typescript-rxjs",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "A typescript client code generator for principled development using RxJS",
   "scripts": {
     "test": "jest",
@@ -35,7 +35,7 @@
     "@babel/core": "^7.15.5",
     "@babel/preset-env": "^7.15.6",
     "@babel/preset-typescript": "^7.15.0",
-    "@principlestudios/openapi-codegen-typescript": "file:../../out/principlestudios-openapi-codegen-typescript-0.3.1.tgz",
+    "@principlestudios/openapi-codegen-typescript": "file:../../typescript/npm",
     "@types/eslint": "^7.28.0",
     "@types/jest": "^27.0.1",
     "@types/node": "^16.9.1",
