@@ -3,6 +3,12 @@
         <TargetFramework>net7.0</TargetFramework>
         <ImportByWildcardAfterMicrosoftCommonTargets>false</ImportByWildcardAfterMicrosoftCommonTargets>
         <GenerateBindingRedirectsOutputType>true</GenerateBindingRedirectsOutputType>
+
+        <NpmInstallScript Condition=" '$(NpmInstallScript)' == '' and $(Configuration) != 'Release' ">npm install</NpmInstallScript>
+        <NpmInstallScript Condition=" '$(NpmInstallScript)' == '' and $(Configuration) == 'Release' ">npm ci</NpmInstallScript>
+        <NpmInstallRecordPath Condition=" '$(NpmInstallRecordPath)' == '' ">$(ProjectDir)node_modules\_$(Configuration)._</NpmInstallRecordPath>
+        <NpmBuildScript Condition=" '$(NpmBuildScript)' == '' ">npm run build</NpmBuildScript>
+        <NpmTestScript Condition=" '$(NpmTestScript)' == '' ">npm test</NpmTestScript>
     </PropertyGroup>
 
     <ItemGroup>
@@ -18,13 +24,13 @@
         </ItemGroup>
     </Target>
 
-    <Target Name="NpmInstall" BeforeTargets="Restore" Inputs="$(ProjectDir)package.json;$(ProjectDir)package-lock.json" Outputs="$(ProjectDir)node_modules\_._">
-        <Exec WorkingDirectory="$(ProjectDir)" Command="npm install" />
-        <Touch AlwaysCreate="true" ForceTouch="true" Files="$(ProjectDir)node_modules\_._" />
+    <Target Name="NpmInstall" BeforeTargets="Restore" Inputs="$(ProjectDir)package.json;$(ProjectDir)package-lock.json" Outputs="$(NpmInstallRecordPath)">
+        <Exec WorkingDirectory="$(ProjectDir)" Command="$(NpmInstallScript)" />
+        <Touch AlwaysCreate="true" ForceTouch="true" Files="$(NpmInstallRecordPath)" />
     </Target>
 
     <Target Name="NodeBuild" BeforeTargets="Build" Inputs="@(Compile);@(CompileConfig)" Outputs="@(Compile->'$(ProjectDir)/lib/%(filename).js');@(Compile->'$(ProjectDir)/lib/%(filename).d.ts')">
-        <Exec WorkingDirectory="$(ProjectDir)" Command="npm run build" />
+        <Exec WorkingDirectory="$(ProjectDir)" Command="$(NpmBuildScript)" />
     </Target>
 
     <Target Name="SetNpmVersion">
@@ -36,7 +42,7 @@
     </Target>
 
     <Target Name="VSTest" DependsOnTargets="Build">
-        <Exec WorkingDirectory="$(ProjectDir)" Command="npm test" />
+        <Exec WorkingDirectory="$(ProjectDir)" Command="$(NpmTestScript)" />
     </Target>
 
 </Project>
