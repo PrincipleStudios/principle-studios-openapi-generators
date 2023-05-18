@@ -44,7 +44,7 @@
         </PropertyGroup>
     </Target>
 
-    <Target Name="NpmInstall" BeforeTargets="Restore" Inputs="$(ProjectDir)package.json;$(ProjectDir)package-lock.json" Outputs="$(NpmInstallRecordPath)">
+    <Target Name="NpmInstall" BeforeTargets="Restore;_GenerateProjectRestoreGraph" Inputs="$(ProjectDir)package.json;$(ProjectDir)package-lock.json" Outputs="$(NpmInstallRecordPath)">
         <Exec WorkingDirectory="$(ProjectDir)" Command="$(NpmInstallScript)" />
         <Touch AlwaysCreate="true" ForceTouch="true" Files="$(NpmInstallRecordPath)" />
     </Target>
