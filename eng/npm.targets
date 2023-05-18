@@ -62,7 +62,9 @@
         <Exec WorkingDirectory="$(ProjectDir)" Command="npm version $(OriginalNpmPackageVersion)" IgnoreExitCode="true" />
     </Target>
 
-    <Target Name="VSTest" DependsOnTargets="Build">
+    <Target Name="VSTest">
+        <CallTarget Condition="'$(VSTestNoBuild)' != 'true'" Targets="Build" />
+
         <Exec WorkingDirectory="$(ProjectDir)" Command="$(NpmTestScript)" />
     </Target>
 
