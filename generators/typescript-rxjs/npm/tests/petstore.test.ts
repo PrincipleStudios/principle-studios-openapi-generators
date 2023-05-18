@@ -6,6 +6,6 @@ import type { Observable } from 'rxjs';
 describe('typescript-rxjs petstore.yaml', () => {
     it('can be wrapped with rxjs', () => {
         const wrapped = toRxjsApi(operations);
-        const petResponse: Observable<Responses> = wrapped.addPet({}, { name: 'Fido', tag: 'dog' }, 'application/json');
+        const petResponse: Observable<Responses> = wrapped.addPet({ body: { name: 'Fido', tag: 'dog' } });
     })
 });
