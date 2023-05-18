@@ -16,12 +16,32 @@
         <CompileConfig Include="tsconfig.build.json" />
         <CompileConfig Include="package.json" />
         <CompileConfig Include="package-lock.json" />
+
+        <NpmPackagedFiles Include="@(Compile->'$(ProjectDir)/lib/%(filename).js');@(Compile->'$(ProjectDir)/lib/%(filename).d.ts')" />
+        <NpmPackagedFiles Include="@(CompileConfig)" />
+
+        <PackageReference Include="JsonPeek" Version="1.2.0" PrivateAssets="All" />
     </ItemGroup>
 
     <Target Name="_PrepareClean" BeforeTargets="CoreClean">
         <ItemGroup>
             <Clean Include="@(Compile->'$(ProjectDir)lib/%(filename).js');@(Compile->'$(ProjectDir)lib/%(filename).d.ts')" />
         </ItemGroup>
+    </Target>
+
+    <Target Name="_LoadPackageJson">
+        <JsonPeek ContentPath="package.json" Query="$.name">
+            <Output TaskParameter="Result" ItemName="NpmPackageName" />
+        </JsonPeek>
+        <JsonPeek ContentPath="package.json" Query="$.version">
+            <Output TaskParameter="Result" ItemName="OriginalNpmPackageVersion" />
+        </JsonPeek>
+
+        <PropertyGroup>
+            <NpmPackageName>@(NpmPackageName->'%(Identity)')</NpmPackageName>
+            <NpmPackageNormalizedName>@(NpmPackageName->'%(Identity)'->Replace("@", "")->Replace("/", "-"))</NpmPackageNormalizedName>
+            <OriginalNpmPackageVersion>@(OriginalNpmPackageVersion->'%(Identity)')</OriginalNpmPackageVersion>
+        </PropertyGroup>
     </Target>
 
     <Target Name="NpmInstall" BeforeTargets="Restore" Inputs="$(ProjectDir)package.json;$(ProjectDir)package-lock.json" Outputs="$(NpmInstallRecordPath)">
@@ -33,16 +53,19 @@
         <Exec WorkingDirectory="$(ProjectDir)" Command="$(NpmBuildScript)" />
     </Target>
 
-    <Target Name="SetNpmVersion">
+    <Target Name="NpmPack" BeforeTargets="Publish" DependsOnTargets="_LoadPackageJson;NodeBuild" Inputs="@(NpmPackagedFiles)" Outputs="$(PackageOutputPath)$(NpmPackageNormalizedName)-$(Version).tgz">
+        <JsonPeek ContentPath="package.json" Query="$.version">
+            <Output TaskParameter="Result" ItemName="OriginalNpmPackageVersion" />
+        </JsonPeek>
         <Exec WorkingDirectory="$(ProjectDir)" Command="npm version $(Version)" IgnoreExitCode="true" />
-    </Target>
-
-    <Target Name="NpmPack" BeforeTargets="Publish" DependsOnTargets="NodeBuild;SetNpmVersion">
         <Exec WorkingDirectory="$(ProjectDir)" Command="npm pack --pack-destination $(PackageOutputPath)" />
+        <Exec WorkingDirectory="$(ProjectDir)" Command="npm version $(OriginalNpmPackageVersion)" IgnoreExitCode="true" />
     </Target>
 
     <Target Name="VSTest" DependsOnTargets="Build">
         <Exec WorkingDirectory="$(ProjectDir)" Command="$(NpmTestScript)" />
     </Target>
+
+    <Target Name="_PackOnBuild" AfterTargets="Build" DependsOnTargets="NpmPack" Condition="'$(PackNpmOnBuild)'=='true'" />
 
 </Project>

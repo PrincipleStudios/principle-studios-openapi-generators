@@ -1,6 +1,7 @@
 <Project Sdk="Microsoft.Build.NoTargets/3.7.0">
     <PropertyGroup>
         <VersionPrefix>$(OpenApiTypeScriptClientVersion)</VersionPrefix>
+        <PackNpmOnBuild Condition=" $(Configuration) == 'Release' ">true</PackNpmOnBuild>
     </PropertyGroup>
     <Import Project="$(RepositoryEngineeringDir)npm.targets" />
 
@@ -14,7 +15,7 @@
         </ItemGroup>
     </Target>
 
-    <Target Name="_CopyProjectReferencesToNpmPackage" BeforeTargets="NpmPack">
+    <Target Name="_CopyProjectReferencesToNpmPackage" BeforeTargets="NodeBuild">
         <MSBuild Projects="@(ProjectReference)"
                 Targets="PublishItemsOutputGroup">
             <Output TaskParameter="TargetOutputs" ItemName="_DotnetFiles" />
@@ -25,6 +26,10 @@
                 DestinationFiles="@(_DotnetFiles->'$(ProjectDir)dotnet/%(filename)%(extension)')"
                 SkipUnchangedFiles="true"
                 OverwriteReadOnlyFiles="true" />
+
+        <ItemGroup>
+            <NpmPackagedFiles Include="$(ProjectDir)dotnet/**/*" />
+        </ItemGroup>
     </Target>
 
 </Project>
