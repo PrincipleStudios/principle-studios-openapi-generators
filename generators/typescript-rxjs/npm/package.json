@@ -3,12 +3,13 @@
   "version": "0.4.0",
   "description": "A typescript client code generator for principled development using RxJS",
   "scripts": {
+    "build": "tsc --project tsconfig.build.json",
+    "pretsc:check": "openapi-codegen-typescript ../../../schemas/no-refs.yaml tests/no-refs/ && openapi-codegen-typescript ../../../schemas/petstore.yaml tests/petstore/ && openapi-codegen-typescript ../../../schemas/headers.yaml tests/headers/",
+    "tsc:check": "tsc",
+    "pretest": "npm run tsc:check",
     "test": "jest",
     "test:update": "jest -u",
-    "pretest": "npm run build",
-    "build": "openapi-codegen-typescript ../../../schemas/no-refs.yaml tests/no-refs/ && openapi-codegen-typescript ../../../schemas/petstore.yaml tests/petstore/ && openapi-codegen-typescript ../../../schemas/headers.yaml tests/headers/",
-    "tsc": "tsc --project tsconfig.build.json",
-    "prepack": "npm run tsc"
+    "prepack": "npm run build"
   },
   "author": "Matt DeKrey",
   "license": "BSD-2-Clause",

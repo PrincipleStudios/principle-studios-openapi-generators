@@ -3,13 +3,12 @@
     "version": "0.5.0",
     "description": "A typescript client code generator for principled development",
     "scripts": {
-        "test": "jest",
-        "pretest": "npm run build",
-        "build": "node bin/index.js ../../../schemas/no-refs.yaml tests/no-refs/ && node bin/index.js ../../../schemas/petstore.yaml tests/petstore/ && node bin/index.js ../../../schemas/headers.yaml tests/headers/",
-        "tsc": "tsc --project tsconfig.build.json",
+        "build": "tsc --project tsconfig.build.json",
+        "pretsc:check": "node bin/index.js ../../../schemas/no-refs.yaml tests/no-refs/ && node bin/index.js ../../../schemas/petstore.yaml tests/petstore/ && node bin/index.js ../../../schemas/headers.yaml tests/headers/",
         "tsc:check": "tsc",
-        "pretsc:check": "npm run build",
-        "prepack": "npm run tsc"
+        "pretest": "npm run tsc:check",
+        "test": "jest",
+        "prepack": "npm run build"
     },
     "author": "Matt DeKrey & Principle Studios",
     "license": "BSD-2-Clause",

@@ -68,27 +68,6 @@ jobs:
         dotnet build --no-restore --configuration Release ${VERSION_SUFFIX_PARAM}
       env:
         VERSION_SUFFIX: ${{ github.ref != 'refs/heads/main' && github.sha || '' }}
-    - name: Finish building TypeScript DLL
-      working-directory: ./generators/typescript
-      run: dotnet publish ./PrincipleStudios.OpenApiCodegen.Client.TypeScript/PrincipleStudios.OpenApiCodegen.Client.TypeScript.csproj -c Release -p:UseAppHost=false -o ./npm/dotnet
-    - name: Install node packages for typescript
-      working-directory: ./generators/typescript/npm
-      run: npm ci
-    - name: Pack typescript npm package
-      working-directory: ./generators/typescript/npm
-      run: |
-        npm pack
-        mkdir ../../out/
-        cp ./principlestudios-openapi-codegen-typescript-[0-9]*.tgz ../../out/principlestudios-openapi-codegen-typescript.tgz
-    - name: Install typescript-rxjs
-      working-directory: ./generators/typescript-rxjs/npm
-      run: |
-        pattern="../../out/principlestudios-openapi-codegen-typescript.tgz"
-        npm i -D "$(echo $pattern)"
-        npm i
-    - name: Pack typescript-rxjs npm package
-      working-directory: ./generators/typescript-rxjs/npm
-      run: npm pack
 
     ###########
     # TEST
@@ -107,12 +86,6 @@ jobs:
     #     repo_token: ${{ secrets.GITHUB_TOKEN }}
     #     minimum_coverage: 90
     #     fail_below_threshold: false
-    - name: Test package for typescript
-      working-directory: ./generators/typescript/npm
-      run: npm test
-    - name: Test package for typescript-rxjs
-      working-directory: ./generators/typescript-rxjs/npm
-      run: npm test
 
     ###########
     # PUBLISH
@@ -134,23 +107,11 @@ jobs:
         echo '@principlestudios:registry=$NODE_REGISTRY' > ~/.npmrc
       env:
         NODE_REGISTRY: ${{ github.ref != 'refs/heads/main' && 'https://npm.pkg.github.com/' || 'https://registry.npmjs.org/' }}
-    - name: Publish typescript npm package
-      working-directory: ./generators/typescript/npm
+    - name: Publish npm packages
+      working-directory: ./artifacts/packages/Release
       run:  |
-        if [[ $IS_PRERELEASE ]]; then npm version prerelease --preid=branch.$IS_PRERELEASE; fi
-        npm publish || echo 'npm publish optional'
-      continue-on-error: true # npm publish does not have a `--skip-duplicate` switch
+        find . -type f -regex ".*\.tgz" -exec npm publish "{}" \;
       env:
-        IS_PRERELEASE: ${{ github.ref != 'refs/heads/main' && github.sha || '' }}
-        NODE_AUTH_TOKEN: "${{ github.ref == 'refs/heads/main' && secrets.NPM_TOKEN || secrets.GITHUB_TOKEN }}"
-    - name: Publish typescript-rxjs npm package
-      working-directory: ./generators/typescript-rxjs/npm
-      run: |
-        if [[ $IS_PRERELEASE ]]; then npm version prerelease --preid=branch.$IS_PRERELEASE; fi
-        npm publish || echo 'npm publish optional'
-      continue-on-error: true # npm publish does not have a `--skip-duplicate` switch
-      env:
-        IS_PRERELEASE: ${{ github.ref != 'refs/heads/main' && github.sha || '' }}
         NODE_AUTH_TOKEN: "${{ github.ref == 'refs/heads/main' && secrets.NPM_TOKEN || secrets.GITHUB_TOKEN }}"
 
     ######################
