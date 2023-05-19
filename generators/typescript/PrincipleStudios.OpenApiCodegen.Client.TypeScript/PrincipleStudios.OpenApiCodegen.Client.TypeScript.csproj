@@ -4,16 +4,15 @@
 		<OutputType>Exe</OutputType>
 		<TargetFramework>net7.0</TargetFramework>
 		<UseAppHost>false</UseAppHost>
+		<VersionPrefix>$(OpenApiTypeScriptClientVersion)</VersionPrefix>
 	</PropertyGroup>
 
 	<ItemGroup>
-		<None Remove="Templates\operation.handlebars" />
-		<None Remove="Templates\operationBarrelFile.handlebars" />
+		<None Remove="Templates\*.handlebars" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<EmbeddedResource Include="Templates\operation.handlebars" />
-		<EmbeddedResource Include="Templates\operationBarrelFile.handlebars" />
+		<EmbeddedResource Include="Templates\*.handlebars" />
 	</ItemGroup>
 
 	<ItemGroup>

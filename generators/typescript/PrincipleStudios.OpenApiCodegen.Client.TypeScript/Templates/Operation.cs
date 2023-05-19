@@ -25,7 +25,10 @@ namespace PrincipleStudios.OpenApiCodegen.Client.TypeScript.Templates
         OperationRequestBody[] RequestBodies,
         OperationResponses Responses,
         OperationSecurityRequirement[] SecurityRequirements
-    );
+    )
+    {
+        public bool HasQueryInPath => Path.IndexOf('?') >= 0;
+    };
 
     public record OperationParameter(
         string? RawName,
@@ -47,7 +50,10 @@ namespace PrincipleStudios.OpenApiCodegen.Client.TypeScript.Templates
         int? MaxLength,
         decimal? Minimum,
         decimal? Maximum
-    );
+    )
+    {
+        public bool IsUrlParam => IsPathParam || IsQueryParam;
+    } 
 
     public record OperationResponses(
         OperationResponse? DefaultResponse,

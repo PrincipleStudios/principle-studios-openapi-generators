@@ -1,33 +1,22 @@
-import {
+import type {
 	RequestBodies,
 	RequestConversion,
 	StandardResponse,
 	TransformCallType,
-	RequestOpts,
+	AdapterRequestArgs,
 	RequestConversions,
-	HttpQuery,
-	encodeURI,
+	HttpMethod
 } from '@principlestudios/openapi-codegen-typescript';
 
 import { Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { ajax, AjaxError, AjaxRequest, AjaxResponse } from 'rxjs/ajax';
 
-const queryString = (params: HttpQuery): string =>
-	Object.keys(params)
-		.map((key) => {
-			const value = params[key];
-			return value instanceof Array
-				? value.map((val) => `${encodeURI(key)}=${encodeURI(val)}`).join('&')
-				: `${encodeURI(key)}=${encodeURI(value)}`;
-		})
-		.join('&');
-
-export const toUrl = (prefix: string, requestOpts: RequestOpts) =>
-	`${prefix}${requestOpts.path}${requestOpts.query ? `?${queryString(requestOpts.query)}` : ''}`;
+export const toUrl = (prefix: string, requestOpts: AdapterRequestArgs) =>
+	`${prefix}${requestOpts.path}`;
 
 function rxWithPrefix(prefix: string, rxjsRequest: (params: AjaxRequest) => Observable<AjaxResponse> = ajax) {
-	const createRequestArgs = (requestOpts: RequestOpts): AjaxRequest => {
+	const createRequestArgs = (requestOpts: AdapterRequestArgs): AjaxRequest => {
 		const url = toUrl(prefix, requestOpts);
 
 		return {
@@ -38,7 +27,7 @@ function rxWithPrefix(prefix: string, rxjsRequest: (params: AjaxRequest) => Obse
 				requestOpts.headers && requestOpts.headers['Content-Type'] === 'application/x-www-form-urlencoded'
 					? requestOpts.body
 					: JSON.stringify(requestOpts.body),
-			responseType: requestOpts.responseType || 'json',
+			responseType: 'json',
 		};
 	};
 
@@ -47,9 +36,9 @@ function rxWithPrefix(prefix: string, rxjsRequest: (params: AjaxRequest) => Obse
 		TBody extends RequestBodies,
 		TResponse extends StandardResponse,
 		TCallType extends TransformCallType
-	>(conversion: RequestConversion<TParams, TBody, TResponse, TCallType>) {
+	>(conversion: RequestConversion<HttpMethod, any, TParams, TBody, TResponse, TCallType>) {
 		function transform({ params = {}, body = undefined, mimeType = undefined }: any = {}): Observable<TResponse> {
-			const requestOpts: RequestOpts = conversion.request(
+			const requestOpts: AdapterRequestArgs = conversion.request(
 				params,
 				body,
 				mimeType || (body ? 'application/json' : undefined)
@@ -86,26 +75,28 @@ type BodyPart<
 	: BodyPartInner<TBodies, Mime>;
 
 type RequestParam<
+	TCallType extends TransformCallType,
 	TParams,
 	TBodies extends RequestBodies,
-	Mime extends keyof TBodies,
-	TCallType extends TransformCallType
+	Mime extends keyof TBodies
 > = ParamPart<TParams> & BodyPart<TBodies, Mime, TCallType>;
 
-type Converted<TConversion extends RequestConversion<any, any, any, any>> = TConversion extends RequestConversion<
+type Converted<TConversion extends RequestConversion<any, any, any, any, any, any>> = TConversion extends RequestConversion<
+	any,
+	any,
 	infer TParams,
 	infer TBodies,
 	infer TResponse,
 	infer TCallType
 >
-	? {} extends RequestParam<TParams, TBodies, keyof TBodies, TCallType>
-		? <Mime extends keyof TBodies>(req?: RequestParam<TParams, TBodies, Mime, TCallType>) => Observable<TResponse>
-		: <Mime extends keyof TBodies>(req: RequestParam<TParams, TBodies, Mime, TCallType>) => Observable<TResponse>
+	? {} extends RequestParam<TCallType, TParams, TBodies, keyof TBodies>
+		? <Mime extends keyof TBodies>(req?: RequestParam<TCallType, TParams, TBodies, Mime>) => Observable<TResponse>
+		: <Mime extends keyof TBodies>(req: RequestParam<TCallType, TParams, TBodies, Mime>) => Observable<TResponse>
 	: never;
 
 function applyTransform<TMethods extends RequestConversions>(
 	methods: TMethods,
-	transform: (input: RequestConversion<any, any, any, any>) => Converted<RequestConversion<any, any, any, any>>
+	transform: (input: RequestConversion<any, any, any, any, any, any>) => Converted<RequestConversion<any, any, any, any, any, any>>
 ): {
 	[K in keyof TMethods]: Converted<TMethods[K]>;
 } {
@@ -122,5 +113,5 @@ export function toRxjsApi<TMethods extends RequestConversions>(
 	prefix = '',
 	rxjsRequest: (params: AjaxRequest) => Observable<AjaxResponse> = ajax
 ) {
-	return applyTransform(api, rxWithPrefix(prefix, rxjsRequest)); // TODO
+	return applyTransform(api, rxWithPrefix(prefix, rxjsRequest));
 }
