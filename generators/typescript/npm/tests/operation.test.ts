@@ -2,7 +2,7 @@ import allOperations from "./no-refs/operations";
 import { conversion as lookupRecord, RequestBodies as LookupRecordRequestBodies, Responses as LookupResponses } from "./no-refs/operations/lookupRecord";
 import { conversion as getPhoto } from "./no-refs/operations/getPhoto";
 import { RequestConversion, RequestBodies, RequestConversions, TransformRequest, TransformResponse } from "~/src/types";
-import { RequestOpts } from "~/src/inputs-outputs";
+import { AdapterRequestArgs } from "~/src/inputs-outputs";
 
 describe('no-refs', () => {
     it('has successful typings', () => {
@@ -12,11 +12,11 @@ describe('no-refs', () => {
     });
 });
 
-const t: TransformRequest<Object, LookupRecordRequestBodies, 'body', RequestOpts> = lookupRecord.request;
-const t2: RequestConversion<Object, LookupRecordRequestBodies, LookupResponses, 'body'> = lookupRecord;
-const t3: TransformRequest<any, never, 'no-body', RequestOpts> = getPhoto.request;
+const t: TransformRequest<Object, LookupRecordRequestBodies, 'body', AdapterRequestArgs> = lookupRecord.request;
+const t2: RequestConversion<any, Object, Object, LookupRecordRequestBodies, LookupResponses, 'body'> = lookupRecord;
+const t3: TransformRequest<any, never, 'no-body', AdapterRequestArgs> = getPhoto.request;
 
-type Req = typeof lookupRecord extends RequestConversion<any, infer Requests, any, 'body'> ? Requests : never;
+type Req = typeof lookupRecord extends RequestConversion<any, any, any, infer Requests, any, 'body'> ? Requests : never;
 
 const temp = {
     lookupRecord,
