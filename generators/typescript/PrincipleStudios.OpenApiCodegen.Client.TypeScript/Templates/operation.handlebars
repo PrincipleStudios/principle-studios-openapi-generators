@@ -78,13 +78,7 @@ export function constructUrl(params: UrlParams): string {
         + {{#if HasQueryInPath}}'&'{{else}}'?'{{/if}} + query.toString(){{/if}};
 }
 
-{{#if AllowNoBody}}
-export function constructRequest(params: RequestParams): AdapterRequestArgs;
-{{/if}}
-{{#if RequestBodies.length}}
-export function constructRequest<K extends keyof RequestBodies>(params: RequestParams, body: RequestBodies[K], mimeType: K): AdapterRequestArgs;
-{{/if}}
-export function constructRequest(params: RequestParams{{#if RequestBodies.length}}, body: RequestBodies[keyof RequestBodies] | null = null, mimeType: keyof RequestBodies | null = null{{/if}}): AdapterRequestArgs {
+export function validate(params: RequestParams{{#if RequestBodies.length}}, body: RequestBodies[keyof RequestBodies] | null = null, mimeType: keyof RequestBodies | null = null{{/if}}) {
     throwIfNullOrUndefined(params, 'params');
     {{#if RequestBodies.length}}
     {{#if AllowNoBody}}if (mimeType) {{/if}}throwIfNullOrUndefined(body, 'body');
@@ -95,10 +89,12 @@ export function constructRequest(params: RequestParams{{#if RequestBodies.length
     throwIfNullOrUndefined(params.{{{ParamName}}}, '{{RawName}}');
     {{/if}}
     {{/each}}
+}
 
+export function constructHeaders(params: RequestParams{{#if RequestBodies.length}}, mimeType: keyof RequestBodies | null{{/if}}): HttpHeaders {
     const headers: HttpHeaders = {};
     {{#if RequestBodies.length}}
-    if (mimeType) headers['Content-Type'] = mimeType;
+    {{#if AllowNoBody}}if (mimeType) {{/if}}headers['Content-Type'] = mimeType;
     {{/if}}
     {{#each SharedParams}}
     {{#if IsHeaderParam}}
@@ -106,40 +102,63 @@ export function constructRequest(params: RequestParams{{#if RequestBodies.length
     {{/if}}
     {{/each}}
 
-    {{#if HasFormRequest}}
-    let formDataBody: RequestBodies[keyof RequestBodies] | FormData = body;
-    if (mimeType === 'application/x-www-form-urlencoded')
-    {
-        let formData = new FormData();
-        {{#each RequestBodies}}
-        {{#each AllParams}}
-        {{#if IsFormParam}}
-        {{#if DataTypeEnumerable}}
-        if (body!.{{{ParamName}}} !== undefined) {
-            {{!-- TODO - openapi style/explode combo --}}
-            body!.{{{ParamName}}}.forEach((element) => formData.append('{{RawName}}', element as any))
-            {{!-- formData.append('{{RawName}}', body!.{{{ParamName}}}.join(COLLECTION_FORMATS['{{CollectionFormat}}'])); --}}
-        }
-        {{else}}
-        if (body!.{{{ParamName}}} !== undefined) { formData.append('{{RawName}}', body!.{{{ParamName}}} as any); }
-        {{/if}}
-        {{/if}}
-        {{/each}}
-        {{/each}}
-        formDataBody = formData;
-    }
+    return headers;
+}
 
+{{#if RequestBodies.length}}
+export const constructRequestBodyByMimeType: {
+    [K in keyof RequestBodies]: (input: RequestBodies[K]) => unknown;
+} = {
+    {{#each RequestBodies}}
+    '{{RequestBodyType}}': (body: RequestBodies['{{RequestBodyType}}']) => {
+        {{#ifEquals RequestBodyType 'application/json'}}
+            return body;
+        {{else}}
+        {{#ifEquals RequestBodyType 'application/x-www-form-urlencoded'}}
+            let formData = new FormData();
+            {{#each AllParams}}
+            {{#if DataTypeEnumerable}}
+            if (body!.{{{ParamName}}} !== undefined) {
+                {{!-- TODO - openapi style/explode combo --}}
+                body!.{{{ParamName}}}.forEach((element) => formData.append('{{RawName}}', element as any))
+                {{!-- formData.append('{{RawName}}', body!.{{{ParamName}}}.join(COLLECTION_FORMATS['{{CollectionFormat}}'])); --}}
+            }
+            {{else}}
+            if (body!.{{{ParamName}}} !== undefined) { formData.append('{{RawName}}', body!.{{{ParamName}}} as any); }
+            {{/if}}
+            {{/each}}
+            return formData;
+        {{else}}
+            throw new Error('Non-JSON requests not supported');
+        {{/ifEquals}}
+        {{/ifEquals}}
+    },
+    {{/each}}
+};
+
+{{/if}}
+{{#if AllowNoBody}}
+export function constructRequest(params: RequestParams): AdapterRequestArgs;
+{{/if}}
+{{#if RequestBodies.length}}
+{{#each RequestBodies}}
+export function constructRequest(params: RequestParams, body: RequestBodies['{{RequestBodyType}}'], mimeType: '{{RequestBodyType}}'): AdapterRequestArgs;
+{{/each}}
+export function constructRequest<K extends keyof RequestBodies>(params: RequestParams, body: RequestBodies[K], mimeType: K): AdapterRequestArgs;
+{{/if}}
+export function constructRequest(params: RequestParams{{#if RequestBodies.length}}, body: RequestBodies[keyof RequestBodies]{{#if AllowNoBody}} | null = null{{/if}}, mimeType: keyof RequestBodies{{#if AllowNoBody}} | null = null{{/if}}{{/if}}): AdapterRequestArgs {
+    validate(params{{#if RequestBodies.length}}, body, mimeType{{/if}});
+    const headers = constructHeaders(params{{#if RequestBodies.length}}, mimeType{{/if}});
+    {{#if RequestBodies.length}}
+    const resultBody = {{#if AllowNoBody}}mimeType === null ? null : {{/if}}constructRequestBodyByMimeType[mimeType](body as any);
     {{/if}}
+
     return {
         path: constructUrl(params),
         method,
         headers,
         {{#if RequestBodies.length}}
-        {{#if HasFormRequest}}
-        body: formDataBody,
-        {{else}}
-        body,
-        {{/if}}
+        body: resultBody,
         {{/if}}
     };
 }
@@ -156,12 +175,15 @@ export function constructResponse(res: AdapterResponseArgs) {
     }) as Responses;
 }
 
-export const conversion: RequestConversion<typeof method, UrlParams, RequestParams, {{#if RequestBodies.length}}RequestBodies{{else}}{}{{/if}}, Responses, typeof callType> = {
+export const conversion = {
     method,
     url: constructUrl,
     callType,
+    {{#if RequestBodies.length}}
+    bodies: constructRequestBodyByMimeType,
+    {{/if}}
     request: constructRequest,
     response: constructResponse,
-};
+} satisfies RequestConversion<typeof method, UrlParams, RequestParams, {{#if RequestBodies.length}}RequestBodies{{else}}{}{{/if}}, Responses, typeof callType>;
 
 {{/with}}

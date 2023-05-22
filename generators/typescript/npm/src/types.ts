@@ -38,6 +38,10 @@ export type RequestConversion<TMethod extends HttpMethod, TUrlParams extends {},
     callType: TCallType;
     request: TransformRequest<TRequestParams, TRequestBodies, TCallType, AdapterRequestArgs>;
     response: TransformResponse<TResponses>;
-};
+} & (TCallType extends 'no-body' ? {} : {
+    bodies: {
+        [K in keyof TRequestBodies]: (input: TRequestBodies[K]) => unknown;
+    }
+});
 
 export type RequestConversions = Record<string, RequestConversion<HttpMethod, any, any, any, StandardResponse, TransformCallType>>;
