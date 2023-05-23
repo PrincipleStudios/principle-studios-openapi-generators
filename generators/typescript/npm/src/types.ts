@@ -33,6 +33,7 @@ export type TransformRequest<TRequestParams extends {}, TRequestBodies extends R
 export type TransformResponse<TResponses extends StandardResponse> = (args: AdapterResponseArgs) => TResponses;
 
 export type RequestConversion<TMethod extends HttpMethod, TUrlParams extends {}, TRequestParams extends TUrlParams, TRequestBodies extends RequestBodies, TResponses extends StandardResponse, TCallType extends TransformCallType> = {
+    name: string;
     method: TMethod;
     url: (params: TUrlParams) => string;
     callType: TCallType;

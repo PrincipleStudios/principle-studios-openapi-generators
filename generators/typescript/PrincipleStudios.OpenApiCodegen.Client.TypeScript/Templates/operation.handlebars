@@ -176,6 +176,7 @@ export function constructResponse(res: AdapterResponseArgs) {
 }
 
 export const conversion = {
+    name: '{{{Name}}}',
     method,
     url: constructUrl,
     callType,
@@ -184,6 +185,6 @@ export const conversion = {
     {{/if}}
     request: constructRequest,
     response: constructResponse,
-} satisfies RequestConversion<typeof method, UrlParams, RequestParams, {{#if RequestBodies.length}}RequestBodies{{else}}{}{{/if}}, Responses, typeof callType>;
+} as const satisfies RequestConversion<typeof method, UrlParams, RequestParams, {{#if RequestBodies.length}}RequestBodies{{else}}{}{{/if}}, Responses, typeof callType>;
 
 {{/with}}
