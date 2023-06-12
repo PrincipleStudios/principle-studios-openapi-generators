@@ -58,6 +58,7 @@
             <Output TaskParameter="Result" ItemName="OriginalNpmPackageVersion" />
         </JsonPeek>
         <Exec WorkingDirectory="$(ProjectDir)" Command="npm version $(Version)" IgnoreExitCode="true" />
+        <MakeDir Directories="$(PackageOutputPath)"/>
         <Exec WorkingDirectory="$(ProjectDir)" Command="npm pack --pack-destination $(PackageOutputPath)" />
         <Exec WorkingDirectory="$(ProjectDir)" Command="npm version $(OriginalNpmPackageVersion)" IgnoreExitCode="true" />
     </Target>

@@ -1,6 +1,6 @@
 # OpenAPI Codegen for a TypeScript-friendly RxJS client
 
-Provides a conversion method for
+Provides an adapter layer method for
 [@principlestudios/openapi-codegen-typescript][1] to integrate with rxjs.
 
     npm i -D @principlestudios/openapi-codegen-typescript-rxjs

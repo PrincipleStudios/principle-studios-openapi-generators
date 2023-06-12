@@ -15,9 +15,9 @@ internal static class GenerationUtilities
         await commonDirectory.PrepareOpenApiDirectory(documentName);
 
         var result = await commonDirectory.TsNode($@"
-            import {{ RequestOpts }} from '@principlestudios/openapi-codegen-typescript';
+            import {{ AdapterRequestArgs }} from '@principlestudios/openapi-codegen-typescript';
             import {{ conversion }} from './{documentName}/operations/{operationName}';
-            const request: RequestOpts = conversion.request({JsonConvert.SerializeObject(parameters)});
+            const request: AdapterRequestArgs = conversion.request({JsonConvert.SerializeObject(parameters)});
             console.log(JSON.stringify(request));
         ");
         return result;
@@ -28,9 +28,9 @@ internal static class GenerationUtilities
         await commonDirectory.PrepareOpenApiDirectory(documentName);
 
         var result = await commonDirectory.TsNode($@"
-            import {{ RequestOpts }} from '@principlestudios/openapi-codegen-typescript';
+            import {{ AdapterRequestArgs }} from '@principlestudios/openapi-codegen-typescript';
             import {{ conversion }} from './{documentName}/operations/{operationName}';
-            const request: RequestOpts = conversion.request({JsonConvert.SerializeObject(parameters)}, {JsonConvert.SerializeObject(body)}, {JsonConvert.SerializeObject(contentType)});
+            const request: AdapterRequestArgs = conversion.request({JsonConvert.SerializeObject(parameters)}, {JsonConvert.SerializeObject(body)}, {JsonConvert.SerializeObject(contentType)});
             console.log(JSON.stringify(request));
         ");
         return result;
@@ -55,10 +55,10 @@ internal static class GenerationUtilities
         await commonDirectory.PrepareOpenApiDirectory(documentName);
 
         var result = await commonDirectory.TsNode($@"
-            import {{ ResponseArgs }} from '@principlestudios/openapi-codegen-typescript';
+            import {{ AdapterResponseArgs }} from '@principlestudios/openapi-codegen-typescript';
             import {{ conversion, Responses }} from './{documentName}/operations/{operationName}';
             const responseBody: Responses['data'] = {(body.HasValue ? JsonConvert.SerializeObject(body.Value) : "undefined")};
-            const response: ResponseArgs = {{
+            const response: AdapterResponseArgs = {{
                 status: {statusCode},
                 response: responseBody,
                 getResponseHeader(headerName) {{

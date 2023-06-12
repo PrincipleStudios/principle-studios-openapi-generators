@@ -25,6 +25,15 @@ namespace PrincipleStudios.OpenApi.TypeScript
                         : parameters[0]
             );
 
+            result.RegisterHelper(
+                "ifEquals",
+                (BlockHelperOptions options, Context context, Arguments parameters) => {
+                    return parameters[0] is string s1 && parameters[1] is string s2
+                        ? s1 == s2 ? options.Template() : options.Inverse()
+                        : throw new InvalidOperationException($"Cannot compoare '{parameters[0]}' and '{parameters[1]}'");
+                }
+            );
+
             foreach (var resourceName in typeof(HandlebarsTemplateProcess).Assembly.GetManifestResourceNames().Where(n => n.EndsWith(".handlebars")))
                 result.AddTemplate(typeof(HandlebarsTemplateProcess).Assembly, resourceName);
 
