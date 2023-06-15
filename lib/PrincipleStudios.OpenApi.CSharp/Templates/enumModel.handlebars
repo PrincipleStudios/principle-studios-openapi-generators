@@ -9,7 +9,9 @@ namespace {{this.PackageName}}
     /// {{linewrap Description "
     /// "}}
     /// </summary>{{/if}}
-    {{#if Model.IsString}}[global::System.Text.Json.Serialization.JsonConverter(typeof(global::PrincipleStudios.OpenApiCodegen.Json.Extensions.JsonStringEnumPropertyNameConverter))]{{/if}}
+    {{#if Model.IsString}}[global::System.Text.Json.Serialization.JsonConverter(typeof(global::PrincipleStudios.OpenApiCodegen.Json.Extensions.JsonStringEnumPropertyNameConverter))]
+    [global::System.ComponentModel.TypeConverter("{{../this.PackageName}}.{{ClassName}}TypeConverter")]
+    {{/if}}
     public enum {{ClassName}}
     {
         {{#each EnumVars as |EnumVar|}}
@@ -21,5 +23,50 @@ namespace {{this.PackageName}}
 
         {{/each}}
     }
+
+    public class {{ClassName}}TypeConverter : global::System.ComponentModel.TypeConverter
+    {
+        public override bool CanConvertFrom(global::System.ComponentModel.ITypeDescriptorContext? context, global::System.Type sourceType)
+        {
+            return sourceType == typeof(string);
+        }
+
+        public override bool CanConvertTo(global::System.ComponentModel.ITypeDescriptorContext? context, global::System.Type? destinationType)
+        {
+            return destinationType == typeof(string);
+        }
+
+        public override object? ConvertFrom(global::System.ComponentModel.ITypeDescriptorContext? context, global::System.Globalization.CultureInfo? culture, object value)
+        {
+            if (value is not string s) return null;
+            switch (s)
+            {
+            {{#each EnumVars as |EnumVar|}}
+                case "{{{EnumVar.Value}}}":
+                    return {{../ClassName}}.{{EnumVar.Name}};
+            {{/each}}
+                default:
+                    return null;
+            }
+        }
+
+        public override object? ConvertTo(global::System.ComponentModel.ITypeDescriptorContext? context, global::System.Globalization.CultureInfo? culture, object? value, global::System.Type destinationType)
+        {
+            if (value == null) return null;
+            if (destinationType != typeof(string)) return null;
+
+
+            switch (({{ClassName}})value)
+            {
+            {{#each EnumVars as |EnumVar|}}
+                case {{../ClassName}}.{{EnumVar.Name}}:
+                    return "{{{EnumVar.Value}}}";
+            {{/each}}
+                default:
+                    return null;
+            }
+        }
+    }
+
 {{/with}}
 }
