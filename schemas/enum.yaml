@@ -36,3 +36,50 @@ paths:
                 enum: [player1,player2]
         '409':
           description: Tie
+  /rock-paper-scissors-query:
+    get:
+      operationId: playRockPaperScissorsQuery
+      parameters:
+        - name: player1
+          in: query
+          required: true
+          schema:
+            $ref: '#/components/schemas/Option'
+        - name: player2
+          in: query
+          required: true
+          schema:
+            $ref: '#/components/schemas/Option'
+      responses:
+        '200':
+          description: One player won
+          content:
+            application/json:
+              schema:
+                type: string
+                enum: [player1,player2]
+        '409':
+          description: Tie
+  /difficult-enum:
+    get:
+      operationId: difficultQueryStringEnum
+      parameters:
+        - name: enum
+          in: query
+          required: true
+          schema:
+            type: string
+            enum:
+              - player one
+              - '2'
+              - three!
+              - f0u|2
+              - fi%e
+              # - six" # TODO: source generators do not escape strings
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: string

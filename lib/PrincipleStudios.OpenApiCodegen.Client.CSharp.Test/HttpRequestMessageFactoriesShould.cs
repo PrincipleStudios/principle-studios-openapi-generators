@@ -5,6 +5,7 @@ using Microsoft.CodeAnalysis.Scripting;
 using PrincipleStudios.OpenApi.CSharp;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
@@ -57,6 +58,31 @@ public class HttpRequestMessageFactoriesShould : IClassFixture<TempDirectory>
         var jsonContent = await actualMessage.Content!.ReadAsStringAsync();
 
         CompareJson(jsonContent, new { player1 = "rock", player2 = "paper" });
+    }
+
+    [Fact]
+    public async Task SerializeEnumerationsInQuery()
+    {
+        var actualMessage = await GetRequestMessage("enum.yaml", @"PlayRockPaperScissorsQuery(player1: Option.Rock, player2: Option.Paper)");
+
+        Assert.Equal("GET", actualMessage.Method.Method);
+        Assert.Equal("rock-paper-scissors-query?player1=rock&player2=paper", actualMessage.RequestUri?.OriginalString);
+        Assert.Null(actualMessage.Content);
+    }
+
+    [Theory]
+    [InlineData("PlayerOne", "player+one")]
+    [InlineData("_2", "2")]
+    [InlineData("Three", "three!")]
+    [InlineData("F0u2", "f0u%7c2")]
+    [InlineData("FiE", "fi%25e")]
+    public async Task SerializeEnumerationsWithDifficultQueryStringEnums(string enumName, string queryValue)
+    {
+        var actualMessage = await GetRequestMessage("enum.yaml", $@"DifficultQueryStringEnum(_enum: DifficultQueryStringEnumEnum.{enumName})");
+
+        Assert.Equal("GET", actualMessage.Method.Method);
+        Assert.Equal($"difficult-enum?enum={queryValue}", actualMessage.RequestUri?.OriginalString);
+        Assert.Null(actualMessage.Content);
     }
 
     [Fact(Skip = "Test fails, see github #86")]

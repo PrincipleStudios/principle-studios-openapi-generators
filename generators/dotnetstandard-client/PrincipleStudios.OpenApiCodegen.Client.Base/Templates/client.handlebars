@@ -34,10 +34,10 @@ namespace {{PackageName}}
 {{#each RequestBody.AllParams}}{{#if IsQueryParam}}{{#if DataTypeEnumerable}}
             if ({{ParamName}} != null)
                 foreach (var entry in {{#if Required}}{{ParamName}}{{else}}global::PrincipleStudios.OpenApiCodegen.Json.Extensions.Optional.GetValueOrThrow({{ParamName}}){{/if}})
-                    query.Add("{{RawName}}", global::System.Convert.ToString(entry));
+                    query.Add("{{RawName}}", global::System.ComponentModel.TypeDescriptor.GetConverter(entry.GetType()).ConvertToString(entry));
 {{else}}
             if ({{ParamName}} != null)
-                query.Add("{{RawName}}", global::System.Convert.ToString({{#if Required}}{{ParamName}}{{else}}global::PrincipleStudios.OpenApiCodegen.Json.Extensions.Optional.GetValueOrThrow({{ParamName}}){{/if}}));
+                query.Add("{{RawName}}", global::System.ComponentModel.TypeDescriptor.GetConverter(typeof({{{DataType}}})).ConvertToString({{#if Required}}{{ParamName}}{{else}}global::PrincipleStudios.OpenApiCodegen.Json.Extensions.Optional.GetValueOrThrow({{ParamName}}){{/if}}));
 {{/if}}{{/if}}{{/each}}
             var requestMessage = new global::System.Net.Http.HttpRequestMessage(
                 global::System.Net.Http.HttpMethod.{{{Operation.HttpMethod}}},
