@@ -110,7 +110,7 @@ jobs:
     - name: Publish npm packages
       working-directory: ./artifacts/packages/Release
       run:  |
-        find . -type f -regex ".*\.tgz" -exec npm publish "{}" \;
+        find . -type f -regex ".*\.tgz" -exec npm publish "{}" --access public \;
       env:
         NODE_AUTH_TOKEN: "${{ github.ref == 'refs/heads/main' && secrets.NPM_TOKEN || secrets.GITHUB_TOKEN }}"
 
