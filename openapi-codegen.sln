@@ -63,6 +63,10 @@ Project("{13B669BE-BB05-4DDF-9536-439F39A36129}") = "npm-typescript", "generator
 EndProject
 Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "npm-typescript-rxjs", "generators\typescript-rxjs\npm\npm-typescript-rxjs.esproj", "{9CEDCF56-A7B6-4D20-9D1E-900AB7C56968}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Testing.TypeScript", "Testing.TypeScript", "{760C5E9A-630B-4C50-B08B-04B74C02E631}"
+EndProject
+Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "npm-typescript-msw", "generators\typescript-msw\npm\npm-typescript-msw.esproj", "{0D47BBFB-35A8-4EE9-9D46-84A73BDF2C7E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -349,6 +353,18 @@ Global
 		{9CEDCF56-A7B6-4D20-9D1E-900AB7C56968}.Release|x64.Build.0 = Release|Any CPU
 		{9CEDCF56-A7B6-4D20-9D1E-900AB7C56968}.Release|x86.ActiveCfg = Release|Any CPU
 		{9CEDCF56-A7B6-4D20-9D1E-900AB7C56968}.Release|x86.Build.0 = Release|Any CPU
+		{0D47BBFB-35A8-4EE9-9D46-84A73BDF2C7E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0D47BBFB-35A8-4EE9-9D46-84A73BDF2C7E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0D47BBFB-35A8-4EE9-9D46-84A73BDF2C7E}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{0D47BBFB-35A8-4EE9-9D46-84A73BDF2C7E}.Debug|x64.Build.0 = Debug|Any CPU
+		{0D47BBFB-35A8-4EE9-9D46-84A73BDF2C7E}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{0D47BBFB-35A8-4EE9-9D46-84A73BDF2C7E}.Debug|x86.Build.0 = Debug|Any CPU
+		{0D47BBFB-35A8-4EE9-9D46-84A73BDF2C7E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0D47BBFB-35A8-4EE9-9D46-84A73BDF2C7E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0D47BBFB-35A8-4EE9-9D46-84A73BDF2C7E}.Release|x64.ActiveCfg = Release|Any CPU
+		{0D47BBFB-35A8-4EE9-9D46-84A73BDF2C7E}.Release|x64.Build.0 = Release|Any CPU
+		{0D47BBFB-35A8-4EE9-9D46-84A73BDF2C7E}.Release|x86.ActiveCfg = Release|Any CPU
+		{0D47BBFB-35A8-4EE9-9D46-84A73BDF2C7E}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -376,6 +392,7 @@ Global
 		{11554C34-D81C-4F07-A38D-1E1995014AD2} = {BFF7FB51-DB27-4E46-B575-DDD11430DE8C}
 		{4F53F6E7-E23C-46FB-888C-F139E785F90F} = {6425AC08-57C0-4453-A78A-537E9514CE7B}
 		{9CEDCF56-A7B6-4D20-9D1E-900AB7C56968} = {6425AC08-57C0-4453-A78A-537E9514CE7B}
+		{0D47BBFB-35A8-4EE9-9D46-84A73BDF2C7E} = {760C5E9A-630B-4C50-B08B-04B74C02E631}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {DC32F906-1354-428B-BD36-FC718248DAFB}

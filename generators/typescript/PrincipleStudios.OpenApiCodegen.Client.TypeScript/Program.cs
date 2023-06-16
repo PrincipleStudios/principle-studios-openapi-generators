@@ -5,6 +5,7 @@ using Microsoft.OpenApi.Readers;
 using PrincipleStudios.OpenApi.Transformations;
 using PrincipleStudios.OpenApi.TypeScript;
 using System;
+using System.IO;
 using System.Linq;
 
 namespace PrincipleStudios.OpenApiCodegen.Client.TypeScript
@@ -48,7 +49,7 @@ namespace PrincipleStudios.OpenApiCodegen.Client.TypeScript
                 foreach (var error in diagnostic.Errors)
                 {
                     commandLineApplication.Error.WriteLine(
-                        "{subcategory}{errorCode}: {helpKeyword} {file}({lineNumber},{columnNumber}-{endLineNumber},{endColumnNumber}) {message}", 
+                        "{subcategory}{errorCode}: {helpKeyword} {file}({lineNumber},{columnNumber}-{endLineNumber},{endColumnNumber}) {message}",
                         null, "PSOPENAPI000", null, inputPath, 0, 0, 0, 0, error.Message);
                 }
                 if (clean && System.IO.Directory.Exists(outputPath))
@@ -88,7 +89,7 @@ namespace PrincipleStudios.OpenApiCodegen.Client.TypeScript
             var builder = new ConfigurationBuilder();
             builder.AddYamlStream(defaultJsonStream);
             if (optionsPath is { Length: > 0 })
-                builder.AddYamlFile(optionsPath);
+                builder.AddYamlFile(Path.Combine(Directory.GetCurrentDirectory(), optionsPath));
             var result = builder.Build().Get<TypeScriptSchemaOptions>()
                 ?? throw new InvalidOperationException("Could not construct options");
             return result;
