@@ -38,6 +38,7 @@
 		<OpenApiCSharpClientVersion>0.14.1</OpenApiCSharpClientVersion>
 		<OpenApiTypeScriptClientVersion>0.6.2</OpenApiTypeScriptClientVersion>
 		<OpenApiTypeScriptRxjsClientVersion>0.6.0</OpenApiTypeScriptRxjsClientVersion>
+		<OpenApiTypeScriptMswVersion>0.6.0</OpenApiTypeScriptMswVersion>
 		<!-- Should be incremented anytime one of the internal libraries changes -->
 		<SharedAnalyzerLibrariesVersion>0.4.0</SharedAnalyzerLibrariesVersion>
 	</PropertyGroup>

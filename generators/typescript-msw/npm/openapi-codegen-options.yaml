@@ -1,0 +1,5 @@
+types:
+  integer:
+    formats:
+      int64: number
+      uint64: number

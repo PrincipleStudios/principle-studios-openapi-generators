@@ -2,11 +2,11 @@ import { toRxjsApi } from '../src';
 import operations from './petstore/operations';
 import { conversion as findPetsConversion } from './petstore/operations/findPets';
 import { conversion as addPetConversion } from './petstore/operations/addPet';
-import { setupServer } from 'msw/node'
-import { mapRequestHandler } from './mwcMappedRestHandler';
+import { setupServer } from 'msw/node';
+import { toMswHandler } from './mwcMappedRestHandler';
 
-const findPets = mapRequestHandler(findPetsConversion);
-const addPet = mapRequestHandler(addPetConversion);
+const findPets = toMswHandler(findPetsConversion);
+const addPet = toMswHandler(addPetConversion);
 
 describe('typescript-rxjs petstore.yaml', () => {
     const wrapped = toRxjsApi(operations);
