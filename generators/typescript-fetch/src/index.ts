@@ -7,17 +7,29 @@ import type {
 	RequestConversions,
 	HttpMethod
 } from '@principlestudios/openapi-codegen-typescript';
-import type { RequestInit, Response } from 'node-fetch';
 
 const applicationJson = 'application/json';
 
-type FetchImplementation = (url: URL, requestInit: RequestInit) => Promise<Response>;
+type FetchRequest = {
+    method: HttpMethod,
+    headers: Record<string, string> | undefined;
+    body: FormData | string;
+}
+
+type FetchResponse = {
+    status: number;
+    headers: Headers;
+    json(): Promise<unknown>;
+    body: unknown; // ReadableStream, but may be different for Node vs DOM
+}
+
+type FetchImplementation = (url: URL, requestInit: FetchRequest) => Promise<FetchResponse>;
 
 export const toUrl = (prefix: string, requestOpts: AdapterRequestArgs) =>
 	`${prefix}${requestOpts.path}`;
 
 function fetchWithPrefix(prefix: string, fetchImpl: FetchImplementation) {
-	const createRequestArgs = (requestOpts: AdapterRequestArgs): [URL, RequestInit] => {
+	const createRequestArgs = (requestOpts: AdapterRequestArgs): [URL, FetchRequest] => {
 		const url = toUrl(prefix, requestOpts);
 
 		return [new URL(url), {
@@ -108,8 +120,8 @@ function applyTransform<TMethods extends RequestConversions>(
 
 export function toFetchApi<TMethods extends RequestConversions>(
 	api: TMethods,
-	prefix = '',
-	fetchImpl: FetchImplementation
+	fetchImpl: FetchImplementation,
+	prefix = ''
 ) {
 	return applyTransform(api, fetchWithPrefix(prefix, fetchImpl));
 }
