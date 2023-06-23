@@ -55,10 +55,11 @@ function fetchWithPrefix(prefix: string, fetchImpl: FetchImplementation) {
 				mimeType || (body ? applicationJson : undefined)
 			);
 			const response = await fetchImpl(...createRequestArgs(requestOpts));
+			const contentType = response.headers.get('Content-Type') ?? '';
 
 			return conversion.response({
 				status: response.status,
-				response: response.headers.get('Content-Type') === applicationJson
+				response: contentType.split(';')[0] === applicationJson
 					? await response.json()
 					: response.body,
 				getResponseHeader(header) {
