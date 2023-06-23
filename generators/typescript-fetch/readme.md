@@ -1,4 +1,4 @@
-# OpenAPI Codegen for TypeScript-friendly MSW testing
+# OpenAPI Codegen for a TypeScript-friendly Fetch client
 
 Provides an adapter layer method for
 [@principlestudios/openapi-codegen-typescript][1] to integrate with fetch.
@@ -13,7 +13,6 @@ This will provide a corresponding bin to generate the typescript files.
 
 You can then create an API wrapper such as:
 
-    import { setupServer } from 'msw/node';
     import { toFetchApi } from '@principlestudios/openapi-codegen-typescript-fetch';
     import operations from './api-generated/operations';
 
