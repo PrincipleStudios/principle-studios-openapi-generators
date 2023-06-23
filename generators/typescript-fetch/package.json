@@ -1,13 +1,13 @@
 {
-  "name": "@principlestudios/openapi-codegen-typescript-msw",
+  "name": "@principlestudios/openapi-codegen-typescript-fetch",
   "version": "0.4.0",
-  "description": "A typescript code generator for principled development to assist with testing using MSW",
+  "description": "A typescript code generator for principled development using the fetch API",
   "scripts": {
     "build": "tsc --project tsconfig.build.json",
     "pretsc:check": "npm run generate-no-refs && npm run generate-petstore && npm run generate-headers",
-    "generate-no-refs": "openapi-codegen-typescript -o ./openapi-codegen-options.yaml ../../../schemas/no-refs.yaml tests/no-refs/",
-    "generate-petstore": "openapi-codegen-typescript -o ./openapi-codegen-options.yaml ../../../schemas/petstore.yaml tests/petstore/",
-    "generate-headers": "openapi-codegen-typescript -o ./openapi-codegen-options.yaml ../../../schemas/headers.yaml tests/headers/",
+    "generate-no-refs": "openapi-codegen-typescript -o ./openapi-codegen-options.yaml ../../schemas/no-refs.yaml tests/no-refs/",
+    "generate-petstore": "openapi-codegen-typescript -o ./openapi-codegen-options.yaml ../../schemas/petstore.yaml tests/petstore/",
+    "generate-headers": "openapi-codegen-typescript -o ./openapi-codegen-options.yaml ../../schemas/headers.yaml tests/headers/",
     "tsc:check": "tsc",
     "pretest": "npm run tsc:check",
     "test": "jest",
@@ -24,13 +24,10 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/PrincipleStudios/principle-studios-openapi-generators.git",
-    "directory": "generators/typescript-msw"
+    "directory": "generators/typescript-fetch"
   },
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
-  "dependencies": {
-    "msw": "^1.2.2"
-  },
   "peerDependencies": {
     "@principlestudios/openapi-codegen-typescript": "*"
   },
@@ -39,16 +36,16 @@
     "@babel/core": "^7.15.5",
     "@babel/preset-env": "^7.15.6",
     "@babel/preset-typescript": "^7.21.5",
-    "@principlestudios/openapi-codegen-typescript": "file:../../typescript/npm",
+    "@principlestudios/openapi-codegen-typescript": "file:../typescript/npm",
+    "@principlestudios/openapi-codegen-typescript-msw": "file:../typescript-msw/npm",
     "@types/eslint": "^7.28.0",
     "@types/jest": "^27.0.1",
-    "@types/node": "^16.9.1",
-    "@types/node-fetch": "^2.6.4",
     "@typescript-eslint/eslint-plugin": "^4.31.1",
     "@typescript-eslint/parser": "^4.31.1",
     "eslint": "^7.32.0",
     "jest": "^27.2.0",
-    "node-fetch": "^2.6.11",
+    "msw": "^1.2.2",
+    "node-fetch": "^3.3.1",
     "typescript": "^4.9.5"
   }
 }
