@@ -37,7 +37,7 @@ namespace PrincipleStudios.OpenApi.CSharp
             return schema switch
             {
                 { Reference: not null, UnresolvedReference: false } => false,
-                { Type: "string", Enum: { Count: > 1 } } => true,
+                { Type: "string", Enum: { Count: > 0 } } => true,
                 { AnyOf: { Count: > 1 } } => true,
                 { OneOf: { Count: > 1 } } => true,
                 { AllOf: { Count: > 1 } } => true,
@@ -64,7 +64,7 @@ namespace PrincipleStudios.OpenApi.CSharp
                 { AllOf: { Count: > 1 } } => true,
                 { AnyOf: { Count: > 1 } } => true,
                 { OneOf: { Count: > 1 } } => true,
-                { Type: "string", Enum: { Count: > 1 } } => true,
+                { Type: "string", Enum: { Count: > 0 } } => true,
                 { Type: "array", Items: OpenApiSchema inner } => false,
                 { Type: string type, Format: var format, Properties: { Count: 0 }, Enum: { Count: 0 } } => options.Find(type, format) == "object",
                 { Type: "object", Format: null } => true,
