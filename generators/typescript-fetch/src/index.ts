@@ -5,124 +5,148 @@ import type {
 	TransformCallType,
 	AdapterRequestArgs,
 	RequestConversions,
-	HttpMethod
+	HttpMethod,
+	AdapterResponseArgs,
 } from '@principlestudios/openapi-codegen-typescript';
 
 const applicationJson = 'application/json';
 
+type AnyObject = Record<string, any>;
+type EmptyObject = Record<never, never>;
+type AnyRequestConversion = RequestConversion<
+	HttpMethod,
+	AnyObject,
+	AnyObject,
+	RequestBodies,
+	StandardResponse,
+	TransformCallType
+>;
+type IfKeyless<T, TTrue, TFalse> = EmptyObject extends T ? TTrue : TFalse;
+
 type FetchRequest = {
-    method: HttpMethod,
-    headers: Record<string, string> | undefined;
-    body: FormData | string;
-}
+	method: HttpMethod;
+	headers: Record<string, string> | undefined;
+	body: FormData | string;
+};
 
 type FetchResponse = {
-    status: number;
-    headers: Headers;
-    json(): Promise<unknown>;
-    body: unknown; // ReadableStream, but may be different for Node vs DOM
-}
+	status: number;
+	headers: Headers;
+	json(): Promise<unknown>;
+	body: unknown; // ReadableStream, but may be different for Node vs DOM
+};
 
-type FetchImplementation = (url: URL, requestInit: FetchRequest) => Promise<FetchResponse>;
+export type BaseFetchImplementation = (url: string | URL, requestInit: FetchRequest) => Promise<FetchResponse>;
+export type FetchImplementation<TExtra> = (
+	...params: [...Parameters<BaseFetchImplementation>, TExtra]
+) => Promise<FetchResponse>;
 
-export const toUrl = (prefix: string, requestOpts: AdapterRequestArgs) =>
-	`${prefix}${requestOpts.path}`;
+function createRequestArgs(requestOpts: AdapterRequestArgs): Parameters<BaseFetchImplementation> {
+	const url = requestOpts.path;
 
-function fetchWithPrefix(prefix: string, fetchImpl: FetchImplementation) {
-	const createRequestArgs = (requestOpts: AdapterRequestArgs): [URL, FetchRequest] => {
-		const url = toUrl(prefix, requestOpts);
-
-		return [new URL(url), {
+	return [
+		url,
+		{
 			method: requestOpts.method,
-			headers: requestOpts.headers ? Object.fromEntries(Object.entries(requestOpts.headers).filter((t): t is [string, string] => t[1] !== null)) : undefined,
+			headers: requestOpts.headers
+				? Object.fromEntries(Object.entries(requestOpts.headers).filter((t): t is [string, string] => t[1] !== null))
+				: undefined,
 			body:
 				requestOpts.headers && requestOpts.headers['Content-Type'] === 'application/x-www-form-urlencoded'
-					? requestOpts.body as FormData
+					? (requestOpts.body as FormData)
 					: JSON.stringify(requestOpts.body),
-		}];
-	};
+		},
+	];
+}
 
-	return function fetchRequest<
-		TParams extends {},
-		TBody extends RequestBodies,
-		TResponse extends StandardResponse,
-		TCallType extends TransformCallType
-	>(conversion: RequestConversion<HttpMethod, any, TParams, TBody, TResponse, TCallType>) {
-		async function transform({ params = {}, body = undefined, mimeType = undefined }: any = {}): Promise<TResponse> {
-			const requestOpts: AdapterRequestArgs = conversion.request(
-				params,
-				body,
-				mimeType || (body ? applicationJson : undefined)
-			);
-			const response = await fetchImpl(...createRequestArgs(requestOpts));
-			const contentType = response.headers.get('Content-Type') ?? '';
-
-			return conversion.response({
-				status: response.status,
-				response: contentType.split(';')[0] === applicationJson
-					? await response.json()
-					: response.body,
-				getResponseHeader(header) {
-					return response.headers.get(header);
-				},
-			});
-		}
-		return transform;
+async function createResponseArgs(
+	fetchResponse: Awaited<ReturnType<BaseFetchImplementation>>
+): Promise<AdapterResponseArgs> {
+	const response = await fetchResponse;
+	const contentType = response.headers.get('Content-Type') ?? '';
+	return {
+		status: response.status,
+		response: contentType.split(';')[0] === applicationJson ? await response.json() : response.body,
+		getResponseHeader(header) {
+			return response.headers.get(header);
+		},
 	};
 }
 
-type ParamPart<TParams> = {} extends TParams ? { params?: TParams } : { params: TParams };
-type BodyPartInner<TBodies extends RequestBodies, Mime extends keyof TBodies> = Mime extends 'application/json'
-	? { body: TBodies['application/json']; mimeType?: 'application/json' }
-	: { body: TBodies[Mime]; mimeType: Mime };
-type BodyPart<
-	TBodies extends RequestBodies,
-	Mime extends keyof TBodies,
-	TCallType extends TransformCallType
-> = TCallType extends 'no-body'
-	? {}
+export function toFetchOperation<
+	TParams extends AnyObject,
+	TBody extends RequestBodies,
+	TResponse extends StandardResponse,
+	TCallType extends TransformCallType,
+	TExtra
+>(
+	fetchImpl: FetchImplementation<TExtra>,
+	conversion: RequestConversion<HttpMethod, AnyObject, TParams, TBody, TResponse, TCallType>
+): Converted<AnyRequestConversion, TExtra> {
+	return async function transform(...[param]): Promise<TResponse> {
+		const { params = {}, body = undefined, extra } = param ?? {};
+		const requestArgs: AdapterRequestArgs = conversion.request(
+			params as TParams,
+			body as TBody['application/json'],
+			(body ? applicationJson : undefined) as keyof TBody
+		);
+		const fetchArgs = createRequestArgs(requestArgs);
+		const fetchResponse = await fetchImpl(...fetchArgs, extra as TExtra);
+		const adapterResponseArgs = await createResponseArgs(fetchResponse);
+		return conversion.response(adapterResponseArgs);
+	};
+}
+
+type ParamPart<TParams> = IfKeyless<TParams, { params?: TParams }, { params: TParams }>;
+type NoBody = { body?: undefined };
+type BodyPartInner<TBodies extends RequestBodies> = { body: TBodies['application/json'] };
+type BodyPart<TBodies extends RequestBodies, TCallType extends TransformCallType> = TCallType extends 'no-body'
+	? NoBody
 	: TCallType extends 'optional'
-	? BodyPartInner<TBodies, Mime> | {}
-	: BodyPartInner<TBodies, Mime>;
+	? BodyPartInner<TBodies> | NoBody
+	: BodyPartInner<TBodies>;
+type ExtraPart<TExtra> = undefined extends TExtra ? { extra?: TExtra } : { extra: TExtra };
 
 type RequestParam<
 	TCallType extends TransformCallType,
 	TParams,
 	TBodies extends RequestBodies,
-	Mime extends keyof TBodies
-> = ParamPart<TParams> & BodyPart<TBodies, Mime, TCallType>;
+	TExtra
+> = ParamPart<TParams> & BodyPart<TBodies, TCallType> & ExtraPart<TExtra>;
 
-type Converted<TConversion extends RequestConversion<any, any, any, any, any, any>> = TConversion extends RequestConversion<
-	any,
-	any,
+type ConvertedParams<TCallType extends TransformCallType, TParams, TBodies extends RequestBodies, TExtra> = IfKeyless<
+	RequestParam<TCallType, TParams, TBodies, TExtra>,
+	[req?: RequestParam<TCallType, TParams, TBodies, TExtra>],
+	[req: RequestParam<TCallType, TParams, TBodies, TExtra>]
+>;
+
+type Converted<TConversion extends AnyRequestConversion, TExtra> = TConversion extends RequestConversion<
+	HttpMethod,
+	AnyObject,
 	infer TParams,
 	infer TBodies,
 	infer TResponse,
 	infer TCallType
 >
-	? {} extends RequestParam<TCallType, TParams, TBodies, keyof TBodies>
-		? <Mime extends keyof TBodies>(req?: RequestParam<TCallType, TParams, TBodies, Mime>) => Promise<TResponse>
-		: <Mime extends keyof TBodies>(req: RequestParam<TCallType, TParams, TBodies, Mime>) => Promise<TResponse>
+	? (...args: ConvertedParams<TCallType, TParams, TBodies, TExtra>) => Promise<TResponse>
 	: never;
 
-function applyTransform<TMethods extends RequestConversions>(
+function applyTransform<TMethods extends RequestConversions, TExtra>(
 	methods: TMethods,
-	transform: (input: RequestConversion<any, any, any, any, any, any>) => Converted<RequestConversion<any, any, any, any, any, any>>
+	transform: (input: AnyRequestConversion) => Converted<AnyRequestConversion, TExtra>
 ): {
-	[K in keyof TMethods]: Converted<TMethods[K]>;
+	[K in keyof TMethods]: Converted<TMethods[K], TExtra>;
 } {
-	return Object.keys(methods).reduce(
-		(prev, next) => ({ ...prev, [next]: transform(methods[next]) }),
-		{} as {
-			[K in keyof TMethods]: Converted<TMethods[K]>;
-		}
-	);
+	return Object.fromEntries(
+		Object.entries(methods).map(([operationId, conversion]) => [operationId, transform(conversion)])
+	) as {
+		[K in keyof TMethods]: Converted<TMethods[K], TExtra>;
+	};
 }
 
-export function toFetchApi<TMethods extends RequestConversions>(
+export function toFetchApi<TMethods extends RequestConversions, TExtra>(
 	api: TMethods,
-	fetchImpl: FetchImplementation,
-	prefix = ''
+	fetchImpl: FetchImplementation<TExtra>
 ) {
-	return applyTransform(api, fetchWithPrefix(prefix, fetchImpl));
+	return applyTransform<TMethods, TExtra>(api, (conversion) => toFetchOperation(fetchImpl, conversion));
 }
