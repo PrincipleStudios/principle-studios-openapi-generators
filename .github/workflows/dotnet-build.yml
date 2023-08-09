@@ -88,6 +88,11 @@ jobs:
     #     repo_token: ${{ secrets.GITHUB_TOKEN }}
     #     minimum_coverage: 90
     #     fail_below_threshold: false
+    - name: Test MVC examples build
+      if: ${{ github.ref != 'refs/heads/main' }}
+      run: ./examples/dotnetcore-server-interfaces/tooling/build-examples.ps1 -VersionSuffix "sha.$VERSION_SUFFIX"
+      env:
+        VERSION_SUFFIX: ${{ github.ref != 'refs/heads/main' && github.sha || '' }}
 
     ###########
     # PUBLISH
@@ -115,19 +120,3 @@ jobs:
         find . -type f -regex ".*\.tgz" -exec npm publish "{}" --access public \;
       env:
         NODE_AUTH_TOKEN: "${{ github.ref == 'refs/heads/main' && secrets.NPM_TOKEN || secrets.GITHUB_TOKEN }}"
-
-    ######################
-    # FINAL VERIFICATIONS
-  verify:
-    runs-on: ubuntu-latest
-    permissions:
-      packages: read
-    needs: build
-    if: ${{ github.ref != 'refs/heads/main' }}
-    steps:
-    - uses: actions/checkout@v3
-    - name: Test MVC examples build
-      run: ./examples/dotnetcore-server-interfaces/tooling/build-examples.ps1 -VersionSuffix "sha.$VERSION_SUFFIX" -githubToken $GITHUB_TOKEN
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        VERSION_SUFFIX: ${{ github.ref != 'refs/heads/main' && github.sha || '' }}
