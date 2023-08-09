@@ -35,7 +35,7 @@ namespace PrincipleStudios.OpenApi.TypeScript
             return schema switch
             {
                 { Reference: not null, UnresolvedReference: false } => false,
-                { Type: "string", Enum: { Count: > 1 } } => true,
+                { Type: "string", Enum: { Count: > 0 } } => true,
                 { AnyOf: { Count: > 1 } } => true,
                 { OneOf: { Count: > 1 } } => true,
                 { AllOf: { Count: > 1 } } => true,
