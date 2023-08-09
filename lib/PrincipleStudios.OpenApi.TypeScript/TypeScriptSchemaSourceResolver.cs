@@ -1,5 +1,6 @@
 ﻿using HandlebarsDotNet;
 using HandlebarsDotNet.Runtime;
+using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using PrincipleStudios.OpenApi.Transformations;
 using System;
@@ -21,13 +22,43 @@ namespace PrincipleStudios.OpenApi.TypeScript
         private readonly TypeScriptSchemaOptions options;
         private readonly HandlebarsFactory handlebarsFactory;
         private readonly string versionInfo;
-
+        private Templates.PartialHeader? header;
 
         public TypeScriptSchemaSourceResolver(TypeScriptSchemaOptions options, HandlebarsFactory handlebarsFactory, string versionInfo)
         {
             this.options = options;
             this.handlebarsFactory = handlebarsFactory;
             this.versionInfo = versionInfo;
+        }
+
+        protected override IEnumerable<SourceEntry> GetAdditionalSources(IEnumerable<OpenApiSchema> referencedSchemas, OpenApiTransformDiagnostic diagnostic)
+        {
+            if (header == null) yield break;
+            var exportStatements = this.GetExportStatements(referencedSchemas, options, "./models/").ToArray();
+            if (exportStatements.Length > 0)
+                yield return new SourceEntry()
+                {
+                    Key = "models/index.ts",
+                    SourceText = HandlebarsTemplateProcess.ProcessModelBarrelFile(
+                        new Templates.ModelBarrelFile(header, exportStatements),
+                        handlebarsFactory.Handlebars
+                    ),
+                };
+        }
+
+        public override void EnsureSchemasRegistered(IOpenApiElement element, OpenApiContext context, OpenApiTransformDiagnostic diagnostic)
+        {
+            var info = context.Select(v => v.Element).OfType<OpenApiDocument>().Last().Info;
+
+            header = new Templates.PartialHeader(
+                AppName: info.Title,
+                AppDescription: info.Description,
+                Version: info.Version,
+                InfoEmail: info.Contact?.Email,
+                CodeGeneratorVersionInfo: versionInfo
+            );
+
+            base.EnsureSchemasRegistered(element, context, diagnostic);
         }
 
         public bool MakeReference(OpenApiSchema schema)
@@ -118,6 +149,7 @@ namespace PrincipleStudios.OpenApi.TypeScript
         }
 
         protected readonly Regex _2xxRegex = new Regex("2[0-9]{2}");
+
         protected virtual string ContextToIdentifier(OpenApiContext context)
         {
             var (parts, remaining) = Simplify(context.Entries);
