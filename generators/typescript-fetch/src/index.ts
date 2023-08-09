@@ -36,8 +36,8 @@ type FetchResponse = {
 	body: unknown; // ReadableStream, but may be different for Node vs DOM
 };
 
-type BaseFetchImplementation = (url: string | URL, requestInit: FetchRequest) => Promise<FetchResponse>;
-type FetchImplementation<TExtra> = (
+export type BaseFetchImplementation = (url: string | URL, requestInit: FetchRequest) => Promise<FetchResponse>;
+export type FetchImplementation<TExtra> = (
 	...params: [...Parameters<BaseFetchImplementation>, TExtra]
 ) => Promise<FetchResponse>;
 
@@ -73,27 +73,27 @@ async function createResponseArgs(
 	};
 }
 
-function adaptFetch<TExtra>(fetchImpl: FetchImplementation<TExtra>) {
-	return function fetchRequest<
-		TParams extends AnyObject,
-		TBody extends RequestBodies,
-		TResponse extends StandardResponse,
-		TCallType extends TransformCallType
-	>(
-		conversion: RequestConversion<HttpMethod, AnyObject, TParams, TBody, TResponse, TCallType>
-	): Converted<AnyRequestConversion, TExtra> {
-		return async function transform(...[param]): Promise<TResponse> {
-			const { params = {}, body = undefined, extra } = param ?? {};
-			const requestArgs: AdapterRequestArgs = conversion.request(
-				params as TParams,
-				body as TBody['application/json'],
-				(body ? applicationJson : undefined) as keyof TBody
-			);
-			const fetchArgs = createRequestArgs(requestArgs);
-			const fetchResponse = await fetchImpl(...fetchArgs, extra as TExtra);
-			const adapterResponseArgs = await createResponseArgs(fetchResponse);
-			return conversion.response(adapterResponseArgs);
-		};
+export function toFetchOperation<
+	TParams extends AnyObject,
+	TBody extends RequestBodies,
+	TResponse extends StandardResponse,
+	TCallType extends TransformCallType,
+	TExtra
+>(
+	fetchImpl: FetchImplementation<TExtra>,
+	conversion: RequestConversion<HttpMethod, AnyObject, TParams, TBody, TResponse, TCallType>
+): Converted<AnyRequestConversion, TExtra> {
+	return async function transform(...[param]): Promise<TResponse> {
+		const { params = {}, body = undefined, extra } = param ?? {};
+		const requestArgs: AdapterRequestArgs = conversion.request(
+			params as TParams,
+			body as TBody['application/json'],
+			(body ? applicationJson : undefined) as keyof TBody
+		);
+		const fetchArgs = createRequestArgs(requestArgs);
+		const fetchResponse = await fetchImpl(...fetchArgs, extra as TExtra);
+		const adapterResponseArgs = await createResponseArgs(fetchResponse);
+		return conversion.response(adapterResponseArgs);
 	};
 }
 
@@ -148,5 +148,5 @@ export function toFetchApi<TMethods extends RequestConversions, TExtra>(
 	api: TMethods,
 	fetchImpl: FetchImplementation<TExtra>
 ) {
-	return applyTransform<TMethods, TExtra>(api, adaptFetch(fetchImpl));
+	return applyTransform<TMethods, TExtra>(api, (conversion) => toFetchOperation(fetchImpl, conversion));
 }

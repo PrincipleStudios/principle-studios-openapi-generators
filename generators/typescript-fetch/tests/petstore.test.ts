@@ -1,10 +1,11 @@
-import { toFetchApi } from '../src';
+import { FetchImplementation, toFetchApi, toFetchOperation } from '../src';
 import { toMswHandler, toMswResponse } from '@principlestudios/openapi-codegen-typescript-msw';
 import operations from './petstore/operations';
 import { setupServer } from 'msw/node'
 import fetch from 'node-fetch';
 
-const fetchApi = toFetchApi(operations, (url, params) => fetch('http://localhost' + url, params));
+const fetchImpl: FetchImplementation<unknown>  = (url, params) => fetch('http://localhost' + url, params);
+const fetchApi = toFetchApi(operations, fetchImpl);
 const findPets = toMswHandler(operations.findPets);
 const addPet = toMswHandler(operations.addPet);
 
@@ -14,6 +15,19 @@ describe('typescript-rxjs petstore.yaml', () => {
     beforeAll(() => server.listen());
     afterEach(() => server.resetHandlers());
     afterAll(() => server.close());
+
+    it('can wrap a post as a single operation', async () => {
+        const addPetOperation = toFetchOperation(fetchImpl, operations.addPet);
+        const inputPet = { name: 'Fido', tag: 'dog' };
+        const outputPet = { ...inputPet, id: 1234 };
+        server.use(
+            addPet({ params: {}, body: inputPet, mimeType: 'application/json'}, { statusCode: 200, data: { ...outputPet }, mimeType: 'application/json' })
+        );
+        const response = await addPetOperation({ body: inputPet });
+        expect(response.statusCode).toBe(200);
+        expect(response.response.getResponseHeader('Content-Type')).toBe('application/json');
+        expect(response.data).toEqual(outputPet);
+    });
 
     it('can wrap a post', async () => {
         const inputPet = { name: 'Fido', tag: 'dog' };
