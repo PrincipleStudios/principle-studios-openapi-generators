@@ -10,6 +10,8 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
+    permissions:
+      packages: write
 
     steps:
     - uses: actions/checkout@v3
@@ -118,6 +120,8 @@ jobs:
     # FINAL VERIFICATIONS
   verify:
     runs-on: ubuntu-latest
+    permissions:
+      packages: read
     needs: build
     if: ${{ github.ref != 'refs/heads/main' }}
     steps:
