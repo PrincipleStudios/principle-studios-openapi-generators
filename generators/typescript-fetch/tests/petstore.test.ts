@@ -4,7 +4,7 @@ import operations from './petstore/operations';
 import { setupServer } from 'msw/node'
 import fetch from 'node-fetch';
 
-const fetchApi = toFetchApi(operations, fetch, 'http://localhost');
+const fetchApi = toFetchApi(operations, (url, params) => fetch('http://localhost' + url, params));
 const findPets = toMswHandler(operations.findPets);
 const addPet = toMswHandler(operations.addPet);
 
