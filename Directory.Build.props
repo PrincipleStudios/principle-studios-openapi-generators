@@ -34,9 +34,9 @@
 
 	<PropertyGroup>
 		<OpenApiJsonExtensionsVersion>0.14.0</OpenApiJsonExtensionsVersion>
-		<OpenApiMvcServerVersion>0.14.1</OpenApiMvcServerVersion>
-		<OpenApiCSharpClientVersion>0.14.1</OpenApiCSharpClientVersion>
-		<OpenApiTypeScriptClientVersion>0.6.2</OpenApiTypeScriptClientVersion>
+		<OpenApiMvcServerVersion>0.14.2</OpenApiMvcServerVersion>
+		<OpenApiCSharpClientVersion>0.14.2</OpenApiCSharpClientVersion>
+		<OpenApiTypeScriptClientVersion>0.6.3</OpenApiTypeScriptClientVersion>
 		<OpenApiTypeScriptRxjsClientVersion>0.6.0</OpenApiTypeScriptRxjsClientVersion>
 		<OpenApiTypeScriptMswVersion>0.6.0</OpenApiTypeScriptMswVersion>
 		<OpenApiTypeScriptFetchVersion>0.7.0</OpenApiTypeScriptFetchVersion>
