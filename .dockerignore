@@ -7,5 +7,6 @@ node_modules/
 .vs/
 **/*.user
 **/*.binlog
-artifacts/
+artifacts/**
+!artifacts/packages/Release/
 .idea/
