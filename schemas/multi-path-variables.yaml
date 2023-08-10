@@ -55,3 +55,26 @@ paths:
               schema:
                 type: string
                 format: binary
+  /photo/{id}/meta/{key}:
+    get:
+      operationId: getPhotoMeta
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: key
+          in: path
+          required: true
+          schema:
+            type: string
+            enum: [author, latlong]
+      responses:
+        '200':
+          description: Photo was found, providing meta
+          content:
+            application/json:
+              schema:
+                type: object
+                format: any
