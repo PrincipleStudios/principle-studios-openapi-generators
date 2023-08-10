@@ -4,10 +4,11 @@
   "description": "A typescript code generator for principled development using the fetch API",
   "scripts": {
     "build": "tsc --project tsconfig.build.json",
-    "pretsc:check": "npm run generate-no-refs && npm run generate-petstore && npm run generate-headers",
+    "pretsc:check": "npm run generate-no-refs && npm run generate-petstore && npm run generate-headers && npm run generate-multi-path-variables",
     "generate-no-refs": "openapi-codegen-typescript -o ./openapi-codegen-options.yaml ../../schemas/no-refs.yaml tests/no-refs/",
     "generate-petstore": "openapi-codegen-typescript -o ./openapi-codegen-options.yaml ../../schemas/petstore.yaml tests/petstore/",
     "generate-headers": "openapi-codegen-typescript -o ./openapi-codegen-options.yaml ../../schemas/headers.yaml tests/headers/",
+    "generate-multi-path-variables": "openapi-codegen-typescript -o ./openapi-codegen-options.yaml ../../schemas/multi-path-variables.yaml tests/multi-path-variables/",
     "tsc:check": "tsc",
     "pretest": "npm run tsc:check",
     "test": "jest",

@@ -9,7 +9,7 @@ const fetchApi = toFetchApi(operations, fetchImpl);
 const findPets = toMswHandler(operations.findPets);
 const addPet = toMswHandler(operations.addPet);
 
-describe('typescript-rxjs petstore.yaml', () => {
+describe('typescript-fetch petstore.yaml', () => {
     const server = setupServer();
 
     beforeAll(() => server.listen());

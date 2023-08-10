@@ -39,7 +39,7 @@
 		<OpenApiTypeScriptClientVersion>0.6.3</OpenApiTypeScriptClientVersion>
 		<OpenApiTypeScriptRxjsClientVersion>0.6.0</OpenApiTypeScriptRxjsClientVersion>
 		<OpenApiTypeScriptMswVersion>0.6.0</OpenApiTypeScriptMswVersion>
-		<OpenApiTypeScriptFetchVersion>0.7.0</OpenApiTypeScriptFetchVersion>
+		<OpenApiTypeScriptFetchVersion>0.7.1</OpenApiTypeScriptFetchVersion>
 		<!-- Should be incremented anytime one of the internal libraries changes -->
 		<SharedAnalyzerLibrariesVersion>0.4.0</SharedAnalyzerLibrariesVersion>
 	</PropertyGroup>

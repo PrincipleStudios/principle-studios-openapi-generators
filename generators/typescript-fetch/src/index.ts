@@ -11,13 +11,14 @@ import type {
 
 const applicationJson = 'application/json';
 
-type AnyObject = Record<string, any>;
+type AnyObject = any;
+type AnyRequestBodies = any;
 type EmptyObject = Record<never, never>;
 type AnyRequestConversion = RequestConversion<
 	HttpMethod,
 	AnyObject,
 	AnyObject,
-	RequestBodies,
+	AnyRequestBodies,
 	StandardResponse,
 	TransformCallType
 >;
@@ -74,27 +75,26 @@ async function createResponseArgs(
 }
 
 export function toFetchOperation<
-	TParams extends AnyObject,
-	TBody extends RequestBodies,
-	TResponse extends StandardResponse,
-	TCallType extends TransformCallType,
+	TConversion extends AnyRequestConversion,
 	TExtra
 >(
 	fetchImpl: FetchImplementation<TExtra>,
-	conversion: RequestConversion<HttpMethod, AnyObject, TParams, TBody, TResponse, TCallType>
-): Converted<AnyRequestConversion, TExtra> {
-	return async function transform(...[param]): Promise<TResponse> {
+	conversion: TConversion
+): Converted<TConversion, TExtra> {
+	type TParameters = Parameters<Converted<TConversion, TExtra>>;
+	type TResponse = Awaited<ReturnType<Converted<TConversion, TExtra>>>;
+	return async function transform(...[param]: TParameters): Promise<TResponse> {
 		const { params = {}, body = undefined, extra } = param ?? {};
 		const requestArgs: AdapterRequestArgs = conversion.request(
-			params as TParams,
-			body as TBody['application/json'],
-			(body ? applicationJson : undefined) as keyof TBody
+			params,
+			body,
+			(body ? applicationJson : undefined) as keyof AnyRequestBodies as keyof RequestBodies
 		);
 		const fetchArgs = createRequestArgs(requestArgs);
 		const fetchResponse = await fetchImpl(...fetchArgs, extra as TExtra);
 		const adapterResponseArgs = await createResponseArgs(fetchResponse);
-		return conversion.response(adapterResponseArgs);
-	};
+		return conversion.response(adapterResponseArgs) as TResponse;
+	} as unknown as Converted<TConversion, TExtra>;
 }
 
 type ParamPart<TParams> = IfKeyless<TParams, { params?: TParams }, { params: TParams }>;
