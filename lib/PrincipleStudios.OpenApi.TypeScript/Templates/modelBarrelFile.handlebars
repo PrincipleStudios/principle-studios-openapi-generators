@@ -1,0 +1,8 @@
+{{>partial_header Header}}
+{{#each Exports}}
+export {
+{{#each Members}}
+    {{#if IsType}}type {{/if}}{{{MemberName}}},
+{{/each}}
+} from '{{Path}}';
+{{/each}}

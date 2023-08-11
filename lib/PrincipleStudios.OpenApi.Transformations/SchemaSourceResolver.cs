@@ -30,13 +30,16 @@ namespace PrincipleStudios.OpenApi.Transformations
             return referencedSchemas[schema].Inline;
         }
 
-        public IEnumerable<SourceEntry> GetSources(OpenApiTransformDiagnostic diagnostic) => 
-            from entry in referencedSchemas.Values
-            let sourceEntry = entry.GetSourceEntry?.Invoke()
-            where sourceEntry != null
-            select sourceEntry.Value;
+        public IEnumerable<SourceEntry> GetSources(OpenApiTransformDiagnostic diagnostic) =>
+            (from entry in referencedSchemas.Values
+             let sourceEntry = entry.GetSourceEntry?.Invoke()
+             where sourceEntry != null
+             select sourceEntry.Value)
+            .Concat(GetAdditionalSources(referencedSchemas.Values.Select(v => v.Schema), diagnostic));
 
-        public void EnsureSchemasRegistered(Microsoft.OpenApi.Interfaces.IOpenApiElement element, OpenApiContext context, OpenApiTransformDiagnostic diagnostic)
+        protected virtual IEnumerable<SourceEntry> GetAdditionalSources(IEnumerable<OpenApiSchema> referencedSchemas, OpenApiTransformDiagnostic diagnostic) => Enumerable.Empty<SourceEntry>();
+
+        public virtual void EnsureSchemasRegistered(Microsoft.OpenApi.Interfaces.IOpenApiElement element, OpenApiContext context, OpenApiTransformDiagnostic diagnostic)
         {
             var newSchemas = new Dictionary<OpenApiSchema, List<OpenApiContext>>();
             this.schemaVisitor.VisitAny(element, context, (nestedSchema, nestedContext) =>
@@ -45,7 +48,7 @@ namespace PrincipleStudios.OpenApi.Transformations
                     newSchemas.Add(nestedSchema, new());
                 newSchemas[nestedSchema].Add(nestedContext);
             });
-            
+
             foreach (var s in newSchemas)
             {
                 if (referencedSchemas.ContainsKey(s.Key))

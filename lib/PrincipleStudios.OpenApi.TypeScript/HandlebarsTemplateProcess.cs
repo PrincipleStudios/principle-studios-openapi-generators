@@ -77,6 +77,19 @@ namespace PrincipleStudios.OpenApi.TypeScript
             }
         }
 
+        public static string ProcessModelBarrelFile(
+            ModelBarrelFile modelBarrelFile,
+            IHandlebars? handlebars = null
+        )
+        {
+            handlebars ??= CreateHandlebars();
+            var dict = ToDictionary(modelBarrelFile);
+
+            using var sr = new StringWriter();
+            handlebars.Configuration.RegisteredTemplates["modelBarrelFile"](sr, dict);
+            return sr.ToString();
+        }
+
         public static IDictionary<string, object?> ToDictionary<T>(T model)
         {
             var result = model == null ? JValue.CreateNull() : JToken.FromObject(model);
