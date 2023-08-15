@@ -17,219 +17,219 @@ namespace PrincipleStudios.OpenApiCodegen.Client.CSharp;
 
 public class HttpRequestMessageFactoriesShould : IClassFixture<TempDirectory>
 {
-    private readonly string workingDirectory;
+	private readonly string workingDirectory;
 
-    public HttpRequestMessageFactoriesShould(TempDirectory directory)
-    {
-        workingDirectory = directory.DirectoryPath;
-    }
+	public HttpRequestMessageFactoriesShould(TempDirectory directory)
+	{
+		workingDirectory = directory.DirectoryPath;
+	}
 
-    [Fact(Skip = "Test fails, see github #85")]
-    public async Task PassBase64EncodedQueryData()
-    {
-        var actualMessage = await GetRequestMessage("controller-extension.yaml", "GetInfo(data: Optional.Create(new byte[] { 1, 2, 3 }))");
+	[Fact(Skip = "Test fails, see github #85")]
+	public async Task PassBase64EncodedQueryData()
+	{
+		var actualMessage = await GetRequestMessage("controller-extension.yaml", "GetInfo(data: Optional.Create(new byte[] { 1, 2, 3 }))");
 
-        Assert.Equal("GET", actualMessage.Method.Method);
-        Assert.Equal("api/info?data=AQI%3D", actualMessage.RequestUri?.OriginalString);
-        Assert.Null(actualMessage.Content);
-    }
+		Assert.Equal("GET", actualMessage.Method.Method);
+		Assert.Equal("api/info?data=AQI%3D", actualMessage.RequestUri?.OriginalString);
+		Assert.Null(actualMessage.Content);
+	}
 
-    [Fact]
-    public async Task SerializeDictionaries()
-    {
-        var actualMessage = await GetRequestMessage("dictionary-ref.yaml", @"LookupRecord(lookupRecordBody: new() { [""key1""] = ""value1"", [""key\"":2""] = ""value\n2"" })");
+	[Fact]
+	public async Task SerializeDictionaries()
+	{
+		var actualMessage = await GetRequestMessage("dictionary-ref.yaml", @"LookupRecord(lookupRecordBody: new() { [""key1""] = ""value1"", [""key\"":2""] = ""value\n2"" })");
 
-        Assert.Equal("POST", actualMessage.Method.Method);
-        Assert.Equal("address", actualMessage.RequestUri?.OriginalString);
-        Assert.NotNull(actualMessage.Content);
-        var jsonContent = await actualMessage.Content!.ReadAsStringAsync();
+		Assert.Equal("POST", actualMessage.Method.Method);
+		Assert.Equal("address", actualMessage.RequestUri?.OriginalString);
+		Assert.NotNull(actualMessage.Content);
+		var jsonContent = await actualMessage.Content!.ReadAsStringAsync();
 
-        CompareJson(jsonContent, new Dictionary<string, string> { ["key1"] = "value1", ["key\":2"] = "value\n2" });
-    }
+		CompareJson(jsonContent, new Dictionary<string, string> { ["key1"] = "value1", ["key\":2"] = "value\n2" });
+	}
 
-    [Fact]
-    public async Task SerializeEnumerations()
-    {
-        var actualMessage = await GetRequestMessage("enum.yaml", @"PlayRockPaperScissors(playRockPaperScissorsBody: new(Player1: Option.Rock, Player2: Option.Paper))");
+	[Fact]
+	public async Task SerializeEnumerations()
+	{
+		var actualMessage = await GetRequestMessage("enum.yaml", @"PlayRockPaperScissors(playRockPaperScissorsBody: new(Player1: Option.Rock, Player2: Option.Paper))");
 
-        Assert.Equal("POST", actualMessage.Method.Method);
-        Assert.Equal("rock-paper-scissors", actualMessage.RequestUri?.OriginalString);
-        Assert.NotNull(actualMessage.Content);
-        var jsonContent = await actualMessage.Content!.ReadAsStringAsync();
+		Assert.Equal("POST", actualMessage.Method.Method);
+		Assert.Equal("rock-paper-scissors", actualMessage.RequestUri?.OriginalString);
+		Assert.NotNull(actualMessage.Content);
+		var jsonContent = await actualMessage.Content!.ReadAsStringAsync();
 
-        CompareJson(jsonContent, new { player1 = "rock", player2 = "paper" });
-    }
+		CompareJson(jsonContent, new { player1 = "rock", player2 = "paper" });
+	}
 
-    [Fact]
-    public async Task SerializeEnumerationsInQuery()
-    {
-        var actualMessage = await GetRequestMessage("enum.yaml", @"PlayRockPaperScissorsQuery(player1: Option.Rock, player2: Option.Paper)");
+	[Fact]
+	public async Task SerializeEnumerationsInQuery()
+	{
+		var actualMessage = await GetRequestMessage("enum.yaml", @"PlayRockPaperScissorsQuery(player1: Option.Rock, player2: Option.Paper)");
 
-        Assert.Equal("GET", actualMessage.Method.Method);
-        Assert.Equal("rock-paper-scissors-query?player1=rock&player2=paper", actualMessage.RequestUri?.OriginalString);
-        Assert.Null(actualMessage.Content);
-    }
+		Assert.Equal("GET", actualMessage.Method.Method);
+		Assert.Equal("rock-paper-scissors-query?player1=rock&player2=paper", actualMessage.RequestUri?.OriginalString);
+		Assert.Null(actualMessage.Content);
+	}
 
-    [Theory]
-    [InlineData("PlayerOne", "player+one")]
-    [InlineData("_2", "2")]
-    [InlineData("Three", "three!")]
-    [InlineData("F0u2", "f0u%7c2")]
-    [InlineData("FiE", "fi%25e")]
-    public async Task SerializeEnumerationsWithDifficultQueryStringEnums(string enumName, string queryValue)
-    {
-        var actualMessage = await GetRequestMessage("enum.yaml", $@"DifficultQueryStringEnum(_enum: DifficultQueryStringEnumEnum.{enumName})");
+	[Theory]
+	[InlineData("PlayerOne", "player+one")]
+	[InlineData("_2", "2")]
+	[InlineData("Three", "three!")]
+	[InlineData("F0u2", "f0u%7c2")]
+	[InlineData("FiE", "fi%25e")]
+	public async Task SerializeEnumerationsWithDifficultQueryStringEnums(string enumName, string queryValue)
+	{
+		var actualMessage = await GetRequestMessage("enum.yaml", $@"DifficultQueryStringEnum(_enum: DifficultQueryStringEnumEnum.{enumName})");
 
-        Assert.Equal("GET", actualMessage.Method.Method);
-        Assert.Equal($"difficult-enum?enum={queryValue}", actualMessage.RequestUri?.OriginalString);
-        Assert.Null(actualMessage.Content);
-    }
+		Assert.Equal("GET", actualMessage.Method.Method);
+		Assert.Equal($"difficult-enum?enum={queryValue}", actualMessage.RequestUri?.OriginalString);
+		Assert.Null(actualMessage.Content);
+	}
 
-    [Fact(Skip = "Test fails, see github #86")]
-    public async Task PassBase64EncodedHeaderData()
-    {
-        var actualMessage = await GetRequestMessage("headers.yaml", "GetInfo(xData: Optional.Create(new byte[] { 1, 2, 3 }))");
+	[Fact(Skip = "Test fails, see github #86")]
+	public async Task PassBase64EncodedHeaderData()
+	{
+		var actualMessage = await GetRequestMessage("headers.yaml", "GetInfo(xData: Optional.Create(new byte[] { 1, 2, 3 }))");
 
-        Assert.Equal("GET", actualMessage.Method.Method);
-        Assert.Equal("info", actualMessage.RequestUri?.OriginalString);
-        Assert.Collection(actualMessage.Headers.GetValues("X-Data"),
-            value => Assert.Equal("AQI=", value)
-        );
-        Assert.Null(actualMessage.Content);
-    }
+		Assert.Equal("GET", actualMessage.Method.Method);
+		Assert.Equal("info", actualMessage.RequestUri?.OriginalString);
+		Assert.Collection(actualMessage.Headers.GetValues("X-Data"),
+			value => Assert.Equal("AQI=", value)
+		);
+		Assert.Null(actualMessage.Content);
+	}
 
-    [Fact]
-    public async Task HandleInlineObjects()
-    {
-        var actualMessage = await GetRequestMessage("no-refs.yaml", @"LookupRecord(lookupRecordBody: new(FormattedAddress: ""123 Main St, Richardson, TX 75081"", Location: new (Latitude: 32.9494998, Longitude: -96.7331253)))");
+	[Fact]
+	public async Task HandleInlineObjects()
+	{
+		var actualMessage = await GetRequestMessage("no-refs.yaml", @"LookupRecord(lookupRecordBody: new(FormattedAddress: ""123 Main St, Richardson, TX 75081"", Location: new (Latitude: 32.9494998, Longitude: -96.7331253)))");
 
-        Assert.Equal("POST", actualMessage.Method.Method);
-        Assert.Equal("address", actualMessage.RequestUri?.OriginalString);
-        Assert.NotNull(actualMessage.Content);
-        var jsonContent = await actualMessage.Content!.ReadAsStringAsync();
+		Assert.Equal("POST", actualMessage.Method.Method);
+		Assert.Equal("address", actualMessage.RequestUri?.OriginalString);
+		Assert.NotNull(actualMessage.Content);
+		var jsonContent = await actualMessage.Content!.ReadAsStringAsync();
 
-        CompareJson(jsonContent, new { formattedAddress = "123 Main St, Richardson, TX 75081", location = new { latitude = 32.9494998, longitude = -96.7331253 } });
-    }
+		CompareJson(jsonContent, new { formattedAddress = "123 Main St, Richardson, TX 75081", location = new { latitude = 32.9494998, longitude = -96.7331253 } });
+	}
 
-    [Fact]
-    public async Task HandleOptionalRequestBodyParameters()
-    {
-        var actualMessage = await GetRequestMessage("nullable-vs-optional.yaml", @"Search(searchBody: new(Name: ""John Smith"", Department: null))");
+	[Fact]
+	public async Task HandleOptionalRequestBodyParameters()
+	{
+		var actualMessage = await GetRequestMessage("nullable-vs-optional.yaml", @"Search(searchBody: new(Name: ""John Smith"", Department: null))");
 
-        Assert.Equal("POST", actualMessage.Method.Method);
-        Assert.Equal("search", actualMessage.RequestUri?.OriginalString);
-        Assert.NotNull(actualMessage.Content);
-        var jsonContent = await actualMessage.Content!.ReadAsStringAsync();
+		Assert.Equal("POST", actualMessage.Method.Method);
+		Assert.Equal("search", actualMessage.RequestUri?.OriginalString);
+		Assert.NotNull(actualMessage.Content);
+		var jsonContent = await actualMessage.Content!.ReadAsStringAsync();
 
-        CompareJson(jsonContent, new { name = "John Smith" });
-    }
+		CompareJson(jsonContent, new { name = "John Smith" });
+	}
 
-    [Fact]
-    public async Task HandleOptionalRequestBodyParametersThatAreProvided()
-    {
-        var actualMessage = await GetRequestMessage("nullable-vs-optional.yaml", @"Search(searchBody: new(Name: ""John Smith"", Department: Optional.Create(""Engineering"")))");
+	[Fact]
+	public async Task HandleOptionalRequestBodyParametersThatAreProvided()
+	{
+		var actualMessage = await GetRequestMessage("nullable-vs-optional.yaml", @"Search(searchBody: new(Name: ""John Smith"", Department: Optional.Create(""Engineering"")))");
 
-        Assert.Equal("POST", actualMessage.Method.Method);
-        Assert.Equal("search", actualMessage.RequestUri?.OriginalString);
-        Assert.NotNull(actualMessage.Content);
-        var jsonContent = await actualMessage.Content!.ReadAsStringAsync();
+		Assert.Equal("POST", actualMessage.Method.Method);
+		Assert.Equal("search", actualMessage.RequestUri?.OriginalString);
+		Assert.NotNull(actualMessage.Content);
+		var jsonContent = await actualMessage.Content!.ReadAsStringAsync();
 
-        CompareJson(jsonContent, new { name = "John Smith", department = "Engineering" });
-    }
+		CompareJson(jsonContent, new { name = "John Smith", department = "Engineering" });
+	}
 
-    [Fact]
-    public async Task HandleWhenAnOptionalParameterIsNullableAndNull()
-    {
-        var actualMessage = await GetRequestMessage("nullable-vs-optional.yaml", @"Contrived(contrivedBody: new(NullableOnly: null, OptionalOnly: Optional.Create(15), OptionalOrNullable: Optional.Create<int?>(null)))");
+	[Fact]
+	public async Task HandleWhenAnOptionalParameterIsNullableAndNull()
+	{
+		var actualMessage = await GetRequestMessage("nullable-vs-optional.yaml", @"Contrived(contrivedBody: new(NullableOnly: null, OptionalOnly: Optional.Create(15), OptionalOrNullable: Optional.Create<int?>(null)))");
 
-        Assert.Equal("POST", actualMessage.Method.Method);
-        Assert.Equal("contrived", actualMessage.RequestUri?.OriginalString);
-        Assert.NotNull(actualMessage.Content);
-        var jsonContent = await actualMessage.Content!.ReadAsStringAsync();
+		Assert.Equal("POST", actualMessage.Method.Method);
+		Assert.Equal("contrived", actualMessage.RequestUri?.OriginalString);
+		Assert.NotNull(actualMessage.Content);
+		var jsonContent = await actualMessage.Content!.ReadAsStringAsync();
 
-        CompareJson(jsonContent, new { nullableOnly = (int?)null, optionalOnly = 15, optionalOrNullable = (int?)null });
-    }
+		CompareJson(jsonContent, new { nullableOnly = (int?)null, optionalOnly = 15, optionalOrNullable = (int?)null });
+	}
 
-    [Fact]
-    public async Task HandleWhenANullableParameterIsOptionalAndNotProvided()
-    {
-        var actualMessage = await GetRequestMessage("nullable-vs-optional.yaml", @"Contrived(contrivedBody: new(NullableOnly: null, OptionalOnly: null, OptionalOrNullable: null))");
+	[Fact]
+	public async Task HandleWhenANullableParameterIsOptionalAndNotProvided()
+	{
+		var actualMessage = await GetRequestMessage("nullable-vs-optional.yaml", @"Contrived(contrivedBody: new(NullableOnly: null, OptionalOnly: null, OptionalOrNullable: null))");
 
-        Assert.Equal("POST", actualMessage.Method.Method);
-        Assert.Equal("contrived", actualMessage.RequestUri?.OriginalString);
-        Assert.NotNull(actualMessage.Content);
-        var jsonContent = await actualMessage.Content!.ReadAsStringAsync();
+		Assert.Equal("POST", actualMessage.Method.Method);
+		Assert.Equal("contrived", actualMessage.RequestUri?.OriginalString);
+		Assert.NotNull(actualMessage.Content);
+		var jsonContent = await actualMessage.Content!.ReadAsStringAsync();
 
-        CompareJson(jsonContent, new { nullableOnly = (int?)null });
-    }
+		CompareJson(jsonContent, new { nullableOnly = (int?)null });
+	}
 
-    [Fact]
-    public async Task NotAlterOperationsWhenSecurityIsRequired()
-    {
-        var actualMessage = await GetRequestMessage("oauth.yaml", @"GetInfo()");
+	[Fact]
+	public async Task NotAlterOperationsWhenSecurityIsRequired()
+	{
+		var actualMessage = await GetRequestMessage("oauth.yaml", @"GetInfo()");
 
-        Assert.Equal("GET", actualMessage.Method.Method);
-        Assert.Equal("info", actualMessage.RequestUri?.OriginalString);
-    }
+		Assert.Equal("GET", actualMessage.Method.Method);
+		Assert.Equal("info", actualMessage.RequestUri?.OriginalString);
+	}
 
-    [Fact]
-    public async Task AllowQueryInPathWithoutOptionalParameters()
-    {
-        var actualMessage = await GetRequestMessage("query-in-path.yaml", "TestPath(limit: null)");
+	[Fact]
+	public async Task AllowQueryInPathWithoutOptionalParameters()
+	{
+		var actualMessage = await GetRequestMessage("query-in-path.yaml", "TestPath(limit: null)");
 
-        Assert.Equal("GET", actualMessage.Method.Method);
-        Assert.Equal("path?param1=test&param2=test&", actualMessage.RequestUri?.OriginalString);
-        Assert.Null(actualMessage.Content);
-    }
+		Assert.Equal("GET", actualMessage.Method.Method);
+		Assert.Equal("path?param1=test&param2=test&", actualMessage.RequestUri?.OriginalString);
+		Assert.Null(actualMessage.Content);
+	}
 
-    [Fact]
-    public async Task AllowQueryInPathWithOptionalParameters()
-    {
-        var actualMessage = await GetRequestMessage("query-in-path.yaml", "TestPath(limit: Optional.Create(15))");
+	[Fact]
+	public async Task AllowQueryInPathWithOptionalParameters()
+	{
+		var actualMessage = await GetRequestMessage("query-in-path.yaml", "TestPath(limit: Optional.Create(15))");
 
-        Assert.Equal("GET", actualMessage.Method.Method);
-        Assert.Equal("path?param1=test&param2=test&limit=15", actualMessage.RequestUri?.OriginalString);
-        Assert.Null(actualMessage.Content);
-    }
+		Assert.Equal("GET", actualMessage.Method.Method);
+		Assert.Equal("path?param1=test&param2=test&limit=15", actualMessage.RequestUri?.OriginalString);
+		Assert.Null(actualMessage.Content);
+	}
 
-    [Fact]
-    public async Task AllowFormEncodedBodies()
-    {
-        var actualMessage = await GetRequestMessage("form.yaml", "PostBasicForm(name: \"Fido\", tag: \"dog\", hasIdTag: true)");
+	[Fact]
+	public async Task AllowFormEncodedBodies()
+	{
+		var actualMessage = await GetRequestMessage("form.yaml", "PostBasicForm(name: \"Fido\", tag: \"dog\", hasIdTag: true)");
 
-        Assert.Equal("POST", actualMessage.Method.Method);
-        Assert.Equal("basic", actualMessage.RequestUri?.OriginalString);
-        var content = Assert.IsType<FormUrlEncodedContent>(actualMessage.Content);
-        using var memoryStream = new MemoryStream();
-        await content.CopyToAsync(memoryStream);
-        var formString = Encoding.ASCII.GetString(memoryStream.ToArray());
-        Assert.Equal("name=Fido&tag=dog&hasIdTag=True", formString);
-    }
+		Assert.Equal("POST", actualMessage.Method.Method);
+		Assert.Equal("basic", actualMessage.RequestUri?.OriginalString);
+		var content = Assert.IsType<FormUrlEncodedContent>(actualMessage.Content);
+		using var memoryStream = new MemoryStream();
+		await content.CopyToAsync(memoryStream);
+		var formString = Encoding.ASCII.GetString(memoryStream.ToArray());
+		Assert.Equal("name=Fido&tag=dog&hasIdTag=True", formString);
+	}
 
-    private async Task<HttpRequestMessage> GetRequestMessage(string documentName, string operationAndParameters, Action<CSharpSchemaOptions>? configureOptions = null)
-    {
-        var libBytes = DynamicCompilation.GetGeneratedLibrary(documentName, configureOptions);
+	private async Task<HttpRequestMessage> GetRequestMessage(string documentName, string operationAndParameters, Action<CSharpSchemaOptions>? configureOptions = null)
+	{
+		var libBytes = DynamicCompilation.GetGeneratedLibrary(documentName, configureOptions);
 
-        var fullPath = Path.Combine(workingDirectory, Path.GetRandomFileName());
-        File.WriteAllBytes(fullPath, libBytes);
+		var fullPath = Path.Combine(workingDirectory, Path.GetRandomFileName());
+		File.WriteAllBytes(fullPath, libBytes);
 
-        var scriptOptions = ScriptOptions.Default
-            .AddReferences(DynamicCompilation.SystemTextCompilationRefPaths.Select(r => MetadataReference.CreateFromFile(r)).ToArray())
-            .AddReferences(MetadataReference.CreateFromFile(fullPath))
-            .WithImports(
-                "PS.Controller",
-                "PS.Controller.Operations",
-                "PrincipleStudios.OpenApiCodegen.Json.Extensions"
-            );
+		var scriptOptions = ScriptOptions.Default
+			.AddReferences(DynamicCompilation.SystemTextCompilationRefPaths.Select(r => MetadataReference.CreateFromFile(r)).ToArray())
+			.AddReferences(MetadataReference.CreateFromFile(fullPath))
+			.WithImports(
+				"PS.Controller",
+				"PS.Controller.Operations",
+				"PrincipleStudios.OpenApiCodegen.Json.Extensions"
+			);
 
-        return (HttpRequestMessage)await CSharpScript.EvaluateAsync($"{operationAndParameters}", scriptOptions);
+		return (HttpRequestMessage)await CSharpScript.EvaluateAsync($"{operationAndParameters}", scriptOptions);
 
-    }
+	}
 
-    private void CompareJson(string actualJson, object expected)
-    {
-        Newtonsoft.Json.Linq.JToken.Parse(actualJson).Should().BeEquivalentTo(
-            Newtonsoft.Json.Linq.JToken.FromObject(expected)
-        );
-    }
+	private void CompareJson(string actualJson, object expected)
+	{
+		Newtonsoft.Json.Linq.JToken.Parse(actualJson).Should().BeEquivalentTo(
+			Newtonsoft.Json.Linq.JToken.FromObject(expected)
+		);
+	}
 }

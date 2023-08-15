@@ -12,90 +12,90 @@ namespace PrincipleStudios.OpenApiCodegen.Client.TypeScript.Integration;
 [Collection(CommonDirectoryFixture.CollectionName)]
 public class LegacyOptionalYamlShould
 {
-    private readonly CommonDirectoryFixture commonDirectory;
+	private readonly CommonDirectoryFixture commonDirectory;
 
-    public LegacyOptionalYamlShould(CommonDirectoryFixture commonDirectory)
-    {
-        this.commonDirectory = commonDirectory;
-    }
+	public LegacyOptionalYamlShould(CommonDirectoryFixture commonDirectory)
+	{
+		this.commonDirectory = commonDirectory;
+	}
 
-    [Fact]
-    public async Task Support_providing_all_values_for_inline_objects()
-    {
-        var body = new { nullableOnly = 2, optionalOnly = 3, optionalOrNullable = 5 };
+	[Fact]
+	public async Task Support_providing_all_values_for_inline_objects()
+	{
+		var body = new { nullableOnly = 2, optionalOnly = 3, optionalOrNullable = 5 };
 
-        var result = await commonDirectory.ConvertRequest("nullable-vs-optional-legacy.yaml", "contrived", new { }, body);
+		var result = await commonDirectory.ConvertRequest("nullable-vs-optional-legacy.yaml", "contrived", new { }, body);
 
-        AssertRequestSuccess(result, "POST", "/contrived", body);
-    }
+		AssertRequestSuccess(result, "POST", "/contrived", body);
+	}
 
-    [Fact]
-    public async Task Support_providing_values_as_intended_by_yaml_for_inline_objects()
-    {
-        var body = new { nullableOnly = (object?)null };
+	[Fact]
+	public async Task Support_providing_values_as_intended_by_yaml_for_inline_objects()
+	{
+		var body = new { nullableOnly = (object?)null };
 
-        var result = await commonDirectory.ConvertRequest("nullable-vs-optional-legacy.yaml", "contrived", new { }, body);
+		var result = await commonDirectory.ConvertRequest("nullable-vs-optional-legacy.yaml", "contrived", new { }, body);
 
-        AssertRequestSuccess(result, "POST", "/contrived", body);
-    }
+		AssertRequestSuccess(result, "POST", "/contrived", body);
+	}
 
-    [Fact]
-    public async Task Support_providing_extra_null_values_for_inline_objects()
-    {
-        var body = new { nullableOnly = (object?)null, optionalOnly = (object?)null, optionalOrNullable = (object?)null };
+	[Fact]
+	public async Task Support_providing_extra_null_values_for_inline_objects()
+	{
+		var body = new { nullableOnly = (object?)null, optionalOnly = (object?)null, optionalOrNullable = (object?)null };
 
-        var result = await commonDirectory.ConvertRequest("nullable-vs-optional-legacy.yaml", "contrived", new { }, body);
+		var result = await commonDirectory.ConvertRequest("nullable-vs-optional-legacy.yaml", "contrived", new { }, body);
 
-        AssertRequestSuccess(result, "POST", "/contrived", body);
-    }
+		AssertRequestSuccess(result, "POST", "/contrived", body);
+	}
 
-    [Fact]
-    public async Task Not_support_excluding_required_parameters_for_inline_objects()
-    {
-        var body = new { };
+	[Fact]
+	public async Task Not_support_excluding_required_parameters_for_inline_objects()
+	{
+		var body = new { };
 
-        var result = await commonDirectory.ConvertRequest("nullable-vs-optional-legacy.yaml", "contrived", new { }, body);
+		var result = await commonDirectory.ConvertRequest("nullable-vs-optional-legacy.yaml", "contrived", new { }, body);
 
-        Assert.NotEqual(0, result.ExitCode);
-    }
+		Assert.NotEqual(0, result.ExitCode);
+	}
 
-    [Fact]
-    public async Task Support_providing_all_values_for_models()
-    {
-        var body = new { errorCode = "foo:bar", errorMessage = "The foo did not bar", referenceCode = "12345" };
+	[Fact]
+	public async Task Support_providing_all_values_for_models()
+	{
+		var body = new { errorCode = "foo:bar", errorMessage = "The foo did not bar", referenceCode = "12345" };
 
-        var result = await commonDirectory.CheckModel("nullable-vs-optional-legacy.yaml", "_Error", body);
+		var result = await commonDirectory.CheckModel("nullable-vs-optional-legacy.yaml", "_Error", body);
 
-        Assert.Equal(0, result.ExitCode);
-    }
+		Assert.Equal(0, result.ExitCode);
+	}
 
-    [Fact]
-    public async Task Support_providing_values_as_intended_by_yaml_for_models()
-    {
-        var body = new { errorCode = "foo:bar", errorMessage = (object?)null };
+	[Fact]
+	public async Task Support_providing_values_as_intended_by_yaml_for_models()
+	{
+		var body = new { errorCode = "foo:bar", errorMessage = (object?)null };
 
-        var result = await commonDirectory.CheckModel("nullable-vs-optional-legacy.yaml", "_Error", body);
+		var result = await commonDirectory.CheckModel("nullable-vs-optional-legacy.yaml", "_Error", body);
 
-        Assert.Equal(0, result.ExitCode);
-    }
+		Assert.Equal(0, result.ExitCode);
+	}
 
-    [Fact]
-    public async Task Support_providing_extra_null_values_for_models()
-    {
-        var body = new { errorCode = "foo:bar", errorMessage = (object?)null, referenceCode = (object?)null };
+	[Fact]
+	public async Task Support_providing_extra_null_values_for_models()
+	{
+		var body = new { errorCode = "foo:bar", errorMessage = (object?)null, referenceCode = (object?)null };
 
-        var result = await commonDirectory.CheckModel("nullable-vs-optional-legacy.yaml", "_Error", body);
+		var result = await commonDirectory.CheckModel("nullable-vs-optional-legacy.yaml", "_Error", body);
 
-        Assert.Equal(0, result.ExitCode);
-    }
+		Assert.Equal(0, result.ExitCode);
+	}
 
-    [Fact]
-    public async Task Not_support_excluding_required_parameters_for_models()
-    {
-        var body = new { errorCode = "foo:bar" };
+	[Fact]
+	public async Task Not_support_excluding_required_parameters_for_models()
+	{
+		var body = new { errorCode = "foo:bar" };
 
-        var result = await commonDirectory.CheckModel("nullable-vs-optional-legacy.yaml", "_Error", body);
+		var result = await commonDirectory.CheckModel("nullable-vs-optional-legacy.yaml", "_Error", body);
 
-        Assert.NotEqual(0, result.ExitCode);
-    }
+		Assert.NotEqual(0, result.ExitCode);
+	}
 }

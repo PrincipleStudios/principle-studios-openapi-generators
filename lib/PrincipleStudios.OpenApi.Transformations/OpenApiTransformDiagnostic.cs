@@ -2,8 +2,8 @@
 
 namespace PrincipleStudios.OpenApi.Transformations
 {
-    public class OpenApiTransformDiagnostic
-    {
-        public IList<OpenApiTransformError> Errors { get; } = new List<OpenApiTransformError>();
-    }
+	public class OpenApiTransformDiagnostic
+	{
+		public IList<OpenApiTransformError> Errors { get; } = new List<OpenApiTransformError>();
+	}
 }

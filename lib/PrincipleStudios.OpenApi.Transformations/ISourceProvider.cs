@@ -2,8 +2,8 @@
 
 namespace PrincipleStudios.OpenApi.Transformations
 {
-    public interface ISourceProvider
-    {
-        IEnumerable<SourceEntry> GetSources(OpenApiTransformDiagnostic diagnostic);
-    }
+	public interface ISourceProvider
+	{
+		IEnumerable<SourceEntry> GetSources(OpenApiTransformDiagnostic diagnostic);
+	}
 }

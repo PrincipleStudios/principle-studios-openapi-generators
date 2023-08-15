@@ -5,7 +5,7 @@ using System.Text;
 
 namespace PrincipleStudios.OpenApiCodegen.Client.TypeScript.Templates
 {
-    public record OperationBarrelFileModel(PartialHeader Header, OperationReference[] Operations);
+	public record OperationBarrelFileModel(PartialHeader Header, OperationReference[] Operations);
 
-    public record OperationReference(string Path, string MethodName);
+	public record OperationReference(string Path, string MethodName);
 }

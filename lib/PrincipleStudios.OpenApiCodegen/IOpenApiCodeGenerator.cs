@@ -14,7 +14,7 @@ public record GenerationResult(IReadOnlyList<SourceEntry> Sources, IReadOnlyList
 // Note: This interface is not used directly, but is used by the `BaseGenerator` via reflection/compiled lambdas
 public interface IOpenApiCodeGenerator
 {
-    IEnumerable<string> MetadataKeys { get; }
+	IEnumerable<string> MetadataKeys { get; }
 
-    GenerationResult Generate(string documentContents, IReadOnlyDictionary<string, string?> additionalTextMetadata);
+	GenerationResult Generate(string documentContents, IReadOnlyDictionary<string, string?> additionalTextMetadata);
 }

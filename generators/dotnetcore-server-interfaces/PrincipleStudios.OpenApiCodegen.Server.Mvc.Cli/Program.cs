@@ -20,7 +20,7 @@ Console.WriteLine($"  Path prefix: {pathPrefix}");
 
 // empty the directory and then recreate it
 if (Directory.Exists(outputFolder))
-    Directory.Delete(outputFolder, recursive: true);
+	Directory.Delete(outputFolder, recursive: true);
 Directory.CreateDirectory(outputFolder);
 
 var document = GetDocument(openApiFilePath);
@@ -33,22 +33,22 @@ OpenApiTransformDiagnostic diagnostic = new();
 var entries = transformer.GetSources(diagnostic).ToArray();
 
 foreach (var entry in entries)
-    File.WriteAllText(Path.Combine(outputFolder, entry.Key), entry.SourceText);
+	File.WriteAllText(Path.Combine(outputFolder, entry.Key), entry.SourceText);
 
 
 Microsoft.OpenApi.Models.OpenApiDocument GetDocument(string path)
 {
-    using var documentStream = File.OpenRead(path);
-    var reader = new Microsoft.OpenApi.Readers.OpenApiStreamReader();
-    return reader.Read(documentStream, out var openApiDiagnostic);
+	using var documentStream = File.OpenRead(path);
+	var reader = new Microsoft.OpenApi.Readers.OpenApiStreamReader();
+	return reader.Read(documentStream, out var openApiDiagnostic);
 }
 CSharpServerSchemaOptions LoadOptions(Action<IConfigurationBuilder>? configureBuilder = null)
 {
-    using var defaultJsonStream = CSharpSchemaOptions.GetDefaultOptionsJson();
-    var builder = new ConfigurationBuilder();
-    builder.AddYamlStream(defaultJsonStream);
-    configureBuilder?.Invoke(builder);
-    var result = builder.Build().Get<CSharpServerSchemaOptions>()
-        ?? throw new InvalidOperationException("Could not construct options");
-    return result;
+	using var defaultJsonStream = CSharpSchemaOptions.GetDefaultOptionsJson();
+	var builder = new ConfigurationBuilder();
+	builder.AddYamlStream(defaultJsonStream);
+	configureBuilder?.Invoke(builder);
+	var result = builder.Build().Get<CSharpServerSchemaOptions>()
+		?? throw new InvalidOperationException("Could not construct options");
+	return result;
 }

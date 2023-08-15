@@ -7,10 +7,10 @@ namespace System.Diagnostics.CodeAnalysis;
 [System.AttributeUsage(AttributeTargets.Parameter, Inherited = false, AllowMultiple = false)]
 sealed class NotNullWhenAttribute : Attribute
 {
-    // This is a positional argument
-    public NotNullWhenAttribute(bool result)
-    {
-    }
+	// This is a positional argument
+	public NotNullWhenAttribute(bool result)
+	{
+	}
 }
 #pragma warning restore CA1019 // Define accessors for attribute arguments
 #endif
