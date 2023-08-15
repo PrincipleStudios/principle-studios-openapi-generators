@@ -54,9 +54,6 @@
     </Target>
 
     <Target Name="NpmPack" BeforeTargets="Publish" DependsOnTargets="_LoadPackageJson;NodeBuild" Inputs="@(NpmPackagedFiles)" Outputs="$(PackageOutputPath)$(NpmPackageNormalizedName)-$(Version).tgz">
-        <JsonPeek ContentPath="package.json" Query="$.version">
-            <Output TaskParameter="Result" ItemName="OriginalNpmPackageVersion" />
-        </JsonPeek>
         <Exec WorkingDirectory="$(ProjectDir)" Command="npm version $(Version)" IgnoreExitCode="true" />
         <MakeDir Directories="$(PackageOutputPath)"/>
         <Exec WorkingDirectory="$(ProjectDir)" Command="npm pack --pack-destination $(PackageOutputPath)" />
