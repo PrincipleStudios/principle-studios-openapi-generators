@@ -4,7 +4,7 @@ using System.Text;
 
 namespace PrincipleStudios.OpenApi.CSharp.Templates
 {
-    public record AddServicesModel(Templates.PartialHeader Header, string MethodName, string PackageName, ControllerReference[] Controllers);
+	public record AddServicesModel(Templates.PartialHeader Header, string MethodName, string PackageName, ControllerReference[] Controllers);
 
-    public record ControllerReference(string GenericTypeName, string ClassName);
+	public record ControllerReference(string GenericTypeName, string ClassName);
 }

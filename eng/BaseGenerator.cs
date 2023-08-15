@@ -17,101 +17,99 @@ using AddSourceText = Action<string, SourceText>;
 
 public abstract class BaseGenerator :
 #if ROSLYN4_0_OR_GREATER
-    IIncrementalGenerator
+	IIncrementalGenerator
 #else
     ISourceGenerator
 #endif
 {
 
-    private static readonly object lockHandle = new object();
+	private static readonly object lockHandle = new object();
 
-    private const string sharedAssemblyName = "PrincipleStudios.OpenApiCodegen";
-    private readonly System.Text.RegularExpressions.Regex regex = new(@"^(\.\d+)*\.dll$");
-    private readonly Func<IEnumerable<string>> getMetadataKeys;
-    private readonly Func<string, IReadOnlyDictionary<string, string?>, object> generate;
+	private readonly Func<IEnumerable<string>> getMetadataKeys;
+	private readonly Func<string, IReadOnlyDictionary<string, string?>, object> generate;
 
-    public BaseGenerator(string generatorTypeName, string assemblyName)
-    {
-        var myAsm = this.GetType().Assembly;
+	protected BaseGenerator(string generatorTypeName, string assemblyName)
+	{
+		var myAsm = this.GetType().Assembly;
 
-        var references = myAsm.GetReferencedAssemblies();
+		var references = myAsm.GetReferencedAssemblies();
 
-        List<Assembly> loadedAssemblies = new() { myAsm };
-        AppDomain.CurrentDomain.ReflectionOnlyAssemblyResolve += ResolveAssembly;
-        AppDomain.CurrentDomain.AssemblyResolve += ResolveAssembly;
+		List<Assembly> loadedAssemblies = new() { myAsm };
+		AppDomain.CurrentDomain.ReflectionOnlyAssemblyResolve += ResolveAssembly;
+		AppDomain.CurrentDomain.AssemblyResolve += ResolveAssembly;
 
-        // When using Type.GetType, the `RequestingAssembly` ends up null. If a generic is passed to Assembly.GetType, it also comes through as null.
-        // See https://github.com/dotnet/runtime/issues/11895, https://github.com/dotnet/runtime/issues/12668
-        var generatorType = GetEmbeddedAssemblyByName(assemblyName)?.GetType(generatorTypeName, throwOnError: false)
-            ?? throw new InvalidOperationException($"Could not find generator {generatorTypeName}");
+		// When using Type.GetType, the `RequestingAssembly` ends up null. If a generic is passed to Assembly.GetType, it also comes through as null.
+		// See https://github.com/dotnet/runtime/issues/11895, https://github.com/dotnet/runtime/issues/12668
+		var generatorType = GetEmbeddedAssemblyByName(assemblyName)?.GetType(generatorTypeName, throwOnError: false)
+			?? throw new InvalidOperationException($"Could not find generator {generatorTypeName}");
 
-        var generator = Activator.CreateInstance(generatorType);
+		var generator = Activator.CreateInstance(generatorType);
 
-        var generateMethod = generatorType.GetMethod("Generate");
-        var generatorExpression = Constant(generator);
-        var compilerApisParameter = Parameter(typeof(CompilerApis));
-        var textParameter = Parameter(typeof(string));
-        var dictionaryParameter = Parameter(typeof(IReadOnlyDictionary<string, string?>));
-        getMetadataKeys = Lambda<Func<IEnumerable<string>>>(Property(generatorExpression, "MetadataKeys")).Compile();
-        generate = Lambda<Func<string, IReadOnlyDictionary<string, string?>, object>>(
-            Convert(Call(generatorExpression, generateMethod, textParameter, dictionaryParameter), typeof(object))
-            , textParameter, dictionaryParameter).Compile();
+		var generateMethod = generatorType.GetMethod("Generate");
+		var generatorExpression = Constant(generator);
+		var compilerApisParameter = Parameter(typeof(CompilerApis));
+		var textParameter = Parameter(typeof(string));
+		var dictionaryParameter = Parameter(typeof(IReadOnlyDictionary<string, string?>));
+		getMetadataKeys = Lambda<Func<IEnumerable<string>>>(Property(generatorExpression, "MetadataKeys")).Compile();
+		generate = Lambda<Func<string, IReadOnlyDictionary<string, string?>, object>>(
+			Convert(Call(generatorExpression, generateMethod, textParameter, dictionaryParameter), typeof(object))
+			, textParameter, dictionaryParameter).Compile();
 
-        Assembly? ResolveAssembly(object sender, ResolveEventArgs ev)
-        {
-            // I'm not sure why this lock makes a difference; maybe by preventing multiple loads of the same assembly.
-            // As a result, this maybe can be moved.
-            lock (lockHandle)
-            {
-                if (ev.RequestingAssembly == null)
-                    // Someone loaded something through Type.GetType or a generic in Assembly.GetType.
-                    // This project shouldn't do that, so we can safely ignore it.
-                    return null;
-                if (!loadedAssemblies.Contains(ev.RequestingAssembly))
-                    // If it wasn't one of our assemblies requesting the DLL, do not respond, let something else handle it
-                    return null;
-                if (references.Any(asm => asm.FullName == ev.Name) && AppDomain.CurrentDomain.GetAssemblies().FirstOrDefault(asm => asm.FullName == ev.Name) is Assembly currentDomainAsm)
-                    // If it's something this assembly references (which is only core Roslyn files), return it from the app domain.
-                    return currentDomainAsm;
-                return GetEmbeddedAssemblyByName(ev.Name);
-            }
-        }
+		Assembly? ResolveAssembly(object sender, ResolveEventArgs ev)
+		{
+			// I'm not sure why this lock makes a difference; maybe by preventing multiple loads of the same assembly.
+			// As a result, this maybe can be moved.
+			lock (lockHandle)
+			{
+				if (ev.RequestingAssembly == null)
+					// Someone loaded something through Type.GetType or a generic in Assembly.GetType.
+					// This project shouldn't do that, so we can safely ignore it.
+					return null;
+				if (!loadedAssemblies.Contains(ev.RequestingAssembly))
+					// If it wasn't one of our assemblies requesting the DLL, do not respond, let something else handle it
+					return null;
+				if (references.Any(asm => asm.FullName == ev.Name) && AppDomain.CurrentDomain.GetAssemblies().FirstOrDefault(asm => asm.FullName == ev.Name) is Assembly currentDomainAsm)
+					// If it's something this assembly references (which is only core Roslyn files), return it from the app domain.
+					return currentDomainAsm;
+				return GetEmbeddedAssemblyByName(ev.Name);
+			}
+		}
 
-        Assembly? GetEmbeddedAssemblyByName(string name)
-        {
-            if (loadedAssemblies.FirstOrDefault(asm => asm.FullName == name) is Assembly preloaded)
-                return preloaded;
+		Assembly? GetEmbeddedAssemblyByName(string name)
+		{
+			if (loadedAssemblies.FirstOrDefault(asm => asm.FullName == name) is Assembly preloaded)
+				return preloaded;
 
-            using var stream = myAsm.GetManifestResourceStream(name.Split(',')[0] + ".dll");
-            if (stream != null)
-            {
-                var dllBytes = new byte[stream.Length];
-                stream.Read(dllBytes, 0, (int)stream.Length);
-                var resultAsm = Assembly.Load(dllBytes);
-                loadedAssemblies.Add(resultAsm);
-                return resultAsm;
-            }
-            return null;
-        }
-    }
+			using var stream = myAsm.GetManifestResourceStream(name.Split(',')[0] + ".dll");
+			if (stream != null)
+			{
+				var dllBytes = new byte[stream.Length];
+				stream.Read(dllBytes, 0, (int)stream.Length);
+				var resultAsm = Assembly.Load(dllBytes);
+				loadedAssemblies.Add(resultAsm);
+				return resultAsm;
+			}
+			return null;
+		}
+	}
 
 #if ROSLYN4_0_OR_GREATER
-    public virtual void Initialize(IncrementalGeneratorInitializationContext incremental)
-    {
-        incremental.RegisterImplementationSourceOutput(incremental.CompilationProvider, (context, compilation) =>
-        {
-            ReportCompilationDiagnostics(compilation, context);
-        });
+	public virtual void Initialize(IncrementalGeneratorInitializationContext context)
+	{
+		context.RegisterImplementationSourceOutput(context.CompilationProvider, (context, compilation) =>
+		{
+			ReportCompilationDiagnostics(compilation, context);
+		});
 
-        var additionalTexts = incremental.AdditionalTextsProvider.Combine(incremental.AnalyzerConfigOptionsProvider)
-            .Select(static (tuple, _) => GetOptions(tuple.Left, tuple.Right))
-            .Where(static (tuple) => tuple.TextContents != null)
-            .Where(IsRelevantFile);
-        incremental.RegisterSourceOutput(additionalTexts, (context, tuple) =>
-        {
-            GenerateSources(tuple, context);
-        });
-    }
+		var additionalTexts = context.AdditionalTextsProvider.Combine(context.AnalyzerConfigOptionsProvider)
+			.Select(static (tuple, _) => GetOptions(tuple.Left, tuple.Right))
+			.Where(static (tuple) => tuple.TextContents != null)
+			.Where(IsRelevantFile);
+		context.RegisterSourceOutput(additionalTexts, (context, tuple) =>
+		{
+			GenerateSources(tuple, context);
+		});
+	}
 #else
     public virtual void Execute(GeneratorExecutionContext context)
     {
@@ -132,43 +130,45 @@ public abstract class BaseGenerator :
 #endif
 
 
-    protected record AdditionalTextWithOptions(string TextContents, AnalyzerConfigOptions ConfigOptions);
-    protected record CompilerApis(AddSourceText AddSource, ReportDiagnostic ReportDiagnostic)
-    {
+	protected record AdditionalTextWithOptions(string TextContents, AnalyzerConfigOptions ConfigOptions);
+	protected record CompilerApis(AddSourceText AddSource, ReportDiagnostic ReportDiagnostic)
+	{
+#pragma warning disable CA2225 // Operator overloads have named alternates
 #if ROSLYN4_0_OR_GREATER
-        public static implicit operator CompilerApis(SourceProductionContext context) =>
-            new(context.AddSource, context.ReportDiagnostic);
+		public static implicit operator CompilerApis(SourceProductionContext context) =>
+			new(context.AddSource, context.ReportDiagnostic);
 #else
         public static implicit operator CompilerApis(GeneratorExecutionContext context) =>
             new(context.AddSource, context.ReportDiagnostic);
 #endif
-    }
-    private static AdditionalTextWithOptions GetOptions(AdditionalText file, AnalyzerConfigOptionsProvider analyzerConfigOptions)
-    {
-        var opt = analyzerConfigOptions.GetOptions(file);
-        return new(file.GetText()?.ToString()!, opt);
-    }
+#pragma warning restore CA2225 // Operator overloads have named alternates
+	}
+	private static AdditionalTextWithOptions GetOptions(AdditionalText file, AnalyzerConfigOptionsProvider analyzerConfigOptions)
+	{
+		var opt = analyzerConfigOptions.GetOptions(file);
+		return new(file.GetText()?.ToString()!, opt);
+	}
 
-    protected abstract void ReportCompilationDiagnostics(Compilation compilation, CompilerApis apis);
-    protected abstract bool IsRelevantFile(AdditionalTextWithOptions additionalText);
-    private void GenerateSources(AdditionalTextWithOptions additionalText, CompilerApis apis)
-    {
-        IEnumerable<string> metadataKeys = getMetadataKeys();
-        dynamic result = generate(
-            additionalText.TextContents,
-            new ReadOnlyDictionary<string, string?>(
-                metadataKeys.ToDictionary(key => key, additionalText.ConfigOptions.GetAdditionalFilesMetadata)
-            )
-        );
-        foreach (var entry in result.Sources)
-        {
-            apis.AddSource($"PS_{entry.Key}", SourceText.From(entry.SourceText, Encoding.UTF8));
-        }
-        foreach (var diagnostic in result.Diagnostics)
-        {
-            // TODO: diagnostics
-        }
-    }
+	protected abstract void ReportCompilationDiagnostics(Compilation compilation, CompilerApis apis);
+	protected abstract bool IsRelevantFile(AdditionalTextWithOptions additionalText);
+	private void GenerateSources(AdditionalTextWithOptions additionalText, CompilerApis apis)
+	{
+		IEnumerable<string> metadataKeys = getMetadataKeys();
+		dynamic result = generate(
+			additionalText.TextContents,
+			new ReadOnlyDictionary<string, string?>(
+				metadataKeys.ToDictionary(key => key, additionalText.ConfigOptions.GetAdditionalFilesMetadata)
+			)
+		);
+		foreach (var entry in result.Sources)
+		{
+			apis.AddSource($"PS_{entry.Key}", SourceText.From(entry.SourceText, Encoding.UTF8));
+		}
+		foreach (var diagnostic in result.Diagnostics)
+		{
+			// TODO: diagnostics
+		}
+	}
 
 
 }

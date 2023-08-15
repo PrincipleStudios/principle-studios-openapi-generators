@@ -6,5 +6,5 @@ namespace PrincipleStudios.OpenApi.CSharp;
 
 public class CSharpServerSchemaOptions : CSharpSchemaOptions
 {
-    public string PathPrefix { get; set; } = "";
+	public string PathPrefix { get; set; } = "";
 }
