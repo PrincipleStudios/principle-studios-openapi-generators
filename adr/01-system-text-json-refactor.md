@@ -12,7 +12,7 @@ beyond the first do not need to follow a specific schema.
 
 ### Registry
 
-We'll keep in memory a registry of URIs without fragments to JSON nodes. This
+We'll keep in memory a registry of [Schema URI](json-schema-structuring)s to JSON nodes. This
 registry will also contain a reference to the original document for use with
 error reporting.
 
@@ -57,3 +57,4 @@ external options file.
 [json-everything]: https://docs.json-everything.net/
 [uri-reference]: https://spec.openapis.org/oas/v3.1.0#relative-references-in-uris
 [latest-spec-schema]: https://spec.openapis.org/oas/v3.1.0#schema
+[json-schema-structuring]: https://json-schema.org/understanding-json-schema/structuring.html

@@ -9,9 +9,9 @@ namespace PrincipleStudios.OpenApi.Transformations.DocumentTypes;
 public interface IDocumentReference
 {
 	/// <summary>
-	/// The Id of the document.
+	/// The RetrievalUri of the document.
 	/// </summary>
-	Uri Id { get; }
+	Uri RetrievalUri { get; }
 
 	/// <summary>
 	/// The root element of the document.
