@@ -6,6 +6,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<PackageReference Include="Bogus" Version="34.0.2" />
 		<PackageReference Include="FluentAssertions.Json" Version="6.1.0" />
 		<PackageReference Include="JsonSchema.Net.OpenApi" Version="2.0.0" />
 		<PackageReference Include="JsonSchema.Net" Version="5.1.3" />

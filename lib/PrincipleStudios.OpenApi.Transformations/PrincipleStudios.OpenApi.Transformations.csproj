@@ -4,6 +4,9 @@
 		<RootNamespace>PrincipleStudios.OpenApi.Transformations</RootNamespace>
 		<TargetFramework>netstandard2.0</TargetFramework>
 		<VersionPrefix>$(SharedAnalyzerLibrariesVersion)</VersionPrefix>
+
+		<!-- CA1032 - Implement standard exception constructors -->
+		<NoWarn>$(NoWarn),CA1032</NoWarn>
 	</PropertyGroup>
 	<ItemGroup>
 		<Compile Include="$(RepositoryEngineeringDir)IsExternalInit.cs" Visible="false" />
@@ -24,5 +27,21 @@
 		<PackageReference Include="Microsoft.Extensions.FileProviders.Physical" Version="7.0.0" />
 		<PackageReference Include="Yaml2JsonNode" Version="1.2.4" />
 		<PackageReference Include="YamlDotNet" Version="13.2.0" />
+	</ItemGroup>
+	<ItemGroup>
+	  <Folder Include="Abstractions\" />
+	</ItemGroup>
+	<ItemGroup>
+	  <Compile Update="Errors.Designer.cs">
+	    <DesignTime>True</DesignTime>
+	    <AutoGen>True</AutoGen>
+	    <DependentUpon>Errors.resx</DependentUpon>
+	  </Compile>
+	</ItemGroup>
+	<ItemGroup>
+	  <EmbeddedResource Update="Errors.resx">
+	    <Generator>ResXFileCodeGenerator</Generator>
+	    <LastGenOutput>Errors.Designer.cs</LastGenOutput>
+	  </EmbeddedResource>
 	</ItemGroup>
 </Project>
