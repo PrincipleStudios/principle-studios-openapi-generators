@@ -70,6 +70,15 @@ namespace PrincipleStudios.OpenApi.Transformations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The document&apos;s retrieval URI must be absolute..
+        /// </summary>
+        internal static string InvalidRetrievalUri {
+            get {
+                return ResourceManager.GetString("InvalidRetrievalUri", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to An error occurred resolving a document from a URI.
         /// </summary>
         internal static string ResolveDocumentException {

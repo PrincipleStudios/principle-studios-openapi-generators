@@ -121,6 +121,9 @@
     <value>The given document URI contained a fragment; fragments are not allowed in document URIs.</value>
     <comment>See https://json-schema.org/understanding-json-schema/structuring.html#id15</comment>
   </data>
+  <data name="InvalidRetrievalUri" xml:space="preserve">
+    <value>The document's retrieval URI must be absolute.</value>
+  </data>
   <data name="ResolveDocumentException" xml:space="preserve">
     <value>An error occurred resolving a document from a URI</value>
   </data>

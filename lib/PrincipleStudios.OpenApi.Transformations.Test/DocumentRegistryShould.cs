@@ -179,8 +179,19 @@ public class DocumentRegistryShould
 		Assert.Equal(rootJson2, actual);
 	}
 
-	[Fact(Skip = "TODO")]
-	public void Finds_a_fragment_via_anchor() { }
+	[Fact]
+	public void Finds_a_fragment_via_anchor()
+	{
+		var target = new DocumentRegistry();
+		var rootJson = new { foo = new Dictionary<string, object> { ["$anchor"] = "my_anchor", ["bar"] = "baz" } }.ToJsonDocument().RootElement;
+		CreateDocument(rootJson, out var documentMock, out var documentId);
+		target.AddDocument(documentMock.Object);
+		var fragmentId = new UriBuilder(documentId) { Fragment = "my_anchor" }.Uri;
+
+		var actual = target.ResolveNode(fragmentId);
+
+		Assert.Equal("\"baz\"", actual.GetProperty("bar").ToJsonString());
+	}
 
 	[Fact(Skip = "TODO")]
 	public void Automatically_locates_bundled_documents() { }
