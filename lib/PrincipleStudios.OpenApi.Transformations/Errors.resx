@@ -130,4 +130,7 @@
   <data name="ResolveNodeException" xml:space="preserve">
     <value>An error occurred resolving a node from a URI</value>
   </data>
+  <data name="UnableToLoadYaml" xml:space="preserve">
+    <value>An error occurred while loading JSON or YAML file</value>
+  </data>
 </root>

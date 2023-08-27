@@ -95,5 +95,14 @@ namespace PrincipleStudios.OpenApi.Transformations {
                 return ResourceManager.GetString("ResolveNodeException", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to An error occurred while loading JSON or YAML file.
+        /// </summary>
+        internal static string UnableToLoadYaml {
+            get {
+                return ResourceManager.GetString("UnableToLoadYaml", resourceCulture);
+            }
+        }
     }
 }

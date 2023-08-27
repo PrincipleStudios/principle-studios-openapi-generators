@@ -28,10 +28,7 @@ namespace PrincipleStudios.OpenApiCodegen.TestUtils
 			var yamlStream = new YamlDotNet.RepresentationModel.YamlStream();
 			yamlStream.Load(sr);
 
-			var jsonSchema = JsonSerializer.Deserialize<JsonSchema>(yamlStream.Documents[0].ToJsonNode(), new JsonSerializerOptions
-			{
-				Converters = { new ValidatingJsonConverter() }
-			});
+			// TODO: use the yaml stream instead
 
 			documentStream.Position = 0;
 

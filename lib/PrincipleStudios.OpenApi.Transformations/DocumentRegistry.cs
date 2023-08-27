@@ -1,6 +1,7 @@
 ﻿using Json.More;
 using Json.Pointer;
 using Json.Schema;
+using PrincipleStudios.OpenApi.Transformations.Diagnostics;
 using PrincipleStudios.OpenApi.Transformations.DocumentTypes;
 using PrincipleStudios.OpenApi.Transformations.Json;
 using System;
@@ -9,6 +10,7 @@ using System.Collections.ObjectModel;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 
 namespace PrincipleStudios.OpenApi.Transformations;
 
@@ -45,7 +47,7 @@ public class DocumentRegistry
 		if (uri.Fragment is { Length: > 0 }) throw new ArgumentException(Errors.InvalidDocumentBaseUri, nameof(document));
 
 		var visitor = new DocumentRefVisitor();
-		visitor.Visit(document.RootElement);
+		visitor.Visit(document.RootNode);
 
 		var result = new DocumentRegistryEntry(document, visitor.Anchors);
 		entries.Add(uri, result);
@@ -60,12 +62,12 @@ public class DocumentRegistry
 
 	public IEnumerable<Uri> RegisteredDocumentIds => entries.Keys;
 
-	public JsonElement ResolveNode(IDocumentReference document, Uri refUri) =>
+	public JsonNode? ResolveNode(IDocumentReference document, Uri refUri) =>
 		ResolveNode(refUri.IsAbsoluteUri ? refUri : new Uri(GetDocumentBaseUri(document), refUri), new(document, refUri));
 
-	public JsonElement ResolveNode(Uri uri) => ResolveNode(uri, relativeDocument: null);
+	public JsonNode? ResolveNode(Uri uri) => ResolveNode(uri, relativeDocument: null);
 
-	private JsonElement ResolveNode(Uri uri, RelativeDocument? relativeDocument)
+	private JsonNode? ResolveNode(Uri uri, RelativeDocument? relativeDocument)
 	{
 		var docUri = uri.Fragment is { Length: > 0 }
 			? new UriBuilder(uri) { Fragment = "" }.Uri
@@ -77,16 +79,20 @@ public class DocumentRegistry
 		}
 
 		if (uri.Fragment is not { Length: > 0 })
-			return document.Document.RootElement;
+			return document.Document.RootNode;
 
 		var element = uri.Fragment.StartsWith("#/")
 			// pointer
-			? JsonPointer.Parse(uri.Fragment).Evaluate(document.Document.RootElement)
+			? !JsonPointer.TryParse(uri.Fragment, out var pointer)
+				? throw new DiagnosticException(InvalidFragmentDiagnostic.Builder())
+				: pointer!.TryEvaluate(document.Document.RootNode, out var node)
+					? node
+					: throw new ResolveNodeException(uri)
 			// anchor
-			: document.Anchors[uri.Fragment.Substring(1)].Evaluate(document.Document.RootElement);
-		if (element is not JsonElement result)
-			throw new ResolveNodeException(uri);
-		return result;
+			: document.Anchors[uri.Fragment.Substring(1)].TryEvaluate(document.Document.RootNode, out var nodeFromAnchor)
+				? nodeFromAnchor
+				: throw new ResolveNodeException(uri);
+		return element;
 	}
 
 	private DocumentRegistryEntry InternalFetch(RelativeDocument? relativeDocument, Uri docUri)
@@ -99,22 +105,32 @@ public class DocumentRegistry
 	}
 
 	private static Uri GetDocumentBaseUri(IDocumentReference document) =>
-		document.RootElement.ValueKind == JsonValueKind.Object && document.RootElement.TryGetProperty("$id", out var id) && id.GetString() is string baseId
+		document.RootNode is JsonObject obj && obj.TryGetPropertyValue("$id", out var id) && id?.GetValue<string>() is string baseId
 			? new Uri(document.RetrievalUri, baseId)
 			: document.RetrievalUri;
 
-	private class DocumentRefVisitor : JsonElementVisitor
+	private class DocumentRefVisitor : JsonNodeVisitor
 	{
 		public Dictionary<string, JsonPointer> Anchors { get; } = new Dictionary<string, JsonPointer>();
 		public Dictionary<string, JsonPointer> BundledSchemas { get; } = new Dictionary<string, JsonPointer>();
 
-		protected override void VisitObject(JsonElement element, JsonPointer elementPointer)
+		protected override void VisitObject(JsonObject obj, JsonPointer elementPointer)
 		{
-			if (element.TryGetProperty("$anchor", out var elem) && elem.ToString() is string anchorId)
+			if (obj.TryGetPropertyValue("$anchor", out var elem) && elem?.GetValue<string>() is string anchorId)
 				Anchors.Add(anchorId, elementPointer);
-			if (elementPointer != JsonPointer.Empty && element.TryGetProperty("$id", out elem) && elem.ToString() is string bundledSchemaId)
+			if (elementPointer != JsonPointer.Empty && obj.TryGetPropertyValue("$id", out elem) && elem?.GetValue<string>() is string bundledSchemaId)
 				BundledSchemas.Add(bundledSchemaId, elementPointer);
-			base.VisitObject(element, elementPointer);
+			base.VisitObject(obj, elementPointer);
 		}
 	}
+}
+
+public record InvalidFragmentDiagnostic(Location Location) : DiagnosticBase(Location)
+{
+	public static DiagnosticException.ToDiagnostic Builder() => (Location) => new InvalidFragmentDiagnostic(Location);
+}
+
+public record UnresolvedNodeDiagnostic(Location Location) : DiagnosticBase(Location)
+{
+	public static DiagnosticException.ToDiagnostic Builder() => (Location) => new UnresolvedNodeDiagnostic(Location);
 }

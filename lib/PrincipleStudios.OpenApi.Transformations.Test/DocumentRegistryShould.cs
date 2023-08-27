@@ -70,7 +70,7 @@ public class DocumentRegistryShould
 
 		var actual = target.ResolveNode(documentId);
 
-		Assert.Equal(rootJson, actual);
+		Assert.True(actual.IsEquivalentTo(rootJson.AsNode()));
 	}
 
 	[Fact]
@@ -83,7 +83,7 @@ public class DocumentRegistryShould
 
 		var actual = target.ResolveNode(documentId);
 
-		Assert.Equal(rootJson, actual);
+		Assert.True(actual.IsEquivalentTo(rootJson.AsNode()));
 	}
 
 	[Fact]
@@ -102,7 +102,7 @@ public class DocumentRegistryShould
 
 		var actual = target.ResolveNode(documentMock.Object, relativePath);
 
-		Assert.Equal(rootJson2, actual);
+		Assert.True(actual.IsEquivalentTo(rootJson2.AsNode()));
 	}
 
 	[Fact]
@@ -128,7 +128,7 @@ public class DocumentRegistryShould
 
 		var actual = target.ResolveNode(fragmentId);
 
-		Assert.Equal("\"baz\"", actual.ToJsonString());
+		Assert.Equal("baz", actual?.GetValue<string>());
 	}
 
 	[Fact]
@@ -155,7 +155,7 @@ public class DocumentRegistryShould
 
 		var actual = target.ResolveNode(fragmentId);
 
-		Assert.Equal("\"baz\"", actual.ToJsonString());
+		Assert.Equal("baz", actual?.GetValue<string>());
 	}
 
 	[Fact]
@@ -176,7 +176,7 @@ public class DocumentRegistryShould
 
 		var actual = target.ResolveNode(documentMock.Object, relativePath);
 
-		Assert.Equal(rootJson2, actual);
+		Assert.True(actual.IsEquivalentTo(rootJson2.AsNode()));
 	}
 
 	[Fact]
@@ -190,15 +190,18 @@ public class DocumentRegistryShould
 
 		var actual = target.ResolveNode(fragmentId);
 
-		Assert.Equal("\"baz\"", actual.GetProperty("bar").ToJsonString());
+		Assert.Equal("baz", actual?["bar"]?.GetValue<string>());
 	}
 
 	[Fact(Skip = "TODO")]
 	public void Automatically_locates_bundled_documents() { }
 
+
+	// Invalidation is for incremental builds to ensure local files get updated
 	[Fact(Skip = "TODO")]
 	public void Can_invalidate_documents() { }
 
+	// Invalidation is for incremental builds to ensure local files get updated
 	[Fact(Skip = "TODO")]
 	public void Can_invalidate_bundled_documents() { }
 
@@ -213,7 +216,7 @@ public class DocumentRegistryShould
 	private static void CreateDocumentWithRetrievalId(JsonElement rootJson, Uri documentId, out Moq.Mock<IDocumentReference> documentMock)
 	{
 		documentMock = new Moq.Mock<IDocumentReference>();
-		documentMock.SetupGet(m => m.RootElement).Returns(rootJson);
+		documentMock.SetupGet(m => m.RootNode).Returns(rootJson.AsNode());
 		documentMock.SetupGet(m => m.RetrievalUri).Returns(documentId);
 	}
 

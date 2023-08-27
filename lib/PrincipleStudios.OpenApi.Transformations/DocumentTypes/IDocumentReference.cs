@@ -16,12 +16,12 @@ public interface IDocumentReference
 	/// <summary>
 	/// The root element of the document.
 	/// </summary>
-	System.Text.Json.JsonElement RootElement { get; }
+	System.Text.Json.Nodes.JsonNode? RootNode { get; }
 
 	/// <summary>
 	/// May be a file path on disk or may be a Uri.
 	/// </summary>
 	string OriginalPath { get; }
 
-	FileLocation? GetLocation(JsonPointer path);
+	FileLocationRange? GetLocation(JsonPointer path);
 }

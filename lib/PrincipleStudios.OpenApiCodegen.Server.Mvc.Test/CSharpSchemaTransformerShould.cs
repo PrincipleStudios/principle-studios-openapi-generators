@@ -68,6 +68,7 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
 		{
 			return new[]
 			{
+				// TODO: swap to uri to get schema
 				Entry("FindPetsByStatusStatusItem", "petstore3.json", doc =>
 					doc.Paths["/pet/findByStatus"].Operations[OperationType.Get].Parameters.First(p => p.Name == "status").Schema.Items),
 			};
