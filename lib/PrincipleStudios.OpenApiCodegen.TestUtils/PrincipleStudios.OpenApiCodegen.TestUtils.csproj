@@ -24,4 +24,8 @@
 			<LogicalName>PrincipleStudios.OpenApiCodegen.TestUtils.schemas.%(Filename)%(Extension)</LogicalName>
 		</EmbeddedResource>
 	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\PrincipleStudios.OpenApi.Transformations\PrincipleStudios.OpenApi.Transformations.csproj" />
+	</ItemGroup>
 </Project>

@@ -11,11 +11,14 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Yaml2JsonNode;
+using PrincipleStudios.OpenApi.Transformations.DocumentTypes;
 
 namespace PrincipleStudios.OpenApiCodegen.TestUtils
 {
 	public static class DocumentHelpers
 	{
+		private static readonly YamlDocumentLoader docLoader = new YamlDocumentLoader();
+
 		static DocumentHelpers()
 		{
 			Json.Schema.OpenApi.Vocabularies.Register();
@@ -23,24 +26,22 @@ namespace PrincipleStudios.OpenApiCodegen.TestUtils
 
 		public static OpenApiDocument GetDocument(string name)
 		{
-			using var documentStream = typeof(DocumentHelpers).Assembly.GetManifestResourceStream($"PrincipleStudios.OpenApiCodegen.TestUtils.schemas.{name}");
-			using var sr = new StreamReader(documentStream);
-			var yamlStream = new YamlDotNet.RepresentationModel.YamlStream();
-			yamlStream.Load(sr);
+			GetDocumentReference(name);
 
-			// TODO: use the yaml stream instead
-
-			documentStream.Position = 0;
-
-			var reader = new OpenApiStreamReader();
-			return reader.Read(documentStream, out var openApiDiagnostic);
+			using (var documentStream = typeof(DocumentHelpers).Assembly.GetManifestResourceStream($"PrincipleStudios.OpenApiCodegen.TestUtils.schemas.{name}"))
+			{
+				var reader = new OpenApiStreamReader();
+				return reader.Read(documentStream, out var openApiDiagnostic);
+			}
 		}
 
-		public static string GetDocumentString(string name)
+		public static IDocumentReference GetDocumentReference(string name)
 		{
-			using var documentStream = typeof(DocumentHelpers).Assembly.GetManifestResourceStream($"PrincipleStudios.OpenApiCodegen.TestUtils.schemas.{name}");
-			using var reader = new System.IO.StreamReader(documentStream!);
-			return reader.ReadToEnd();
+			var uri = new Uri($"proj://{name}");
+			using (var documentStream = typeof(DocumentHelpers).Assembly.GetManifestResourceStream($"PrincipleStudios.OpenApiCodegen.TestUtils.schemas.{name}"))
+			{
+				return docLoader.LoadDocument(uri, documentStream);
+			}
 		}
 
 		public static Microsoft.OpenApi.OpenApiSpecVersion ToSpecVersion(string? inputVersion)
