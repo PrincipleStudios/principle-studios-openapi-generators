@@ -72,11 +72,7 @@ public class DocumentRegistry
 		var docUri = uri.Fragment is { Length: > 0 }
 			? new UriBuilder(uri) { Fragment = "" }.Uri
 			: uri;
-
-		if (!entries.TryGetValue(docUri, out var document))
-		{
-			document = InternalFetch(relativeDocument, docUri);
-		}
+		var document = InternalResolveDocumentEntry(docUri, relativeDocument);
 
 		if (uri.Fragment is not { Length: > 0 })
 			return document.Document.RootNode;
@@ -93,6 +89,23 @@ public class DocumentRegistry
 				? nodeFromAnchor
 				: throw new ResolveNodeException(uri);
 		return element;
+	}
+
+	public IDocumentReference ResolveDocument(Uri uri, RelativeDocument? relativeDocument) =>
+		InternalResolveDocumentEntry(uri, relativeDocument).Document;
+
+	private DocumentRegistryEntry InternalResolveDocumentEntry(Uri uri, RelativeDocument? relativeDocument)
+	{
+		var docUri = uri.Fragment is { Length: > 0 }
+			? throw new ArgumentException(Errors.InvalidDocumentBaseUri, nameof(uri))
+			: uri;
+
+		if (!entries.TryGetValue(docUri, out var document))
+		{
+			document = InternalFetch(relativeDocument, docUri);
+		}
+
+		return document;
 	}
 
 	private DocumentRegistryEntry InternalFetch(RelativeDocument? relativeDocument, Uri docUri)

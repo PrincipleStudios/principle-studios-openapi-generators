@@ -17,7 +17,6 @@ namespace PrincipleStudios.OpenApiCodegen.TestUtils
 {
 	public static class DocumentHelpers
 	{
-		private static readonly YamlDocumentLoader docLoader = new YamlDocumentLoader();
 
 		static DocumentHelpers()
 		{
@@ -37,11 +36,8 @@ namespace PrincipleStudios.OpenApiCodegen.TestUtils
 
 		public static IDocumentReference GetDocumentReference(string name)
 		{
-			var uri = new Uri($"proj://{name}");
-			using (var documentStream = typeof(DocumentHelpers).Assembly.GetManifestResourceStream($"PrincipleStudios.OpenApiCodegen.TestUtils.schemas.{name}"))
-			{
-				return docLoader.LoadDocument(uri, documentStream);
-			}
+			var uri = new Uri($"proj://embedded/{name}");
+			return DocumentLoader.CreateRegistry().ResolveDocument(uri, null) ?? throw new InvalidOperationException("Embeded document not found");
 		}
 
 		public static Microsoft.OpenApi.OpenApiSpecVersion ToSpecVersion(string? inputVersion)
