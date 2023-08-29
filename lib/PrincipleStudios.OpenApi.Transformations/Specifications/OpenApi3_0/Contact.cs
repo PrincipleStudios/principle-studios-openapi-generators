@@ -27,6 +27,4 @@ internal class Contact : IOpenApiContact
 	public string? Email => jsonNode?["email"]?.GetValue<string>();
 
 	public Uri Id { get; }
-
-	public JsonPointer JsonPointer => JsonPointer.Parse(jsonNode.GetPointerFromRoot());
 }

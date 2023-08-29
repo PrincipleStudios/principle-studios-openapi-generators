@@ -27,5 +27,4 @@ internal class License : IOpenApiLicense
 	public string? Identifier => null;
 
 	public Uri Id { get; }
-	public JsonPointer JsonPointer => JsonPointer.Parse(jsonNode.GetPointerFromRoot());
 }

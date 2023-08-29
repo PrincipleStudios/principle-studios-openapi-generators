@@ -14,6 +14,7 @@ public class OpenApi3_1Document : IOpenApiDocument
 
 	public OpenApi3_1Document(Uri id, JsonNode rootNode)
 	{
+		this.Id = id;
 		this.rootNode = rootNode;
 	}
 
@@ -26,6 +27,5 @@ public class OpenApi3_1Document : IOpenApiDocument
 	// Not required, default for 3.1 is https://spec.openapis.org/oas/3.1/dialect/base
 	public Uri JsonSchemaDialect => throw new NotImplementedException();
 
-	public Uri Id => throw new NotImplementedException();
-	public JsonPointer JsonPointer => JsonPointer.Parse(rootNode.GetPointerFromRoot());
+	public Uri Id { get; }
 }

@@ -21,10 +21,11 @@ internal class OpenApi3_0Document : IOpenApiDocument
 
 	public OpenApiSpecVersion OpenApiSpecVersion => new OpenApiSpecVersion("openapi", rootNode["openapi"]?.GetValue<string>() ?? "3.0.3");
 
-	public IOpenApiInfo Info => rootNode["info"] is JsonObject obj ? new Info(Id.AppendPointer("info"), obj) : new MissingRequiredFieldDefaults.PlaceholderInfo(Id.AppendPointer("info"));
+	public IOpenApiInfo Info => rootNode["info"] is JsonObject obj
+		? new Info(Id.AppendPointer("info"), obj)
+		: new MissingRequiredFieldDefaults.PlaceholderInfo(Id.AppendPointer("info"));
 
 	public Uri JsonSchemaDialect => jsonSchemaDialect;
 
 	public Uri Id { get; }
-	public JsonPointer JsonPointer => JsonPointer.Parse(rootNode.GetPointerFromRoot());
 }
