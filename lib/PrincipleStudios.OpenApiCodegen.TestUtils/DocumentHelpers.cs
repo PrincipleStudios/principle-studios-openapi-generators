@@ -49,7 +49,12 @@ namespace PrincipleStudios.OpenApiCodegen.TestUtils
 		public static IDocumentReference GetDocumentReference(string name)
 		{
 			var uri = new Uri($"proj://embedded/{name}");
-			return DocumentLoader.CreateRegistry().ResolveDocument(uri, null) ?? throw new InvalidOperationException("Embeded document not found");
+			return GetDocumentByUri(uri);
+		}
+
+		public static IDocumentReference GetDocumentByUri(Uri uri)
+		{
+			return DocumentLoader.CreateRegistry().ResolveDocument(new UriBuilder(uri) { Fragment = "" }.Uri, null) ?? throw new InvalidOperationException("Embeded document not found");
 		}
 
 		public static Microsoft.OpenApi.OpenApiSpecVersion ToSpecVersion(string? inputVersion)

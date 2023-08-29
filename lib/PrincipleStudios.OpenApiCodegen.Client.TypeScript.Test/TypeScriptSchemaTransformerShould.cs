@@ -18,6 +18,37 @@ namespace PrincipleStudios.OpenApiCodegen.Client.TypeScript
 	public class TypeScriptSchemaTransformerShould
 	{
 		[Theory]
+		[InlineData(false, "proj://embedded/petstore.yaml#/paths/~1pets/get/parameters/0/schema")]
+		[InlineData(false, "proj://embedded/petstore.yaml#/paths/~1pets/get/parameters/1/schema")]
+		[InlineData(false, "proj://embedded/petstore.yaml#/paths/~1pets/get/responses/200/content/application~1json/schema")]
+		[InlineData(true, "proj://embedded/petstore.yaml#/paths/~1pets/get/responses/200/content/application~1json/schema/items")]
+		[InlineData(true, "proj://embedded/petstore.yaml#/paths/~1pets/get/responses/default/content/application~1json/schema")]
+		[InlineData(true, "proj://embedded/petstore.yaml#/paths/~1pets/post/requestBody/content/application~1json/schema")]
+		[InlineData(true, "proj://embedded/petstore.yaml#/paths/~1pets/post/responses/200/content/application~1json/schema")]
+		[InlineData(false, "proj://embedded/petstore.yaml#/paths/~1pets~1{id}/get/parameters/0/schema")]
+		[InlineData(false, "proj://embedded/petstore.yaml#/paths/~1pets~1{id}/delete/parameters/0/schema")]
+		[InlineData(true, "proj://embedded/petstore.yaml#/components/schemas/Pet")]
+		[InlineData(true, "proj://embedded/petstore.yaml#/components/schemas/NewPet")]
+		[InlineData(true, "proj://embedded/petstore.yaml#/components/schemas/Error")]
+		[InlineData(false, "proj://embedded/no-refs.yaml#/paths/~1address/post/requestBody/content/application~1json/schema")]
+		[InlineData(false, "proj://embedded/no-refs.yaml#/paths/~1address/post/requestBody/content/application~1json/schema/properties/location")]
+		public void Know_when_to_generate_source(bool expectedInline, string schemaUriString)
+		{
+			var schemaUri = new Uri(schemaUriString);
+			var docRef = GetDocumentByUri(schemaUri);
+
+			// TODO - use json schema instead
+			var (document, schema) = GetSchema(docRef, Uri.UnescapeDataString(schemaUri.Fragment.Substring(1)));
+			Assert.NotNull(document);
+			Assert.NotNull(schema);
+
+			var target = ConstructTarget(document!, LoadOptions());
+			var actual = target.ProduceSourceEntry(schema!);
+
+			Assert.Equal(expectedInline, actual);
+		}
+
+		[Theory]
 		[InlineData(false, "petstore.yaml", "/paths/~1pets/get/parameters/0/schema")]
 		[InlineData(false, "petstore.yaml", "/paths/~1pets/get/parameters/1/schema")]
 		[InlineData(false, "petstore.yaml", "/paths/~1pets/get/responses/200/content/application~1json/schema")]
@@ -107,6 +138,5 @@ namespace PrincipleStudios.OpenApiCodegen.Client.TypeScript
 		{
 			return new TypeScriptSchemaSourceResolver(options, new HandlebarsFactory(HandlebarsTemplateProcess.CreateHandlebars), "");
 		}
-
 	}
 }
