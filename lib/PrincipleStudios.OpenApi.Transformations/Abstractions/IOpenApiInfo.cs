@@ -13,5 +13,5 @@ public interface IOpenApiInfo : IReferenceableDocument
 	public Uri? TermsOfService { get; }
 	public IOpenApiContact? Contact { get; }
 	public IOpenApiLicense? License { get; }
-	public string Version { get; set; }
+	public string Version { get; }
 }

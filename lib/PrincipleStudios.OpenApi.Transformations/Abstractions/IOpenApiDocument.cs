@@ -22,8 +22,3 @@ public interface IOpenApiDocument : IReferenceableDocument
 	// tags?
 	// externalDocs?
 }
-
-public interface IReferenceableDocument
-{
-	public Uri Id { get; }
-}

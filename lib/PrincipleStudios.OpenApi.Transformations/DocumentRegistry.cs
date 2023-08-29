@@ -41,7 +41,7 @@ public class DocumentRegistry
 
 	private DocumentRegistryEntry InternalAddDocument(IDocumentReference document)
 	{
-		var uri = GetDocumentBaseUri(document);
+		var uri = document.BaseUri;
 		// TODO: should this be a warning and instead just use the retrieval uri?
 		if (uri.Fragment is { Length: > 0 }) throw new ArgumentException(Errors.InvalidDocumentBaseUri, nameof(document));
 
@@ -62,7 +62,7 @@ public class DocumentRegistry
 	public IEnumerable<Uri> RegisteredDocumentIds => entries.Keys;
 
 	public JsonNode? ResolveNode(IDocumentReference document, Uri refUri) =>
-		ResolveNode(refUri.IsAbsoluteUri ? refUri : new Uri(GetDocumentBaseUri(document), refUri), new(document, refUri));
+		ResolveNode(refUri.IsAbsoluteUri ? refUri : new Uri(document.BaseUri, refUri), new(document, refUri));
 
 	public JsonNode? ResolveNode(Uri uri) => ResolveNode(uri, relativeDocument: null);
 
@@ -116,11 +116,6 @@ public class DocumentRegistry
 		return InternalAddDocument(document);
 	}
 
-	private static Uri GetDocumentBaseUri(IDocumentReference document) =>
-		document.RootNode is JsonObject obj && obj.TryGetPropertyValue("$id", out var id) && id?.GetValue<string>() is string baseId
-			? new Uri(document.RetrievalUri, baseId)
-			: document.RetrievalUri;
-
 	private class DocumentRefVisitor : JsonNodeVisitor
 	{
 		public Dictionary<string, JsonPointer> Anchors { get; } = new Dictionary<string, JsonPointer>();
@@ -135,6 +130,19 @@ public class DocumentRegistry
 			base.VisitObject(obj, elementPointer);
 		}
 	}
+}
+
+public static class JsonDocumentUtils
+{
+	public static Uri GetDocumentBaseUri(IDocumentReference document) =>
+		document.RootNode.GetBaseUri(document.RetrievalUri);
+
+
+	public static Uri GetBaseUri(this JsonNode? jsonNode, Uri retrievalUri) =>
+		jsonNode is JsonObject obj && obj.TryGetPropertyValue("$id", out var id) && id?.GetValue<string>() is string baseId
+			? new Uri(retrievalUri, baseId)
+			: retrievalUri;
+
 }
 
 public record InvalidFragmentDiagnostic(Location Location) : DiagnosticBase(Location)

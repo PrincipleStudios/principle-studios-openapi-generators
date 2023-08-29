@@ -41,7 +41,6 @@ internal class OpenApi3_0Parser : SchemaValidatingParser<IOpenApiDocument, OpenA
 
 	protected override IOpenApiDocument? Construct(IDocumentReference documentReference, EvaluationResults evaluationResults)
 	{
-		// TODO
-		return new OpenApi3_0Document(documentReference.RootNode);
+		return new OpenApi3_0Document(documentReference.BaseUri, documentReference.RootNode ?? throw new InvalidOperationException(Errors.InvalidOpenApiRootNode));
 	}
 }

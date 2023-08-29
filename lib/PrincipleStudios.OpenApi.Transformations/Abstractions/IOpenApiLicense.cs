@@ -7,7 +7,7 @@ namespace PrincipleStudios.OpenApi.Transformations.Abstractions;
 /// </summary>
 public interface IOpenApiLicense : IReferenceableDocument
 {
-	public string? Name { get; }
+	public string Name { get; }
 	public Uri? Url { get; }
 	public string? Identifier { get; }
 }

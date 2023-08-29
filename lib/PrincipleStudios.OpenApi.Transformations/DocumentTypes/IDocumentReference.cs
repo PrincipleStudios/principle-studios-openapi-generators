@@ -9,6 +9,11 @@ namespace PrincipleStudios.OpenApi.Transformations.DocumentTypes;
 public interface IDocumentReference
 {
 	/// <summary>
+	/// The BaseUri of the document, used to resolve inner references
+	/// </summary>
+	Uri BaseUri { get; }
+
+	/// <summary>
 	/// The RetrievalUri of the document.
 	/// </summary>
 	Uri RetrievalUri { get; }

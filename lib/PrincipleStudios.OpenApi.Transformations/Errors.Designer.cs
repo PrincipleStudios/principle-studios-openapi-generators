@@ -70,6 +70,15 @@ namespace PrincipleStudios.OpenApi.Transformations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Root node of an OpenApi document must be an object.
+        /// </summary>
+        internal static string InvalidOpenApiRootNode {
+            get {
+                return ResourceManager.GetString("InvalidOpenApiRootNode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The document&apos;s retrieval URI must be absolute..
         /// </summary>
         internal static string InvalidRetrievalUri {

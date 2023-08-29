@@ -43,7 +43,11 @@ public class YamlDocumentLoader : IDocumentTypeLoader
 			this.RetrievalUri = retrievalUri;
 			this.yamlStream = yamlStream;
 			this.RootNode = yamlStream.Documents[0].ToJsonNode();
+
+			this.BaseUri = JsonDocumentUtils.GetBaseUri(this.RootNode, retrievalUri);
 		}
+
+		public Uri BaseUri { get; }
 
 		public Uri RetrievalUri { get; }
 

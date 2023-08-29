@@ -1,6 +1,7 @@
 ﻿using Json.Schema;
 using PrincipleStudios.OpenApi.Transformations.Abstractions;
 using PrincipleStudios.OpenApi.Transformations.DocumentTypes;
+using System;
 using System.Text.Json.Nodes;
 
 namespace PrincipleStudios.OpenApi.Transformations.Specifications.OpenApi3_1;
@@ -24,6 +25,6 @@ internal class OpenApi3_1Parser : SchemaValidatingParser<IOpenApiDocument, OpenA
 
 	protected override IOpenApiDocument? Construct(IDocumentReference documentReference, EvaluationResults evaluationResults)
 	{
-		return new OpenApi3_1Document(documentReference.RootNode);
+		return new OpenApi3_1Document(documentReference.BaseUri, documentReference.RootNode ?? throw new InvalidOperationException(Errors.InvalidOpenApiRootNode));
 	}
 }

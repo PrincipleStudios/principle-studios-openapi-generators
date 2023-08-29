@@ -1,4 +1,6 @@
-﻿using PrincipleStudios.OpenApi.Transformations.Abstractions;
+﻿using Json.More;
+using Json.Pointer;
+using PrincipleStudios.OpenApi.Transformations.Abstractions;
 using System;
 using System.Text.Json.Nodes;
 
@@ -6,11 +8,11 @@ namespace PrincipleStudios.OpenApi.Transformations.Specifications.OpenApi3_1;
 
 public class OpenApi3_1Document : IOpenApiDocument
 {
-	// TODO - does this spec version need to be flxible on the patch version?
+	// TODO - does this spec version need to be flexible on the patch version?
 	public static readonly OpenApiSpecVersion specVersion = new OpenApiSpecVersion("openapi", "3.1.0");
-	private JsonNode? rootNode;
+	private JsonNode rootNode;
 
-	public OpenApi3_1Document(JsonNode? rootNode)
+	public OpenApi3_1Document(Uri id, JsonNode rootNode)
 	{
 		this.rootNode = rootNode;
 	}
@@ -25,4 +27,5 @@ public class OpenApi3_1Document : IOpenApiDocument
 	public Uri JsonSchemaDialect => throw new NotImplementedException();
 
 	public Uri Id => throw new NotImplementedException();
+	public JsonPointer JsonPointer => JsonPointer.Parse(rootNode.GetPointerFromRoot());
 }
