@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Text.Json.Nodes;
 
-namespace PrincipleStudios.OpenApi.Transformations.Json;
+namespace PrincipleStudios.OpenApi.Transformations;
 
 public abstract class JsonNodeVisitor
 {
@@ -27,7 +27,7 @@ public abstract class JsonNodeVisitor
 			case JsonValue value when value.TryGetValue<bool>(out var boolValue):
 				VisitBoolean(boolValue, elementPointer);
 				return;
-			case JsonValue value when value.TryGetValue<double>(out var numberValue):
+			case JsonValue value when value.TryGetValue<decimal>(out var numberValue):
 				VisitNumber(value, numberValue, elementPointer);
 				return;
 			case null:
@@ -59,7 +59,7 @@ public abstract class JsonNodeVisitor
 	protected virtual void VisitString(string stringValue, JsonPointer elementPointer) { }
 
 	// JavaScript uses 64-bit floating point numbers (double), but other json serializers may include int64 or larger numbers. Raw Value is provided here.
-	protected virtual void VisitNumber(JsonValue value, double numberValue, JsonPointer elementPointer) { }
+	protected virtual void VisitNumber(JsonValue value, decimal numberValue, JsonPointer elementPointer) { }
 
 	protected virtual void VisitBoolean(bool booleanValue, JsonPointer elementPointer) { }
 

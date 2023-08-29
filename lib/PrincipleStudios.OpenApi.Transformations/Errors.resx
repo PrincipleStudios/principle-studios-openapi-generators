@@ -124,6 +124,9 @@
   <data name="InvalidRetrievalUri" xml:space="preserve">
     <value>The document's retrieval URI must be absolute.</value>
   </data>
+  <data name="ParserCannotHandleDocument" xml:space="preserve">
+    <value>Parser could not handle the document provided</value>
+  </data>
   <data name="ResolveDocumentException" xml:space="preserve">
     <value>An error occurred resolving a document from a URI</value>
   </data>

@@ -79,6 +79,15 @@ namespace PrincipleStudios.OpenApi.Transformations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Parser could not handle the document provided.
+        /// </summary>
+        internal static string ParserCannotHandleDocument {
+            get {
+                return ResourceManager.GetString("ParserCannotHandleDocument", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to An error occurred resolving a document from a URI.
         /// </summary>
         internal static string ResolveDocumentException {

@@ -12,6 +12,8 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using Yaml2JsonNode;
 using PrincipleStudios.OpenApi.Transformations.DocumentTypes;
+using PrincipleStudios.OpenApi.Transformations.Specifications;
+using PrincipleStudios.OpenApi.Transformations.Abstractions;
 
 namespace PrincipleStudios.OpenApiCodegen.TestUtils
 {
@@ -23,9 +25,19 @@ namespace PrincipleStudios.OpenApiCodegen.TestUtils
 			Json.Schema.OpenApi.Vocabularies.Register();
 		}
 
+		public static ParseResult<IOpenApiDocument> GetOpenApiDocument(string name)
+		{
+			var documentReference = GetDocumentReference(name);
+			var parseResult = CommonParsers.DefaultParsers.Parse(documentReference);
+			if (parseResult == null)
+				throw new InvalidOperationException("No parser found");
+
+			return parseResult;
+		}
+
 		public static OpenApiDocument GetDocument(string name)
 		{
-			GetDocumentReference(name);
+			GetOpenApiDocument(name);
 
 			using (var documentStream = typeof(DocumentHelpers).Assembly.GetManifestResourceStream($"PrincipleStudios.OpenApiCodegen.TestUtils.schemas.{name}"))
 			{

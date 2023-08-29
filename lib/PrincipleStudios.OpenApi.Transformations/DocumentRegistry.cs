@@ -3,7 +3,6 @@ using Json.Pointer;
 using Json.Schema;
 using PrincipleStudios.OpenApi.Transformations.Diagnostics;
 using PrincipleStudios.OpenApi.Transformations.DocumentTypes;
-using PrincipleStudios.OpenApi.Transformations.Json;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
