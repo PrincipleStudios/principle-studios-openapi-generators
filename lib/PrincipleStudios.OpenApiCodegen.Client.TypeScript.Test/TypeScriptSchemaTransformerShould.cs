@@ -10,6 +10,9 @@ using System.Collections.Generic;
 using System;
 using PrincipleStudios.OpenApi.Transformations.DocumentTypes;
 using Json.Pointer;
+using System.Text.Json;
+using FluentAssertions;
+using PrincipleStudios.OpenApiCodegen.TestUtils;
 
 namespace PrincipleStudios.OpenApiCodegen.Client.TypeScript
 {
@@ -38,6 +41,8 @@ namespace PrincipleStudios.OpenApiCodegen.Client.TypeScript
 			var docRef = GetDocumentByUri(schemaUri);
 
 			// TODO - use json schema instead
+			Assert.NotNull(LocateSchema(schemaUri));
+
 			var (document, schema) = GetSchema(docRef, Uri.UnescapeDataString(schemaUri.Fragment.Substring(1)));
 			Assert.NotNull(document);
 			Assert.NotNull(schema);
@@ -46,6 +51,11 @@ namespace PrincipleStudios.OpenApiCodegen.Client.TypeScript
 			var actual = target.ProduceSourceEntry(schema!);
 
 			Assert.Equal(expectedInline, actual);
+		}
+
+		private static Json.Schema.JsonSchema? LocateSchema(Uri schemaUri)
+		{
+			return DocumentLoader.CreateRegistry().ResolveSchema(schemaUri, null);
 		}
 
 		[Theory]

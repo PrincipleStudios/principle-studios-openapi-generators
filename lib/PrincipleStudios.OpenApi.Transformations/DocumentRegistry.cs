@@ -18,12 +18,28 @@ public delegate IDocumentReference? DocumentResolver(Uri baseUri, RelativeDocume
 
 public class DocumentRegistry
 {
+	private EvaluationOptions evaluationOptions;
+
 	private record DocumentRegistryEntry(
 		IDocumentReference Document,
 		IReadOnlyDictionary<string, JsonPointer> Anchors
 	);
 	private readonly IDictionary<Uri, DocumentRegistryEntry> entries = new Dictionary<Uri, DocumentRegistryEntry>();
 	private DocumentResolver? fetch;
+
+	public DocumentRegistry()
+	{
+		evaluationOptions = new EvaluationOptions()
+		{
+			SchemaRegistry = { Fetch = SchemaRegistryFetch },
+			// TODO - any other settings here?
+		};
+	}
+
+	private IBaseDocument? SchemaRegistryFetch(Uri uri)
+	{
+		return ResolveDocument(uri, null);
+	}
 
 	public DocumentResolver Fetch
 	{
@@ -93,12 +109,9 @@ public class DocumentRegistry
 	public IDocumentReference ResolveDocument(Uri uri, RelativeDocument? relativeDocument) =>
 		InternalResolveDocumentEntry(uri, relativeDocument).Document;
 
-	private DocumentRegistryEntry InternalResolveDocumentEntry(Uri uri, RelativeDocument? relativeDocument)
+	private DocumentRegistryEntry InternalResolveDocumentEntry(Uri docUri, RelativeDocument? relativeDocument)
 	{
-		var docUri = uri.Fragment is { Length: > 0 }
-			? throw new ArgumentException(Errors.InvalidDocumentBaseUri, nameof(uri))
-			: uri;
-
+		// .NET's Uri type doesn't include the Fragment in equality, so we don't need to check until we fetch
 		if (!entries.TryGetValue(docUri, out var document))
 		{
 			document = InternalFetch(relativeDocument, docUri);
@@ -109,12 +122,25 @@ public class DocumentRegistry
 
 	private DocumentRegistryEntry InternalFetch(RelativeDocument? relativeDocument, Uri docUri)
 	{
+		if (docUri.Fragment is { Length: > 0 })
+			docUri = new UriBuilder(docUri) { Fragment = "" }.Uri;
+
 		var document = fetch?.Invoke(docUri, relativeDocument);
 		if (document == null)
 			throw new ResolveDocumentException(docUri);
 
 		return InternalAddDocument(document);
 	}
+
+	public JsonSchema? ResolveSchema(Uri schemaUri, RelativeDocument? relativeDocument)
+	{
+		var docRef = ResolveDocument(schemaUri, relativeDocument);
+		var pointer = JsonPointer.Parse(Uri.UnescapeDataString(schemaUri.Fragment.Substring(1)));
+		var schema = docRef.FindSubschema(pointer, SchemaEvaluationOptions);
+		return schema;
+	}
+
+	public EvaluationOptions SchemaEvaluationOptions => evaluationOptions;
 
 	private class DocumentRefVisitor : JsonNodeVisitor
 	{

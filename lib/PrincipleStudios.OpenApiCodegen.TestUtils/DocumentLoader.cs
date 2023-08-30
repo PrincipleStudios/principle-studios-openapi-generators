@@ -11,7 +11,7 @@ using PrincipleStudios.OpenApi.Transformations.Abstractions;
 
 namespace PrincipleStudios.OpenApiCodegen.TestUtils;
 
-internal class DocumentLoader
+public class DocumentLoader
 {
 	private static readonly YamlDocumentLoader docLoader = new YamlDocumentLoader();
 

@@ -55,6 +55,7 @@ public class DocumentRegistryShould
 		var documentId = new Uri(new Bogus.DataSets.Internet().UrlWithPath());
 		var rootJson = new Dictionary<string, object> { ["$id"] = documentId }.ToJsonDocument().RootElement;
 		CreateDocument(rootJson, out var documentMock, out _);
+		documentMock.Setup(d => d.BaseUri).Returns(documentId);
 		target.AddDocument(documentMock.Object);
 
 		Assert.Contains(documentId, target.RegisteredDocumentIds);
@@ -218,6 +219,7 @@ public class DocumentRegistryShould
 		documentMock = new Moq.Mock<IDocumentReference>();
 		documentMock.SetupGet(m => m.RootNode).Returns(rootJson.AsNode());
 		documentMock.SetupGet(m => m.RetrievalUri).Returns(documentId);
+		documentMock.SetupGet(m => m.BaseUri).Returns(documentId);
 	}
 
 }

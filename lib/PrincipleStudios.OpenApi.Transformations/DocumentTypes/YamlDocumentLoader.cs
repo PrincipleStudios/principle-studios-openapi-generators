@@ -53,7 +53,9 @@ public class YamlDocumentLoader : IDocumentTypeLoader
 
 		public JsonNode? RootNode { get; }
 
-		public string OriginalPath => throw new NotImplementedException();
+		string IDocumentReference.OriginalPath => RetrievalUri.OriginalString;
+
+		public Json.Schema.JsonSchema? FindSubschema(JsonPointer pointer, Json.Schema.EvaluationOptions options) => SubschemaLoader.FindSubschema(this, pointer, options);
 
 		public FileLocationRange? GetLocation(JsonPointer path)
 		{

@@ -1,4 +1,5 @@
 ﻿using Json.Pointer;
+using Json.Schema;
 using PrincipleStudios.OpenApi.Transformations.Diagnostics;
 using System;
 using System.Collections.Generic;
@@ -6,13 +7,8 @@ using System.Text;
 
 namespace PrincipleStudios.OpenApi.Transformations.DocumentTypes;
 
-public interface IDocumentReference
+public interface IDocumentReference : IBaseDocument
 {
-	/// <summary>
-	/// The BaseUri of the document, used to resolve inner references
-	/// </summary>
-	Uri BaseUri { get; }
-
 	/// <summary>
 	/// The RetrievalUri of the document.
 	/// </summary>
