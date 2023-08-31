@@ -1,8 +1,11 @@
 ﻿using Json.Schema;
 using PrincipleStudios.OpenApi.Transformations.Abstractions;
+using PrincipleStudios.OpenApi.Transformations.Diagnostics;
 using PrincipleStudios.OpenApi.Transformations.DocumentTypes;
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using Yaml2JsonNode;
@@ -39,8 +42,13 @@ internal class OpenApi3_0Parser : SchemaValidatingParser<OpenApiDocument>
 		return true;
 	}
 
-	protected override OpenApiDocument? Construct(IDocumentReference documentReference, EvaluationResults evaluationResults, DocumentRegistry documentRegistry)
+	protected override ParseResult<OpenApiDocument> Construct(IDocumentReference documentReference, IEnumerable<DiagnosticBase> diagnostics, DocumentRegistry documentRegistry)
 	{
-		return new OpenApi3_0DocumentFactory(documentRegistry).ConstructDocument(documentReference);
+		var factory = new OpenApi3_0DocumentFactory(documentRegistry, diagnostics);
+		var result = factory.ConstructDocument(documentReference);
+		return new ParseResult<OpenApiDocument>(
+			result,
+			factory.Diagnostics.ToArray()
+		);
 	}
 }

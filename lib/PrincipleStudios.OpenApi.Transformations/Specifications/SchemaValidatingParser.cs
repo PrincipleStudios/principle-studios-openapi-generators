@@ -28,12 +28,10 @@ public abstract class SchemaValidatingParser<TInterface> : IParser<TInterface>
 		if (!CanParse(documentReference)) throw new ArgumentException(Errors.ParserCannotHandleDocument, nameof(documentReference));
 
 		var evaluationResults = schema.Evaluate(documentReference.RootNode, new EvaluationOptions { OutputFormat = OutputFormat.Hierarchical });
-		return new ParseResult<TInterface>(
-			Construct(documentReference, evaluationResults, documentRegistry),
-			evaluationResults.IsValid
-				? Array.Empty<Diagnostics.DiagnosticBase>()
-				: ConvertEvaluationToDiagnostics(documentReference, evaluationResults).ToArray()
-		);
+		var diagnosticList = evaluationResults.IsValid
+			? new List<Diagnostics.DiagnosticBase>()
+			: ConvertEvaluationToDiagnostics(documentReference, evaluationResults).ToList();
+		return Construct(documentReference, diagnosticList, documentRegistry);
 	}
 
 	private static IEnumerable<Diagnostics.DiagnosticBase> ConvertEvaluationToDiagnostics(IDocumentReference documentReference, EvaluationResults evaluationResults)
@@ -78,7 +76,7 @@ public abstract class SchemaValidatingParser<TInterface> : IParser<TInterface>
 		}
 	}
 
-	protected abstract TInterface? Construct(IDocumentReference documentReference, EvaluationResults evaluationResults, DocumentRegistry documentRegistry);
+	protected abstract ParseResult<TInterface> Construct(IDocumentReference documentReference, IEnumerable<DiagnosticBase> diagnostics, DocumentRegistry documentRegistry);
 }
 
 public record SchemaValidationDiagnostic(string SchemaValidationRule, string SchemaValidationMessage, Location Location) : DiagnosticBase(Location);

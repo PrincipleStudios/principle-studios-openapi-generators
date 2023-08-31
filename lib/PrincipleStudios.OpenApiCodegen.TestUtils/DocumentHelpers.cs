@@ -19,12 +19,6 @@ namespace PrincipleStudios.OpenApiCodegen.TestUtils
 {
 	public static class DocumentHelpers
 	{
-
-		static DocumentHelpers()
-		{
-			Json.Schema.OpenApi.Vocabularies.Register();
-		}
-
 		public static ParseResult<OpenApi.Transformations.Abstractions.OpenApiDocument> GetOpenApiDocument(string name)
 		{
 			var registry = DocumentLoader.CreateRegistry();

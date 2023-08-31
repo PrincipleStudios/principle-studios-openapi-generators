@@ -23,7 +23,7 @@ internal static class MissingRequiredFieldDefaults
 	public static string HeaderName => "unknown-header";
 	public static string ResponseDescription => "unknown-description";
 
-	public record PlaceholderInfo(Uri Id) : OpenApiInfo(
+	private record PlaceholderInfo(Uri Id) : OpenApiInfo(
 		Id,
 		Title: InfoTitle,
 		Summary: null,
@@ -34,17 +34,20 @@ internal static class MissingRequiredFieldDefaults
 		Version: InfoVersion
 	);
 
+	public static OpenApiInfo ConstructPlaceholderInfo(Uri id) => new PlaceholderInfo(id);
+
 	/// <summary>
 	/// Path has no required properties
 	/// </summary>
-	public record EmptyPath(Uri Id) : OpenApiPath(
+	private record EmptyPath(Uri Id) : OpenApiPath(
 		Id,
 		Summary: null,
 		Description: null,
 		Operations: new Dictionary<string, OpenApiOperation>()
 	);
+	public static OpenApiPath ConstructPlaceholderPath(Uri id) => new EmptyPath(id);
 
-	public record PlaceholderOperation(Uri Id) : OpenApiOperation(
+	private record PlaceholderOperation(Uri Id) : OpenApiOperation(
 		Id,
 		Tags: Array.Empty<string>(),
 		Summary: null,
@@ -55,8 +58,9 @@ internal static class MissingRequiredFieldDefaults
 		Responses: null,
 		Deprecated: false
 	);
+	public static OpenApiOperation ConstructPlaceholderOperation(Uri id) => new PlaceholderOperation(id);
 
-	public record PlaceholderParameter(Uri Id) : OpenApiParameter(
+	private record PlaceholderParameter(Uri Id) : OpenApiParameter(
 		Id,
 		Name: ParameterName,
 		In: ParameterLocation.Query,
@@ -68,8 +72,9 @@ internal static class MissingRequiredFieldDefaults
 		Explode: false,
 		Schema: null
 	);
+	public static OpenApiParameter ConstructPlaceholderParameter(Uri id) => new PlaceholderParameter(id);
 
-	public record PlaceholderHeaderParameter(Uri Id) : OpenApiParameter(
+	private record PlaceholderHeaderParameter(Uri Id) : OpenApiParameter(
 		Id,
 		Name: HeaderName,
 		In: ParameterLocation.Query,
@@ -81,16 +86,19 @@ internal static class MissingRequiredFieldDefaults
 		Explode: false,
 		Schema: null
 	);
+	public static OpenApiParameter ConstructPlaceholderHeaderParameter(Uri id) => new PlaceholderHeaderParameter(id);
 
-	public record PlaceholderMediaTypeObject(Uri Id) : OpenApiMediaTypeObject(
+	private record PlaceholderMediaTypeObject(Uri Id) : OpenApiMediaTypeObject(
 		Id,
 		Schema: null
 	);
+	public static OpenApiMediaTypeObject ConstructPlaceholderMediaTypeObject(Uri id) => new PlaceholderMediaTypeObject(id);
 
-	public record PlaceholderResponse(Uri Id) : OpenApiResponse(
+	private record PlaceholderResponse(Uri Id) : OpenApiResponse(
 		Id,
 		Description: ResponseDescription,
 		Headers: Array.Empty<OpenApiParameter>(),
 		Content: new Dictionary<string, OpenApiMediaTypeObject>()
 	);
+	public static OpenApiResponse ConstructPlaceholderResponse(Uri id) => new PlaceholderResponse(id);
 }

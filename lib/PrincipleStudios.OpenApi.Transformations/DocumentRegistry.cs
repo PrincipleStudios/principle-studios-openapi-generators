@@ -1,4 +1,5 @@
-﻿using Json.More;
+﻿// Throw an exception here because this is a problem with the usage of this class, not data
+using Json.More;
 using Json.Pointer;
 using Json.Schema;
 using PrincipleStudios.OpenApi.Transformations.Diagnostics;
@@ -10,30 +11,21 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
+using System.Xml.Linq;
 
 namespace PrincipleStudios.OpenApi.Transformations;
 
 public delegate IDocumentReference? DocumentResolver(Uri baseUri, IDocumentReference? currentDocument);
+public record NodeMetadata(Uri Id, JsonNode? Node, IDocumentReference Document);
 
 public class DocumentRegistry
 {
-	private EvaluationOptions evaluationOptions;
-
 	private record DocumentRegistryEntry(
 		IDocumentReference Document,
 		IReadOnlyDictionary<string, JsonPointer> Anchors
 	);
 	private readonly IDictionary<Uri, DocumentRegistryEntry> entries = new Dictionary<Uri, DocumentRegistryEntry>();
 	private DocumentResolver? fetch;
-
-	public DocumentRegistry()
-	{
-		evaluationOptions = new EvaluationOptions()
-		{
-			SchemaRegistry = { Fetch = SchemaRegistryFetch },
-			// TODO - any other settings here?
-		};
-	}
 
 	private IBaseDocument? SchemaRegistryFetch(Uri uri)
 	{
@@ -49,7 +41,7 @@ public class DocumentRegistry
 	public void AddDocument(IDocumentReference document)
 	{
 		if (document is null) throw new ArgumentNullException(nameof(document));
-		if (!document.RetrievalUri.IsAbsoluteUri) throw new ArgumentException(Errors.InvalidRetrievalUri, nameof(document));
+		if (!document.RetrievalUri.IsAbsoluteUri) throw new DiagnosticException(InvalidRetrievalUri.Builder(document.RetrievalUri));
 
 		InternalAddDocument(document);
 	}
@@ -58,7 +50,7 @@ public class DocumentRegistry
 	{
 		var uri = document.BaseUri;
 		// TODO: should this be a warning and instead just use the retrieval uri?
-		if (uri.Fragment is { Length: > 0 }) throw new ArgumentException(Errors.InvalidDocumentBaseUri, nameof(document));
+		if (uri.Fragment is { Length: > 0 }) throw new DiagnosticException(InvalidDocumentBaseUri.Builder(retrievalUri: document.RetrievalUri, baseUri: document.BaseUri));
 
 		var visitor = new DocumentRefVisitor();
 		visitor.Visit(document.RootNode);
@@ -76,40 +68,65 @@ public class DocumentRegistry
 
 	public IEnumerable<Uri> RegisteredDocumentIds => entries.Keys;
 
-	public JsonNode? ResolveNode(IDocumentReference document, Uri refUri) =>
-		ResolveNode(refUri.IsAbsoluteUri ? refUri : new Uri(document.BaseUri, refUri), document);
+	public JsonNode? ResolveNode(Uri uri, IDocumentReference? relativeDocument = null) => ResolveMetadata(uri, relativeDocument).Node;
 
-	public JsonNode? ResolveNode(Uri uri) => ResolveNode(uri, relativeDocument: null);
-
-	private JsonNode? ResolveNode(Uri uri, IDocumentReference? relativeDocument)
+	public NodeMetadata ResolveMetadata(Uri uri, IDocumentReference? relativeDocument)
 	{
-		var docUri = uri.Fragment is { Length: > 0 }
-			? new UriBuilder(uri) { Fragment = "" }.Uri
-			: uri;
-		var document = InternalResolveDocumentEntry(docUri, relativeDocument);
+		var registryEntry = InternalResolveDocumentEntry(uri, relativeDocument);
+		var fullUri = uri.IsAbsoluteUri ? uri
+			: relativeDocument != null
+				// Can't use the .Fragment property of a relative URI, so we need to construct the full resulting URI
+				? new UriBuilder(registryEntry.Document.BaseUri)
+				{
+					Fragment = new Uri(relativeDocument.BaseUri, uri).Fragment
+				}.Uri
+			// Throw an exception here because this is a problem with the usage of this class, not data
+			: throw new InvalidOperationException(Errors.ReceivedRelativeUriWithoutDocument);
 
-		if (uri.Fragment is not { Length: > 0 })
-			return document.Document.RootNode;
-
-		var element = uri.Fragment.StartsWith("#/")
-			// pointer
-			? !JsonPointer.TryParse(uri.Fragment, out var pointer)
-				? throw new DiagnosticException(InvalidFragmentDiagnostic.Builder())
-				: pointer!.TryEvaluate(document.Document.RootNode, out var node)
-					? node
-					: throw new ResolveNodeException(uri)
-			// anchor
-			: document.Anchors[uri.Fragment.Substring(1)].TryEvaluate(document.Document.RootNode, out var nodeFromAnchor)
-				? nodeFromAnchor
-				: throw new ResolveNodeException(uri);
-		return element;
+		return ResolveFragment(fullUri.Fragment, registryEntry);
 	}
+
+	private static NodeMetadata ResolveFragment(string fragment, DocumentRegistryEntry registryEntry)
+	{
+		// fragments must start with `#` or be empty
+		if (fragment is not { Length: > 1 })
+			return new(Id: registryEntry.Document.BaseUri, Node: registryEntry.Document.RootNode, Document: registryEntry.Document);
+
+		var uri = new UriBuilder(registryEntry.Document.BaseUri) { Fragment = fragment }.Uri;
+		if (!ResolvePointer(uri, registryEntry).TryEvaluate(registryEntry.Document.RootNode, out var node))
+			throw new DiagnosticException(CouldNotFindTargetNodeDiagnostic.Builder(uri));
+
+		return new(Id: registryEntry.Document.BaseUri, Node: node, Document: registryEntry.Document);
+	}
+
+	private static JsonPointer ResolvePointer(Uri uri, DocumentRegistryEntry registryEntry)
+	{
+		// Fragments always start with `#`
+		if (uri.Fragment is not { Length: > 1 }) return JsonPointer.Empty;
+		if (uri.Fragment.StartsWith("#/"))
+		{
+			if (!JsonPointer.TryParse(Uri.UnescapeDataString(uri.Fragment).Substring(1), out var pointer)) throw new DiagnosticException(InvalidFragmentDiagnostic.Builder());
+			// needs not-null assertion because we're supporting .NET Standard 2.0, which was pre-NotNullWhenAttribute
+			return pointer!;
+		}
+		else
+		{
+			if (!registryEntry.Anchors.TryGetValue(uri.Fragment.Substring(1), out var pointer)) throw new DiagnosticException(UnknownAnchorDiagnostic.Builder(uri));
+			return pointer;
+		}
+	}
+
 
 	public IDocumentReference ResolveDocument(Uri uri, IDocumentReference? relativeDocument) =>
 		InternalResolveDocumentEntry(uri, relativeDocument).Document;
 
-	private DocumentRegistryEntry InternalResolveDocumentEntry(Uri docUri, IDocumentReference? relativeDocument)
+	private DocumentRegistryEntry InternalResolveDocumentEntry(Uri uri, IDocumentReference? relativeDocument)
 	{
+		var docUri = uri.IsAbsoluteUri ? uri
+			: relativeDocument != null ? new Uri(relativeDocument.BaseUri, uri)
+			// Throw an exception here because this is a problem with the usage of this class, not data
+			: throw new InvalidOperationException(Errors.ReceivedRelativeUriWithoutDocument);
+
 		// .NET's Uri type doesn't include the Fragment in equality, so we don't need to check until we fetch
 		if (!entries.TryGetValue(docUri, out var document))
 		{
@@ -126,20 +143,29 @@ public class DocumentRegistry
 
 		var document = fetch?.Invoke(docUri, relativeDocument);
 		if (document == null)
-			throw new ResolveDocumentException(docUri);
+			throw new DiagnosticException(ResolveDocumentDiagnostic.Builder(docUri));
 
 		return InternalAddDocument(document);
 	}
 
-	public JsonSchema? ResolveSchema(Uri schemaUri, IDocumentReference? relativeDocument)
+	public JsonSchema? ResolveSchema(Uri schemaUri, IDocumentReference? relativeDocument, EvaluationOptions? evaluationOptions = default)
 	{
 		var docRef = ResolveDocument(schemaUri, relativeDocument);
 		var pointer = JsonPointer.Parse(Uri.UnescapeDataString(schemaUri.Fragment.Substring(1)));
-		var schema = docRef.FindSubschema(pointer, SchemaEvaluationOptions);
+
+		evaluationOptions ??= new EvaluationOptions();
+		evaluationOptions.SchemaRegistry.Fetch = SchemaRegistryFetch;
+		var schema = docRef.FindSubschema(pointer, evaluationOptions);
 		return schema;
 	}
 
-	public EvaluationOptions SchemaEvaluationOptions => evaluationOptions;
+	internal Location ResolveLocation(NodeMetadata key)
+	{
+		var registryEntry = InternalResolveDocumentEntry(key.Document.BaseUri, null);
+		if (registryEntry.Document != key.Document) throw new ArgumentException(Errors.DocumentMismatch, nameof(key));
+		var fileLocation = key.Document.GetLocation(ResolvePointer(key.Id, registryEntry));
+		return fileLocation == null ? new Location(key.Document.RetrievalUri) : new Location(key.Document.RetrievalUri, fileLocation);
+	}
 
 	private class DocumentRefVisitor : JsonNodeVisitor
 	{
@@ -170,12 +196,37 @@ public static class JsonDocumentUtils
 
 }
 
+public record InvalidRetrievalUri(Uri RetrievalUri, Location Location) : DiagnosticBase(Location)
+{
+	public static DiagnosticException.ToDiagnostic Builder(Uri retrievalUri) => (Location) => new InvalidRetrievalUri(retrievalUri, Location);
+}
+
+public record InvalidDocumentBaseUri(Uri RetrievalUri, Uri BaseUri, Location Location) : DiagnosticBase(Location)
+{
+	public static DiagnosticException.ToDiagnostic Builder(Uri retrievalUri, Uri baseUri) => (Location) => new InvalidDocumentBaseUri(retrievalUri, baseUri, Location);
+}
+
 public record InvalidFragmentDiagnostic(Location Location) : DiagnosticBase(Location)
 {
 	public static DiagnosticException.ToDiagnostic Builder() => (Location) => new InvalidFragmentDiagnostic(Location);
 }
 
-public record UnresolvedNodeDiagnostic(Location Location) : DiagnosticBase(Location)
+public record InvalidRefDiagnostic(Location Location) : DiagnosticBase(Location)
 {
-	public static DiagnosticException.ToDiagnostic Builder() => (Location) => new UnresolvedNodeDiagnostic(Location);
+	public static DiagnosticException.ToDiagnostic Builder() => (Location) => new InvalidRefDiagnostic(Location);
+}
+
+public record CouldNotFindTargetNodeDiagnostic(Uri Uri, Location Location) : DiagnosticBase(Location)
+{
+	internal static DiagnosticException.ToDiagnostic Builder(Uri uri) => (Location) => new CouldNotFindTargetNodeDiagnostic(uri, Location);
+}
+
+public record UnknownAnchorDiagnostic(Uri Uri, Location Location) : DiagnosticBase(Location)
+{
+	internal static DiagnosticException.ToDiagnostic Builder(Uri uri) => (Location) => new UnknownAnchorDiagnostic(uri, Location);
+}
+
+public record ResolveDocumentDiagnostic(Uri Uri, Location Location) : DiagnosticBase(Location)
+{
+	internal static DiagnosticException.ToDiagnostic Builder(Uri uri) => (Location) => new ResolveDocumentDiagnostic(uri, Location);
 }

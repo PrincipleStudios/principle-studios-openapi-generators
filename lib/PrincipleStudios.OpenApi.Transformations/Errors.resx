@@ -117,18 +117,17 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="InvalidDocumentBaseUri" xml:space="preserve">
-    <value>The given document URI contained a fragment; fragments are not allowed in document URIs.</value>
-    <comment>See https://json-schema.org/understanding-json-schema/structuring.html#id15</comment>
+  <data name="DocumentMismatch" xml:space="preserve">
+    <value>Provided document did not match registry</value>
   </data>
   <data name="InvalidOpenApiRootNode" xml:space="preserve">
     <value>Root node of an OpenApi document must be an object</value>
   </data>
-  <data name="InvalidRetrievalUri" xml:space="preserve">
-    <value>The document's retrieval URI must be absolute.</value>
-  </data>
   <data name="ParserCannotHandleDocument" xml:space="preserve">
     <value>Parser could not handle the document provided</value>
+  </data>
+  <data name="ReceivedRelativeUriWithoutDocument" xml:space="preserve">
+    <value>Received a relative URI without a relative document</value>
   </data>
   <data name="ResolveDocumentException" xml:space="preserve">
     <value>An error occurred resolving a document from a URI</value>

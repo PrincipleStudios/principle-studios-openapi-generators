@@ -61,11 +61,11 @@ namespace PrincipleStudios.OpenApi.Transformations {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The given document URI contained a fragment; fragments are not allowed in document URIs..
+        ///   Looks up a localized string similar to Provided document did not match registry.
         /// </summary>
-        internal static string InvalidDocumentBaseUri {
+        internal static string DocumentMismatch {
             get {
-                return ResourceManager.GetString("InvalidDocumentBaseUri", resourceCulture);
+                return ResourceManager.GetString("DocumentMismatch", resourceCulture);
             }
         }
         
@@ -79,20 +79,20 @@ namespace PrincipleStudios.OpenApi.Transformations {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The document&apos;s retrieval URI must be absolute..
-        /// </summary>
-        internal static string InvalidRetrievalUri {
-            get {
-                return ResourceManager.GetString("InvalidRetrievalUri", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Parser could not handle the document provided.
         /// </summary>
         internal static string ParserCannotHandleDocument {
             get {
                 return ResourceManager.GetString("ParserCannotHandleDocument", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Received a relative URI without a relative document.
+        /// </summary>
+        internal static string ReceivedRelativeUriWithoutDocument {
+            get {
+                return ResourceManager.GetString("ReceivedRelativeUriWithoutDocument", resourceCulture);
             }
         }
         

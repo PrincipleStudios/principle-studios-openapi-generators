@@ -1,5 +1,6 @@
 ﻿using Json.More;
 using Moq;
+using PrincipleStudios.OpenApi.Transformations.Diagnostics;
 using PrincipleStudios.OpenApi.Transformations.DocumentTypes;
 using System;
 using System.Collections.Generic;
@@ -13,14 +14,15 @@ namespace PrincipleStudios.OpenApi.Transformations;
 
 public class DocumentRegistryShould
 {
+	private static Bogus.DataSets.Internet internetDataSet = new Bogus.DataSets.Internet();
 	[Fact]
 	public void Throws_if_a_document_cannot_be_located_without_a_fetch_function()
 	{
 		var target = new DocumentRegistry();
-		var documentId = new Uri(new Bogus.DataSets.Internet().UrlWithPath());
+		var documentId = new Uri(internetDataSet.UrlWithPath());
 
-		var ex = Assert.Throws<ResolveDocumentException>(() => target.ResolveNode(documentId));
-		Assert.Equal(documentId, ex.Uri);
+		var diag = AssertThrowsDiagnostic<ResolveDocumentDiagnostic>(() => target.ResolveNode(documentId));
+		Assert.Equal(documentId, diag.Uri);
 	}
 
 	[Fact]
@@ -31,10 +33,10 @@ public class DocumentRegistryShould
 		mockFetch.Setup(a => a(It.IsAny<Uri>(), It.IsAny<IDocumentReference?>())).Returns((IDocumentReference?)null);
 		target.Fetch = mockFetch.Object;
 
-		var documentId = new Uri(new Bogus.DataSets.Internet().UrlWithPath());
+		var documentId = new Uri(internetDataSet.UrlWithPath());
 
-		var ex = Assert.Throws<ResolveDocumentException>(() => target.ResolveNode(documentId));
-		Assert.Equal(documentId, ex.Uri);
+		var diag = AssertThrowsDiagnostic<ResolveDocumentDiagnostic>(() => target.ResolveNode(documentId));
+		Assert.Equal(documentId, diag.Uri);
 	}
 
 	[Fact]
@@ -52,7 +54,7 @@ public class DocumentRegistryShould
 	public void Allow_documents_to_be_added_with_a_different_base_uri()
 	{
 		var target = new DocumentRegistry();
-		var documentId = new Uri(new Bogus.DataSets.Internet().UrlWithPath());
+		var documentId = new Uri(internetDataSet.UrlWithPath());
 		var rootJson = new Dictionary<string, object> { ["$id"] = documentId }.ToJsonDocument().RootElement;
 		CreateDocument(rootJson, out var documentMock, out _);
 		documentMock.Setup(d => d.BaseUri).Returns(documentId);
@@ -101,7 +103,7 @@ public class DocumentRegistryShould
 
 		target.Fetch = (uri, relative) => uri == document2Id ? document2Mock.Object : null;
 
-		var actual = target.ResolveNode(documentMock.Object, relativePath);
+		var actual = target.ResolveNode(relativePath, documentMock.Object);
 
 		Assert.True(actual.IsEquivalentTo(rootJson2.AsNode()));
 	}
@@ -116,6 +118,38 @@ public class DocumentRegistryShould
 		target.AddDocument(documentMock.Object);
 
 		Assert.Throws<ArgumentException>(() => target.AddDocument(documentMock2.Object));
+	}
+
+	[Fact]
+	public void Allow_fragment_metadata_to_be_retrieved_via_absolute_fragment()
+	{
+		var target = new DocumentRegistry();
+		var rootJson = new { foo = new { bar = "baz" } }.ToJsonDocument().RootElement;
+		CreateDocument(rootJson, out var documentMock, out var documentId);
+		target.AddDocument(documentMock.Object);
+		var fragmentId = new UriBuilder(documentId) { Fragment = "/foo/bar" }.Uri;
+
+		var actual = target.ResolveMetadata(fragmentId, null);
+
+		Assert.Equal(documentMock.Object, actual.Document);
+		Assert.Equal(fragmentId, actual.Id);
+		Assert.Equal("baz", actual.Node?.GetValue<string>());
+	}
+
+	[Fact]
+	public void Allow_fragment_metadata_to_be_retrieved_via_relative_fragment()
+	{
+		var target = new DocumentRegistry();
+		var rootJson = new { foo = new { bar = "baz" } }.ToJsonDocument().RootElement;
+		CreateDocument(rootJson, out var documentMock, out var documentId);
+		target.AddDocument(documentMock.Object);
+		var fragmentId = new UriBuilder(documentId) { Fragment = "/foo/bar" }.Uri;
+
+		var actual = target.ResolveMetadata(new Uri("#/foo/bar", UriKind.Relative), documentMock.Object);
+
+		Assert.Equal(documentMock.Object, actual.Document);
+		Assert.Equal(fragmentId, actual.Id);
+		Assert.Equal("baz", actual.Node?.GetValue<string>());
 	}
 
 	[Fact]
@@ -141,8 +175,8 @@ public class DocumentRegistryShould
 		target.AddDocument(documentMock.Object);
 		var fragmentId = new UriBuilder(documentId) { Fragment = "/foo/bad/fragment" }.Uri;
 
-		var ex = Assert.Throws<ResolveNodeException>(() => target.ResolveNode(fragmentId));
-		Assert.Equal(fragmentId, ex.Uri);
+		var diag = AssertThrowsDiagnostic<CouldNotFindTargetNodeDiagnostic>(() => target.ResolveNode(fragmentId));
+		Assert.Equal(fragmentId, diag.Uri);
 	}
 
 	[Fact]
@@ -175,7 +209,7 @@ public class DocumentRegistryShould
 
 		target.Fetch = (uri, relative) => uri == document2Id ? document2Mock.Object : null;
 
-		var actual = target.ResolveNode(documentMock.Object, relativePath);
+		var actual = target.ResolveNode(relativePath, documentMock.Object);
 
 		Assert.True(actual.IsEquivalentTo(rootJson2.AsNode()));
 	}
@@ -210,7 +244,7 @@ public class DocumentRegistryShould
 
 	private static void CreateDocument(JsonElement rootJson, out Moq.Mock<IDocumentReference> documentMock, out Uri documentId)
 	{
-		documentId = new Uri(new Bogus.DataSets.Internet().UrlWithPath());
+		documentId = new Uri(internetDataSet.UrlWithPath());
 		CreateDocumentWithRetrievalId(rootJson, documentId, out documentMock);
 	}
 
@@ -220,6 +254,21 @@ public class DocumentRegistryShould
 		documentMock.SetupGet(m => m.RootNode).Returns(rootJson.AsNode());
 		documentMock.SetupGet(m => m.RetrievalUri).Returns(documentId);
 		documentMock.SetupGet(m => m.BaseUri).Returns(documentId);
+	}
+
+	private static T AssertThrowsDiagnostic<T>(Action testCode)
+		where T : DiagnosticBase
+	{
+		return UnwrapDiagnostic<T>(Assert.Throws<DiagnosticException>(testCode));
+	}
+
+	private static T UnwrapDiagnostic<T>(DiagnosticException ex)
+		where T : DiagnosticBase
+	{
+		var location = new Location(new Uri(internetDataSet.UrlWithPath()));
+		var diagnostic = Assert.IsType<T>(ex.ConstructDiagnostic(location));
+		Assert.Equal(location, diagnostic.Location);
+		return diagnostic;
 	}
 
 }

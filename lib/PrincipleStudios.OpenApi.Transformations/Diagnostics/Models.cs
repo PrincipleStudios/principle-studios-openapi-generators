@@ -7,7 +7,9 @@ namespace PrincipleStudios.OpenApi.Transformations.Diagnostics;
 [DebuggerDisplay("{Line},{Column}")]
 public record FileLocationMark(int Line, int Column);
 [DebuggerDisplay("{Start},{End}")]
-public record FileLocationRange(FileLocationMark Start, FileLocationMark End);
+public record FileLocationRange(FileLocationMark Start, FileLocationMark End)
+{
+}
 
 [DebuggerDisplay("{RetrievalUri}({Range})")]
 public record PreciseLocation(Uri RetrievalUri, FileLocationRange Range);
