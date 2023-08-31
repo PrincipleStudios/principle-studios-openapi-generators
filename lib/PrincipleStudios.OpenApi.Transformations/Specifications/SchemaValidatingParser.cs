@@ -38,9 +38,7 @@ public abstract class SchemaValidatingParser<TInterface> : IParser<TInterface>
 	{
 		return from entry in Inner(evaluationResults)
 			   let range = documentReference.GetLocation(entry.Pointer)
-			   let location = range == null
-					? new Location(documentReference.RetrievalUri)
-					: new Location(documentReference.RetrievalUri, range)
+			   let location = new Location(documentReference.RetrievalUri, range)
 			   select new SchemaValidationDiagnostic(entry.ErrorKey, entry.ErrorMessage, location);
 
 		IEnumerable<(Json.Pointer.JsonPointer Pointer, string ErrorKey, string ErrorMessage)> Inner(EvaluationResults evaluationResults)

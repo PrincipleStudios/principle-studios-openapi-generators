@@ -113,7 +113,7 @@ public record YamlLoadDiagnostic(Location Location, string Message) : Diagnostic
 		var location = YamlUtils.FromException(ex);
 		return (retrievalUri) =>
 		{
-			return new YamlLoadDiagnostic(new Location(retrievalUri, location.Start, location.End), ex.Message);
+			return new YamlLoadDiagnostic(new Location(retrievalUri, location), ex.Message);
 		};
 	}
 }

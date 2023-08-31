@@ -164,7 +164,7 @@ public class DocumentRegistry
 		var registryEntry = InternalResolveDocumentEntry(key.Document.BaseUri, null);
 		if (registryEntry.Document != key.Document) throw new ArgumentException(Errors.DocumentMismatch, nameof(key));
 		var fileLocation = key.Document.GetLocation(ResolvePointer(key.Id, registryEntry));
-		return fileLocation == null ? new Location(key.Document.RetrievalUri) : new Location(key.Document.RetrievalUri, fileLocation);
+		return new Location(key.Document.RetrievalUri, fileLocation);
 	}
 
 	private class DocumentRefVisitor : JsonNodeVisitor
