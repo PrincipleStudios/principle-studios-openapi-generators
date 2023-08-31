@@ -6,7 +6,7 @@ using System.Text.Json.Nodes;
 
 namespace PrincipleStudios.OpenApi.Transformations.Specifications.OpenApi3_1;
 
-internal class OpenApi3_1Parser : SchemaValidatingParser<IOpenApiDocument, OpenApi3_1Document>
+internal class OpenApi3_1Parser : SchemaValidatingParser<OpenApiDocument>
 {
 	public OpenApi3_1Parser() : base(Json.Schema.OpenApi.MetaSchemas.DocumentSchema)
 	{
@@ -23,8 +23,8 @@ internal class OpenApi3_1Parser : SchemaValidatingParser<IOpenApiDocument, OpenA
 		return true;
 	}
 
-	protected override IOpenApiDocument? Construct(IDocumentReference documentReference, EvaluationResults evaluationResults)
+	protected override OpenApiDocument? Construct(IDocumentReference documentReference, EvaluationResults evaluationResults, DocumentRegistry documentRegistry)
 	{
-		return new OpenApi3_1Document(documentReference.BaseUri, documentReference.RootNode ?? throw new InvalidOperationException(Errors.InvalidOpenApiRootNode));
+		return new OpenApi3_1DocumentFactory().ConstructDocument(documentReference.BaseUri, documentReference.RootNode ?? throw new InvalidOperationException(Errors.InvalidOpenApiRootNode));
 	}
 }

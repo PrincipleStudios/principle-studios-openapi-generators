@@ -15,7 +15,7 @@ public class DocumentLoader
 {
 	private static readonly YamlDocumentLoader docLoader = new YamlDocumentLoader();
 
-	private static IDocumentReference? DocumentResolver(Uri baseUri, RelativeDocument? relativeDocument = null)
+	private static IDocumentReference? DocumentResolver(Uri baseUri, IDocumentReference? currentDocument = null)
 	{
 		switch (baseUri)
 		{

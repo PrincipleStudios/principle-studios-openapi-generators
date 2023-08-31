@@ -10,7 +10,7 @@ using YamlDotNet.RepresentationModel;
 
 namespace PrincipleStudios.OpenApi.Transformations.Specifications.OpenApi3_0;
 
-internal class OpenApi3_0Parser : SchemaValidatingParser<IOpenApiDocument, OpenApi3_0Document>
+internal class OpenApi3_0Parser : SchemaValidatingParser<OpenApiDocument>
 {
 	public OpenApi3_0Parser() : base(LoadOpenApi3_0Schema())
 	{
@@ -39,8 +39,8 @@ internal class OpenApi3_0Parser : SchemaValidatingParser<IOpenApiDocument, OpenA
 		return true;
 	}
 
-	protected override IOpenApiDocument? Construct(IDocumentReference documentReference, EvaluationResults evaluationResults)
+	protected override OpenApiDocument? Construct(IDocumentReference documentReference, EvaluationResults evaluationResults, DocumentRegistry documentRegistry)
 	{
-		return new OpenApi3_0Document(documentReference.BaseUri, documentReference.RootNode ?? throw new InvalidOperationException(Errors.InvalidOpenApiRootNode));
+		return new OpenApi3_0DocumentFactory(documentRegistry).ConstructDocument(documentReference);
 	}
 }

@@ -28,7 +28,7 @@ public class DocumentRegistryShould
 	{
 		var target = new DocumentRegistry();
 		var mockFetch = new Mock<DocumentResolver>();
-		mockFetch.Setup(a => a(It.IsAny<Uri>(), It.IsAny<RelativeDocument>())).Returns((IDocumentReference?)null);
+		mockFetch.Setup(a => a(It.IsAny<Uri>(), It.IsAny<IDocumentReference?>())).Returns((IDocumentReference?)null);
 		target.Fetch = mockFetch.Object;
 
 		var documentId = new Uri(new Bogus.DataSets.Internet().UrlWithPath());

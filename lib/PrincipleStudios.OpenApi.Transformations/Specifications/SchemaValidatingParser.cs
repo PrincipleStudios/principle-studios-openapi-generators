@@ -11,9 +11,8 @@ using System.Text.Json.Nodes;
 
 namespace PrincipleStudios.OpenApi.Transformations.Specifications;
 
-public abstract class SchemaValidatingParser<TInterface, TImplementation> : IParser<TInterface>
+public abstract class SchemaValidatingParser<TInterface> : IParser<TInterface>
 	where TInterface : class, IReferenceableDocument
-	where TImplementation : TInterface
 {
 	private readonly JsonSchema schema;
 
@@ -24,13 +23,13 @@ public abstract class SchemaValidatingParser<TInterface, TImplementation> : IPar
 
 	public abstract bool CanParse(IDocumentReference documentReference);
 
-	public ParseResult<TInterface>? Parse(IDocumentReference documentReference)
+	public ParseResult<TInterface>? Parse(IDocumentReference documentReference, DocumentRegistry documentRegistry)
 	{
 		if (!CanParse(documentReference)) throw new ArgumentException(Errors.ParserCannotHandleDocument, nameof(documentReference));
 
 		var evaluationResults = schema.Evaluate(documentReference.RootNode, new EvaluationOptions { OutputFormat = OutputFormat.Hierarchical });
 		return new ParseResult<TInterface>(
-			Construct(documentReference, evaluationResults),
+			Construct(documentReference, evaluationResults, documentRegistry),
 			evaluationResults.IsValid
 				? Array.Empty<Diagnostics.DiagnosticBase>()
 				: ConvertEvaluationToDiagnostics(documentReference, evaluationResults).ToArray()
@@ -79,7 +78,7 @@ public abstract class SchemaValidatingParser<TInterface, TImplementation> : IPar
 		}
 	}
 
-	protected abstract TInterface? Construct(IDocumentReference documentReference, EvaluationResults evaluationResults);
+	protected abstract TInterface? Construct(IDocumentReference documentReference, EvaluationResults evaluationResults, DocumentRegistry documentRegistry);
 }
 
 public record SchemaValidationDiagnostic(string SchemaValidationRule, string SchemaValidationMessage, Location Location) : DiagnosticBase(Location);

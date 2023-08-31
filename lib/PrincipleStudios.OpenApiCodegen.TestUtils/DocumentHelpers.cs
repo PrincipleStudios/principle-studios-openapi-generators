@@ -25,17 +25,18 @@ namespace PrincipleStudios.OpenApiCodegen.TestUtils
 			Json.Schema.OpenApi.Vocabularies.Register();
 		}
 
-		public static ParseResult<IOpenApiDocument> GetOpenApiDocument(string name)
+		public static ParseResult<OpenApi.Transformations.Abstractions.OpenApiDocument> GetOpenApiDocument(string name)
 		{
-			var documentReference = GetDocumentReference(name);
-			var parseResult = CommonParsers.DefaultParsers.Parse(documentReference);
+			var registry = DocumentLoader.CreateRegistry();
+			var documentReference = GetDocumentReference(registry, name);
+			var parseResult = CommonParsers.DefaultParsers.Parse(documentReference, registry);
 			if (parseResult == null)
 				throw new InvalidOperationException("No parser found");
 
 			return parseResult;
 		}
 
-		public static OpenApiDocument GetDocument(string name)
+		public static Microsoft.OpenApi.Models.OpenApiDocument GetDocument(string name)
 		{
 			GetOpenApiDocument(name);
 
@@ -47,14 +48,22 @@ namespace PrincipleStudios.OpenApiCodegen.TestUtils
 		}
 
 		public static IDocumentReference GetDocumentReference(string name)
+			=> GetDocumentReference(DocumentLoader.CreateRegistry(), name);
+
+		public static IDocumentReference GetDocumentReference(OpenApi.Transformations.DocumentRegistry registry, string name)
 		{
 			var uri = new Uri($"proj://embedded/{name}");
-			return GetDocumentByUri(uri);
+			return GetDocumentByUri(registry, uri);
 		}
 
 		public static IDocumentReference GetDocumentByUri(Uri uri)
 		{
-			return DocumentLoader.CreateRegistry().ResolveDocument(new UriBuilder(uri) { Fragment = "" }.Uri, null) ?? throw new InvalidOperationException("Embeded document not found");
+			return GetDocumentByUri(DocumentLoader.CreateRegistry(), uri);
+		}
+
+		public static IDocumentReference GetDocumentByUri(OpenApi.Transformations.DocumentRegistry registry, Uri uri)
+		{
+			return registry.ResolveDocument(new UriBuilder(uri) { Fragment = "" }.Uri, null) ?? throw new InvalidOperationException("Embeded document not found");
 		}
 
 		public static Microsoft.OpenApi.OpenApiSpecVersion ToSpecVersion(string? inputVersion)

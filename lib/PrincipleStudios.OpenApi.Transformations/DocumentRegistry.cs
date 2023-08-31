@@ -13,8 +13,7 @@ using System.Text.Json.Nodes;
 
 namespace PrincipleStudios.OpenApi.Transformations;
 
-public record RelativeDocument(IDocumentReference Document, Uri RelativeUri);
-public delegate IDocumentReference? DocumentResolver(Uri baseUri, RelativeDocument? relativeDocument);
+public delegate IDocumentReference? DocumentResolver(Uri baseUri, IDocumentReference? currentDocument);
 
 public class DocumentRegistry
 {
@@ -78,11 +77,11 @@ public class DocumentRegistry
 	public IEnumerable<Uri> RegisteredDocumentIds => entries.Keys;
 
 	public JsonNode? ResolveNode(IDocumentReference document, Uri refUri) =>
-		ResolveNode(refUri.IsAbsoluteUri ? refUri : new Uri(document.BaseUri, refUri), new(document, refUri));
+		ResolveNode(refUri.IsAbsoluteUri ? refUri : new Uri(document.BaseUri, refUri), document);
 
 	public JsonNode? ResolveNode(Uri uri) => ResolveNode(uri, relativeDocument: null);
 
-	private JsonNode? ResolveNode(Uri uri, RelativeDocument? relativeDocument)
+	private JsonNode? ResolveNode(Uri uri, IDocumentReference? relativeDocument)
 	{
 		var docUri = uri.Fragment is { Length: > 0 }
 			? new UriBuilder(uri) { Fragment = "" }.Uri
@@ -106,10 +105,10 @@ public class DocumentRegistry
 		return element;
 	}
 
-	public IDocumentReference ResolveDocument(Uri uri, RelativeDocument? relativeDocument) =>
+	public IDocumentReference ResolveDocument(Uri uri, IDocumentReference? relativeDocument) =>
 		InternalResolveDocumentEntry(uri, relativeDocument).Document;
 
-	private DocumentRegistryEntry InternalResolveDocumentEntry(Uri docUri, RelativeDocument? relativeDocument)
+	private DocumentRegistryEntry InternalResolveDocumentEntry(Uri docUri, IDocumentReference? relativeDocument)
 	{
 		// .NET's Uri type doesn't include the Fragment in equality, so we don't need to check until we fetch
 		if (!entries.TryGetValue(docUri, out var document))
@@ -120,7 +119,7 @@ public class DocumentRegistry
 		return document;
 	}
 
-	private DocumentRegistryEntry InternalFetch(RelativeDocument? relativeDocument, Uri docUri)
+	private DocumentRegistryEntry InternalFetch(IDocumentReference? relativeDocument, Uri docUri)
 	{
 		if (docUri.Fragment is { Length: > 0 })
 			docUri = new UriBuilder(docUri) { Fragment = "" }.Uri;
@@ -132,7 +131,7 @@ public class DocumentRegistry
 		return InternalAddDocument(document);
 	}
 
-	public JsonSchema? ResolveSchema(Uri schemaUri, RelativeDocument? relativeDocument)
+	public JsonSchema? ResolveSchema(Uri schemaUri, IDocumentReference? relativeDocument)
 	{
 		var docRef = ResolveDocument(schemaUri, relativeDocument);
 		var pointer = JsonPointer.Parse(Uri.UnescapeDataString(schemaUri.Fragment.Substring(1)));

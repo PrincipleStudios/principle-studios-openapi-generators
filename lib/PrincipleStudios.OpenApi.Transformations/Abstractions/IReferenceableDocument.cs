@@ -5,5 +5,5 @@ namespace PrincipleStudios.OpenApi.Transformations.Abstractions;
 
 public interface IReferenceableDocument
 {
-	public Uri Id { get; }
+	Uri Id { get; }
 }
