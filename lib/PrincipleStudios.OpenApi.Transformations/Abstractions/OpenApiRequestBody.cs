@@ -9,6 +9,6 @@ namespace PrincipleStudios.OpenApi.Transformations.Abstractions;
 public record OpenApiRequestBody(
 	Uri Id,
 	string? Description,
-	IReadOnlyDictionary<string, OpenApiMediaTypeObject> Content,
+	IReadOnlyDictionary<string, OpenApiMediaTypeObject>? Content,
 	bool Required
 ) : IReferenceableDocument;

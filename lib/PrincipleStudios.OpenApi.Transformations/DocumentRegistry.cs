@@ -96,7 +96,7 @@ public class DocumentRegistry
 		if (!ResolvePointer(uri, registryEntry).TryEvaluate(registryEntry.Document.RootNode, out var node))
 			throw new DiagnosticException(CouldNotFindTargetNodeDiagnostic.Builder(uri));
 
-		return new(Id: registryEntry.Document.BaseUri, Node: node, Document: registryEntry.Document);
+		return new(Id: uri, Node: node, Document: registryEntry.Document);
 	}
 
 	private static JsonPointer ResolvePointer(Uri uri, DocumentRegistryEntry registryEntry)
@@ -150,12 +150,12 @@ public class DocumentRegistry
 
 	public JsonSchema? ResolveSchema(Uri schemaUri, IDocumentReference? relativeDocument, EvaluationOptions? evaluationOptions = default)
 	{
-		var docRef = ResolveDocument(schemaUri, relativeDocument);
-		var pointer = JsonPointer.Parse(Uri.UnescapeDataString(schemaUri.Fragment.Substring(1)));
+		var registryEntry = InternalResolveDocumentEntry(schemaUri, relativeDocument);
+		var pointer = ResolvePointer(schemaUri, registryEntry);
 
 		evaluationOptions ??= new EvaluationOptions();
 		evaluationOptions.SchemaRegistry.Fetch = SchemaRegistryFetch;
-		var schema = docRef.FindSubschema(pointer, evaluationOptions);
+		var schema = registryEntry.Document.FindSubschema(pointer, evaluationOptions);
 		return schema;
 	}
 

@@ -251,10 +251,11 @@ internal class OpenApi3_0DocumentFactory : IOpenApiDocumentFactory
 		);
 	}
 
-	private IReadOnlyDictionary<string, OpenApiMediaTypeObject> ConstructMediaContentDictionary(NodeMetadata key) =>
-		CatchDiagnostic(InternalConstructMediaContentDictionary, (_) => new Dictionary<string, OpenApiMediaTypeObject>())(key);
-	private IReadOnlyDictionary<string, OpenApiMediaTypeObject> InternalConstructMediaContentDictionary(NodeMetadata key)
+	private IReadOnlyDictionary<string, OpenApiMediaTypeObject>? ConstructMediaContentDictionary(NodeMetadata key) =>
+		CatchDiagnostic(InternalConstructMediaContentDictionary, (_) => null)(key);
+	private IReadOnlyDictionary<string, OpenApiMediaTypeObject>? InternalConstructMediaContentDictionary(NodeMetadata key)
 	{
+		if (key.Node == null) return null;
 		if (key.Node is not JsonObject obj) throw new DiagnosticException(InvalidNode.Builder("OpenApiMediaTypeContent"));
 		return ReadDictionary(key,
 			filter: media => media.Contains('/'),

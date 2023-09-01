@@ -10,7 +10,7 @@ public record OpenApiResponse(
 	Uri Id,
 	string Description,
 	IReadOnlyList<OpenApiParameter> Headers,
-	IReadOnlyDictionary<string, OpenApiMediaTypeObject> Content
+	IReadOnlyDictionary<string, OpenApiMediaTypeObject>? Content
 
 ) : IReferenceableDocument
 {
