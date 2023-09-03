@@ -35,7 +35,7 @@ public class YamlDocumentLoader : IDocumentTypeLoader
 		return new YamlDocument(retrievalUri, yamlStream);
 	}
 
-	private class YamlDocument : /*JsonNodeBaseDocument, */IDocumentReference
+	private class YamlDocument : IDocumentReference
 	{
 		private YamlStream yamlStream;
 
@@ -55,6 +55,13 @@ public class YamlDocumentLoader : IDocumentTypeLoader
 		public JsonNode? RootNode { get; }
 
 		string IDocumentReference.OriginalPath => RetrievalUri.OriginalString;
+
+		public JsonSchema? FindSubschema(JsonPointer pointer, EvaluationOptions options)
+		{
+			if (!pointer.TryEvaluate(RootNode, out var node)) return null;
+			var schema = SubschemaLoader.FindSubschema(new NodeMetadata(BaseUri, node, this));
+			return schema;
+		}
 
 		public FileLocationRange? GetLocation(JsonPointer path)
 		{

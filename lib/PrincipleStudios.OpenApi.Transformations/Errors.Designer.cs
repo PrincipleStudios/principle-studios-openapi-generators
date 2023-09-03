@@ -122,5 +122,14 @@ namespace PrincipleStudios.OpenApi.Transformations {
                 return ResourceManager.GetString("UnableToLoadYaml", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to An unsupported deserialization technique was used.
+        /// </summary>
+        internal static string UnsupportedDeserialization {
+            get {
+                return ResourceManager.GetString("UnsupportedDeserialization", resourceCulture);
+            }
+        }
     }
 }

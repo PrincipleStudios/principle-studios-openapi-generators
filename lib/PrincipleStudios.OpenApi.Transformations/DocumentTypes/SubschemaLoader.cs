@@ -32,6 +32,7 @@ public static class SubschemaLoader
 					new ItemsKeywordJsonConverter(),
 					new PropertiesKeywordJsonConverter(),
 					new AllOfKeywordJsonConverter(),
+					new OneOfKeywordJsonConverter(),
 				}
 			});
 		}
@@ -129,8 +130,12 @@ public static class SubschemaLoader
 
 		public override JsonSchema? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{
-			// TODO: is BytesConsumed correct?
 			var start = reader.TokenStartIndex;
+			if (!uriByBytes.ContainsKey(start))
+			{
+				// This is probably because someone incorrectly called `JsonSerialiazer.Deserialize` instead of asking for a converter from options.
+				throw new InvalidOperationException(Errors.UnsupportedDeserialization);
+			}
 			var result = InnerRead(ref reader, typeToConvert, options);
 			if (result != null)
 				result.BaseUri = uriByBytes[start];
@@ -228,6 +233,7 @@ public static class SubschemaLoader
 			return converter.Read(ref reader, typeof(T), options) ?? throw new InvalidOperationException("Could not deserialize expected keyword `" + keyword + "`");
 		}
 	}
+#pragma warning restore CA1812
 
 	internal class ItemsKeywordJsonConverter : JsonConverter<ItemsKeyword>
 	{
@@ -304,7 +310,31 @@ public static class SubschemaLoader
 			writer.WriteEndArray();
 		}
 	}
-#pragma warning restore CA1812
+
+
+	internal class OneOfKeywordJsonConverter : JsonConverter<OneOfKeyword>
+	{
+		public override OneOfKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+		{
+			if (reader.TokenType == JsonTokenType.StartArray)
+			{
+				return new OneOfKeyword(options.Read<List<JsonSchema>>(ref reader)!);
+			}
+			JsonSchema jsonSchema = options.Read<JsonSchema>(ref reader)!;
+			return new OneOfKeyword(jsonSchema);
+		}
+
+		public override void Write(Utf8JsonWriter writer, OneOfKeyword value, JsonSerializerOptions options)
+		{
+			writer.WritePropertyName("oneOf");
+			writer.WriteStartArray();
+			foreach (JsonSchema schema in value.Schemas)
+			{
+				JsonSerializer.Serialize(writer, schema, options);
+			}
+			writer.WriteEndArray();
+		}
+	}
 }
 
 public record UnableToParseSchema(JsonException JsonException, Location Location) : DiagnosticBase(Location)

@@ -138,4 +138,7 @@
   <data name="UnableToLoadYaml" xml:space="preserve">
     <value>An error occurred while loading JSON or YAML file</value>
   </data>
+  <data name="UnsupportedDeserialization" xml:space="preserve">
+    <value>An unsupported deserialization technique was used</value>
+  </data>
 </root>

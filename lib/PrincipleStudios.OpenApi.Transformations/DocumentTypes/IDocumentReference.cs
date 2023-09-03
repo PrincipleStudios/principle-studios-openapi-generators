@@ -7,13 +7,8 @@ using System.Text;
 
 namespace PrincipleStudios.OpenApi.Transformations.DocumentTypes;
 
-public interface IDocumentReference
+public interface IDocumentReference : IBaseDocument
 {
-	/// <summary>
-	/// The Id of the document.
-	/// </summary>
-	Uri BaseUri { get; }
-
 	/// <summary>
 	/// The RetrievalUri of the document.
 	/// </summary>

@@ -13,6 +13,26 @@ namespace PrincipleStudios.OpenApi.Transformations;
 
 public class OpenApi3_0ParserShould
 {
+	[InlineData("all-of.yaml")]
+	[InlineData("enum.yaml")]
+	[InlineData("controller-extension.yaml")]
+	[InlineData("regex-escape.yaml")]
+	[InlineData("validation-min-max.yaml")]
+	[InlineData("headers.yaml")]
+	[InlineData("oauth.yaml")]
+	[InlineData("form.yaml")]
+	[InlineData("one-of.yaml")]
+	[InlineData("nullable-vs-optional.yaml")]
+	[InlineData("nullable-vs-optional-legacy.yaml")]
+	[Theory]
+	public void Loads_all_yaml(string yamlName)
+	{
+		var result = GetOpenApiDocument(yamlName);
+
+		Assert.Empty(result.Diagnostics);
+		Assert.NotNull(result.Document);
+	}
+
 	[Fact]
 	public void Loads_petstore_yaml()
 	{

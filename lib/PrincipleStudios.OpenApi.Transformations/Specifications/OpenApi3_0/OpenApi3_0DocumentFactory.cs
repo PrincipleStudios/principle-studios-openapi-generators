@@ -63,10 +63,9 @@ internal class OpenApi3_0DocumentFactory : IOpenApiDocumentFactory
 	}
 
 	private OpenApiContact? ConstructContact(NodeMetadata key) =>
-		CatchDiagnostic(InternalConstructContact, (_) => null)(key);
-	private OpenApiContact? InternalConstructContact(NodeMetadata key)
+		CatchDiagnostic(AllowNull(InternalConstructContact), (_) => null)(key);
+	private OpenApiContact InternalConstructContact(NodeMetadata key)
 	{
-		if (key.Node == null) return null;
 		if (key.Node is not JsonObject obj) throw new DiagnosticException(InvalidNode.Builder(nameof(OpenApiContact)));
 		return new OpenApiContact(key.Id,
 			Name: obj["name"]?.GetValue<string>(),
@@ -100,10 +99,9 @@ internal class OpenApi3_0DocumentFactory : IOpenApiDocumentFactory
 	}
 
 	private OpenApiLicense? ConstructLicense(NodeMetadata key) =>
-		CatchDiagnostic(InternalConstructLicense, (_) => null)(key);
-	private OpenApiLicense? InternalConstructLicense(NodeMetadata key)
+		CatchDiagnostic(AllowNull(InternalConstructLicense), (_) => null)(key);
+	private OpenApiLicense InternalConstructLicense(NodeMetadata key)
 	{
-		if (key.Node == null) return null;
 		if (key.Node is not JsonObject obj) throw new DiagnosticException(InvalidNode.Builder(nameof(OpenApiLicense)));
 		return new OpenApiLicense(key.Id,
 			Name: obj["name"]?.GetValue<string>() ?? MissingRequiredFieldDefaults.LicenseName,
@@ -189,16 +187,10 @@ internal class OpenApi3_0DocumentFactory : IOpenApiDocumentFactory
 	}
 
 	private JsonSchema? ConstructSchema(NodeMetadata key) =>
-		CatchDiagnostic(AllowReference(InternalConstructSchema), (_) => null)(key);
-	private JsonSchema? InternalConstructSchema(NodeMetadata key)
+		CatchDiagnostic(AllowReference(AllowNull(InternalConstructSchema)), (_) => null)(key);
+	private JsonSchema InternalConstructSchema(NodeMetadata key)
 	{
-		if (key.Node == null) return null;
-		var options = new Json.Schema.EvaluationOptions();
-
-		var builder = new JsonSchemaBuilder();
-
-
-		return SubschemaLoader.FindSubschema(key);
+		return SubschemaLoader.FindSubschema(key) ?? JsonSchema.Empty;
 	}
 
 	private ParameterLocation ToParameterLocation(JsonNode? jsonNode)
@@ -238,11 +230,10 @@ internal class OpenApi3_0DocumentFactory : IOpenApiDocumentFactory
 	}
 
 	private OpenApiRequestBody? ConstructRequestBody(NodeMetadata key) =>
-		CatchDiagnostic(AllowReference(InternalConstructRequestBody), (_) => null)(key);
+		CatchDiagnostic(AllowReference(AllowNull(InternalConstructRequestBody)), (_) => null)(key);
 	// https://spec.openapis.org/oas/v3.0.0#request-body-object
-	private OpenApiRequestBody? InternalConstructRequestBody(NodeMetadata key)
+	private OpenApiRequestBody InternalConstructRequestBody(NodeMetadata key)
 	{
-		if (key.Node == null) return null;
 		if (key.Node is not JsonObject obj) throw new DiagnosticException(InvalidNode.Builder(nameof(OpenApiRequestBody)));
 		return new OpenApiRequestBody(
 			Id: key.Id,
@@ -253,10 +244,9 @@ internal class OpenApi3_0DocumentFactory : IOpenApiDocumentFactory
 	}
 
 	private IReadOnlyDictionary<string, OpenApiMediaTypeObject>? ConstructMediaContentDictionary(NodeMetadata key) =>
-		CatchDiagnostic(InternalConstructMediaContentDictionary, (_) => null)(key);
-	private IReadOnlyDictionary<string, OpenApiMediaTypeObject>? InternalConstructMediaContentDictionary(NodeMetadata key)
+		CatchDiagnostic(AllowNull(InternalConstructMediaContentDictionary), (_) => null)(key);
+	private IReadOnlyDictionary<string, OpenApiMediaTypeObject> InternalConstructMediaContentDictionary(NodeMetadata key)
 	{
-		if (key.Node == null) return null;
 		if (key.Node is not JsonObject obj) throw new DiagnosticException(InvalidNode.Builder("OpenApiMediaTypeContent"));
 		return ReadDictionary(key,
 			filter: media => media.Contains('/'),
@@ -291,13 +281,12 @@ internal class OpenApi3_0DocumentFactory : IOpenApiDocumentFactory
 
 	// https://spec.openapis.org/oas/v3.0.0#responses-object
 	private OpenApiResponses? ConstructResponses(NodeMetadata key) =>
-		CatchDiagnostic(InternalConstructResponses, (_) => null)(key);
-	private OpenApiResponses? InternalConstructResponses(NodeMetadata key)
+		CatchDiagnostic(AllowNull(InternalConstructResponses), (_) => null)(key);
+	private OpenApiResponses InternalConstructResponses(NodeMetadata key)
 	{
-		if (key.Node == null) return null;
 		if (key.Node is not JsonObject obj) throw new DiagnosticException(InvalidNode.Builder(nameof(OpenApiResponses)));
 		return new OpenApiResponses(Id: key.Id,
-			Default: ConstructResponse(key.Navigate("default")),
+			Default: AllowNull(ConstructResponse)(key.Navigate("default")),
 			StatusCodeResponses: ReadDictionary(key,
 				filter: statusCode => statusCode.Length == 3 && int.TryParse(statusCode, NumberStyles.Integer, CultureInfo.InvariantCulture, out _),
 				toKeyValuePair: (statusCode, key) => (Key: int.Parse(statusCode, NumberStyles.Integer, CultureInfo.InvariantCulture), Value: ConstructResponse(key))
@@ -327,6 +316,15 @@ internal class OpenApi3_0DocumentFactory : IOpenApiDocumentFactory
 			return Array.Empty<T>();
 		}
 		return array.Select((node, index) => key.Navigate(index.ToString())).Select(toItem).ToArray();
+	}
+
+	private Func<NodeMetadata, T?> AllowNull<T>(Func<NodeMetadata, T> toItem)
+	{
+		return (key) =>
+		{
+			if (key.Node == null) return default;
+			return toItem(key);
+		};
 	}
 
 	private Func<NodeMetadata, T> AllowReference<T>(Func<NodeMetadata, T> toItem)
