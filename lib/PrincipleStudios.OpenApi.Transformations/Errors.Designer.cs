@@ -70,6 +70,15 @@ namespace PrincipleStudios.OpenApi.Transformations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Keyword implementation `{0}` does not carry `{1}`.
+        /// </summary>
+        internal static string InvalidKeywordType {
+            get {
+                return ResourceManager.GetString("InvalidKeywordType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Root node of an OpenApi document must be an object.
         /// </summary>
         internal static string InvalidOpenApiRootNode {

@@ -24,6 +24,7 @@ public class OpenApi3_0ParserShould
 	[InlineData("one-of.yaml")]
 	[InlineData("nullable-vs-optional.yaml")]
 	[InlineData("nullable-vs-optional-legacy.yaml")]
+	[InlineData("exclusive-range-openapi-3_0.yaml")]
 	[Theory]
 	public void Loads_all_yaml(string yamlName)
 	{
@@ -135,6 +136,7 @@ public class OpenApi3_0ParserShould
 	{
 		var result = GetOpenApiDocument("bad.yaml");
 		// TODO - check more diagnostics here
+		Assert.Contains(result.Diagnostics, (d) => d is CouldNotFindTargetNodeDiagnostic);
 		Assert.Contains(result.Diagnostics, (d) => d is UnableToParseSchema);
 	}
 }

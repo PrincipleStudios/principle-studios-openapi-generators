@@ -32,6 +32,7 @@ public class YamlDocumentLoader : IDocumentTypeLoader
 			throw new DocumentException(YamlLoadDiagnostic.Builder(ex), Errors.UnableToLoadYaml, ex);
 		}
 
+		// TODO: check $ top-level variables for vocabulary overrides
 		return new YamlDocument(retrievalUri, yamlStream);
 	}
 
@@ -53,6 +54,8 @@ public class YamlDocumentLoader : IDocumentTypeLoader
 		public Uri RetrievalUri { get; }
 
 		public JsonNode? RootNode { get; }
+
+		public JsonSchema Dialect { get; set; } = MetaSchemas.CoreNext;
 
 		string IDocumentReference.OriginalPath => RetrievalUri.OriginalString;
 

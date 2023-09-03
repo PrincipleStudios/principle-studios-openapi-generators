@@ -1,0 +1,44 @@
+openapi: "3.0.3"
+info:
+  version: 1.0.0
+  title: Exclusive Range Sample for OpenAPI 3.0
+  description: OpenAPI 3.0 was not fully JSON Schema compliant, using booleans for exclusive range values
+paths:
+  /random-integer:
+    get:
+      description: Gets a random integer
+      operationId: getRandomInteger
+      parameters:
+        - name: max
+          in: query
+          description: maximum value to return
+          required: true
+          schema:
+            type: integer
+            format: int32
+            minimum: 0
+            exclusiveMinimum: true
+            maximum: 256
+            exclusiveMaximum: false
+      responses:
+        '200':
+          description: The random integer
+          content:
+            application/json:
+              schema:
+                type: integer
+                format: int32
+  /random-number:
+    get:
+      description: Gets a random number in the range [0,1)
+      operationId: getRandomNumber
+      responses:
+        '200':
+          description: The random number
+          content:
+            application/json:
+              schema:
+                type: number
+                minimum: 0
+                maximum: 1
+                exclusiveMaximum: true

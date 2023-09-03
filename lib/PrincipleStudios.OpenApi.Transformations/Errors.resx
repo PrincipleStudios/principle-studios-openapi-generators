@@ -120,6 +120,9 @@
   <data name="DocumentMismatch" xml:space="preserve">
     <value>Provided document did not match registry</value>
   </data>
+  <data name="InvalidKeywordType" xml:space="preserve">
+    <value>Keyword implementation `{0}` does not carry `{1}`</value>
+  </data>
   <data name="InvalidOpenApiRootNode" xml:space="preserve">
     <value>Root node of an OpenApi document must be an object</value>
   </data>

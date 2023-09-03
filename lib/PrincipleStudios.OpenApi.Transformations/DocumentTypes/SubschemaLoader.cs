@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Text.Json;
@@ -16,6 +17,24 @@ namespace PrincipleStudios.OpenApi.Transformations.DocumentTypes;
 
 public static class SubschemaLoader
 {
+	static SubschemaLoader()
+	{
+		foreach (var schema in new[]
+		{
+			(SpecVersion: SpecVersion.Draft6, Uri: MetaSchemas.Draft6Id),
+			(SpecVersion: SpecVersion.Draft7, Uri: MetaSchemas.Draft7Id),
+			(SpecVersion: SpecVersion.Draft201909, Uri: MetaSchemas.Draft201909Id),
+			(SpecVersion: SpecVersion.Draft202012, Uri: MetaSchemas.Draft202012Id),
+			(SpecVersion: SpecVersion.DraftNext, Uri: MetaSchemas.DraftNextId),
+		})
+			VocabularyRegistry.Global.Register(new Vocabulary(schema.Uri.OriginalString, typeof(SchemaKeywordRegistry)
+				.Assembly
+				.GetTypes()
+				.Where(t => typeof(IJsonSchemaKeyword).IsAssignableFrom(t) &&
+							t.GetCustomAttribute<SchemaKeywordAttribute>() != null &&
+							t.GetCustomAttributes<SchemaSpecVersionAttribute>().Any(attr => attr.Version == schema.SpecVersion))));
+	}
+
 	public static JsonSchema? FindSubschema(NodeMetadata nodeInfo)
 	{
 		var data = Encoding.UTF8.GetBytes(nodeInfo.Node?.ToJsonString() ?? "null");
@@ -23,12 +42,12 @@ public static class SubschemaLoader
 		var uriByBytes = GetJsonPointerDictionary(ref reader, nodeInfo.Id);
 		try
 		{
-
+			var keywords = nodeInfo.Document.Dialect.GetVocabularyKeywords().GetKeywordRegistry();
 			return JsonSerializer.Deserialize<JsonSchema>(data, new JsonSerializerOptions
 			{
 				Converters =
 				{
-					new JsonSchemaWithIdConverter(uriByBytes),
+					new JsonSchemaWithIdConverter(uriByBytes, keywords),
 					new ItemsKeywordJsonConverter(),
 					new PropertiesKeywordJsonConverter(),
 					new AllOfKeywordJsonConverter(),
@@ -41,6 +60,36 @@ public static class SubschemaLoader
 			var uri = uriByBytes[(ex.BytePositionInLine - 1) ?? 0];
 			// TODO - use `uri` to record exact location
 			throw new DiagnosticException(UnableToParseSchema.Builder(ex));
+		}
+	}
+
+	private static IEnumerable<Type> GetVocabularyKeywords(this JsonSchema jsonSchema)
+	{
+		return from vocabUri in GetVocabUris()
+			   from keyword in VocabularyRegistry.Global.Get(vocabUri)?.Keywords ?? Enumerable.Empty<Type>()
+			   select keyword;
+
+		IEnumerable<Uri> GetVocabUris()
+		{
+			if (jsonSchema.GetSchema() is Uri schema)
+				yield return schema;
+
+			foreach (var kvp in jsonSchema.GetVocabulary() ?? Enumerable.Empty<KeyValuePair<Uri, bool>>())
+				yield return kvp.Key;
+		}
+	}
+
+	private static Dictionary<string, Type> GetKeywordRegistry(this IEnumerable<Type> keywords)
+	{
+		return keywords.ToDictionary(GetKeywordName);
+
+		string GetKeywordName(Type keywordType)
+		{
+			var keyword = keywordType.GetCustomAttribute<SchemaKeywordAttribute>();
+			if (keyword == null)
+				throw new ArgumentException(string.Format(Errors.InvalidKeywordType, keywordType, nameof(SchemaKeywordAttribute)));
+
+			return keyword.Name;
 		}
 	}
 
@@ -122,10 +171,12 @@ public static class SubschemaLoader
 		private static readonly JsonConverter<JsonSchema> original =
 			(Activator.CreateInstance(typeof(JsonSchema).GetCustomAttribute<JsonConverterAttribute>().ConverterType) as JsonConverter<JsonSchema>)!;
 		private readonly IReadOnlyDictionary<long, Uri> uriByBytes;
+		private readonly IReadOnlyDictionary<string, Type> keywordRegistry;
 
-		public JsonSchemaWithIdConverter(IReadOnlyDictionary<long, Uri> uriByBytes)
+		public JsonSchemaWithIdConverter(IReadOnlyDictionary<long, Uri> uriByBytes, IReadOnlyDictionary<string, Type> keywordRegistry)
 		{
 			this.uriByBytes = uriByBytes;
+			this.keywordRegistry = keywordRegistry;
 		}
 
 		public override JsonSchema? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
@@ -142,9 +193,8 @@ public static class SubschemaLoader
 			return result;
 		}
 
-		private static JsonSchema? InnerRead(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+		private JsonSchema? InnerRead(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{
-
 			if (reader.TokenType == JsonTokenType.True)
 			{
 				return JsonSchema.True;
@@ -174,17 +224,14 @@ public static class SubschemaLoader
 						{
 							string keyword = reader.GetString()!;
 							reader.Read();
-							Type? implementationType = SchemaKeywordRegistry.GetImplementationType(keyword);
-							if (implementationType == null)
+							if (keywordRegistry.TryGetValue(keyword, out var implementationType))
+								builder.Add(ReadSchemaKeyword(ref reader, implementationType, options, keyword));
+							else
 							{
 								var converter = (JsonConverter<JsonNode>)options.GetConverter(typeof(JsonNode));
 								JsonNode? value = converter.Read(ref reader, typeof(JsonNode), options);
 								UnrecognizedKeyword item = new UnrecognizedKeyword(keyword, value);
 								builder.Add(item);
-							}
-							else
-							{
-								builder.Add(ReadSchemaKeyword(ref reader, implementationType, options, keyword));
 							}
 
 							break;

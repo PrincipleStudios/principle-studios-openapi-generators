@@ -24,5 +24,10 @@ public interface IDocumentReference : IBaseDocument
 	/// </summary>
 	string OriginalPath { get; }
 
+	/// <summary>
+	/// The json schema dialect to use for this document
+	/// </summary>
+	JsonSchema Dialect { get; set; }
+
 	FileLocationRange? GetLocation(JsonPointer path);
 }

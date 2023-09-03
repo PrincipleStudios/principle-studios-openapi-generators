@@ -41,7 +41,6 @@ namespace PrincipleStudios.OpenApiCodegen.Client.TypeScript
 			var docRef = GetDocumentByUri(schemaUri);
 
 			// TODO - use json schema instead
-			Assert.NotNull(LocateSchema(schemaUri));
 
 			var (document, schema) = GetSchema(docRef, Uri.UnescapeDataString(schemaUri.Fragment.Substring(1)));
 			Assert.NotNull(document);
@@ -51,11 +50,6 @@ namespace PrincipleStudios.OpenApiCodegen.Client.TypeScript
 			var actual = target.ProduceSourceEntry(schema!);
 
 			Assert.Equal(expectedInline, actual);
-		}
-
-		private static Json.Schema.JsonSchema? LocateSchema(Uri schemaUri)
-		{
-			return DocumentLoader.CreateRegistry().ResolveSchema(schemaUri, null);
 		}
 
 		[Theory]

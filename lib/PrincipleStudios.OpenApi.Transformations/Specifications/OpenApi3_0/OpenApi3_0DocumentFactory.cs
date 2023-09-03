@@ -34,10 +34,60 @@ internal class OpenApi3_0DocumentFactory : IOpenApiDocumentFactory
 	};
 
 
+	public static readonly Uri jsonSchemaMeta = new Uri("https://spec.openapis.example.org/oas/3.0/meta/base");
 	public static readonly Uri jsonSchemaDialect = new Uri("https://spec.openapis.example.org/oas/3.0/dialect/base");
 	private readonly DocumentRegistry documentRegistry;
 
 	public ICollection<DiagnosticBase> Diagnostics { get; }
+	public static Vocabulary Vocabulary { get; }
+
+
+	public static readonly JsonSchema OpenApiDialect =
+		new JsonSchemaBuilder()
+			.Id(jsonSchemaDialect)
+			.Title("OpenAPI 3.0 Schema Object Dialect")
+			.Description("A JSON Schema dialect describing schemas found in OpenAPI documents")
+			.Vocabulary(
+				(Vocabularies.Core202012Id, true),
+				(Vocabularies.Applicator202012Id, true),
+				(Vocabularies.Unevaluated202012Id, true),
+				(Vocabularies.Metadata202012Id, true),
+				(Vocabularies.FormatAnnotation202012Id, true),
+				(Vocabularies.Content202012Id, true),
+				(jsonSchemaMeta.OriginalString, false)
+			)
+			.DynamicAnchor("meta")
+			.AllOf(
+				new JsonSchemaBuilder().Ref("https://spec.openapis.org/oas/3.0/schema/2021-09-28")
+			);
+
+	static OpenApi3_0DocumentFactory()
+	{
+		//Vocabularies.Core201909.Keywords
+		Vocabulary = new Vocabulary(jsonSchemaMeta.OriginalString,
+			// OpenAPI 3.0 is not truly JsonSchema compliant, which is why this is an "example" metaschema
+			// "type" must also be included.
+			typeof(TypeKeyword),
+
+			// Most of `Vocabularies.Validation202012Id` works, but the exclusiveMinimum / exclusiveMaximum work differently
+			typeof(MultipleOfKeyword),
+			typeof(MinimumKeyword),
+			typeof(MaximumKeyword),
+			typeof(OpenApi3_0.ExclusiveMinimumKeyword),
+			typeof(OpenApi3_0.ExclusiveMaximumKeyword),
+			typeof(MaxLengthKeyword),
+			typeof(MinLengthKeyword),
+			typeof(PatternKeyword),
+			typeof(MaxItemsKeyword),
+			typeof(MinItemsKeyword),
+			typeof(UniqueItemsKeyword),
+			typeof(MaxPropertiesKeyword),
+			typeof(MinPropertiesKeyword),
+			typeof(RequiredKeyword),
+			typeof(EnumKeyword)
+		);
+		VocabularyRegistry.Global.Register(Vocabulary);
+	}
 
 	public OpenApi3_0DocumentFactory(DocumentRegistry documentRegistry, IEnumerable<DiagnosticBase> initialDiagnostics)
 	{
@@ -45,8 +95,10 @@ internal class OpenApi3_0DocumentFactory : IOpenApiDocumentFactory
 		this.Diagnostics = initialDiagnostics.ToList();
 	}
 
+
 	public OpenApiDocument ConstructDocument(IDocumentReference documentReference)
 	{
+		documentReference.Dialect = OpenApiDialect;
 		var key = new NodeMetadata(documentReference.BaseUri, documentReference.RootNode, documentReference);
 		return ConstructDocument(key);
 	}
