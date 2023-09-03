@@ -54,8 +54,7 @@ public class OpenApi3_0ParserShould
 								Assert.Equal(SchemaValueType.Array, schemaType.Type);
 								var itemsType = Assert.Single(param.Schema.Keywords.OfType<ItemsKeyword>());
 								Assert.NotNull(itemsType.SingleSchema?.Keywords);
-								// TODO: normalize the schema BaseUris
-								// Assert.Equal("proj://embedded/petstore.yaml#/paths/~1pets/get/parameters/0/schema/items", itemsType.SingleSchema.BaseUri.OriginalString);
+								Assert.Equal("proj://embedded/petstore.yaml#/paths/~1pets/get/parameters/0/schema/items", itemsType.SingleSchema.BaseUri.OriginalString);
 								var itemSchemaType = Assert.Single(itemsType.SingleSchema.Keywords.OfType<TypeKeyword>());
 								Assert.Equal(SchemaValueType.String, itemSchemaType.Type);
 							},

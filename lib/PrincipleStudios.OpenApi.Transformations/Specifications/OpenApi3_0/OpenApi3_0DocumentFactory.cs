@@ -1,5 +1,6 @@
 ﻿using Json.More;
 using Json.Pointer;
+using Json.Schema;
 using PrincipleStudios.OpenApi.Transformations.Abstractions;
 using PrincipleStudios.OpenApi.Transformations.Diagnostics;
 using PrincipleStudios.OpenApi.Transformations.DocumentTypes;
@@ -187,17 +188,17 @@ internal class OpenApi3_0DocumentFactory : IOpenApiDocumentFactory
 		return LoadParameter(key, obj, ParameterLocation.Header);
 	}
 
-	private Json.Schema.JsonSchema? ConstructSchema(NodeMetadata key) =>
+	private JsonSchema? ConstructSchema(NodeMetadata key) =>
 		CatchDiagnostic(AllowReference(InternalConstructSchema), (_) => null)(key);
-	private Json.Schema.JsonSchema? InternalConstructSchema(NodeMetadata key)
+	private JsonSchema? InternalConstructSchema(NodeMetadata key)
 	{
 		if (key.Node == null) return null;
 		var options = new Json.Schema.EvaluationOptions();
 
-		// TODO: OpenApi 3.0 vocabulary? or maybe rewrite the schema when it is loaded instead...
-		//options.VocabularyRegistry.Register(Json.Schema.OpenApi.Vocabularies.OpenApi);
+		var builder = new JsonSchemaBuilder();
 
-		return documentRegistry.ResolveSchema(key.Id, key.Document, options);
+
+		return SubschemaLoader.FindSubschema(key);
 	}
 
 	private ParameterLocation ToParameterLocation(JsonNode? jsonNode)

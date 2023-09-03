@@ -29,7 +29,7 @@ public class DocumentRegistry
 
 	private IBaseDocument? SchemaRegistryFetch(Uri uri)
 	{
-		return ResolveDocument(uri, null);
+		return (IBaseDocument?)ResolveDocument(uri, null);
 	}
 
 	public DocumentResolver Fetch
@@ -147,7 +147,6 @@ public class DocumentRegistry
 
 		return InternalAddDocument(document);
 	}
-
 	public JsonSchema? ResolveSchema(Uri schemaUri, IDocumentReference? relativeDocument, EvaluationOptions? evaluationOptions = default)
 	{
 		var registryEntry = InternalResolveDocumentEntry(schemaUri, relativeDocument);
@@ -155,7 +154,7 @@ public class DocumentRegistry
 
 		evaluationOptions ??= new EvaluationOptions();
 		evaluationOptions.SchemaRegistry.Fetch = SchemaRegistryFetch;
-		var schema = registryEntry.Document.FindSubschema(pointer, evaluationOptions);
+		var schema = SubschemaLoader.FindSubschema(ResolveFragment(schemaUri.Fragment, registryEntry));
 		return schema;
 	}
 

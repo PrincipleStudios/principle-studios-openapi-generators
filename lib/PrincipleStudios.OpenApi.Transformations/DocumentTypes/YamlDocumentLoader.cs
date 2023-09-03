@@ -1,4 +1,5 @@
 ﻿using Json.Pointer;
+using Json.Schema;
 using PrincipleStudios.OpenApi.Transformations;
 using PrincipleStudios.OpenApi.Transformations.Diagnostics;
 using System;
@@ -34,7 +35,7 @@ public class YamlDocumentLoader : IDocumentTypeLoader
 		return new YamlDocument(retrievalUri, yamlStream);
 	}
 
-	private class YamlDocument : IDocumentReference
+	private class YamlDocument : /*JsonNodeBaseDocument, */IDocumentReference
 	{
 		private YamlStream yamlStream;
 
@@ -54,8 +55,6 @@ public class YamlDocumentLoader : IDocumentTypeLoader
 		public JsonNode? RootNode { get; }
 
 		string IDocumentReference.OriginalPath => RetrievalUri.OriginalString;
-
-		public Json.Schema.JsonSchema? FindSubschema(JsonPointer pointer, Json.Schema.EvaluationOptions options) => SubschemaLoader.FindSubschema(this, pointer, options);
 
 		public FileLocationRange? GetLocation(JsonPointer path)
 		{
