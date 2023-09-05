@@ -61,6 +61,18 @@ namespace PrincipleStudios.OpenApi.CSharp.Templates
 		bool IsContainer,
 		string Name,
 		bool Required,
-		bool Optional
-	);
+		bool Optional,
+		string Pattern,
+		int? MinLength,
+		int? MaxLength,
+		decimal? Minimum,
+		decimal? Maximum
+	)
+	{
+		public bool HasMinLength => MinLength.HasValue;
+		public bool HasMaxLength => MaxLength.HasValue;
+
+		public bool HasMinimum => Minimum.HasValue;
+		public bool HasMaximum => Maximum.HasValue;
+	}
 }

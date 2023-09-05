@@ -227,7 +227,12 @@ namespace PrincipleStudios.OpenApi.CSharp
 												   IsContainer: resolved.isEnumerable,
 												   Name: CSharpNaming.ToPropertyName(entry.Key, options.ReservedIdentifiers("object", className)),
 												   Required: req,
-												   Optional: !req && !objectModel.LegacyOptionalBehavior
+												   Optional: !req && !objectModel.LegacyOptionalBehavior,
+												   Pattern: entry.Value.Pattern,
+												   MinLength: entry.Value.MinLength,
+												   MaxLength: entry.Value.MaxLength,
+												   Minimum: entry.Value.Minimum,
+												   Maximum: entry.Value.Maximum
 												))).ToArray();
 
 			return () => new Templates.ObjectModel(

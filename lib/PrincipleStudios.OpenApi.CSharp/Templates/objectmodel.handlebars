@@ -14,6 +14,11 @@ namespace {{this.PackageName}}
         [property: global::System.Text.Json.Serialization.JsonPropertyName("{{BaseName}}")]{{#if Required
             }}[property: global::System.Text.Json.Serialization.JsonRequiredAttribute]{{else
             }}[property: global::System.Text.Json.Serialization.JsonIgnore(Condition = global::System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]{{/if}}{{!
+            }}{{#if Required}}[global::System.ComponentModel.DataAnnotations.Required]{{/if}}{{!
+            }}{{#if Pattern}}[global::System.ComponentModel.DataAnnotations.RegularExpression(@".*{{{escapeverbatimstring Pattern}}}.*")]{{/if}}{{!
+            }}{{#if HasMinLength}}[global::System.ComponentModel.DataAnnotations.MinLength({{MinLength}})]{{/if}}{{!
+            }}{{#if HasMaxLength}}[global::System.ComponentModel.DataAnnotations.MaxLength({{MaxLength}})]{{/if}}{{!
+            }}{{#if HasMinimum}}{{#if HasMaximum}}[global::System.ComponentModel.DataAnnotations.Range({{Minimum}}, {{Maximum}})]{{/if}}{{/if}}{{!
     data type: }} {{#if Optional}}global::PrincipleStudios.OpenApiCodegen.Json.Extensions.Optional<{{/if}}{{{DataType}}}{{#if Optional}}>?{{/if}}{{!
     name: }} {{Name}}{{#unless @last}}, {{/unless}}{{/each}}
     );

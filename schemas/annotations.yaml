@@ -1,0 +1,48 @@
+openapi: '3.0.2'
+info:
+  title: Annotations Example
+  version: '1.0'
+
+components:
+  schemas:
+    Dog:
+      type: object
+      properties:
+        bark:
+          type: boolean
+        breed:
+          type: string
+          minLength: 1
+          maxLength: 50
+        name:
+          type: string
+          minimum: 0
+          maximum: 10
+        hairColor:
+          type: string
+          pattern: "^[a-zA-Z-0-9 ]{3,100}|null$"
+        eyeColor:
+          type: string
+          pattern: "^[a-zA-Z-0-9 ]{3,100}|null$"
+          minLength: 1
+          maxLength: 50
+          minimum: 0
+          maximum: 10
+      required:
+        - bark
+        - breed
+        - name
+        - eyeColor
+paths:
+  /dog:
+    post:
+        operationId: addDog
+        requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Dog'
+        responses:
+          '200':
+            description: OK
