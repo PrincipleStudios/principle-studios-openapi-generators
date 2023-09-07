@@ -38,9 +38,14 @@ public class AnnotationsYamlShould
 			AssertRequest = (controller, request) =>
 			{
 				Assert.False(controller.ModelState.IsValid);
-				Assert.Contains("Breed", controller.ModelState.Keys);
-				Assert.Equal(1, controller.ModelState.ErrorCount);
-				Assert.Contains("The field Breed must match the regular expression", controller.ModelState.Values.First().Errors.First().ErrorMessage);
+				Assert.Collection(controller.ModelState,
+					(stateEntry) =>
+					{
+						Assert.Equal("Breed", stateEntry.Key);
+						Assert.NotNull(stateEntry.Value);
+						Assert.Collection(stateEntry.Value.Errors,
+							(error) => Assert.StartsWith("The field Breed must match the regular expression", error.ErrorMessage));
+					});
 			},
 			AssertResponseMessage = VerifyResponse(400)
 		});
@@ -55,9 +60,14 @@ public class AnnotationsYamlShould
 			AssertRequest = (controller, request) =>
 			{
 				Assert.False(controller.ModelState.IsValid);
-				Assert.Contains("Breed", controller.ModelState.Keys);
-				Assert.Equal(1, controller.ModelState.ErrorCount);
-				Assert.Contains("The field Breed must be a string or array type with a minimum length", controller.ModelState.Values.First().Errors.First().ErrorMessage);
+				Assert.Collection(controller.ModelState,
+					(stateEntry) =>
+					{
+						Assert.Equal("Breed", stateEntry.Key);
+						Assert.NotNull(stateEntry.Value);
+						Assert.Collection(stateEntry.Value.Errors,
+							(error) => Assert.StartsWith("The field Breed must be a string or array type with a minimum length", error.ErrorMessage));
+					});
 			},
 			AssertResponseMessage = VerifyResponse(400)
 		});
@@ -72,9 +82,14 @@ public class AnnotationsYamlShould
 			AssertRequest = (controller, request) =>
 			{
 				Assert.False(controller.ModelState.IsValid);
-				Assert.Contains("Breed", controller.ModelState.Keys);
-				Assert.Equal(1, controller.ModelState.ErrorCount);
-				Assert.Contains("The field Breed must be a string or array type with a maximum length", controller.ModelState.Values.First().Errors.First().ErrorMessage);
+				Assert.Collection(controller.ModelState,
+					(stateEntry) =>
+					{
+						Assert.Equal("Breed", stateEntry.Key);
+						Assert.NotNull(stateEntry.Value);
+						Assert.Collection(stateEntry.Value.Errors,
+							(error) => Assert.StartsWith("The field Breed must be a string or array type with a maximum length", error.ErrorMessage));
+					});
 			},
 			AssertResponseMessage = VerifyResponse(400)
 		});
@@ -89,9 +104,14 @@ public class AnnotationsYamlShould
 			AssertRequest = (controller, request) =>
 			{
 				Assert.False(controller.ModelState.IsValid);
-				Assert.Contains("LifeExpectancy", controller.ModelState.Keys);
-				Assert.Equal(1, controller.ModelState.ErrorCount);
-				Assert.Contains("The field LifeExpectancy must be between", controller.ModelState.Values.First().Errors.First().ErrorMessage);
+				Assert.Collection(controller.ModelState,
+					(stateEntry) =>
+					{
+						Assert.Equal("LifeExpectancy", stateEntry.Key);
+						Assert.NotNull(stateEntry.Value);
+						Assert.Collection(stateEntry.Value.Errors,
+							(error) => Assert.StartsWith("The field LifeExpectancy must be between", error.ErrorMessage));
+					});
 			},
 			AssertResponseMessage = VerifyResponse(400)
 		});
@@ -106,9 +126,14 @@ public class AnnotationsYamlShould
 			AssertRequest = (controller, request) =>
 			{
 				Assert.False(controller.ModelState.IsValid);
-				Assert.Contains("LifeExpectancy", controller.ModelState.Keys);
-				Assert.Equal(1, controller.ModelState.ErrorCount);
-				Assert.Contains("The field LifeExpectancy must be between", controller.ModelState.Values.First().Errors.First().ErrorMessage);
+				Assert.Collection(controller.ModelState,
+					(stateEntry) =>
+					{
+						Assert.Equal("LifeExpectancy", stateEntry.Key);
+						Assert.NotNull(stateEntry.Value);
+						Assert.Collection(stateEntry.Value.Errors,
+							(error) => Assert.StartsWith("The field LifeExpectancy must be between", error.ErrorMessage));
+					});
 			},
 			AssertResponseMessage = VerifyResponse(400)
 		});
