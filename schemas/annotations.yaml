@@ -1,0 +1,38 @@
+openapi: '3.0.2'
+info:
+  title: Annotations Example
+  version: '1.0'
+
+components:
+  schemas:
+    Dog:
+      type: object
+      properties:
+        bark:
+          type: boolean
+        breed:
+          type: string
+          pattern: "^[A-Za-z]+"
+          minLength: 3
+          maxLength: 10
+        lifeExpectancy:
+          type: integer
+          minimum: 5
+          maximum: 25
+      required:
+        - bark
+        - breed
+        - lifeExpectancy
+paths:
+  /dog:
+    post:
+        operationId: addDog
+        requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Dog'
+        responses:
+          '200':
+            description: OK

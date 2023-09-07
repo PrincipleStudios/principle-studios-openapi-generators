@@ -91,6 +91,7 @@ namespace PrincipleStudios.OpenApi.CSharp
 				{ Type: JTokenType.Boolean } => result.ToObject<bool>(),
 				{ Type: JTokenType.Float } => result.ToObject<double>(),
 				{ Type: JTokenType.String } => result.ToObject<string>(),
+				{ Type: JTokenType.Integer } => result.ToObject<int>(),
 				JArray array => (from item in array
 								 select FromElement(item)).ToArray(),
 				JObject obj => (from prop in obj.Properties()
