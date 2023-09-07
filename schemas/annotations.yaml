@@ -12,27 +12,17 @@ components:
           type: boolean
         breed:
           type: string
-          minLength: 1
-          maxLength: 50
-        name:
-          type: string
-          minimum: 0
-          maximum: 10
-        hairColor:
-          type: string
-          pattern: "^[a-zA-Z-0-9 ]{3,100}|null$"
-        eyeColor:
-          type: string
-          pattern: "^[a-zA-Z-0-9 ]{3,100}|null$"
-          minLength: 1
-          maxLength: 50
-          minimum: 0
-          maximum: 10
+          pattern: "^[A-Za-z]+"
+          minLength: 3
+          maxLength: 10
+        lifeExpectancy:
+          type: integer
+          minimum: 5
+          maximum: 25
       required:
         - bark
         - breed
-        - name
-        - eyeColor
+        - lifeExpectancy
 paths:
   /dog:
     post:
