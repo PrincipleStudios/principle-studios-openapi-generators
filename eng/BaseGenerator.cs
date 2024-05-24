@@ -19,7 +19,7 @@ public abstract class BaseGenerator :
 #if ROSLYN4_0_OR_GREATER
 	IIncrementalGenerator
 #else
-    ISourceGenerator
+	ISourceGenerator
 #endif
 {
 
@@ -111,22 +111,22 @@ public abstract class BaseGenerator :
 		});
 	}
 #else
-    public virtual void Execute(GeneratorExecutionContext context)
-    {
-        ReportCompilationDiagnostics(context.Compilation, context);
+	public virtual void Execute(GeneratorExecutionContext context)
+	{
+		ReportCompilationDiagnostics(context.Compilation, context);
 
-        var additionalTexts = context.AdditionalFiles.Select(file => GetOptions(file, context.AnalyzerConfigOptions))
-            .Where(static (tuple) => tuple.TextContents != null)
-            .Where(IsRelevantFile);
-        foreach (var additionalText in additionalTexts)
-        {
-            GenerateSources(additionalText, context);
-        }
-    }
+		var additionalTexts = context.AdditionalFiles.Select(file => GetOptions(file, context.AnalyzerConfigOptions))
+			.Where(static (tuple) => tuple.TextContents != null)
+			.Where(IsRelevantFile);
+		foreach (var additionalText in additionalTexts)
+		{
+			GenerateSources(additionalText, context);
+		}
+	}
 
-    public void Initialize(GeneratorInitializationContext context)
-    {
-    }
+	public void Initialize(GeneratorInitializationContext context)
+	{
+	}
 #endif
 
 
@@ -138,8 +138,8 @@ public abstract class BaseGenerator :
 		public static implicit operator CompilerApis(SourceProductionContext context) =>
 			new(context.AddSource, context.ReportDiagnostic);
 #else
-        public static implicit operator CompilerApis(GeneratorExecutionContext context) =>
-            new(context.AddSource, context.ReportDiagnostic);
+		public static implicit operator CompilerApis(GeneratorExecutionContext context) =>
+			new(context.AddSource, context.ReportDiagnostic);
 #endif
 #pragma warning restore CA2225 // Operator overloads have named alternates
 	}
