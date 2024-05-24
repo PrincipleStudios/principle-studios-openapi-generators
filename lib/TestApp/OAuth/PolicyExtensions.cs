@@ -53,7 +53,7 @@ public static class OuthYamlPolicyExtensions
 	private class OauthYamlApiKeyHandler : AuthenticationHandler<OauthYamlApiKeyOptions>
 #pragma warning restore CA1812
 	{
-		public OauthYamlApiKeyHandler(IOptionsMonitor<OauthYamlApiKeyOptions> options, ILoggerFactory logger, UrlEncoder encoder, ISystemClock clock) : base(options, logger, encoder, clock)
+		public OauthYamlApiKeyHandler(IOptionsMonitor<OauthYamlApiKeyOptions> options, ILoggerFactory logger, UrlEncoder encoder) : base(options, logger, encoder)
 		{
 		}
 
@@ -62,13 +62,11 @@ public static class OuthYamlPolicyExtensions
 			// This is just a dummy api key handler
 			await Task.Yield();
 
-			if (!Request.Headers.ContainsKey(AuthorizationHeaderName))
+			if (!Request.Headers.TryGetValue(AuthorizationHeaderName, out var headerValue))
 			{
 				//Authorization header not in request
 				return AuthenticateResult.NoResult();
 			}
-
-			var headerValue = Request.Headers[AuthorizationHeaderName];
 
 			var identity = new ClaimsIdentity(Scheme.Name);
 			identity.AddClaim(new Claim(ClaimTypes.Name, $"Key:{headerValue}"));

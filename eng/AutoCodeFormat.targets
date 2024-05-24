@@ -43,8 +43,10 @@
 			CA1816 - finalizer suppression
 			CA2234 - call with Uri instead of string
 			CA1003 - use EventHandler instead of Action-based `event`
+			CA1861 - Prefer 'static readonly' fields over constant array arguments
+			CA1849 - Prefer methods that do not synchronously block
 		 -->
-		<NoWarn Condition=" $(AssemblyName.EndsWith('.Test')) ">$(NoWarn),CA1033,CA1052,CA1063,CA1711,CA2016,CA1806,CA1822,CA1031,CA1816,CA2234,CA1003</NoWarn>
+		<NoWarn Condition=" $(AssemblyName.EndsWith('.Test')) ">$(NoWarn),CA1033,CA1052,CA1063,CA1711,CA2016,CA1806,CA1822,CA1031,CA1816,CA2234,CA1003,CA1861,CA1849</NoWarn>
 
 	</PropertyGroup>
 
