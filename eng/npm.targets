@@ -1,7 +1,7 @@
 <Project>
     <PropertyGroup>
         <TargetFramework>net7.0</TargetFramework>
-        <ImportByWildcardAfterMicrosoftCommonTargets>false</ImportByWildcardAfterMicrosoftCommonTargets>
+        <ImportByWildcardAfterMicrosoftCommonTargets>true</ImportByWildcardAfterMicrosoftCommonTargets>
         <GenerateBindingRedirectsOutputType>true</GenerateBindingRedirectsOutputType>
 
         <NpmInstallScript Condition=" '$(NpmInstallScript)' == '' and $(Configuration) != 'Release' ">npm install</NpmInstallScript>
@@ -61,7 +61,7 @@
     </Target>
 
     <Target Name="VSTest">
-        <CallTarget Condition="'$(VSTestNoBuild)' != 'true'" Targets="Build" />
+        <CallTarget Condition="'$(VSTestNoBuild)' != 'true'" Targets="BuildProject" />
 
         <Exec WorkingDirectory="$(ProjectDir)" Command="$(NpmTestScript)" />
     </Target>
