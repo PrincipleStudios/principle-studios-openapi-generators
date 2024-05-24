@@ -113,7 +113,7 @@ public class CommonDirectoryFixture : IDisposable
 		{
 			Directory.CreateDirectory(Path.GetDirectoryName(Path.Combine(generatedFolder, entry.Key))!);
 
-			File.WriteAllText(Path.Combine(generatedFolder, entry.Key), contents: entry.SourceText);
+			await File.WriteAllTextAsync(Path.Combine(generatedFolder, entry.Key), contents: entry.SourceText);
 		}
 
 		// Ensure the codegenerated files build
@@ -121,10 +121,10 @@ public class CommonDirectoryFixture : IDisposable
 		if (tscResult.ExitCode != 0)
 		{
 			var tsconfig = Path.Combine(DirectoryPath, "tsconfig.json");
-			var tsconfigContents = System.Text.Json.JsonSerializer.Deserialize<System.Text.Json.Nodes.JsonObject>(File.ReadAllText(tsconfig));
+			var tsconfigContents = System.Text.Json.JsonSerializer.Deserialize<System.Text.Json.Nodes.JsonObject>(await File.ReadAllTextAsync(tsconfig));
 			var exclude = (System.Text.Json.Nodes.JsonArray)(tsconfigContents!["exclude"] ??= new System.Text.Json.Nodes.JsonArray());
 			exclude.Add(documentName + "/");
-			File.WriteAllText(tsconfig, tsconfigContents.ToJsonString());
+			await File.WriteAllTextAsync(tsconfig, tsconfigContents.ToJsonString());
 
 			throw new InvalidOperationException($"tsc failed!\n\n{tscResult.Output}");
 		}

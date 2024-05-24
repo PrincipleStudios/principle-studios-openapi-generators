@@ -9,7 +9,7 @@ namespace PrincipleStudios.OpenApi.Transformations.Configuration
 {
 	internal class YamlConfigurationFileParser
 	{
-		private readonly IDictionary<string, string?> _data = new SortedDictionary<string, string?>(StringComparer.OrdinalIgnoreCase);
+		private readonly SortedDictionary<string, string?> _data = new(StringComparer.OrdinalIgnoreCase);
 		private readonly Stack<string> _context = new Stack<string>();
 		private string _currentPath = "";
 
@@ -58,7 +58,7 @@ namespace PrincipleStudios.OpenApi.Transformations.Configuration
 
 		private void VisitYamlScalarNode(string context, YamlScalarNode yamlValue)
 		{
-			//a node with a single 1-1 mapping 
+			//a node with a single 1-1 mapping
 			EnterContext(context);
 			var currentKey = _currentPath;
 

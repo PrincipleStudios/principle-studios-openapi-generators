@@ -60,7 +60,7 @@ namespace PrincipleStudios.OpenApi.CSharp
 			var requestBodies = builder.RequestBodies.DefaultIfEmpty(noBody).Select(transform => transform(sharedParameters))
 				.Where(body => body.RequestBodyType != "application/xml") // exclude xml, since we don't support it
 				.ToArray();
-			if (requestBodies.Any())
+			if (requestBodies.Length > 0)
 			{
 				argument.RegisterControllerOperation(
 					new Templates.Operation(
