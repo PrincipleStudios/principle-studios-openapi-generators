@@ -1,6 +1,6 @@
 <Project>
     <PropertyGroup>
-        <TargetFramework>net7.0</TargetFramework>
+        <TargetFramework>net8.0</TargetFramework>
         <ImportByWildcardAfterMicrosoftCommonTargets>true</ImportByWildcardAfterMicrosoftCommonTargets>
         <GenerateBindingRedirectsOutputType>true</GenerateBindingRedirectsOutputType>
 
