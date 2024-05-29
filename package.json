@@ -2,7 +2,7 @@
   "name": "principle-studios-openapi-generators",
   "version": "1.0.0",
   "description": "",
-  "priavte": "true",
+  "private": "true",
   "scripts": {
     "test": "dotnet test"
   },

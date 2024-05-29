@@ -92,12 +92,6 @@ public class CommonDirectoryFixture : IDisposable
 		var tscResult = await NodeUtility.Tsc(SetupProcess, CancellationToken);
 		if (tscResult.ExitCode != 0)
 		{
-			var tsconfig = Path.Combine(DirectoryPath, "tsconfig.json");
-			var tsconfigContents = System.Text.Json.JsonSerializer.Deserialize<System.Text.Json.Nodes.JsonObject>(await File.ReadAllTextAsync(tsconfig));
-			var exclude = (System.Text.Json.Nodes.JsonArray)(tsconfigContents!["exclude"] ??= new System.Text.Json.Nodes.JsonArray());
-			exclude.Add(documentName + "/");
-			await File.WriteAllTextAsync(tsconfig, tsconfigContents.ToJsonString());
-
 			throw new InvalidOperationException($"tsc failed!\n\n{tscResult.Output}");
 		}
 	}

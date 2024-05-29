@@ -1,12 +1,15 @@
 ﻿<Project Sdk="Microsoft.Build.NoTargets/3.7.0">
 
 	<PropertyGroup>
-        <VersionPrefix>$(OpenApiTypeScriptClientVersion)</VersionPrefix>
-        <PackNpmOnBuild Condition=" $(Configuration) == 'Release' ">false</PackNpmOnBuild>
+		<VersionPrefix>$(OpenApiTypeScriptClientVersion)</VersionPrefix>
+		<PackPnpmOnBuild Condition=" $(Configuration) == 'Release' ">false</PackPnpmOnBuild>
+
+		<PnpmBuildScript>pnpm run build</PnpmBuildScript>
+		<PnpmTestScript>pnpm test</PnpmTestScript>
 	</PropertyGroup>
-    <Import Project="$(RepositoryEngineeringDir)pnpm.targets" />
+	<Import Project="$(RepositoryEngineeringDir)pnpm.targets" />
 
 	<ItemGroup>
-		<ProjectReference Include="$(SolutionRoot)generators\typescript\PrincipleStudios.OpenApiCodegen.Client.TypeScript\PrincipleStudios.OpenApiCodegen.Client.TypeScript.csproj" />
+		<ProjectReference Include="$(SolutionRoot)generators\typescript\npm\npm-typescript.esproj" />
 	</ItemGroup>
 </Project>
