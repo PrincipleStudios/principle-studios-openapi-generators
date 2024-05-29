@@ -294,6 +294,15 @@ importers:
         specifier: ^4.9.5
         version: 4.9.5
 
+  lib/PrincipleStudios.OpenApiCodegen.Client.TypeScript.Test/testing:
+    devDependencies:
+      '@principlestudios/openapi-codegen-typescript':
+        specifier: workspace:*
+        version: link:../../../generators/typescript/npm
+      typescript:
+        specifier: ^5.4.5
+        version: 5.4.5
+
 packages:
 
   /@aashutoshrathi/word-wrap@1.2.6:
@@ -13065,6 +13074,12 @@ packages:
     resolution: {integrity: sha512-1FXk9E2Hm+QzZQ7z+McJiHL4NW1F2EzMu9Nq9i3zAaGqibafqYwCVU6WyWAuyQRRzOlxou8xZSyXLEN8oKj24g==}
     engines: {node: '>=4.2.0'}
     hasBin: true
+
+  /typescript@5.4.5:
+    resolution: {integrity: sha512-vcI4UpRgg81oIRUFwR0WSIHKt11nJ7SAVlYNIu+QpqeyXP+gpQJy/Z4+F0aGxSE4MqwjyXvW/TzgkLAx2AGHwQ==}
+    engines: {node: '>=14.17'}
+    hasBin: true
+    dev: true
 
   /unbox-primitive@1.0.2:
     resolution: {integrity: sha512-61pPlCD9h51VoreyJ0BReideM3MDKMKnh6+V9L08331ipq6Q8OFXZYiqP6n/tbHx4s5I9uRhcye6BrbkizkBDw==}

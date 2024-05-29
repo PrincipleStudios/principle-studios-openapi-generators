@@ -25,9 +25,8 @@ public class CommonDirectoryFixture : IDisposable
 	{
 		DirectoryPath = Path.Combine(
 			SolutionConfiguration.SolutionRoot,
-			"artifacts/TypeScriptTests"
+			"lib/PrincipleStudios.OpenApiCodegen.Client.TypeScript.Test/testing"
 		);
-		Directory.CreateDirectory(DirectoryPath);
 
 		cancellation = new CancellationTokenSource();
 
@@ -47,34 +46,7 @@ public class CommonDirectoryFixture : IDisposable
 			Directory.Delete(dir, recursive: true);
 		}
 
-		// Ensure our common package was built
-		var tscResult = await NodeUtility.TscOpenApiCodegenTypeScriptPackage(psi => psi.WorkingDirectory = SolutionConfiguration.TypeScriptPackagePath, CancellationToken);
-		if (tscResult.ExitCode != 0) throw new InvalidOperationException("tsc failed!") { Data = { ["error"] = tscResult.Error } };
-
-		await WritePackageJson();
-		await WriteTsconfigJson();
-
-		var exitCode = await NodeUtility.NpmInstall("typescript@latest", SetupProcess, CancellationToken);
-		if (exitCode != 0) throw new InvalidOperationException("npm install failed!");
-	}
-
-	private async Task WritePackageJson()
-	{
-		using var testingPackageJson = typeof(CommonDirectoryFixture).Assembly.GetManifestResourceStream($"{typeof(SolutionConfiguration).Namespace}.package.testing.json");
-		if (testingPackageJson == null) throw new InvalidOperationException("Cannot find package.testing.json - make sure the namespace didn't change and it is still embedded.");
-		using var streamReader = new StreamReader(testingPackageJson);
-		var packageJsonContents = await streamReader.ReadToEndAsync();
-		packageJsonContents = packageJsonContents.Replace("%tsfilepath%", SolutionConfiguration.TypeScriptPackagePath.Replace('\\', '/'));
-		await File.WriteAllTextAsync(Path.Combine(DirectoryPath, "package.json"), packageJsonContents);
-	}
-
-	private async Task WriteTsconfigJson()
-	{
-		using var testingTsconfigJson = typeof(CommonDirectoryFixture).Assembly.GetManifestResourceStream($"{typeof(SolutionConfiguration).Namespace}.tsconfig.testing.json");
-		if (testingTsconfigJson == null) throw new InvalidOperationException("Cannot find tsconfig.testing.json - make sure the namespace didn't change and it is still embedded.");
-		using var streamReader = new StreamReader(testingTsconfigJson);
-		var tsconfigJsonContents = await streamReader.ReadToEndAsync();
-		await File.WriteAllTextAsync(Path.Combine(DirectoryPath, "tsconfig.json"), tsconfigJsonContents);
+		await Task.Yield();
 	}
 
 	public void SetupProcess(System.Diagnostics.ProcessStartInfo psi)

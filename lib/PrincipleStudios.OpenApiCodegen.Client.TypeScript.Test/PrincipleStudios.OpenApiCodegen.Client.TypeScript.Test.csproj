@@ -34,5 +34,6 @@
 	<ItemGroup>
 		<ProjectReference Include="$(SolutionRoot)generators\typescript\PrincipleStudios.OpenApiCodegen.Client.TypeScript\PrincipleStudios.OpenApiCodegen.Client.TypeScript.csproj" />
 		<ProjectReference Include="..\PrincipleStudios.OpenApiCodegen.TestUtils\PrincipleStudios.OpenApiCodegen.TestUtils.csproj" />
+		<ProjectReference Include=".\testing\PrincipleStudios.OpenApiCodegen.Client.TypeScript.TestProject.esproj" />
 	</ItemGroup>
 </Project>
