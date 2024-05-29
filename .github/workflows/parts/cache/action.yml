@@ -1,0 +1,37 @@
+name: 'Package Cache'
+description: 'Caches packages for this repository'
+inputs: {}
+outputs: {}
+runs:
+  using: 'composite'
+  steps:
+    # .NET install and cache
+    - uses: actions/setup-dotnet@v3
+      with:
+        # The main version this project uses
+        dotnet-version: '8.0.x'
+
+    - uses: actions/cache@v3
+      with:
+        path: ~/.nuget/packages
+        key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
+        restore-keys: |
+          ${{ runner.os }}-nuget-
+
+    # PNPM install and cache
+    - uses: pnpm/action-setup@v2
+      with:
+        version: 8
+
+    - name: Get pnpm store directory
+      id: pnpm-cache-dir
+      shell: pwsh
+      run: echo "dir=$(pnpm store path --silent)" >> ${env:GITHUB_OUTPUT}
+    - uses: actions/cache@v3
+      name: Setup pnpm cache
+      id: pnpm-cache # use this to check for `cache-hit` ==> if: steps.pnpm-cache.outputs.cache-hit != 'true'
+      with:
+        path: ${{ steps.pnpm-cache-dir.outputs.dir }}
+        key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+        restore-keys: |
+          ${{ runner.os }}-pnpm-store-

@@ -15,39 +15,8 @@ jobs:
       packages: write
 
     steps:
-    - uses: actions/checkout@v3
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v3
-      with:
-            dotnet-version: |
-              8.0.x
-    - name: Setup Node
-      uses: actions/setup-node@v3
-      with:
-        node-version: 16
-        registry-url: ${{ github.ref != 'refs/heads/main' && 'https://npm.pkg.github.com/' || 'https://registry.npmjs.org/' }}
-        scope: '@principlestudios'
-
-    - name: Cache nuget packages
-      uses: actions/cache@v3
-      with:
-        path: ~/.nuget/packages
-        # Look to see if there is a cache hit for the corresponding requirements file
-        key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
-        restore-keys: |
-          ${{ runner.os }}-nuget
-    - name: Cache node modules
-      uses: actions/cache@v3
-      env:
-        cache-name: cache-node-modules
-      with:
-        # npm cache files are stored in `~/.npm` on Linux/macOS
-        path: ~/.npm
-        key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
-        restore-keys: |
-          ${{ runner.os }}-build-${{ env.cache-name }}-
-          ${{ runner.os }}-build-
-          ${{ runner.os }}-
+    - uses: actions/checkout@v4
+    - uses: ./.github/workflows/parts/cache/
 
     - name: Decode the Signing Key
       # Generated via powershell: `[System.Convert]::ToBase64String((Get-Content '.\OpenApiCodegen.snk' -Encoding Byte)) | Set-Clipboard` and saved to GitHub Secrets SIGNING_KEY
