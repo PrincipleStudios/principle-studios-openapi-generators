@@ -8,5 +8,8 @@
   },
   "keywords": [],
   "author": "",
-  "license": "BSD-2-Clause"
+  "license": "BSD-2-Clause",
+  "dependencies": {
+    "prettier": "^3.2.5"
+  }
 }
