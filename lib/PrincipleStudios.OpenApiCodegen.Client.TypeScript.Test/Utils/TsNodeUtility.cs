@@ -18,13 +18,13 @@ static class NodeUtility
 #if Windows
 		new ProcessStartInfo("pwsh", @$"-c ""npx {args}""");
 #else
-        new ProcessStartInfo("npx", args);
+		new ProcessStartInfo("npx", args);
 #endif
 	private static ProcessStartInfo Npm(string args) =>
 #if Windows
 		new ProcessStartInfo("pwsh", @$"-c ""npm {args}""");
 #else
-        new ProcessStartInfo("npm", args);
+		new ProcessStartInfo("npm", args);
 #endif
 
 	public static async Task<ProcessResult> TsNode(string input, Action<System.Diagnostics.ProcessStartInfo>? configureStartInfo = null, CancellationToken cancellationToken = default)
