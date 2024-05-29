@@ -120,6 +120,9 @@ importers:
       '@types/jest':
         specifier: ^27.0.1
         version: 27.5.2
+      '@types/node':
+        specifier: ^16.9.1
+        version: 16.18.97
       '@typescript-eslint/eslint-plugin':
         specifier: ^4.31.1
         version: 4.33.0(@typescript-eslint/parser@4.33.0)(eslint@7.32.0)(typescript@4.9.5)
