@@ -8,6 +8,10 @@
     </PropertyGroup>
     <Import Project="$(RepositoryEngineeringDir)pnpm.targets" />
 
+    <Target Name="GenerateForTests" BeforeTargets="VSTest_pnpm">
+        <Exec WorkingDirectory="$(ProjectDir)" Command="pnpm run pretsc:check" />
+    </Target>
+
     <ItemGroup>
         <CompileOutputs Include="@(Compile->'$(ProjectDir)/lib/%(filename).js');@(Compile->'$(ProjectDir)/lib/%(filename).d.ts')" />
     </ItemGroup>

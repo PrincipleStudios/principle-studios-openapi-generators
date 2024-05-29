@@ -22,6 +22,10 @@
         </ItemGroup>
     </Target>
 
+    <Target Name="GenerateForTests" BeforeTargets="VSTest_pnpm">
+        <Exec WorkingDirectory="$(ProjectDir)" Command="pnpm run pretsc:check" />
+    </Target>
+
     <Target Name="_CopyProjectReferencesToNpmPackage" BeforeTargets="NodeBuild">
         <MSBuild Projects="@(ProjectReference)"
                 Targets="PublishItemsOutputGroup">

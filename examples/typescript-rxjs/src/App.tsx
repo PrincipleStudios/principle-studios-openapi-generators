@@ -47,7 +47,7 @@ function App() {
   }
 
   async function addPet(pet: NewPet) {
-    const result = await api.addPet({}, pet, 'application/json').toPromise();
+    const result = await api.addPet({ body: pet, mimeType: 'application/json' }).toPromise();
     if (result.statusCode === 200) {
       setMessage(`Added a ${result.data.tag}`);
       updateResultsCallback();
@@ -55,7 +55,7 @@ function App() {
   }
 
   async function updateResults() {
-    const results = await api.findPets({ tags: ['dog', 'cat'] }).toPromise();
+    const results = await api.findPets({ params: { tags: ['dog', 'cat'] } }).toPromise();
     if (results.statusCode === 200)
     {
       setResults(results.data);

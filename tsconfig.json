@@ -1,0 +1,25 @@
+{
+	"references": [
+		{
+			"path": "./examples/typescript"
+		},
+		{
+			"path": "./examples/typescript-rxjs"
+		},
+		{
+			"path": "generators/typescript/npm"
+		},
+		{
+			"path": "generators/typescript-fetch"
+		},
+		{
+			"path": "generators/typescript-msw/npm"
+		},
+		{
+			"path": "generators/typescript-rxjs/npm"
+		},
+		{
+			"path": "lib/PrincipleStudios.OpenApiCodegen.Client.TypeScript.Test/testing"
+		},
+	]
+}

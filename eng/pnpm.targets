@@ -81,7 +81,7 @@
         <Touch Files="package.json" Time="$(PackageJsonLastModifiedTime)" />
     </Target>
 
-    <Target Name="VSTest" Condition=" '$(PnpmTestScript)' != '' ">
+    <Target Name="VSTest_pnpm" BeforeTargets="VSTest" Condition=" '$(PnpmTestScript)' != '' ">
         <CallTarget Condition="'$(VSTestNoBuild)' != 'true'" Targets="Build" />
 
         <Exec WorkingDirectory="$(ProjectDir)" Command="$(PnpmTestScript)" />

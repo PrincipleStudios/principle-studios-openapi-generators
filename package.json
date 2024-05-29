@@ -4,12 +4,16 @@
   "description": "",
   "private": "true",
   "scripts": {
-    "test": "dotnet test"
+    "test": "dotnet test",
+    "typecheck": "tsc -b"
   },
   "keywords": [],
   "author": "",
   "license": "BSD-2-Clause",
   "dependencies": {
     "prettier": "^3.2.5"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.5"
   }
 }
