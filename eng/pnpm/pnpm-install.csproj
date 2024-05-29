@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.Build.NoTargets/3.7.0">
+	<PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+		<ImportByWildcardAfterMicrosoftCommonTargets>true</ImportByWildcardAfterMicrosoftCommonTargets>
+		<GenerateBindingRedirectsOutputType>true</GenerateBindingRedirectsOutputType>
+
+		<PnpmInstallRecordPath Condition=" '$(PnpmInstallRecordPath)' == '' ">$(SolutionRoot)node_modules\_.install.$(Configuration)._</PnpmInstallRecordPath>
+		<PnpmInstallScript Condition=" '$(PnpmInstallScript)' == '' and $(Configuration) != 'Release' ">pnpm install</PnpmInstallScript>
+		<PnpmInstallScript Condition=" '$(PnpmInstallScript)' == '' and $(Configuration) == 'Release' ">pnpm install --frozen-lockfile</PnpmInstallScript>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<RestoreConfig Include="$(SolutionRoot)package.json" />
+		<RestoreConfig Include="$(SolutionRoot)pnpm-workspace.yaml" />
+		<RestoreConfig Include="$(SolutionRoot)pnpm-lock.yaml" />
+		<RestoreConfig Include="package.json" />
+		<RestoreConfig Include="$(SolutionRoot)**/package.json" Exclude="$(SolutionRoot)artifacts/**/*" />
+	</ItemGroup>
+
+	<Target Name="PnpmInstall" BeforeTargets="Build" Inputs="@(RestoreConfig)" Outputs="$(PnpmInstallRecordPath)">
+		<!-- Launched via PnpmInstall to run in a critical section -->
+		<Exec WorkingDirectory="$(ProjectDir)" Command="$(PnpmInstallScript)" />
+		<Touch AlwaysCreate="true" ForceTouch="true" Files="$(PnpmInstallRecordPath)" />
+	</Target>
+</Project>

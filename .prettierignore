@@ -1,0 +1,8 @@
+/artifacts
+**/node_modules/
+**/generated/
+*/dev-dist/
+.config/
+
+**/package.json
+/pnpm-lock.yaml

@@ -1,0 +1,43 @@
+{
+	"editor.codeActionsOnSave": {
+		"source.fixAll.eslint": "always"
+	},
+	"editor.insertSpaces": false,
+	"eslint.rules.customizations": [
+		{
+			"rule": "*",
+			"severity": "warn"
+		}
+	],
+	"files.eol": "\n",
+	"typescript.tsdk": "node_modules/typescript/lib",
+	"prettier.requireConfig": true,
+	"[javascript]": {
+		"editor.formatOnSave": true,
+		"editor.defaultFormatter": "esbenp.prettier-vscode"
+	},
+	"[javascriptreact]": {
+		"editor.formatOnSave": true,
+		"editor.defaultFormatter": "esbenp.prettier-vscode"
+	},
+	"[typescript]": {
+		"editor.formatOnSave": true,
+		"editor.defaultFormatter": "esbenp.prettier-vscode"
+	},
+	"[typescriptreact]": {
+		"editor.formatOnSave": true,
+		"editor.defaultFormatter": "esbenp.prettier-vscode"
+	},
+	"[json]": {
+		"editor.formatOnSave": true,
+		"editor.defaultFormatter": "esbenp.prettier-vscode"
+	},
+	"[yaml]": {
+		"editor.formatOnSave": true,
+		"editor.defaultFormatter": "esbenp.prettier-vscode"
+	},
+	"dotnet.defaultSolution": "openapi-codegen.sln",
+	"files.associations": {
+		"*.esproj": "xml"
+	}
+}

@@ -39,6 +39,6 @@
     ]
   },
   "devDependencies": {
-    "@principlestudios/openapi-codegen-typescript-rxjs": "file:../../generators/out/principlestudios-openapi-codegen-typescript-rxjs-0.3.0.tgz"
+    "@principlestudios/openapi-codegen-typescript-rxjs": "workspace:*"
   }
 }

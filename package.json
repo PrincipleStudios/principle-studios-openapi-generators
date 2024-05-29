@@ -1,0 +1,12 @@
+{
+  "name": "principle-studios-openapi-generators",
+  "version": "1.0.0",
+  "description": "",
+  "priavte": "true",
+  "scripts": {
+    "test": "dotnet test"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "BSD-2-Clause"
+}

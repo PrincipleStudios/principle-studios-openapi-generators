@@ -3,7 +3,7 @@
         <VersionPrefix>$(OpenApiTypeScriptClientVersion)</VersionPrefix>
         <PackNpmOnBuild Condition=" $(Configuration) == 'Release' ">true</PackNpmOnBuild>
     </PropertyGroup>
-    <Import Project="$(RepositoryEngineeringDir)npm.targets" />
+    <Import Project="$(RepositoryEngineeringDir)pnpm.targets" />
 
     <ItemGroup>
         <ProjectReference Include="$(SolutionRoot)generators/typescript/PrincipleStudios.OpenApiCodegen.Client.TypeScript/PrincipleStudios.OpenApiCodegen.Client.TypeScript.csproj" SpecificVersion="true" />

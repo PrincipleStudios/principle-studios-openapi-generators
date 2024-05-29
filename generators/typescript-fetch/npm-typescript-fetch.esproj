@@ -3,7 +3,7 @@
         <VersionPrefix>$(OpenApiTypeScriptFetchVersion)</VersionPrefix>
         <PackNpmOnBuild Condition=" $(Configuration) == 'Release' ">true</PackNpmOnBuild>
     </PropertyGroup>
-    <Import Project="$(RepositoryEngineeringDir)npm.targets" />
+    <Import Project="$(RepositoryEngineeringDir)pnpm.targets" />
 
     <ItemGroup>
         <ProjectReference Include="$(SolutionRoot)generators\typescript\npm\npm-typescript.esproj" SpecificVersion="true" />

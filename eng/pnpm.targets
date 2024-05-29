@@ -1,0 +1,92 @@
+<Project>
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImportByWildcardAfterMicrosoftCommonTargets>true</ImportByWildcardAfterMicrosoftCommonTargets>
+        <GenerateBindingRedirectsOutputType>true</GenerateBindingRedirectsOutputType>
+        <DefaultProjectTypeGuid>{9A19103F-16F7-4668-BE54-9A1E7A4F7556}</DefaultProjectTypeGuid>
+
+        <PnpmStepRecordDir Condition=" '$(PnpmStepRecordDir)' == '' ">$(BaseIntermediateOutputPath)</PnpmStepRecordDir>
+        <!-- pnpm allows an install for the entire solution -->
+        <PnpmInstallRecordPath Condition=" '$(PnpmInstallRecordPath)' == '' ">$(SolutionRoot)node_modules\_.install.$(Configuration)._</PnpmInstallRecordPath>
+        <PnpmPrebuildChecksRecordPath Condition=" '$(PnpmPrebuildChecksRecordPath)' == '' ">$(PnpmStepRecordDir)_.prebuild.$(Configuration)._</PnpmPrebuildChecksRecordPath>
+        <PnpmLintRecordPath Condition=" '$(PnpmLintRecordPath)' == '' ">$(PnpmStepRecordDir)_.lint.$(Configuration)._</PnpmLintRecordPath>
+
+        <PnpmInstallScript Condition=" '$(PnpmInstallScript)' == '' and $(Configuration) != 'Release' ">pnpm install</PnpmInstallScript>
+        <PnpmInstallScript Condition=" '$(PnpmInstallScript)' == '' and $(Configuration) == 'Release' ">pnpm install --frozen-lockfile</PnpmInstallScript>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <Compile Include="src/**" Watch="false" />
+        <RestoreConfig Include="$(SolutionRoot)package.json" />
+        <RestoreConfig Include="$(SolutionRoot)pnpm-lock.yaml" />
+        <RestoreConfig Include="package.json" />
+        <CompileConfig Include="tsconfig*.json" />
+        <CompileConfig Include="rollup.config*.json" />
+        <Watch Include="@(RestoreConfig)" />
+
+        <DefaultPnpmPackagedFiles Include="@(Compile->'$(ProjectDir)/lib/%(filename).js');@(Compile->'$(ProjectDir)/lib/%(filename).d.ts')" />
+        <PnpmPackagedFiles Condition=" '$(PnpmPackagedFiles)' == '' " Include="@(DefaultPnpmPackagedFiles)" />
+        <PnpmPackagedFiles Include=".npmignore" />
+
+        <PackageReference Include="JsonPeek" Version="1.2.0" PrivateAssets="All" />
+    </ItemGroup>
+
+    <Target Name="_LoadPackageJson" BeforeTargets="PnpmPack">
+        <JsonPeek ContentPath="package.json" Query="$.name">
+            <Output TaskParameter="Result" ItemName="NpmPackageName" />
+        </JsonPeek>
+        <JsonPeek ContentPath="package.json" Query="$.version">
+            <Output TaskParameter="Result" ItemName="NpmPackageVersion" />
+        </JsonPeek>
+
+        <PropertyGroup>
+            <NpmPackageVersion>@(NpmPackageVersion->'%(Identity)')</NpmPackageVersion>
+            <NpmPackageNormalizedName>@(NpmPackageName->'%(Identity)'->Replace("@", "")->Replace("/", "-"))</NpmPackageNormalizedName>
+            <VersionPrefix>@(NpmPackageVersion->'%(Identity)')</VersionPrefix>
+            <Version>$(VersionPrefix)</Version>
+            <Version Condition=" '$(VersionSuffix)' != '' ">$(VersionPrefix)-$(VersionSuffix)</Version>
+        </PropertyGroup>
+    </Target>
+
+    <Target Name="PnpmInstall" BeforeTargets="NodeBuild;Restore;_GenerateProjectRestoreGraph" Inputs="@(RestoreConfig)" Outputs="$(PnpmInstallRecordPath)">
+        <!-- Runs _PnpmInstall in a critical section, meaning only one  -->
+        <MsBuild
+            Projects="$(SolutionRoot)eng/pnpm/pnpm-install.csproj"
+            Targets="PnpmInstall"
+            BuildInParallel="false" />
+    </Target>
+
+    <Target Name="Lint" BeforeTargets="NodeBuild" Inputs="@(Compile);@(RestoreConfig);@(CompileConfig)" Outputs="$(PnpmLintRecordPath)">
+        <Touch ForceTouch="true" Files="$(PnpmLintRecordPath)" AlwaysCreate="true" />
+    </Target>
+
+    <Target Name="NodeBuild" Condition="'$(PnpmBuildScript)' != ''" BeforeTargets="Build" Inputs="@(Compile);@(RestoreConfig);@(CompileConfig)" Outputs="@(CompileOutputs)">
+        <ItemGroup>
+            <OutputCleanup Include="dist/**/*" />
+        </ItemGroup>
+        <Delete Files="@(OutputCleanup)" />
+        <Exec WorkingDirectory="$(ProjectDir)" Command="$(PnpmBuildScript)" />
+        <Touch ForceTouch="true" Files="@(CompileOutputs)" />
+    </Target>
+
+    <Target Name="PnpmPack" BeforeTargets="Publish" DependsOnTargets="NodeBuild" Inputs="@(RestoreConfig);@(PnpmPackagedFiles);@(CompileOutputs)" Outputs="$(PackageOutputPath)$(NpmPackageNormalizedName)-$(NpmPackageVersion).tgz">
+        <PropertyGroup>
+            <PackageJsonLastModifiedTime>$([System.IO.File]::GetLastWriteTime('package.json').ToString('g'))</PackageJsonLastModifiedTime>
+        </PropertyGroup>
+        <Exec WorkingDirectory="$(ProjectDir)" Command="npm version $(Version)" IgnoreExitCode="true" Condition=" '$(NpmPackageVersion)' != '$(Version)' " />
+        <MakeDir Directories="$(PackageOutputPath)"/>
+        <Exec WorkingDirectory="$(ProjectDir)" Command="pnpm pack" />
+        <Move SourceFiles="$(NpmPackageNormalizedName)-$(Version).tgz" DestinationFolder="$(PackageOutputPath)" />
+        <Exec WorkingDirectory="$(ProjectDir)" Command="npm version $(NpmPackageVersion)" IgnoreExitCode="true" Condition=" '$(NpmPackageVersion)' != '$(Version)' " />
+        <Touch Files="package.json" Time="$(PackageJsonLastModifiedTime)" />
+    </Target>
+
+    <Target Name="VSTest" Condition=" '$(PnpmTestScript)' != '' ">
+        <CallTarget Condition="'$(VSTestNoBuild)' != 'true'" Targets="Build" />
+
+        <Exec WorkingDirectory="$(ProjectDir)" Command="$(PnpmTestScript)" />
+    </Target>
+
+    <Target Name="_PackOnBuild" AfterTargets="Build" DependsOnTargets="PnpmPack" Condition="'$(PackPnpmOnBuild)'=='true'" />
+
+</Project>
