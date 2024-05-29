@@ -30,7 +30,7 @@
 			CA2007 - ConfigureAwait
 		 -->
 		<NoWarn>$(NoWarn),CA1052,CA1852,CA1303,CA1304,CA1305,CA1307,CA1310,CA1311,CA1707,CA1716,CA1805,CA1034,CA1062,CA1508,CA1002,CA1815,CA1819,CA2007</NoWarn>
-		<!-- CS9057 - Visual is finding a different version -->
+		<!-- CS9057 - Visual Studio is finding a different version of analyzers; this will allow builds in VS. -->
 		<NoWarn>$(NoWarn),CS9057</NoWarn>
 		<!--
 			test project supressions:
