@@ -5,7 +5,6 @@
 		<Nullable>enable</Nullable>
 		<LangVersion>12</LangVersion>
 
-		<IsWindows Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Windows)))' == 'true'">true</IsWindows>
 		<SolutionRoot>$(MSBuildThisFileDirectory)</SolutionRoot>
 		<RepositoryEngineeringDir>$(SolutionRoot)eng/</RepositoryEngineeringDir>
 
@@ -27,9 +26,6 @@
 
 		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
 		<WarningsAsErrors />
-	</PropertyGroup>
-	<PropertyGroup Condition="'$(IsWindows)'=='true'">
-		<DefineConstants>$(DefineConstants);Windows</DefineConstants>
 	</PropertyGroup>
 
 	<PropertyGroup>
