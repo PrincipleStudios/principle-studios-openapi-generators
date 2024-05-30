@@ -53,7 +53,7 @@
 	</PropertyGroup>
 
 	<Target Name="_FormatSourceFiles" BeforeTargets="BeforeBuild" Inputs="@(Compile)" Outputs="@(IntermediateAssembly)">
-		<Exec WorkingDirectory="$(ProjectDir)" Command="dotnet format $(ProjectPath)" />
+		<Exec WorkingDirectory="$(ProjectDir)" Command="dotnet format $(ProjectPath) --no-restore" />
 	</Target>
 
 </Project>

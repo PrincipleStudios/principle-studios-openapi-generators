@@ -17,9 +17,7 @@
     </ItemGroup>
 
     <Target Name="_CleanDotnet" BeforeTargets="CoreClean">
-        <ItemGroup>
-            <Clean Include="dotnet/**" />
-        </ItemGroup>
+        <RemoveDir Directories="$(ProjectDir)dotnet" />
     </Target>
 
     <Target Name="GenerateForTests" BeforeTargets="VSTest_pnpm">

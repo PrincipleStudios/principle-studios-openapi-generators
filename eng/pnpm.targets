@@ -7,7 +7,7 @@
 
         <PnpmStepRecordDir Condition=" '$(PnpmStepRecordDir)' == '' ">$(BaseIntermediateOutputPath)</PnpmStepRecordDir>
         <!-- pnpm allows an install for the entire solution -->
-        <PnpmInstallRecordPath Condition=" '$(PnpmInstallRecordPath)' == '' ">$(SolutionRoot)node_modules\_.install.$(Configuration)._</PnpmInstallRecordPath>
+        <PnpmInstallRecordPath Condition=" '$(PnpmInstallRecordPath)' == '' ">$(ProjectDir)node_modules\_.install.$(Configuration)._</PnpmInstallRecordPath>
         <PnpmPrebuildChecksRecordPath Condition=" '$(PnpmPrebuildChecksRecordPath)' == '' ">$(PnpmStepRecordDir)_.prebuild.$(Configuration)._</PnpmPrebuildChecksRecordPath>
         <PnpmLintRecordPath Condition=" '$(PnpmLintRecordPath)' == '' ">$(PnpmStepRecordDir)_.lint.$(Configuration)._</PnpmLintRecordPath>
 
@@ -47,6 +47,16 @@
             <Version Condition=" '$(VersionSuffix)' != '' ">$(VersionPrefix)-$(VersionSuffix)</Version>
         </PropertyGroup>
     </Target>
+
+    <Target Name="CleanPnpmBuildOutputs" BeforeTargets="CoreClean">
+        <ItemGroup>
+            <Clean Include="@(CompileOutputs)" />
+        </ItemGroup>
+    </Target>
+
+	<Target Name="CleanPnpmNodeDir" BeforeTargets="CoreClean">
+		<RemoveDir Directories="$(ProjectDir)node_modules" />
+	</Target>
 
     <Target Name="PnpmInstall" BeforeTargets="NodeBuild;Restore;_GenerateProjectRestoreGraph" Inputs="@(RestoreConfig)" Outputs="$(PnpmInstallRecordPath)">
         <!-- Runs _PnpmInstall in a critical section, meaning only one  -->
