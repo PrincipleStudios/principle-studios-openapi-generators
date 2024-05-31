@@ -16,9 +16,8 @@
   "keywords": [],
   "author": "",
   "license": "BSD-2-Clause",
-  "dependencies": {
-  },
   "devDependencies": {
+    "@types/eslint": "^7.29.0",
     "@typescript-eslint/eslint-plugin": "^6.21.0",
     "@typescript-eslint/parser": "^6.21.0",
     "eslint": "^8.56.0",
