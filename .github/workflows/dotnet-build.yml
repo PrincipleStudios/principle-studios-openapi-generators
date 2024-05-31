@@ -16,6 +16,12 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+    - name: Setup Node
+      uses: actions/setup-node@v4
+      with:
+        node-version: 20
+        registry-url: ${{ github.ref != 'refs/heads/main' && 'https://npm.pkg.github.com/' || 'https://registry.npmjs.org/' }}
+        scope: '@principlestudios'
     - uses: ./.github/workflows/parts/cache/
 
     - name: Decode the Signing Key
@@ -43,7 +49,15 @@ jobs:
     ###########
     # TEST
     - name: Test
-      run: dotnet test --no-build --verbosity normal --configuration Release --collect:"XPlat Code Coverage"
+      run: |
+        if [[ $VERSION_SUFFIX ]]; then
+          VERSION_SUFFIX_PARAM="-p:VersionSuffix=sha.$VERSION_SUFFIX"
+        else
+          VERSION_SUFFIX_PARAM=''
+        fi
+        dotnet test --verbosity normal ${VERSION_SUFFIX_PARAM} --configuration Release --collect:"XPlat Code Coverage"
+      env:
+        VERSION_SUFFIX: ${{ github.ref != 'refs/heads/main' && github.sha || '' }}
     - name: 'Upload Code Coverage'
       uses: actions/upload-artifact@v3
       with:
@@ -80,7 +94,7 @@ jobs:
     - name: Set publish NPM registry
       if: ${{ github.ref == 'refs/heads/main' }}
       run:  |
-        echo '@principlestudios:registry=$NODE_REGISTRY' > ~/.npmrc
+        echo '@principlestudios:registry=$NODE_REGISTRY' >> ~/.npmrc
       env:
         NODE_REGISTRY: ${{ github.ref != 'refs/heads/main' && 'https://npm.pkg.github.com/' || 'https://registry.npmjs.org/' }}
     - name: Publish npm packages
