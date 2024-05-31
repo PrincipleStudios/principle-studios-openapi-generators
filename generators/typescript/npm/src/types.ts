@@ -1,4 +1,4 @@
-import { HttpMethod, AdapterRequestArgs, AdapterResponseArgs } from "./inputs-outputs";
+import type { HttpMethod, AdapterRequestArgs, AdapterResponseArgs } from "./inputs-outputs";
 
 export type RequestBodies = {
     [mimeType: string]: any;
@@ -13,12 +13,12 @@ export type Responses = {
     }
 }
 
-export type StandardResponse<TStatusCode extends number | 'other' = number | 'other', TMimeType extends string = string, TBody extends unknown = unknown> =
+export type StandardResponse<TStatusCode extends number | 'other' = number | 'other', TMimeType extends string = string, TBody = unknown> =
     { statusCode: TStatusCode; mimeType: TMimeType; data: TBody; response: AdapterResponseArgs };
 
 export type TransformRequestNoBody<TRequestParams extends {}, TResult> = (params: TRequestParams) => TResult;
 export type TransformRequestWithBody<TRequestParams extends {}, TRequestBodies extends RequestBodies, TResult> =
-    <K extends keyof TRequestBodies>(params: TRequestParams, body: TRequestBodies[K], mimeType: K) => TResult;
+    <TMimeType extends keyof TRequestBodies>(params: TRequestParams, body: TRequestBodies[TMimeType], mimeType: TMimeType) => TResult;
 export type TransformRequestWithOptionalBody<TRequestParams extends {}, TRequestBodies extends RequestBodies, TResult> =
     TransformRequestNoBody<TRequestParams, TResult> & TransformRequestWithBody<TRequestParams, TRequestBodies, TResult>;
 

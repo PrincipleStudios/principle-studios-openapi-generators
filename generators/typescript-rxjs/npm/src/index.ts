@@ -1,3 +1,7 @@
+/* eslint-disable @typescript-eslint/ban-types */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/naming-convention */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 import type {
 	RequestBodies,
 	RequestConversion,
@@ -7,10 +11,11 @@ import type {
 	RequestConversions,
 	HttpMethod
 } from '@principlestudios/openapi-codegen-typescript';
-
-import { Observable, of } from 'rxjs';
+import type { Observable} from 'rxjs';
+import { of } from 'rxjs';
+import type { AjaxError, AjaxRequest, AjaxResponse } from 'rxjs/ajax';
+import { ajax } from 'rxjs/ajax';
 import { catchError, map } from 'rxjs/operators';
-import { ajax, AjaxError, AjaxRequest, AjaxResponse } from 'rxjs/ajax';
 
 export const toUrl = (prefix: string, requestOpts: AdapterRequestArgs) =>
 	`${prefix}${requestOpts.path}`;

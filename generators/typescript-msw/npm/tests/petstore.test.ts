@@ -1,7 +1,7 @@
-import { toMswHandler, toMswResponse } from '../src';
-import operations from './petstore/operations';
 import { setupServer } from 'msw/node'
 import fetch from 'node-fetch';
+import { toMswHandler, toMswResponse } from '../src';
+import operations from './petstore/operations';
 
 const findPets = toMswHandler(operations.findPets);
 const addPet = toMswHandler(operations.addPet);

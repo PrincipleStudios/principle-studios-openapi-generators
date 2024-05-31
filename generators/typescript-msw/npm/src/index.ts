@@ -1,5 +1,11 @@
-import { AsyncResponseResolverReturnType, DefaultBodyType, Match, MockedRequest, MockedResponse, defaultContext, ResponseResolverReturnType, rest, RestHandler, ResponseComposition, RestContext } from 'msw'
-import { AdapterRequestArgs, AdapterResponseArgs, HttpMethod, RequestBodies, RequestConversion, StandardResponse, TransformCallType } from '@principlestudios/openapi-codegen-typescript';
+/* eslint-disable @typescript-eslint/ban-types */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/naming-convention */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+// TODO: this likely needs to be rewritten to support newer msw anyway
+import type { AdapterRequestArgs, HttpMethod, RequestBodies, RequestConversion, StandardResponse, TransformCallType } from '@principlestudios/openapi-codegen-typescript';
+import type { DefaultBodyType, Match, MockedRequest, MockedResponse, ResponseResolverReturnType, ResponseComposition, RestContext } from 'msw';
+import { RestHandler } from 'msw'
 
 function deepEqual(x: unknown, y: unknown): boolean {
     const tx = typeof x,
@@ -89,5 +95,3 @@ export function toMswHandler<
         return new MappedRestHandler(standardRequest, response);
     }
 }
-
-type Temp = 'no-body' extends 'no-body' | 'optional' ? true : false;

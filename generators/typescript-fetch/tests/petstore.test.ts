@@ -1,10 +1,11 @@
-import { FetchImplementation, toFetchApi, toFetchOperation } from '../src';
 import { toMswHandler, toMswResponse } from '@principlestudios/openapi-codegen-typescript-msw';
-import operations from './petstore/operations';
 import { setupServer } from 'msw/node'
 import fetch from 'node-fetch';
+import { toFetchApi, toFetchOperation } from '../src';
+import type { FetchImplementation} from '../src';
+import operations from './petstore/operations';
 
-const fetchImpl: FetchImplementation<unknown>  = (url, params) => fetch('http://localhost' + url, params);
+const fetchImpl: FetchImplementation<unknown>  = (url, params) => fetch('http://localhost' + String(url), params);
 const fetchApi = toFetchApi(operations, fetchImpl);
 const findPets = toMswHandler(operations.findPets);
 const addPet = toMswHandler(operations.addPet);

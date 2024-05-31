@@ -1,8 +1,9 @@
-import allOperations from "./no-refs/operations";
-import { conversion as lookupRecord, RequestBodies as LookupRecordRequestBodies, Responses as LookupResponses } from "./no-refs/operations/lookupRecord";
+import type allOperations from "./no-refs/operations";
 import { conversion as getPhoto } from "./no-refs/operations/getPhoto";
-import { RequestConversion, RequestBodies, RequestConversions, TransformRequest, TransformResponse } from "~/src/types";
-import { AdapterRequestArgs } from "~/src/inputs-outputs";
+import type { RequestBodies as LookupRecordRequestBodies, Responses as LookupResponses } from "./no-refs/operations/lookupRecord";
+import { conversion as lookupRecord } from "./no-refs/operations/lookupRecord";
+import type { AdapterRequestArgs } from "~/src/inputs-outputs";
+import type { RequestConversion, RequestBodies, RequestConversions, TransformRequest} from "~/src/types";
 
 describe('no-refs', () => {
     it('has successful typings', () => {
@@ -12,18 +13,15 @@ describe('no-refs', () => {
     });
 });
 
-const t: TransformRequest<Object, LookupRecordRequestBodies, 'body', AdapterRequestArgs> = lookupRecord.request;
-const t2: RequestConversion<any, Object, Object, LookupRecordRequestBodies, LookupResponses, 'body'> = lookupRecord;
-const t3: TransformRequest<any, never, 'no-body', AdapterRequestArgs> = getPhoto.request;
-
-type Req = typeof lookupRecord extends RequestConversion<any, any, any, infer Requests, any, 'body'> ? Requests : never;
+lookupRecord.request satisfies TransformRequest<NonNullable<unknown>, LookupRecordRequestBodies, 'body', AdapterRequestArgs>;
+lookupRecord satisfies RequestConversion<any, Object, Object, LookupRecordRequestBodies, LookupResponses, 'body'>;
+getPhoto.request satisfies TransformRequest<any, never, 'no-body', AdapterRequestArgs>;
 
 const temp = {
     lookupRecord,
     getPhoto,
 } as const;
 
-const emptyExtendsRequestBodies: {} extends RequestBodies ? true : false = true;
-
-const extendsRequestConversions: typeof temp extends RequestConversions ? true : false = true;
-const allOperationsExtendsRequestConversions: typeof allOperations extends RequestConversions ? true : false = true;
+true satisfies ({} extends RequestBodies ? true : false);
+true satisfies (typeof temp extends RequestConversions ? true : false);
+true satisfies (typeof allOperations extends RequestConversions ? true : false);

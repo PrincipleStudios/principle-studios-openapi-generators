@@ -1,9 +1,9 @@
-import { toRxjsApi } from '../src';
-import operations from './petstore/operations';
-import { conversion as findPetsConversion } from './petstore/operations/findPets';
-import { conversion as addPetConversion } from './petstore/operations/addPet';
 import { setupServer } from 'msw/node';
+import { toRxjsApi } from '../src';
 import { toMswHandler } from './mwcMappedRestHandler';
+import operations from './petstore/operations';
+import { conversion as addPetConversion } from './petstore/operations/addPet';
+import { conversion as findPetsConversion } from './petstore/operations/findPets';
 
 const findPets = toMswHandler(findPetsConversion);
 const addPet = toMswHandler(addPetConversion);

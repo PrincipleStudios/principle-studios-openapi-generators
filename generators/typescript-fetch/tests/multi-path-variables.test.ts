@@ -1,10 +1,11 @@
-import { FetchImplementation, toFetchApi, toFetchOperation } from '../src';
 import { toMswHandler } from '@principlestudios/openapi-codegen-typescript-msw';
-import operations from './multi-path-variables/operations';
 import { setupServer } from 'msw/node'
 import fetch from 'node-fetch';
+import { toFetchApi, toFetchOperation } from '../src';
+import type { FetchImplementation} from '../src';
+import operations from './multi-path-variables/operations';
 
-const fetchImpl: FetchImplementation<unknown>  = (url, params) => fetch('http://localhost' + url, params);
+const fetchImpl: FetchImplementation<unknown>  = (url, params) => fetch('http://localhost' + String(url), params);
 const fetchApi = toFetchApi(operations, fetchImpl);
 const getPhotoMeta = toMswHandler(operations.getPhotoMeta);
 

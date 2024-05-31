@@ -1,7 +1,7 @@
 
-export const encodeURI = (value: any) => encodeURIComponent(String(value));
+export const encodeURI = (value: unknown) => encodeURIComponent(String(value));
 
-export const throwIfNullOrUndefined = (value: any, nickname?: string) => {
+export const throwIfNullOrUndefined = (value: unknown, nickname?: string) => {
     if (value == null) {
         throw new Error(`Parameter "${value}" was null or undefined when calling "${nickname}".`);
     }
