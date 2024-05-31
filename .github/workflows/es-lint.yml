@@ -1,4 +1,4 @@
-name: Lint DotNet
+name: Lint JS/TS
 on:
   pull_request:
     types: [edited, opened, reopened, synchronize, ready_for_review]
