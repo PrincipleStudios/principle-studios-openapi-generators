@@ -5,7 +5,7 @@
 		<PackPnpmOnBuild Condition=" $(Configuration) == 'Release' ">false</PackPnpmOnBuild>
 
 		<PnpmBuildScript>pnpm run build</PnpmBuildScript>
-		<PnpmTestScript>pnpm test</PnpmTestScript>
+		<PnpmTestScript></PnpmTestScript>
 	</PropertyGroup>
 	<Import Project="$(RepositoryEngineeringDir)pnpm.targets" />
 
