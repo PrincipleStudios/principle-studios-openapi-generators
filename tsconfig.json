@@ -14,12 +14,7 @@
 		},
 		{
 			"path": "./lib/PrincipleStudios.OpenApiCodegen.Client.TypeScript.Test/testing"
-		},
+		}
 	],
-	"exclude": [
-		"./artifacts",
-		"./examples",
-		"./lib",
-		"./generators"
-	]
+	"exclude": ["./artifacts", "./examples", "./lib", "./generators"]
 }

@@ -1,12 +1,12 @@
 {
-  "profiles": {
-    "PrincipleStudios.OpenApiCodegen.Server.Mvc.TestApp": {
-      "commandName": "Project",
-      "launchBrowser": true,
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
-      },
-      "applicationUrl": "https://localhost:52841;http://localhost:52842"
-    }
-  }
+	"profiles": {
+		"PrincipleStudios.OpenApiCodegen.Server.Mvc.TestApp": {
+			"commandName": "Project",
+			"launchBrowser": true,
+			"environmentVariables": {
+				"ASPNETCORE_ENVIRONMENT": "Development"
+			},
+			"applicationUrl": "https://localhost:52841;http://localhost:52842"
+		}
+	}
 }

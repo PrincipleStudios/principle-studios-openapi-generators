@@ -1,19 +1,16 @@
 {
-    "compilerOptions": {
-        "outDir": "./lib",
-        "noEmit": false,
-        "declaration": true,
-        "rootDir": "./src",
-        "composite": true
-    },
-    "extends": "./tsconfig.node.json",
-    "include": [
-        "./src",
-        "./types.d.ts"
-    ],
+	"compilerOptions": {
+		"outDir": "./lib",
+		"noEmit": false,
+		"declaration": true,
+		"rootDir": "./src",
+		"composite": true
+	},
+	"extends": "./tsconfig.node.json",
+	"include": ["./src", "./types.d.ts"],
 	"references": [
 		{
 			"path": "./tsconfig.node.json"
-		},
-	],
+		}
+	]
 }

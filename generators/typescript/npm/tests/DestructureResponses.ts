@@ -1,13 +1,25 @@
-import type { StructuredResponses } from "./no-refs/operations/lookupRecord";
-import type { StandardResponse } from "~/src/types";
+import type { StructuredResponses } from './no-refs/operations/lookupRecord';
+import type { StandardResponse } from '~/src/types';
 
-type DestructureMime<TStatusCode extends number | 'other', T extends { [mimeType: string]: any; }> = {
-    [K in keyof T]: K extends string ? StandardResponse<TStatusCode, K, T[K]> : never;
+type DestructureMime<
+	TStatusCode extends number | 'other',
+	T extends { [mimeType: string]: any },
+> = {
+	[K in keyof T]: K extends string
+		? StandardResponse<TStatusCode, K, T[K]>
+		: never;
 }[keyof T];
-type Destructure<T extends { [statusCode: string | number]: { [mimeType: string]: any; }; }> = {
-    [K in keyof T]: K extends number | 'other' ? DestructureMime<K, T[K]> : never;
+type Destructure<
+	T extends { [statusCode: string | number]: { [mimeType: string]: any } },
+> = {
+	[K in keyof T]: K extends number | 'other' ? DestructureMime<K, T[K]> : never;
 }[keyof T];
 type Destructured = Destructure<StructuredResponses>;
 
 // So, it is possible to destructure the response, but... this could end up with complex (therefore slow) type checking. I'd rather not.
-({ statusCode: 409, mimeType: 'application/json', data: { multiple: {} as any }, response: {} as any }) satisfies Destructured;
+({
+	statusCode: 409,
+	mimeType: 'application/json',
+	data: { multiple: {} as any },
+	response: {} as any,
+}) satisfies Destructured;

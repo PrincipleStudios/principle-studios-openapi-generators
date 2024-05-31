@@ -1,26 +1,24 @@
 {
-  "compilerOptions": {
-    "target": "es6",
-    "lib": [
-      "esnext"
-    ],
-    "allowJs": true,
-    "skipLibCheck": true,
-    "esModuleInterop": true,
-    "strict": true,
-    "forceConsistentCasingInFileNames": true,
-    "module": "commonjs",
-    "moduleResolution": "node",
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "noEmit": false,
-    "composite": true,
-    "declaration": true,
-    "outDir": "../../artifacts/generators/typescript-fetch/",
-    "types": ["node", "jest"],
-    "rootDir": ".",
-    "paths": {
-      "@principlestudios/openapi-codegen-typescript-fetch": ["./src"],
-    }
-  }
+	"compilerOptions": {
+		"target": "es6",
+		"lib": ["esnext"],
+		"allowJs": true,
+		"skipLibCheck": true,
+		"esModuleInterop": true,
+		"strict": true,
+		"forceConsistentCasingInFileNames": true,
+		"module": "commonjs",
+		"moduleResolution": "node",
+		"resolveJsonModule": true,
+		"isolatedModules": true,
+		"noEmit": false,
+		"composite": true,
+		"declaration": true,
+		"outDir": "../../artifacts/generators/typescript-fetch/",
+		"types": ["node", "jest"],
+		"rootDir": ".",
+		"paths": {
+			"@principlestudios/openapi-codegen-typescript-fetch": ["./src"]
+		}
+	}
 }

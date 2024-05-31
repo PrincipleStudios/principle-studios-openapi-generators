@@ -1,17 +1,15 @@
 {
-    "compilerOptions": {
-        "outDir": "./lib",
-        "noEmit": false,
-        "declaration": true,
-        "rootDir": "./src",
-    },
-    "extends": "./tsconfig.node.json",
-    "include": [
-        "./src"
-    ],
+	"compilerOptions": {
+		"outDir": "./lib",
+		"noEmit": false,
+		"declaration": true,
+		"rootDir": "./src"
+	},
+	"extends": "./tsconfig.node.json",
+	"include": ["./src"],
 	"references": [
 		{
 			"path": "./tsconfig.node.json"
-		},
-	],
+		}
+	]
 }

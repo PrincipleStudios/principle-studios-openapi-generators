@@ -1,4 +1,4 @@
 {
-    "startPath": "index.htm",
-    "server": { "baseDir": "./artifacts/coveragereport" }
+	"startPath": "index.htm",
+	"server": { "baseDir": "./artifacts/coveragereport" }
 }

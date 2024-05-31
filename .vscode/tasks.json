@@ -1,25 +1,25 @@
 {
-    // See https://go.microsoft.com/fwlink/?LinkId=733558
-    // for the documentation about the tasks.json format
-    "version": "2.0.0",
-    "tasks": [
-        {
-            "label": "Generate .NET Core Coverage Results",
-            "type": "shell",
-            "command": "${workspaceFolder}/eng/code-coverage/generate-code-results.ps1",
-            "group": "test"
-        },
-        {
-            "label": "View .NET Core Coverage Results",
-            "isBackground": true,
-            "type": "shell",
-            "command": "npx",
-            "args": [
-                "lite-server",
-                "-c",
-                "eng/code-coverage/lite-server-code-coverage-config.json"
-            ],
-            "problemMatcher": []
-        }
-    ]
+	// See https://go.microsoft.com/fwlink/?LinkId=733558
+	// for the documentation about the tasks.json format
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Generate .NET Core Coverage Results",
+			"type": "shell",
+			"command": "${workspaceFolder}/eng/code-coverage/generate-code-results.ps1",
+			"group": "test"
+		},
+		{
+			"label": "View .NET Core Coverage Results",
+			"isBackground": true,
+			"type": "shell",
+			"command": "npx",
+			"args": [
+				"lite-server",
+				"-c",
+				"eng/code-coverage/lite-server-code-coverage-config.json"
+			],
+			"problemMatcher": []
+		}
+	]
 }
