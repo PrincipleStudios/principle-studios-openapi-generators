@@ -20,11 +20,12 @@
         <RemoveDir Directories="$(ProjectDir)dotnet" />
     </Target>
 
-    <Target Name="GenerateForTests" DependsOnTargets="_CopyProjectReferencesToNpmPackage" BeforeTargets="VSTest_pnpm">
+    <Target Name="GenerateForTests" DependsOnTargets="NodeBuild" BeforeTargets="VSTest_pnpm;PrepareLint">
         <Exec WorkingDirectory="$(ProjectDir)" Command="pnpm run pretsc:check" />
     </Target>
 
     <Target Name="_CopyProjectReferencesToNpmPackage" BeforeTargets="NodeBuild">
+        <MSBuild Projects="@(ProjectReference)" Targets="Build"/>
         <MSBuild Projects="@(ProjectReference)"
                 Targets="PublishItemsOutputGroup">
             <Output TaskParameter="TargetOutputs" ItemName="_DotnetFiles" />

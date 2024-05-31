@@ -52,7 +52,9 @@
 
 	</PropertyGroup>
 
-	<Target Name="_FormatSourceFiles" BeforeTargets="BeforeBuild" Inputs="@(Compile)" Outputs="@(IntermediateAssembly)">
+	<Target Name="PrepareLint" />
+
+	<Target Name="_FormatSourceFiles" DependsOnTargets="PrepareLint" BeforeTargets="BeforeBuild" Inputs="@(Compile)" Outputs="@(IntermediateAssembly)">
 		<Exec WorkingDirectory="$(ProjectDir)" Command="dotnet format $(ProjectPath) --no-restore" />
 	</Target>
 

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Project>
-	<Import Project="eng/AutoCodeFormat.targets" Condition="exists('$(MSBuildThisFileDirectory)eng/AutoCodeFormat.targets')" />
+	<Import Project="$(RepositoryEngineeringDir)AutoCodeFormat.targets" Condition="exists('$(MSBuildThisFileDirectory)eng/AutoCodeFormat.targets')" />
 	<Import Project="$(RepositoryEngineeringDir)packaging.targets" />
 </Project>

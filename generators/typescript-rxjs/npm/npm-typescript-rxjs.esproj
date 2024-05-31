@@ -8,7 +8,8 @@
     </PropertyGroup>
     <Import Project="$(RepositoryEngineeringDir)pnpm.targets" />
 
-    <Target Name="GenerateForTests" BeforeTargets="VSTest_pnpm">
+    <Target Name="GenerateForTests" BeforeTargets="VSTest_pnpm;PrepareLint">
+        <MSBuild Projects="@(ProjectReference)" Targets="Build"/>
         <Exec WorkingDirectory="$(ProjectDir)" Command="pnpm run pretsc:check" />
     </Target>
 

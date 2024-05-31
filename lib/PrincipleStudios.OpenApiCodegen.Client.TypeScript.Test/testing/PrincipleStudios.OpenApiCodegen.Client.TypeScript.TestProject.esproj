@@ -32,6 +32,7 @@
 	        BeforeTargets="Generate"
 	        Inputs="@(Schemas)"
 	        Outputs="$([MSBuild]::NormalizePath('%(Schemas.DestinationFolder)', '.gitignore'))">
+		<MSBuild Projects="@(ProjectReference)" Targets="Build" />
 		<Exec WorkingDirectory="$(ProjectDir)"
 			Command="pnpm openapi-codegen-typescript &quot;%(Schemas.Identity)&quot; &quot;$([MSBuild]::NormalizeDirectory('%(Schemas.DestinationFolder)').Replace('\', '/'))&quot; -c" />
 	</Target>
@@ -40,7 +41,7 @@
 		<Exec WorkingDirectory="$(ProjectDir)"
 			Command="pnpm tsc -b tsconfig.json" />
 	</Target>
-	<Target Name="Generate" BeforeTargets="NodeBuild" />
+	<Target Name="Generate" BeforeTargets="NodeBuild;PrepareLint" />
 
 	<ItemGroup>
 		<ProjectReference Include="$(SolutionRoot)generators\typescript\npm\npm-typescript.esproj" />

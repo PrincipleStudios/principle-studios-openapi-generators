@@ -17,7 +17,8 @@
         <ProjectReference Include="$(SolutionRoot)generators\typescript-msw\npm\npm-typescript-msw.esproj" SpecificVersion="true" />
     </ItemGroup>
 
-    <Target Name="GenerateForTests" BeforeTargets="VSTest_pnpm">
+    <Target Name="GenerateForTests" BeforeTargets="VSTest_pnpm;PrepareLint">
+        <MSBuild Projects="@(ProjectReference)" Targets="Build"/>
         <Exec WorkingDirectory="$(ProjectDir)" Command="pnpm run pretsc:check" />
     </Target>
 
