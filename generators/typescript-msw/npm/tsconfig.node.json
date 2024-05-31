@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "es5",
+    "target": "es6",
     "lib": [
       "esnext", "DOM"
     ],
@@ -15,18 +15,13 @@
     "isolatedModules": true,
     "noEmit": false,
     "composite": true,
-    "declaration": true,
-    "outDir": "../../../artifacts/generators/typescript/npm/",
     "types": ["node", "jest"],
+    "declaration": true,
     "rootDir": ".",
+    "outDir": "../../../artifacts/generators/typescript-msw/npm",
     "paths": {
-      "~/*": ["./*"],
-      "@principlestudios/openapi-codegen-typescript": ["./src"],
+      "@principlestudios/openapi-codegen-typescript-msw": ["./src"],
     }
   },
-	"references": [
-		{
-			"path": "./tsconfig.build.json"
-		},
-	],
+  "exclude": ["./lib"]
 }

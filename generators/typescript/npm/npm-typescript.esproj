@@ -20,7 +20,7 @@
         <RemoveDir Directories="$(ProjectDir)dotnet" />
     </Target>
 
-    <Target Name="GenerateForTests" BeforeTargets="VSTest_pnpm">
+    <Target Name="GenerateForTests" DependsOnTargets="_CopyProjectReferencesToNpmPackage" BeforeTargets="VSTest_pnpm">
         <Exec WorkingDirectory="$(ProjectDir)" Command="pnpm run pretsc:check" />
     </Target>
 

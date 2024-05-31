@@ -38,7 +38,7 @@
 
 	<Target Name="VerifyGenerateSchemaFolders" AfterTargets="GenerateSchemaFolders">
 		<Exec WorkingDirectory="$(ProjectDir)"
-			Command="pnpm tsc --project tsconfig.json" />
+			Command="pnpm tsc -b tsconfig.json" />
 	</Target>
 	<Target Name="Generate" BeforeTargets="NodeBuild" />
 

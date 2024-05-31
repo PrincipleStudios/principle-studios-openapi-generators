@@ -6,6 +6,8 @@
         ],
         "strict": true,
         "moduleResolution": "node",
-        "noEmit": true
+        "noEmit": false,
+        "composite": true,
+        "outDir": "./dist"
     }
 }

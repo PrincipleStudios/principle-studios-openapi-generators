@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
-    "target": "es5",
+    "target": "es6",
     "lib": [
-      "esnext", "DOM"
+      "esnext"
     ],
     "allowJs": true,
     "skipLibCheck": true,
@@ -16,17 +16,11 @@
     "noEmit": false,
     "composite": true,
     "declaration": true,
-    "outDir": "../../../artifacts/generators/typescript/npm/",
+    "outDir": "../../artifacts/generators/typescript-fetch/",
     "types": ["node", "jest"],
     "rootDir": ".",
     "paths": {
-      "~/*": ["./*"],
-      "@principlestudios/openapi-codegen-typescript": ["./src"],
+      "@principlestudios/openapi-codegen-typescript-fetch": ["./src"],
     }
-  },
-	"references": [
-		{
-			"path": "./tsconfig.build.json"
-		},
-	],
+  }
 }

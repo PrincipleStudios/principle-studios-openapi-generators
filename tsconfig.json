@@ -1,25 +1,25 @@
 {
 	"references": [
 		{
-			"path": "./examples/typescript"
+			"path": "./generators/typescript/npm"
 		},
 		{
-			"path": "./examples/typescript-rxjs"
+			"path": "./generators/typescript-fetch"
 		},
 		{
-			"path": "generators/typescript/npm"
+			"path": "./generators/typescript-msw/npm"
 		},
 		{
-			"path": "generators/typescript-fetch"
+			"path": "./generators/typescript-rxjs/npm"
 		},
 		{
-			"path": "generators/typescript-msw/npm"
+			"path": "./lib/PrincipleStudios.OpenApiCodegen.Client.TypeScript.Test/testing"
 		},
-		{
-			"path": "generators/typescript-rxjs/npm"
-		},
-		{
-			"path": "lib/PrincipleStudios.OpenApiCodegen.Client.TypeScript.Test/testing"
-		},
+	],
+	"exclude": [
+		"./artifacts",
+		"./examples",
+		"./lib",
+		"./generators"
 	]
 }

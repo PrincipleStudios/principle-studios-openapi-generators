@@ -3,8 +3,8 @@
     "version": "0.5.0",
     "description": "A typescript client code generator for principled development",
     "scripts": {
-        "build": "tsc --project tsconfig.build.json",
-        "pretsc:check": "node bin/index.js ../../../schemas/no-refs.yaml tests/no-refs/ && node bin/index.js ../../../schemas/petstore.yaml tests/petstore/ && node bin/index.js ../../../schemas/headers.yaml tests/headers/",
+        "build": "tsc -b tsconfig.build.json",
+        "pretsc:check": "pnpm build && node bin/index.js ../../../schemas/no-refs.yaml tests/no-refs/ && node bin/index.js ../../../schemas/petstore.yaml tests/petstore/ && node bin/index.js ../../../schemas/headers.yaml tests/headers/",
         "tsc:check": "tsc",
         "pretest": "npm run tsc:check",
         "test": "jest",

@@ -5,15 +5,26 @@
   "private": "true",
   "scripts": {
     "test": "dotnet test",
+    "lint": "pnpm run typecheck && pnpm run eslint:check && pnpm run prettier:check",
+    "lint:fix": "pnpm run typecheck && pnpm run eslint:fix && pnpm run prettier:fix",
+    "eslint:check": "eslint \"**/*.{cjs,mjs,js,mts,cts,ts,tsx}\"",
+    "eslint:fix": "eslint \"**/*.{cjs,mjs,js,mts,cts,ts,tsx}\" --fix",
+    "prettier:check": "prettier --list-different \"**/*.{cjs,mjs,js,mts,cts,ts,tsx,yaml,json}\"",
+    "prettier:fix": "prettier --write \"**/*.{cjs,mjs,js,mts,cts,ts,tsx,yaml,json}\"",
     "typecheck": "tsc -b"
   },
   "keywords": [],
   "author": "",
   "license": "BSD-2-Clause",
   "dependencies": {
-    "prettier": "^3.2.5"
   },
   "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^6.21.0",
+    "@typescript-eslint/parser": "^6.21.0",
+    "eslint": "^8.56.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-import": "^2.29.1",
+    "prettier": "^3.2.5",
     "typescript": "^5.4.5"
   }
 }

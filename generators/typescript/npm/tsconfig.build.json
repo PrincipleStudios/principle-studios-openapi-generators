@@ -3,10 +3,14 @@
         "outDir": "./lib",
         "noEmit": false,
         "declaration": true,
-        "rootDir": "./src"
+        "rootDir": "./src",
+        "composite": true,
+        "paths": {
+            "@principlestudios/openapi-codegen-typescript": ["./src"],
+        }
     },
     "extends": "./tsconfig.json",
     "include": [
         "./src"
-    ]
+    ],
 }
