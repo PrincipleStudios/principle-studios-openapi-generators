@@ -1,6 +1,6 @@
 {
     "name": "@principlestudios/openapi-codegen-typescript",
-    "version": "0.5.0",
+    "version": "0.8.0",
     "description": "A typescript client code generator for principled development",
     "scripts": {
         "build": "tsc -b tsconfig.build.json",

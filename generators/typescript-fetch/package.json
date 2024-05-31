@@ -1,6 +1,6 @@
 {
   "name": "@principlestudios/openapi-codegen-typescript-fetch",
-  "version": "0.4.0",
+  "version": "0.7.1",
   "description": "A typescript code generator for principled development using the fetch API",
   "scripts": {
     "build": "tsc -b tsconfig.json",

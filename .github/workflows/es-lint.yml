@@ -15,3 +15,6 @@ jobs:
       - name: 'Run JS lint checks'
         run: |
           pnpm lint
+      - name: 'Ensure npm versions are correct'
+        run: |
+          git diff --stat --exit-code

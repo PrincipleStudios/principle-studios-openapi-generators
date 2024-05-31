@@ -42,8 +42,6 @@
         <PropertyGroup>
             <NpmPackageVersion>@(NpmPackageVersion->'%(Identity)')</NpmPackageVersion>
             <NpmPackageNormalizedName>@(NpmPackageName->'%(Identity)'->Replace("@", "")->Replace("/", "-"))</NpmPackageNormalizedName>
-            <VersionPrefix>@(NpmPackageVersion->'%(Identity)')</VersionPrefix>
-            <Version>$(VersionPrefix)</Version>
             <Version Condition=" '$(VersionSuffix)' != '' ">$(VersionPrefix)-$(VersionSuffix)</Version>
         </PropertyGroup>
     </Target>
@@ -79,15 +77,21 @@
         <Touch ForceTouch="true" Files="@(CompileOutputs)" />
     </Target>
 
-    <Target Name="PnpmPack" BeforeTargets="Publish" DependsOnTargets="NodeBuild" Inputs="@(RestoreConfig);@(PnpmPackagedFiles);@(CompileOutputs)" Outputs="$(PackageOutputPath)$(NpmPackageNormalizedName)-$(NpmPackageVersion).tgz">
+    <Target Name="PnpmPack_PreVersion" BeforeTargets="NodeBuild;PrepareLint" DependsOnTargets="_LoadPackageJson">
         <PropertyGroup>
             <PackageJsonLastModifiedTime>$([System.IO.File]::GetLastWriteTime('package.json').ToString('g'))</PackageJsonLastModifiedTime>
         </PropertyGroup>
         <Exec WorkingDirectory="$(ProjectDir)" Command="npm version $(Version)" IgnoreExitCode="true" Condition=" '$(NpmPackageVersion)' != '$(Version)' " />
+    </Target>
+
+    <Target Name="PnpmPack" BeforeTargets="Publish" DependsOnTargets="NodeBuild" Inputs="@(RestoreConfig);@(PnpmPackagedFiles);@(CompileOutputs)" Outputs="$(PackageOutputPath)$(NpmPackageNormalizedName)-$(NpmPackageVersion).tgz">
         <MakeDir Directories="$(PackageOutputPath)"/>
         <Exec WorkingDirectory="$(ProjectDir)" Command="pnpm pack" />
         <Move SourceFiles="$(NpmPackageNormalizedName)-$(Version).tgz" DestinationFolder="$(PackageOutputPath)" />
-        <Exec WorkingDirectory="$(ProjectDir)" Command="npm version $(NpmPackageVersion)" IgnoreExitCode="true" Condition=" '$(NpmPackageVersion)' != '$(Version)' " />
+    </Target>
+
+    <Target Name="PnpmPack_PostVersion" AfterTargets="PnpmPack" DependsOnTargets="NodeBuild;PnpmPack_PreVersion">
+        <Exec WorkingDirectory="$(ProjectDir)" Command="npm version $(NpmPackageVersion)" IgnoreExitCode="true" Condition=" '$(NpmPackageVersion)' != '$(Version)' and $(Configuration) != 'Release' " />
         <Touch Files="package.json" Time="$(PackageJsonLastModifiedTime)" />
     </Target>
 
