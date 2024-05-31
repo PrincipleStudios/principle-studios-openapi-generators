@@ -1,0 +1,9 @@
+{
+  "name": "integration-testing",
+  "version": "0.8.0",
+  "private": true,
+  "devDependencies": {
+    "@principlestudios/openapi-codegen-typescript": "workspace:*",
+    "typescript": "^5.4.5"
+  }
+}

@@ -1,8 +1,8 @@
 {
-  "profiles": {
-    "PrincipleStudios.OpenApiCodegen.Client.TypeScript": {
-      "commandName": "Project",
-      "commandLineArgs": "\"$(SolutionDir)schemas/local.yaml\" \"$(ProjectDir)demo/\" -c"
-    }
-  }
+	"profiles": {
+		"PrincipleStudios.OpenApiCodegen.Client.TypeScript": {
+			"commandName": "Project",
+			"commandLineArgs": "\"$(SolutionDir)schemas/local.yaml\" \"$(ProjectDir)demo/\" -c"
+		}
+	}
 }

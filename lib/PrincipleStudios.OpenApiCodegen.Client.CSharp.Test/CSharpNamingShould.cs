@@ -42,16 +42,7 @@ namespace PrincipleStudios.OpenApiCodegen.Client.CSharp
 			Assert.Equal(expected, actual);
 		}
 
-#if Windows
-		[InlineData("PrincipleStudios.Project", @"C:\users\user\source\project\", @"C:\users\user\source\project\controllers\api.yaml", null, "PrincipleStudios.Project.Controllers")]
-		[InlineData("PrincipleStudios.Project", @"C:\users\user\source\project\", @"C:\users\user\source\api.yaml", @"controllers\api.yaml", "PrincipleStudios.Project.Controllers")]
-		[InlineData("PrincipleStudios.Project", @"C:\users\user\source\project\", @"C:\users\user\source\project\api.yaml", null, "PrincipleStudios.Project")]
-		[InlineData("PrincipleStudios.Project", @"C:\users\user\source\project\", @"C:\users\user\source\api.yaml", @"api.yaml", "PrincipleStudios.Project")]
-		[InlineData("", @"C:\users\user\source\project\", @"C:\users\user\source\project\controllers\api.yaml", null, "Controllers")]
-		[InlineData("", @"C:\users\user\source\project\", @"C:\users\user\source\api.yaml", @"controllers\api.yaml", "Controllers")]
-		[InlineData("", @"C:\users\user\source\project\", @"C:\users\user\source\project\api.yaml", null, "")]
-		[InlineData("", @"C:\users\user\source\project\", @"C:\users\user\source\api.yaml", @"api.yaml", "")]
-#endif
+		[MemberData(nameof(WindowsPaths))]
 		[InlineData("PrincipleStudios.Project", @"/users/user/source/project/", @"/users/user/source/project/controllers/api.yaml", null, "PrincipleStudios.Project.Controllers")]
 		[InlineData("PrincipleStudios.Project", @"/users/user/source/project/", @"/users/user/source/api.yaml", @"controllers/api.yaml", "PrincipleStudios.Project.Controllers")]
 		[InlineData("PrincipleStudios.Project", @"/users/user/source/project/", @"/users/user/source/project/api.yaml", null, "PrincipleStudios.Project")]
@@ -66,6 +57,21 @@ namespace PrincipleStudios.OpenApiCodegen.Client.CSharp
 			var options = LoadOptions();
 			var actual = CSharpNaming.ToNamespace(rootNamespace, projectDir, identity, link, options.ReservedIdentifiers());
 			Assert.Equal(expected, actual);
+		}
+
+		public static IEnumerable<object?[]> WindowsPaths()
+		{
+			if (!System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Windows))
+				yield break;
+
+			yield return ["PrincipleStudios.Project", @"C:\users\user\source\project\", @"C:\users\user\source\project\controllers\api.yaml", null, "PrincipleStudios.Project.Controllers"];
+			yield return ["PrincipleStudios.Project", @"C:\users\user\source\project\", @"C:\users\user\source\api.yaml", @"controllers\api.yaml", "PrincipleStudios.Project.Controllers"];
+			yield return ["PrincipleStudios.Project", @"C:\users\user\source\project\", @"C:\users\user\source\project\api.yaml", null, "PrincipleStudios.Project"];
+			yield return ["PrincipleStudios.Project", @"C:\users\user\source\project\", @"C:\users\user\source\api.yaml", @"api.yaml", "PrincipleStudios.Project"];
+			yield return ["", @"C:\users\user\source\project\", @"C:\users\user\source\project\controllers\api.yaml", null, "Controllers"];
+			yield return ["", @"C:\users\user\source\project\", @"C:\users\user\source\api.yaml", @"controllers\api.yaml", "Controllers"];
+			yield return ["", @"C:\users\user\source\project\", @"C:\users\user\source\project\api.yaml", null, ""];
+			yield return ["", @"C:\users\user\source\project\", @"C:\users\user\source\api.yaml", @"api.yaml", ""];
 		}
 	}
 }

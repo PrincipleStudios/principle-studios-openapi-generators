@@ -1,9 +1,9 @@
 {
   "name": "@principlestudios/openapi-codegen-typescript-fetch",
-  "version": "0.4.0",
+  "version": "0.7.1",
   "description": "A typescript code generator for principled development using the fetch API",
   "scripts": {
-    "build": "tsc --project tsconfig.build.json",
+    "build": "tsc -b tsconfig.json",
     "pretsc:check": "npm run generate-no-refs && npm run generate-petstore && npm run generate-headers && npm run generate-multi-path-variables",
     "generate-no-refs": "openapi-codegen-typescript -o ./openapi-codegen-options.yaml ../../schemas/no-refs.yaml tests/no-refs/",
     "generate-petstore": "openapi-codegen-typescript -o ./openapi-codegen-options.yaml ../../schemas/petstore.yaml tests/petstore/",
@@ -30,17 +30,18 @@
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
   "peerDependencies": {
-    "@principlestudios/openapi-codegen-typescript": "*"
+    "@principlestudios/openapi-codegen-typescript": "workspace:^"
   },
   "devDependencies": {
     "@babel/cli": "^7.15.4",
     "@babel/core": "^7.15.5",
     "@babel/preset-env": "^7.15.6",
     "@babel/preset-typescript": "^7.21.5",
-    "@principlestudios/openapi-codegen-typescript": "file:../typescript/npm",
-    "@principlestudios/openapi-codegen-typescript-msw": "file:../typescript-msw/npm",
+    "@principlestudios/openapi-codegen-typescript": "workspace:*",
+    "@principlestudios/openapi-codegen-typescript-msw": "workspace:*",
     "@types/eslint": "^7.28.0",
     "@types/jest": "^27.0.1",
+    "@types/node": "^16.9.1",
     "@typescript-eslint/eslint-plugin": "^4.31.1",
     "@typescript-eslint/parser": "^4.31.1",
     "eslint": "^7.32.0",

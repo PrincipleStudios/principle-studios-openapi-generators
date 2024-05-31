@@ -1,9 +1,9 @@
 {
   "name": "@principlestudios/openapi-codegen-typescript-rxjs",
-  "version": "0.4.0",
+  "version": "0.6.0",
   "description": "A typescript client code generator for principled development using RxJS",
   "scripts": {
-    "build": "tsc --project tsconfig.build.json",
+    "build": "tsc -b tsconfig.json",
     "pretsc:check": "npm run generate-no-refs && npm run generate-petstore && npm run generate-headers",
     "generate-no-refs": "openapi-codegen-typescript -o ./openapi-codegen-options.yaml ../../../schemas/no-refs.yaml tests/no-refs/",
     "generate-petstore": "openapi-codegen-typescript -o ./openapi-codegen-options.yaml ../../../schemas/petstore.yaml tests/petstore/",
@@ -32,15 +32,15 @@
     "rxjs": "^6.5.5"
   },
   "peerDependencies": {
-    "@principlestudios/openapi-codegen-typescript": "*"
+    "@principlestudios/openapi-codegen-typescript": "workspace:^"
   },
   "devDependencies": {
     "@babel/cli": "^7.15.4",
     "@babel/core": "^7.15.5",
     "@babel/preset-env": "^7.15.6",
     "@babel/preset-typescript": "^7.21.5",
-    "@principlestudios/openapi-codegen-typescript": "file:../../typescript/npm",
-    "@principlestudios/openapi-codegen-typescript-msw": "file:../../typescript-msw/npm",
+    "@principlestudios/openapi-codegen-typescript": "workspace:*",
+    "@principlestudios/openapi-codegen-typescript-msw": "workspace:*",
     "@types/eslint": "^7.28.0",
     "@types/jest": "^27.0.1",
     "@types/node": "^16.9.1",

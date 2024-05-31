@@ -1,12 +1,14 @@
 {
-    "compilerOptions": {
-        "outDir": "./lib",
-        "noEmit": false,
-        "declaration": true,
-        "rootDir": "./src"
-    },
-    "extends": "./tsconfig.json",
-    "include": [
-        "./src"
-    ]
+	"compilerOptions": {
+		"outDir": "./lib",
+		"noEmit": false,
+		"declaration": true,
+		"rootDir": "./src",
+		"composite": true,
+		"paths": {
+			"@principlestudios/openapi-codegen-typescript": ["./src"]
+		}
+	},
+	"extends": "./tsconfig.json",
+	"include": ["./src"]
 }
