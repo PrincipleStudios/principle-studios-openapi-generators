@@ -1,0 +1,17 @@
+name: Lint DotNet
+on:
+  pull_request:
+    types: [edited, opened, reopened, synchronize, ready_for_review]
+
+jobs:
+  build:
+    runs-on: 'ubuntu-latest'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/workflows/parts/cache/
+      - name: 'Prepare for linting'
+        run: |
+          dotnet build -t:PrepareLint
+      - name: 'Run JS lint checks'
+        run: |
+          pnpm lint
