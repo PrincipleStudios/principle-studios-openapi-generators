@@ -35,10 +35,7 @@
   },
   "devDependencies": {
     "@principlestudios/openapi-codegen-typescript-msw": "workspace:*",
-    "@types/eslint": "^7.28.0",
     "msw": "^1.2.2",
-    "vite-tsconfig-paths": "^4.3.2",
-    "vitest": "^1.6.0",
     "xmlhttprequest": "^1.8.0"
   }
 }

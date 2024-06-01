@@ -34,11 +34,7 @@
     "@principlestudios/openapi-codegen-typescript": "workspace:^"
   },
   "devDependencies": {
-    "@types/eslint": "^7.28.0",
     "@types/node-fetch": "^2.6.4",
-    "eslint": "^7.32.0",
-    "node-fetch": "^2.6.11",
-    "vite-tsconfig-paths": "^4.3.2",
-    "vitest": "^1.6.0"
+    "node-fetch": "^2.6.11"
   }
 }
