@@ -1,6 +1,7 @@
 import { toMswHandler } from '@principlestudios/openapi-codegen-typescript-msw';
 import { setupServer } from 'msw/node';
 import fetch from 'node-fetch';
+import { describe, beforeAll, afterEach, afterAll, it, expect } from 'vitest';
 import { toFetchApi, toFetchOperation } from '../src';
 import type { FetchImplementation } from '../src';
 import operations from './multi-path-variables/operations';

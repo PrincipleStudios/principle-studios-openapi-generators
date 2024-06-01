@@ -7,7 +7,7 @@
         "pretsc:check": "pnpm build && node bin/index.js ../../../schemas/no-refs.yaml tests/no-refs/ && node bin/index.js ../../../schemas/petstore.yaml tests/petstore/ && node bin/index.js ../../../schemas/headers.yaml tests/headers/",
         "tsc:check": "tsc",
         "pretest": "npm run tsc:check",
-        "test": "jest",
+        "test": "vitest",
         "prepack": "npm run build"
     },
     "author": "Matt DeKrey & Principle Studios",
@@ -30,19 +30,11 @@
         "directory": "generators/typescript/npm"
     },
     "devDependencies": {
-        "@babel/cli": "^7.15.4",
-        "@babel/core": "^7.15.5",
-        "@babel/plugin-proposal-class-properties": "^7.14.5",
-        "@babel/preset-env": "^7.15.6",
-        "@babel/preset-typescript": "^7.21.5",
         "@types/eslint": "^7.28.0",
-        "@types/jest": "^27.0.1",
-        "@types/node": "^16.9.1",
-        "@types/rimraf": "^3.0.2",
         "@typescript-eslint/eslint-plugin": "^4.31.1",
         "@typescript-eslint/parser": "^4.31.1",
         "eslint": "^7.32.0",
-        "jest": "^27.2.0",
-        "typescript": "^4.9.5"
+        "vite-tsconfig-paths": "^4.3.2",
+        "vitest": "^1.6.0"
     }
 }

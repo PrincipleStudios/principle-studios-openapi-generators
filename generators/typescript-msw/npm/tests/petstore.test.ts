@@ -1,5 +1,6 @@
 import { setupServer } from 'msw/node';
 import fetch from 'node-fetch';
+import { describe, beforeAll, afterEach, afterAll, it, expect } from 'vitest';
 import { toMswHandler, toMswResponse } from '../src';
 import operations from './petstore/operations';
 

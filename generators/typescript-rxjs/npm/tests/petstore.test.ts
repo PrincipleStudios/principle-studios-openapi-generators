@@ -1,4 +1,5 @@
 import { setupServer } from 'msw/node';
+import { describe, beforeAll, afterEach, afterAll, it, expect } from 'vitest';
 import { toRxjsApi } from '../src';
 import { toMswHandler } from './mwcMappedRestHandler';
 import operations from './petstore/operations';
