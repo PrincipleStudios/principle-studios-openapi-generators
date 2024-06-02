@@ -1,24 +1,15 @@
 {
-  "compilerOptions": {
-    "target": "es5",
-    "lib": [
-      "esnext", "DOM"
-    ],
-    "allowJs": true,
-    "skipLibCheck": true,
-    "esModuleInterop": true,
-    "strict": true,
-    "forceConsistentCasingInFileNames": true,
-    "module": "commonjs",
-    "moduleResolution": "node",
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "noEmit": true,
-    "types": ["node", "jest"],
-    "declaration": false,
-    "rootDir": ".",
-    "paths": {
-      "@principlestudios/openapi-codegen-typescript-rxjs": ["./src"],
-    }
-  }
+	"compilerOptions": {
+		"outDir": "./lib",
+		"noEmit": false,
+		"declaration": true,
+		"rootDir": "./src"
+	},
+	"extends": "./tsconfig.node.json",
+	"include": ["./src"],
+	"references": [
+		{
+			"path": "./tsconfig.node.json"
+		}
+	]
 }

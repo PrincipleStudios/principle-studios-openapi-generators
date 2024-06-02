@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net7.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
 
@@ -20,6 +20,7 @@
     <OpenApiSchemaMvcServer Include="$(SolutionRoot)schemas\one-of.yaml" Link="OneOf\one-of.yaml" Key="OneOf" PathPrefix="/one-of" />
     <OpenApiSchemaMvcServer Include="$(SolutionRoot)schemas\nullable-vs-optional-legacy.yaml" Link="LegacyOptional\nullable-vs-optional-legacy.yaml" Key="LegacyOptional" PathPrefix="/nullable-vs-optional-legacy" />
     <OpenApiSchemaMvcServer Include="$(SolutionRoot)schemas\nullable-vs-optional.yaml" Link="NullableVsOptional\nullable-vs-optional.yaml" Key="NullableVsOptional" PathPrefix="/nullable-vs-optional" />
+    <OpenApiSchemaMvcServer Include="$(SolutionRoot)schemas\annotations.yaml" Link="Annotations\annotations.yaml" Key="Annotations" PathPrefix="/annotations" />
 
 	<Clean Include="generated/**/*" />
   </ItemGroup>

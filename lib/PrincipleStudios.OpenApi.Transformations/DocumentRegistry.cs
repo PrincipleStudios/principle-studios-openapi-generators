@@ -24,7 +24,7 @@ public class DocumentRegistry
 		IDocumentReference Document,
 		IReadOnlyDictionary<string, JsonPointer> Anchors
 	);
-	private readonly IDictionary<Uri, DocumentRegistryEntry> entries = new Dictionary<Uri, DocumentRegistryEntry>();
+	private readonly Dictionary<Uri, DocumentRegistryEntry> entries = new();
 	private DocumentResolver? fetch;
 
 	private IBaseDocument? SchemaRegistryFetch(Uri uri)

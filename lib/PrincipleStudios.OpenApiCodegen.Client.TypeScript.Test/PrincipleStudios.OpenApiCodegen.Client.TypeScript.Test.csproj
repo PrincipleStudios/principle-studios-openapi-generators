@@ -1,22 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFramework>net7.0</TargetFramework>
+		<TargetFramework>net8.0</TargetFramework>
 
 		<IsPackable>false</IsPackable>
 
 		<RootNamespace>PrincipleStudios.OpenApiCodegen.Client.TypeScript</RootNamespace>
 	</PropertyGroup>
-
-	<ItemGroup>
-	  <None Remove="package.testing.json" />
-	  <None Remove="tsconfig.testing.json" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <EmbeddedResource Include="package.testing.json" />
-	  <EmbeddedResource Include="tsconfig.testing.json" />
-	</ItemGroup>
 
 	<ItemGroup>
 		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.5.0" />
@@ -34,5 +24,6 @@
 	<ItemGroup>
 		<ProjectReference Include="$(SolutionRoot)generators\typescript\PrincipleStudios.OpenApiCodegen.Client.TypeScript\PrincipleStudios.OpenApiCodegen.Client.TypeScript.csproj" />
 		<ProjectReference Include="..\PrincipleStudios.OpenApiCodegen.TestUtils\PrincipleStudios.OpenApiCodegen.TestUtils.csproj" />
+		<ProjectReference Include=".\testing\PrincipleStudios.OpenApiCodegen.Client.TypeScript.TestProject.esproj" />
 	</ItemGroup>
 </Project>

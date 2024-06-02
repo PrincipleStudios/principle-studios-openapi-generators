@@ -5,7 +5,7 @@ Provides an adapter layer method for
 
     npm i -D @principlestudios/openapi-codegen-typescript-msw
 
-You must also have `dotnet` 7.0 runtime installed on your machine.
+You must also have `dotnet` 8.0 runtime installed on your machine.
 
 This will provide a corresponding bin to generate the typescript files.
 

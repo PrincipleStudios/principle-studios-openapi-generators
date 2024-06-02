@@ -43,6 +43,7 @@ public static class SubschemaLoader
 		try
 		{
 			var keywords = nodeInfo.Document.Dialect.GetVocabularyKeywords().GetKeywordRegistry();
+#pragma warning disable CA1869 // Cache and reuse 'JsonSerializerOptions' instances
 			return JsonSerializer.Deserialize<JsonSchema>(data, new JsonSerializerOptions
 			{
 				Converters =
@@ -54,6 +55,7 @@ public static class SubschemaLoader
 					new OneOfKeywordJsonConverter(),
 				}
 			});
+#pragma warning restore CA1869 // Cache and reuse 'JsonSerializerOptions' instances
 		}
 		catch (JsonException ex)
 		{

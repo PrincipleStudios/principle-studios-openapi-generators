@@ -1,24 +1,16 @@
 {
-  "compilerOptions": {
-    "target": "es6",
-    "lib": [
-      "esnext"
-    ],
-    "allowJs": true,
-    "skipLibCheck": true,
-    "esModuleInterop": true,
-    "strict": true,
-    "forceConsistentCasingInFileNames": true,
-    "module": "commonjs",
-    "moduleResolution": "node",
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "noEmit": true,
-    "types": ["node", "jest"],
-    "declaration": false,
-    "rootDir": ".",
-    "paths": {
-      "@principlestudios/openapi-codegen-typescript-fetch": ["./src"],
-    }
-  }
+	"compilerOptions": {
+		"outDir": "./lib",
+		"noEmit": false,
+		"declaration": true,
+		"rootDir": "./src",
+		"composite": true
+	},
+	"extends": "./tsconfig.node.json",
+	"include": ["./src", "./types.d.ts"],
+	"references": [
+		{
+			"path": "./tsconfig.node.json"
+		}
+	]
 }

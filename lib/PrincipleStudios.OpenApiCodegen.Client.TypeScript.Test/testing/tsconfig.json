@@ -1,0 +1,10 @@
+{
+	"compilerOptions": {
+		"lib": ["ESNext", "DOM"],
+		"strict": true,
+		"moduleResolution": "node",
+		"noEmit": false,
+		"composite": true,
+		"outDir": "./dist"
+	}
+}

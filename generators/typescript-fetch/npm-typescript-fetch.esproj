@@ -1,12 +1,25 @@
 <Project Sdk="Microsoft.Build.NoTargets/3.7.0">
     <PropertyGroup>
         <VersionPrefix>$(OpenApiTypeScriptFetchVersion)</VersionPrefix>
-        <PackNpmOnBuild Condition=" $(Configuration) == 'Release' ">true</PackNpmOnBuild>
+        <PackPnpmOnBuild Condition=" $(Configuration) == 'Release' ">true</PackPnpmOnBuild>
+
+        <PnpmBuildScript>pnpm run build</PnpmBuildScript>
+        <PnpmTestScript>pnpm test</PnpmTestScript>
     </PropertyGroup>
-    <Import Project="$(RepositoryEngineeringDir)npm.targets" />
+    <Import Project="$(RepositoryEngineeringDir)pnpm.targets" />
+
+    <ItemGroup>
+        <CompileOutputs Include="@(Compile->'$(ProjectDir)/lib/%(filename).js');@(Compile->'$(ProjectDir)/lib/%(filename).d.ts')" />
+    </ItemGroup>
 
     <ItemGroup>
         <ProjectReference Include="$(SolutionRoot)generators\typescript\npm\npm-typescript.esproj" SpecificVersion="true" />
+        <ProjectReference Include="$(SolutionRoot)generators\typescript-msw\npm\npm-typescript-msw.esproj" SpecificVersion="true" />
     </ItemGroup>
+
+    <Target Name="GenerateForTests" BeforeTargets="VSTest_pnpm;PrepareLint">
+        <MSBuild Projects="@(ProjectReference)" Targets="Build"/>
+        <Exec WorkingDirectory="$(ProjectDir)" Command="pnpm run pretsc:check" />
+    </Target>
 
 </Project>

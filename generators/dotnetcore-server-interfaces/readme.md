@@ -6,7 +6,7 @@ See the Readme in /generators/dotnetcore-server-interfaces/PrincipleStudios.Open
 
 Prerequisites:
 
-    .NET 7.0 SDK
+    .NET 8.0 SDK
 
 ## Testing locally
 

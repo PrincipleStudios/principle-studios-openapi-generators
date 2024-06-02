@@ -23,7 +23,9 @@ namespace PrincipleStudios.OpenApi.TypeScript
 		private static string ToTitleCase(string key) =>
 			string.Join("", Regex.Split(key, "[^a-zA-Z0-9]+")
 				.Where(s => s is { Length: > 0 })
+#pragma warning disable CA1862 // Use the 'StringComparison' method overloads to perform case-insensitive string comparisons
 				.Select(s => s.ToUpper() == s
+#pragma warning restore CA1862 // Use the 'StringComparison' method overloads to perform case-insensitive string comparisons
 					? char.ToUpper(s[0]) + s.Substring(1).ToLower() // assume acronym, which gets lowercased, such as `HttpMethod` or `CorsPolicy`.
 					: char.ToUpper(s[0]) + s.Substring(1))
 			);

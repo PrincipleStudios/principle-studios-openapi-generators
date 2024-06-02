@@ -48,9 +48,11 @@ namespace PrincipleStudios.OpenApiCodegen.Client.TypeScript
 				var entries = transformer.GetSources(diagnostic).ToArray();
 				foreach (var error in diagnostic.Errors)
 				{
+#pragma warning disable CA2241 // CommandLineApplication does not follow standard format string format
 					commandLineApplication.Error.WriteLine(
 						"{subcategory}{errorCode}: {helpKeyword} {file}({lineNumber},{columnNumber}-{endLineNumber},{endColumnNumber}) {message}",
 						null, "PSOPENAPI000", null, inputPath, 0, 0, 0, 0, error.Message);
+#pragma warning restore CA2241
 				}
 				if (clean && System.IO.Directory.Exists(outputPath))
 				{

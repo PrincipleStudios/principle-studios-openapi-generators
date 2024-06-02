@@ -1,21 +1,31 @@
 <Project Sdk="Microsoft.Build.NoTargets/3.7.0">
     <PropertyGroup>
         <VersionPrefix>$(OpenApiTypeScriptClientVersion)</VersionPrefix>
-        <PackNpmOnBuild Condition=" $(Configuration) == 'Release' ">true</PackNpmOnBuild>
+        <PackPnpmOnBuild Condition=" $(Configuration) == 'Release' ">true</PackPnpmOnBuild>
+
+        <PnpmBuildScript>pnpm run build</PnpmBuildScript>
+        <PnpmTestScript>pnpm test</PnpmTestScript>
     </PropertyGroup>
-    <Import Project="$(RepositoryEngineeringDir)npm.targets" />
+    <Import Project="$(RepositoryEngineeringDir)pnpm.targets" />
+
+    <ItemGroup>
+        <CompileOutputs Include="@(Compile->'$(ProjectDir)/lib/%(filename).js');@(Compile->'$(ProjectDir)/lib/%(filename).d.ts')" />
+    </ItemGroup>
 
     <ItemGroup>
         <ProjectReference Include="$(SolutionRoot)generators/typescript/PrincipleStudios.OpenApiCodegen.Client.TypeScript/PrincipleStudios.OpenApiCodegen.Client.TypeScript.csproj" SpecificVersion="true" />
     </ItemGroup>
 
     <Target Name="_CleanDotnet" BeforeTargets="CoreClean">
-        <ItemGroup>
-            <Clean Include="dotnet/**" />
-        </ItemGroup>
+        <RemoveDir Directories="$(ProjectDir)dotnet" />
+    </Target>
+
+    <Target Name="GenerateForTests" DependsOnTargets="NodeBuild" BeforeTargets="VSTest_pnpm;PrepareLint">
+        <Exec WorkingDirectory="$(ProjectDir)" Command="pnpm run pretsc:check" />
     </Target>
 
     <Target Name="_CopyProjectReferencesToNpmPackage" BeforeTargets="NodeBuild">
+        <MSBuild Projects="@(ProjectReference)" Targets="Build"/>
         <MSBuild Projects="@(ProjectReference)"
                 Targets="PublishItemsOutputGroup">
             <Output TaskParameter="TargetOutputs" ItemName="_DotnetFiles" />

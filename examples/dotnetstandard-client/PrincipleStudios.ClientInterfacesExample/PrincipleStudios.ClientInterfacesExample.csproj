@@ -1,10 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFramework>net7.0</TargetFramework>
+		<TargetFramework>net8.0</TargetFramework>
 		<ApplicationIcon />
 		<OutputType>Exe</OutputType>
 		<StartupObject />
+
+		<!-- CA1861 - use static readonly fields -->
+		<NoWarn>$(NoWarn);CA1861</NoWarn>
 	</PropertyGroup>
 
 	<ItemGroup>

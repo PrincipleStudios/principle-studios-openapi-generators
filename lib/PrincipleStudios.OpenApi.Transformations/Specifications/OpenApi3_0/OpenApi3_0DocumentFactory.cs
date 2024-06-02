@@ -346,7 +346,7 @@ internal class OpenApi3_0DocumentFactory : IOpenApiDocumentFactory
 		);
 	}
 
-	private IReadOnlyDictionary<TKey, TValue> ReadDictionary<TKey, TValue>(NodeMetadata key, Func<string, bool> filter, Func<string, NodeMetadata, (TKey Key, TValue Value)> toKeyValuePair, Action? ifNotObject = null)
+	private Dictionary<TKey, TValue> ReadDictionary<TKey, TValue>(NodeMetadata key, Func<string, bool> filter, Func<string, NodeMetadata, (TKey Key, TValue Value)> toKeyValuePair, Action? ifNotObject = null)
 	{
 		if (key.Node is not JsonObject obj)
 		{
@@ -360,7 +360,7 @@ internal class OpenApi3_0DocumentFactory : IOpenApiDocumentFactory
 			.ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
 	}
 
-	private IReadOnlyList<T> ReadArray<T>(NodeMetadata key, Func<NodeMetadata, T> toItem, Action? ifNotArray = null)
+	private T[] ReadArray<T>(NodeMetadata key, Func<NodeMetadata, T> toItem, Action? ifNotArray = null)
 	{
 		if (key.Node is not JsonArray array)
 		{

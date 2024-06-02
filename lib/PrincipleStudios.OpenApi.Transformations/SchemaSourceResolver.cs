@@ -24,10 +24,10 @@ namespace PrincipleStudios.OpenApi.Transformations
 
 		public InlineDataTypeResolver<TInlineDataType> ToInlineDataType(OpenApiSchema schema)
 		{
-			if (!referencedSchemas.ContainsKey(schema))
+			if (!referencedSchemas.TryGetValue(schema, out var entry))
 				throw new InvalidOperationException("Attempt to use unregistered schema");
 
-			return referencedSchemas[schema].Inline;
+			return entry.Inline;
 		}
 
 		public IEnumerable<SourceEntry> GetSources(OpenApiTransformDiagnostic diagnostic) =>
