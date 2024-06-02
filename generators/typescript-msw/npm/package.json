@@ -1,6 +1,6 @@
 {
   "name": "@principlestudios/openapi-codegen-typescript-msw",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "description": "A typescript code generator for principled development to assist with testing using MSW",
   "scripts": {
     "build": "tsc -b tsconfig.json",
