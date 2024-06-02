@@ -13,7 +13,6 @@
 		"isolatedModules": true,
 		"noEmit": false,
 		"composite": true,
-		"types": ["node", "jest"],
 		"declaration": true,
 		"rootDir": ".",
 		"outDir": "../../../artifacts/generators/typescript-msw/npm",

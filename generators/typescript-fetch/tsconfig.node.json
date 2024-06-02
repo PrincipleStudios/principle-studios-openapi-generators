@@ -15,10 +15,14 @@
 		"composite": true,
 		"declaration": true,
 		"outDir": "../../artifacts/generators/typescript-fetch/",
-		"types": ["node", "jest"],
 		"rootDir": ".",
 		"paths": {
 			"@principlestudios/openapi-codegen-typescript-fetch": ["./src"]
 		}
-	}
+	},
+	"references": [
+		{
+			"path": "../typescript-msw/npm/tsconfig.json"
+		}
+	]
 }

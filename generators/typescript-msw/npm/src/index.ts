@@ -12,15 +12,14 @@ import type {
 	TransformCallType,
 } from '@principlestudios/openapi-codegen-typescript';
 import type {
-	DefaultBodyType,
-	Match,
-	MockedRequest,
-	MockedResponse,
+	HttpHandler,
+	DefaultRequestMultipartBody,
+	JsonBodyType,
+	StrictResponse,
 	ResponseResolverReturnType,
-	ResponseComposition,
-	RestContext,
 } from 'msw';
-import { RestHandler } from 'msw';
+import { http, HttpResponse } from 'msw';
+import type { ResponseResolverInfo } from 'msw/lib/core/handlers/RequestHandler';
 
 function deepEqual(x: unknown, y: unknown): boolean {
 	const tx = typeof x,
@@ -40,94 +39,130 @@ function deepEqual(x: unknown, y: unknown): boolean {
 	);
 }
 
-export type AsyncResponseResolver<
-	RequestType = MockedRequest,
-	BodyType extends DefaultBodyType = any,
-> = (
-	req: RequestType,
-	res: ResponseComposition<BodyType>,
-	context: RestContext,
+type DefaultBodyType = DefaultRequestMultipartBody | JsonBodyType;
+type SafeStandardResponse = StandardResponse<
+	number | 'other',
+	string,
+	DefaultBodyType
+>;
+type SafeResponseResolverReturnType<TResponses extends SafeStandardResponse> =
+	ResponseResolverReturnType<TResponses['data']>;
+
+export type AsyncResponseResolver<TResponses extends SafeStandardResponse> = (
+	info: ResponseResolverInfo<Record<string, unknown>>,
 ) =>
-	| ResponseResolverReturnType<MockedResponse<BodyType>>
-	| Promise<ResponseResolverReturnType<MockedResponse<BodyType>>>;
+	| SafeResponseResolverReturnType<TResponses>
+	| Promise<SafeResponseResolverReturnType<TResponses>>;
 
-export type SafeResponse<T extends StandardResponse = StandardResponse> = Omit<
-	T,
-	'response'
-> & { headers?: Record<string, unknown> };
+export type MswStandardResponse<
+	T extends SafeStandardResponse = SafeStandardResponse,
+> = {
+	statusCode: T['statusCode'];
+	mimeType: T['mimeType'];
+	data: T['data'];
+	headers?: Record<string, unknown>;
+};
 
-export function toMswResponse(
-	response: SafeResponse,
-	res: ResponseComposition,
-	ctx: RestContext,
-) {
-	return res(
-		ctx.status(response.statusCode === 'other' ? 0 : response.statusCode),
-		ctx.json(response.data),
+export function toMswResponse<
+	TStatusCode extends number | 'other' = number | 'other',
+	TMimeType extends string = string,
+	TBody extends DefaultBodyType = undefined,
+>(
+	response: MswStandardResponse<
+		StandardResponse<TStatusCode, TMimeType, TBody>
+	>,
+): StrictResponse<TBody> {
+	return HttpResponse.json<TBody>(response.data, {
+		status: response.statusCode === 'other' ? 0 : response.statusCode,
 		// TODO: support headers
+	});
+}
+
+function buildHandler<
+	TBody extends DefaultBodyType,
+	TResponses extends StandardResponse<number | 'other', string, TBody>,
+>(
+	request: AdapterRequestArgs,
+	response: AsyncResponseResolver<TResponses> | MswStandardResponse<TResponses>,
+	options?: RequestHandlerOptions,
+) {
+	const methodFunc =
+		http[request.method.toLowerCase() as Lowercase<HttpMethod>];
+	const url = new URL(
+		request.path.split('?')[0],
+		options?.baseDomain,
+	).toString();
+	return methodFunc<
+		any,
+		any,
+		TResponses['data'] extends DefaultBodyType
+			? TResponses['data']
+			: DefaultBodyType
+	>(url, (info) => handleMswFullRequest(info, request, response), options);
+}
+
+async function handleMswFullRequest<
+	TBody extends DefaultBodyType,
+	TResponses extends StandardResponse<number | 'other', string, TBody>,
+>(
+	info: ResponseResolverInfo<Record<string, unknown>>,
+	request: AdapterRequestArgs,
+	response: AsyncResponseResolver<TResponses> | MswStandardResponse<TResponses>,
+): Promise<SafeResponseResolverReturnType<TResponses>> {
+	if (!queryStringMatch(request, info.request)) {
+		return;
+	}
+	if ('body' in request) {
+		const currentBody = await info.request.clone().json();
+		if (!deepEqual(request.body, currentBody)) {
+			return;
+		}
+	} else if (info.request.bodyUsed) {
+		return;
+	}
+	// TODO: request headers aren't checked
+
+	if (typeof response === 'function') return response(info);
+	return toMswResponse(response);
+}
+
+function queryStringMatch(thisRequest: AdapterRequestArgs, request: Request) {
+	return (
+		new URL(request.url).searchParams.toString() ==
+		(thisRequest.path.split('?')[1] ?? '')
 	);
 }
 
-export class MappedRestHandler<
-	T extends MockedRequest = MockedRequest,
-> extends RestHandler<T> {
-	constructor(
-		private request: AdapterRequestArgs,
-		response: SafeResponse | AsyncResponseResolver<T>,
-	) {
-		super(
-			request.method,
-			new URL(request.path.split('?')[0], 'http://localhost').toString(),
-			async (
-				req: T,
-				res,
-				ctx,
-			): Promise<ResponseResolverReturnType<MockedResponse<any>>> => {
-				if ('body' in request) {
-					if (!deepEqual(request.body, await req.json())) {
-						this.shouldSkip = true;
-						return res();
-					}
-				} else if (req.bodyUsed) {
-					this.shouldSkip = true;
-					return res();
-				}
-				// TODO: request headers aren't checked
+type RequestHandlerOptions = {
+	once?: boolean;
+	baseDomain?: string;
+};
 
-				if (typeof response === 'function') return response(req, res, ctx);
-				return toMswResponse(response, res, ctx);
-			},
-		);
-	}
-
-	override run(
-		...params: Parameters<RestHandler<T>['run']>
-	): ReturnType<RestHandler<T>['run']> {
-		this.shouldSkip = false;
-		return super.run(...params);
-	}
-
-	override predicate(request: T, parsedResult: Match): boolean {
-		// body isn't checked here because this can't be async, so instead it is checked in the MappedRestHandler above
-		return (
-			super.predicate(request, parsedResult) && this.queryStringMatch(request)
-		);
-	}
-
-	private queryStringMatch(request: T) {
-		return (
-			request.url.searchParams.toString() ==
-			(this.request.path.split('?')[1] ?? '')
-		);
-	}
-}
+type MatchedRequest<
+	TRequestParams extends {} = {},
+	TRequestBodies extends RequestBodies = RequestBodies,
+	TCallType extends TransformCallType = TransformCallType,
+> =
+	| (TCallType extends 'no-body' | 'optional'
+			? { params: TRequestParams; body?: never; mimeType?: never }
+			: never)
+	| (TCallType extends 'body' | 'optional'
+			? {
+					[K in keyof TRequestBodies]: {
+						params: TRequestParams;
+						body?: TRequestBodies[K];
+						mimeType?: K;
+					};
+				}[keyof TRequestBodies]
+			: never);
 
 export function toMswHandler<
 	TMethod extends HttpMethod,
 	TUrlParams extends {},
 	TRequestParams extends TUrlParams,
 	TRequestBodies extends RequestBodies,
-	TResponses extends StandardResponse,
+	TBody extends DefaultBodyType,
+	TResponses extends StandardResponse<number | 'other', string, TBody>,
 	TCallType extends TransformCallType,
 >(
 	conversion: RequestConversion<
@@ -138,25 +173,17 @@ export function toMswHandler<
 		TResponses,
 		TCallType
 	>,
+	defaultOptions?: RequestHandlerOptions,
 ) {
-	type MyRequest =
-		| (TCallType extends 'no-body' | 'optional'
-				? { params: TRequestParams; body?: never; mimeType?: never }
-				: never)
-		| (TCallType extends 'body' | 'optional'
-				? {
-						[K in keyof TRequestBodies]: {
-							params: TRequestParams;
-							body?: TRequestBodies[K];
-							mimeType?: K;
-						};
-					}[keyof TRequestBodies]
-				: never);
+	type MyRequest = MatchedRequest<TRequestParams, TRequestBodies, TCallType>;
 
 	return function (
 		request: MyRequest,
-		response: AsyncResponseResolver | SafeResponse<TResponses>,
-	) {
+		response:
+			| AsyncResponseResolver<TResponses>
+			| MswStandardResponse<TResponses>,
+		options?: RequestHandlerOptions,
+	): HttpHandler {
 		const standardRequest: AdapterRequestArgs =
 			'body' in request
 				? conversion.request(
@@ -169,6 +196,9 @@ export function toMswHandler<
 						path: conversion.url(request.params),
 						// TODO: headers support?
 					};
-		return new MappedRestHandler(standardRequest, response);
+		return buildHandler(standardRequest, response, {
+			...defaultOptions,
+			...options,
+		});
 	};
 }

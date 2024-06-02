@@ -4,15 +4,19 @@ import {
 } from '@principlestudios/openapi-codegen-typescript-msw';
 import { setupServer } from 'msw/node';
 import fetch from 'node-fetch';
+import { describe, beforeAll, afterEach, afterAll, it, expect } from 'vitest';
 import { toFetchApi, toFetchOperation } from '../src';
 import type { FetchImplementation } from '../src';
+import type { NewPet } from './petstore/models';
 import operations from './petstore/operations';
 
-const fetchImpl: FetchImplementation<unknown> = (url, params) =>
-	fetch('http://localhost' + String(url), params);
+const baseDomain = 'http://localhost/';
+const fetchImpl: FetchImplementation<unknown> = (url, params) => {
+	return fetch(new URL(url, baseDomain), params);
+};
 const fetchApi = toFetchApi(operations, fetchImpl);
-const findPets = toMswHandler(operations.findPets);
-const addPet = toMswHandler(operations.addPet);
+const findPets = toMswHandler(operations.findPets, { baseDomain });
+const addPet = toMswHandler(operations.addPet, { baseDomain });
 
 describe('typescript-fetch petstore.yaml', () => {
 	const server = setupServer();
@@ -103,16 +107,12 @@ describe('typescript-fetch petstore.yaml', () => {
 
 	it('can wrap any post', async () => {
 		server.use(
-			addPet({ params: {} }, async (req, res, ctx) => {
-				return toMswResponse(
-					{
-						statusCode: 200,
-						data: { id: 1234, ...(await req.json()) },
-						mimeType: 'application/json',
-					},
-					res,
-					ctx,
-				);
+			addPet({ params: {} }, async (info) => {
+				return toMswResponse({
+					statusCode: 200,
+					data: { id: 1234, ...((await info.request.json()) as NewPet) },
+					mimeType: 'application/json',
+				});
 			}),
 		);
 		const response = await fetchApi.addPet({

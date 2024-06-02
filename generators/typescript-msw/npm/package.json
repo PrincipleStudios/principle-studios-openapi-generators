@@ -1,6 +1,6 @@
 {
   "name": "@principlestudios/openapi-codegen-typescript-msw",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "description": "A typescript code generator for principled development to assist with testing using MSW",
   "scripts": {
     "build": "tsc -b tsconfig.json",
@@ -10,8 +10,7 @@
     "generate-headers": "openapi-codegen-typescript -o ./openapi-codegen-options.yaml ../../../schemas/headers.yaml tests/headers/",
     "tsc:check": "tsc",
     "pretest": "npm run tsc:check",
-    "test": "jest",
-    "test:update": "jest -u",
+    "test": "vitest",
     "prepack": "npm run build"
   },
   "author": "Matt DeKrey",
@@ -29,26 +28,13 @@
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
   "dependencies": {
-    "msw": "^1.2.2"
   },
   "peerDependencies": {
+    "msw": "^2.3.1",
     "@principlestudios/openapi-codegen-typescript": "workspace:^"
   },
   "devDependencies": {
-    "@babel/cli": "^7.15.4",
-    "@babel/core": "^7.15.5",
-    "@babel/preset-env": "^7.15.6",
-    "@babel/preset-typescript": "^7.21.5",
-    "@principlestudios/openapi-codegen-typescript": "workspace:*",
-    "@types/eslint": "^7.28.0",
-    "@types/jest": "^27.0.1",
-    "@types/node": "^16.9.1",
-    "@types/node-fetch": "^2.6.4",
-    "@typescript-eslint/eslint-plugin": "^4.31.1",
-    "@typescript-eslint/parser": "^4.31.1",
-    "eslint": "^7.32.0",
-    "jest": "^27.2.0",
-    "node-fetch": "^2.6.11",
-    "typescript": "^4.9.5"
+    "@types/node-fetch": "^2.6.11",
+    "node-fetch": "^2.6.12"
   }
 }

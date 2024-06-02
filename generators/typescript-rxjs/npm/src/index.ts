@@ -13,18 +13,18 @@ import type {
 } from '@principlestudios/openapi-codegen-typescript';
 import type { Observable } from 'rxjs';
 import { of } from 'rxjs';
-import type { AjaxError, AjaxRequest, AjaxResponse } from 'rxjs/ajax';
+import type { AjaxConfig, AjaxError, AjaxResponse } from 'rxjs/ajax';
 import { ajax } from 'rxjs/ajax';
 import { catchError, map } from 'rxjs/operators';
 
 export const toUrl = (prefix: string, requestOpts: AdapterRequestArgs) =>
-	`${prefix}${requestOpts.path}`;
+	new URL(requestOpts.path, prefix).toString();
 
 function rxWithPrefix(
 	prefix: string,
-	rxjsRequest: (params: AjaxRequest) => Observable<AjaxResponse> = ajax,
+	rxjsRequest: (params: AjaxConfig) => Observable<AjaxResponse<unknown>> = ajax,
 ) {
-	const createRequestArgs = (requestOpts: AdapterRequestArgs): AjaxRequest => {
+	const createRequestArgs = (requestOpts: AdapterRequestArgs): AjaxConfig => {
 		const url = toUrl(prefix, requestOpts);
 
 		return {
@@ -68,15 +68,15 @@ function rxWithPrefix(
 			);
 			return rxjsRequest(createRequestArgs(requestOpts)).pipe(
 				catchError((ex: AjaxError) => of(ex)),
-				map((response) =>
-					conversion.response({
+				map((response) => {
+					return conversion.response({
 						status: response.status,
 						response: response.response,
 						getResponseHeader(header) {
 							return response.xhr.getResponseHeader(header);
 						},
-					}),
-				),
+					});
+				}),
 			);
 		}
 		return transform;
@@ -148,7 +148,7 @@ function applyTransform<TMethods extends RequestConversions>(
 export function toRxjsApi<TMethods extends RequestConversions>(
 	api: TMethods,
 	prefix = '',
-	rxjsRequest: (params: AjaxRequest) => Observable<AjaxResponse> = ajax,
+	rxjsRequest: (params: AjaxConfig) => Observable<AjaxResponse<unknown>> = ajax,
 ) {
 	return applyTransform(api, rxWithPrefix(prefix, rxjsRequest));
 }

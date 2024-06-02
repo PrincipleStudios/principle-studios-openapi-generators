@@ -15,7 +15,6 @@
 		"composite": true,
 		"declaration": true,
 		"outDir": "../../../artifacts/generators/typescript/npm/",
-		"types": ["node", "jest"],
 		"rootDir": ".",
 		"paths": {
 			"~/*": ["./*"],
