@@ -1,7 +1,9 @@
+import { toMswHandler } from '@principlestudios/openapi-codegen-typescript-msw';
 import { setupServer } from 'msw/node';
+import { lastValueFrom } from 'rxjs';
+import { request as ajax } from 'universal-rxjs-ajax';
 import { describe, beforeAll, afterEach, afterAll, it, expect } from 'vitest';
 import { toRxjsApi } from '../src';
-import { toMswHandler } from './mwcMappedRestHandler';
 import operations from './petstore/operations';
 import { conversion as addPetConversion } from './petstore/operations/addPet';
 import { conversion as findPetsConversion } from './petstore/operations/findPets';
@@ -11,7 +13,7 @@ const findPets = toMswHandler(findPetsConversion, { baseDomain });
 const addPet = toMswHandler(addPetConversion, { baseDomain });
 
 describe('typescript-rxjs petstore.yaml', () => {
-	const wrapped = toRxjsApi(operations, baseDomain);
+	const wrapped = toRxjsApi(operations, baseDomain, ajax);
 	const server = setupServer();
 
 	beforeAll(() => server.listen());
@@ -31,7 +33,7 @@ describe('typescript-rxjs petstore.yaml', () => {
 				},
 			),
 		);
-		const response = await wrapped.addPet({ body: inputPet }).toPromise();
+		const response = await lastValueFrom(wrapped.addPet({ body: inputPet }));
 		expect(response.statusCode).toBe(200);
 		expect(response.mimeType).toBe('application/json');
 		expect(response.data).toEqual(outputPet);
@@ -60,8 +62,8 @@ describe('typescript-rxjs petstore.yaml', () => {
 				},
 			),
 		);
-		const response2 = await wrapped.addPet({ body: inputPet2 }).toPromise();
-		const response1 = await wrapped.addPet({ body: inputPet1 }).toPromise();
+		const response2 = await lastValueFrom(wrapped.addPet({ body: inputPet2 }));
+		const response1 = await lastValueFrom(wrapped.addPet({ body: inputPet1 }));
 		expect(response1.statusCode).toBe(200);
 		expect(response1.mimeType).toBe('application/json');
 		expect(response1.data).toEqual(outputPet1);
@@ -79,9 +81,9 @@ describe('typescript-rxjs petstore.yaml', () => {
 				{ statusCode: 200, data: outputPets, mimeType: 'application/json' },
 			),
 		);
-		const response = await wrapped
-			.findPets({ params: inputParams })
-			.toPromise();
+		const response = await lastValueFrom(
+			wrapped.findPets({ params: inputParams }),
+		);
 		expect(response.data).toEqual(outputPets);
 		expect(response.statusCode).toBe(200);
 		expect(response.mimeType).toBe('application/json');

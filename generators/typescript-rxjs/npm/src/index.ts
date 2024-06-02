@@ -13,18 +13,18 @@ import type {
 } from '@principlestudios/openapi-codegen-typescript';
 import type { Observable } from 'rxjs';
 import { of } from 'rxjs';
-import type { AjaxError, AjaxRequest, AjaxResponse } from 'rxjs/ajax';
+import type { AjaxConfig, AjaxError, AjaxResponse } from 'rxjs/ajax';
 import { ajax } from 'rxjs/ajax';
-import { catchError, map } from 'rxjs/operators';
+import { catchError, map, tap } from 'rxjs/operators';
 
 export const toUrl = (prefix: string, requestOpts: AdapterRequestArgs) =>
 	new URL(requestOpts.path, prefix).toString();
 
 function rxWithPrefix(
 	prefix: string,
-	rxjsRequest: (params: AjaxRequest) => Observable<AjaxResponse> = ajax,
+	rxjsRequest: (params: AjaxConfig) => Observable<AjaxResponse<unknown>> = ajax,
 ) {
-	const createRequestArgs = (requestOpts: AdapterRequestArgs): AjaxRequest => {
+	const createRequestArgs = (requestOpts: AdapterRequestArgs): AjaxConfig => {
 		const url = toUrl(prefix, requestOpts);
 
 		return {
@@ -67,16 +67,22 @@ function rxWithPrefix(
 				mimeType || (body ? 'application/json' : undefined),
 			);
 			return rxjsRequest(createRequestArgs(requestOpts)).pipe(
+				tap({
+					next: (v) => console.log({ next: v }),
+					complete: () => console.log('complete'),
+					error: (err) => console.log({ err }),
+				}),
 				catchError((ex: AjaxError) => of(ex)),
-				map((response) =>
-					conversion.response({
+				map((response) => {
+					console.log({ response });
+					return conversion.response({
 						status: response.status,
 						response: response.response,
 						getResponseHeader(header) {
 							return response.xhr.getResponseHeader(header);
 						},
-					}),
-				),
+					});
+				}),
 			);
 		}
 		return transform;
@@ -148,7 +154,7 @@ function applyTransform<TMethods extends RequestConversions>(
 export function toRxjsApi<TMethods extends RequestConversions>(
 	api: TMethods,
 	prefix = '',
-	rxjsRequest: (params: AjaxRequest) => Observable<AjaxResponse> = ajax,
+	rxjsRequest: (params: AjaxConfig) => Observable<AjaxResponse<unknown>> = ajax,
 ) {
 	return applyTransform(api, rxWithPrefix(prefix, rxjsRequest));
 }

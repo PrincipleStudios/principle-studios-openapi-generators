@@ -1,6 +1,6 @@
 {
   "name": "@principlestudios/openapi-codegen-typescript-rxjs",
-  "version": "0.6.1",
+  "version": "0.7.0",
   "description": "A typescript client code generator for principled development using RxJS",
   "scripts": {
     "build": "tsc -b tsconfig.json",
@@ -28,7 +28,7 @@
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
   "dependencies": {
-    "rxjs": "^6.5.5"
+    "rxjs": "^7.8.1"
   },
   "peerDependencies": {
     "@principlestudios/openapi-codegen-typescript": "workspace:^"
@@ -36,6 +36,6 @@
   "devDependencies": {
     "@principlestudios/openapi-codegen-typescript-msw": "workspace:*",
     "msw": "^2.3.1",
-    "xmlhttprequest": "^1.8.0"
+    "universal-rxjs-ajax": "^3.0.0"
   }
 }
