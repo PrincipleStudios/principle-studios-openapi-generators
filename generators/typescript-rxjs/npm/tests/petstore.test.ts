@@ -6,11 +6,12 @@ import operations from './petstore/operations';
 import { conversion as addPetConversion } from './petstore/operations/addPet';
 import { conversion as findPetsConversion } from './petstore/operations/findPets';
 
-const findPets = toMswHandler(findPetsConversion);
-const addPet = toMswHandler(addPetConversion);
+const baseDomain = 'http://localhost/';
+const findPets = toMswHandler(findPetsConversion, { baseDomain });
+const addPet = toMswHandler(addPetConversion, { baseDomain });
 
 describe('typescript-rxjs petstore.yaml', () => {
-	const wrapped = toRxjsApi(operations);
+	const wrapped = toRxjsApi(operations, baseDomain);
 	const server = setupServer();
 
 	beforeAll(() => server.listen());

@@ -18,7 +18,7 @@ import { ajax } from 'rxjs/ajax';
 import { catchError, map } from 'rxjs/operators';
 
 export const toUrl = (prefix: string, requestOpts: AdapterRequestArgs) =>
-	`${prefix}${requestOpts.path}`;
+	new URL(requestOpts.path, prefix).toString();
 
 function rxWithPrefix(
 	prefix: string,

@@ -2,10 +2,12 @@ import { setupServer } from 'msw/node';
 import fetch from 'node-fetch';
 import { describe, beforeAll, afterEach, afterAll, it, expect } from 'vitest';
 import { toMswHandler, toMswResponse } from '../src';
+import type { NewPet } from './petstore/models';
 import operations from './petstore/operations';
 
-const findPets = toMswHandler(operations.findPets);
-const addPet = toMswHandler(operations.addPet);
+const baseDomain = 'http://localhost/';
+const findPets = toMswHandler(operations.findPets, { baseDomain });
+const addPet = toMswHandler(operations.addPet, { baseDomain });
 
 describe('typescript-rxjs petstore.yaml', () => {
 	const server = setupServer();
@@ -27,7 +29,7 @@ describe('typescript-rxjs petstore.yaml', () => {
 				},
 			),
 		);
-		const response = await fetch('http://localhost/pets', {
+		const response = await fetch(new URL('/pets', baseDomain), {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',
@@ -62,14 +64,14 @@ describe('typescript-rxjs petstore.yaml', () => {
 				},
 			),
 		);
-		const response2 = await fetch('http://localhost/pets', {
+		const response2 = await fetch(new URL('/pets', baseDomain), {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',
 			},
 			body: JSON.stringify(inputPet2),
 		});
-		const response1 = await fetch('http://localhost/pets', {
+		const response1 = await fetch(new URL('/pets', baseDomain), {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',
@@ -86,19 +88,15 @@ describe('typescript-rxjs petstore.yaml', () => {
 
 	it('can wrap any post', async () => {
 		server.use(
-			addPet({ params: {} }, async (req, res, ctx) => {
-				return toMswResponse(
-					{
-						statusCode: 200,
-						data: { id: 1234, ...(await req.json()) },
-						mimeType: 'application/json',
-					},
-					res,
-					ctx,
-				);
+			addPet({ params: {} }, async (info) => {
+				return toMswResponse({
+					statusCode: 200,
+					data: { id: 1234, ...((await info.request.json()) as NewPet) },
+					mimeType: 'application/json',
+				});
 			}),
 		);
-		const response = await fetch('http://localhost/pets', {
+		const response = await fetch(new URL('/pets', baseDomain), {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',
@@ -113,7 +111,7 @@ describe('typescript-rxjs petstore.yaml', () => {
 			id: 1234,
 		});
 
-		const response2 = await fetch('http://localhost/pets', {
+		const response2 = await fetch(new URL('/pets', baseDomain), {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',
@@ -137,7 +135,7 @@ describe('typescript-rxjs petstore.yaml', () => {
 			),
 		);
 		const response = await fetch(
-			'http://localhost/pets?tags=dog&tags=cat&limit=10',
+			new URL('/pets?tags=dog&tags=cat&limit=10', baseDomain),
 		);
 		expect(await response.json()).toEqual(outputPets);
 		expect(response.status).toBe(200);

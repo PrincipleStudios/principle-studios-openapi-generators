@@ -28,13 +28,13 @@
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
   "dependencies": {
-    "msw": "^1.2.2"
   },
   "peerDependencies": {
+    "msw": "^2.3.1",
     "@principlestudios/openapi-codegen-typescript": "workspace:^"
   },
   "devDependencies": {
-    "@types/node-fetch": "^2.6.4",
-    "node-fetch": "^2.6.11"
+    "@types/node-fetch": "^2.6.11",
+    "node-fetch": "^2.6.12"
   }
 }

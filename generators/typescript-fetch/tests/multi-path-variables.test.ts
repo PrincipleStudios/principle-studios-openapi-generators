@@ -6,10 +6,13 @@ import { toFetchApi, toFetchOperation } from '../src';
 import type { FetchImplementation } from '../src';
 import operations from './multi-path-variables/operations';
 
+const baseDomain = 'http://localhost/';
 const fetchImpl: FetchImplementation<unknown> = (url, params) =>
-	fetch('http://localhost' + String(url), params);
+	fetch(new URL(url, baseDomain).href, params);
 const fetchApi = toFetchApi(operations, fetchImpl);
-const getPhotoMeta = toMswHandler(operations.getPhotoMeta);
+const getPhotoMeta = toMswHandler(operations.getPhotoMeta, {
+	baseDomain,
+});
 
 describe('typescript-fetch multi-path-variables.yaml', () => {
 	const server = setupServer();

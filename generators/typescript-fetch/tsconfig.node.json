@@ -19,5 +19,10 @@
 		"paths": {
 			"@principlestudios/openapi-codegen-typescript-fetch": ["./src"]
 		}
-	}
+	},
+	"references": [
+		{
+			"path": "../typescript-msw/npm/tsconfig.json"
+		}
+	]
 }

@@ -1,6 +1,6 @@
 {
   "name": "@principlestudios/openapi-codegen-typescript-rxjs",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "description": "A typescript client code generator for principled development using RxJS",
   "scripts": {
     "build": "tsc -b tsconfig.json",
@@ -35,7 +35,7 @@
   },
   "devDependencies": {
     "@principlestudios/openapi-codegen-typescript-msw": "workspace:*",
-    "msw": "^1.2.2",
+    "msw": "^2.3.1",
     "xmlhttprequest": "^1.8.0"
   }
 }
