@@ -69,7 +69,6 @@ definitions:
       '^x-': {}
     additionalProperties: false
 
-
   Contact:
     type: object
     properties:
@@ -594,7 +593,6 @@ definitions:
       '^x-': {}
     minProperties: 1
     additionalProperties: false
-
 
   SecurityRequirement:
     type: object
