@@ -15,7 +15,7 @@ import type { Observable } from 'rxjs';
 import { of } from 'rxjs';
 import type { AjaxConfig, AjaxError, AjaxResponse } from 'rxjs/ajax';
 import { ajax } from 'rxjs/ajax';
-import { catchError, map, tap } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 
 export const toUrl = (prefix: string, requestOpts: AdapterRequestArgs) =>
 	new URL(requestOpts.path, prefix).toString();
@@ -67,14 +67,8 @@ function rxWithPrefix(
 				mimeType || (body ? 'application/json' : undefined),
 			);
 			return rxjsRequest(createRequestArgs(requestOpts)).pipe(
-				tap({
-					next: (v) => console.log({ next: v }),
-					complete: () => console.log('complete'),
-					error: (err) => console.log({ err }),
-				}),
 				catchError((ex: AjaxError) => of(ex)),
 				map((response) => {
-					console.log({ response });
 					return conversion.response({
 						status: response.status,
 						response: response.response,
