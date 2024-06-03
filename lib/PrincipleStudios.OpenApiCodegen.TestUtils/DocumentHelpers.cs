@@ -1,16 +1,5 @@
-﻿using Json.Schema;
-using Json.Schema.Serialization;
-using Microsoft.Extensions.Configuration;
-using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Readers;
+﻿using Microsoft.OpenApi.Readers;
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Text.Json;
-using System.Threading.Tasks;
-using Yaml2JsonNode;
 using PrincipleStudios.OpenApi.Transformations.DocumentTypes;
 using PrincipleStudios.OpenApi.Transformations.Specifications;
 using PrincipleStudios.OpenApi.Transformations.Abstractions;

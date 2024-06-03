@@ -1,10 +1,7 @@
 ﻿using Json.Pointer;
-using Json.Schema;
 using PrincipleStudios.OpenApi.Transformations.Diagnostics;
 using PrincipleStudios.OpenApi.Transformations.Specifications;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace PrincipleStudios.OpenApi.Transformations.DocumentTypes;
 
