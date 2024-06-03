@@ -7,14 +7,15 @@ using Json.Pointer;
 
 namespace PrincipleStudios.OpenApi.Transformations.Specifications.OpenApi3_0;
 
-[JsonConverter(typeof(ExclusiveMaximumKeywordJsonConverter))]
-public class ExclusiveMaximumKeyword : IJsonSchemaKeyword
+public class ExclusiveMaximumKeyword(string keyword, bool isExclusive) : IJsonSchemaKeyword
 {
 	public static readonly IJsonSchemaKeywordDefinition Instance = new JsonSchemaKeywordDefinition(Parse);
 
-	private static IJsonSchemaKeyword Parse(string keyword, NodeMetadata nodeInfo, JsonSchemaParserOptions options)
+	private static ExclusiveMaximumKeyword Parse(string keyword, NodeMetadata nodeInfo, JsonSchemaParserOptions options)
 	{
-		// TODO
+		if (nodeInfo.Node is JsonValue val && val.TryGetValue<bool>(out var value))
+			return new ExclusiveMaximumKeyword(keyword, value);
+		// TODO - parsing errors
 		throw new NotImplementedException();
 	}
 
@@ -23,21 +24,12 @@ public class ExclusiveMaximumKeyword : IJsonSchemaKeyword
 	/// </summary>
 	public const string Name = "exclusiveMaximum";
 
-	public string Keyword => Name;
+	public string Keyword => keyword;
 
 	/// <summary>
 	/// Whether to use the maximumValue as an exclusive value.
 	/// </summary>
-	public bool Value { get; }
-
-	/// <summary>
-	/// Creates a new <see cref="ExclusiveMaximumKeyword"/>.
-	/// </summary>
-	/// <param name="value">Whether to use the maximumValue as an exclusive value.</param>
-	public ExclusiveMaximumKeyword(bool value)
-	{
-		Value = value;
-	}
+	public bool IsExclusive => isExclusive;
 
 	public IEnumerable<EvaluationResults> Evaluate(JsonNode? node, JsonPointer currentPosition, JsonSchemaViaKeywords context)
 	{
@@ -65,22 +57,4 @@ public class ExclusiveMaximumKeyword : IJsonSchemaKeyword
 	// {
 	// 	throw new NotImplementedException();
 	// }
-}
-
-#pragma warning disable CA1812 // apparently not instantiated
-internal class ExclusiveMaximumKeywordJsonConverter : JsonConverter<ExclusiveMaximumKeyword>
-{
-	public override ExclusiveMaximumKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
-	{
-		if (reader.TokenType != JsonTokenType.True && reader.TokenType != JsonTokenType.False)
-			throw new JsonException("Expected number");
-
-		var isExclusive = reader.GetBoolean();
-
-		return new ExclusiveMaximumKeyword(isExclusive);
-	}
-	public override void Write(Utf8JsonWriter writer, ExclusiveMaximumKeyword value, JsonSerializerOptions options)
-	{
-		writer.WriteBoolean(ExclusiveMaximumKeyword.Name, value.Value);
-	}
 }

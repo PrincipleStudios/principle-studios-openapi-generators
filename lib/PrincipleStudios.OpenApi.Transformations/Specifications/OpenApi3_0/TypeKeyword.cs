@@ -4,17 +4,17 @@ using System.Collections.Generic;
 using System.Text.Json.Nodes;
 using Json.Pointer;
 
-namespace PrincipleStudios.OpenApi.Transformations.Specifications.Keywords;
+namespace PrincipleStudios.OpenApi.Transformations.Specifications.OpenApi3_0;
 
+// This follows OpenApi 3.0 TypeKeyword, not the actual standard at https://json-schema.org/draft/2020-12/json-schema-validation#name-type
 public class TypeKeyword(string keyword, string value) : IJsonSchemaKeyword
 {
 	public static readonly IJsonSchemaKeywordDefinition Instance = new JsonSchemaKeywordDefinition(Parse);
 
 	private static TypeKeyword Parse(string keyword, NodeMetadata nodeInfo, JsonSchemaParserOptions options)
 	{
-		if (nodeInfo.Node?.AsValue()?.TryGetValue<string>(out var s) ?? false)
+		if (nodeInfo.Node is JsonValue val && val.TryGetValue<string>(out var s))
 			return new TypeKeyword(keyword, s);
-		// TODO - array of types
 		// TODO - parsing errors
 		throw new NotImplementedException();
 	}

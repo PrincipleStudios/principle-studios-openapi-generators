@@ -6,17 +6,20 @@ using Json.Pointer;
 
 namespace PrincipleStudios.OpenApi.Transformations.Specifications.Keywords;
 
-public class MinimumKeyword : IJsonSchemaKeyword
+public class MinimumKeyword(string keyword, decimal value) : IJsonSchemaKeyword
 {
 	public static readonly IJsonSchemaKeywordDefinition Instance = new JsonSchemaKeywordDefinition(Parse);
 
-	private static IJsonSchemaKeyword Parse(string keyword, NodeMetadata nodeInfo, JsonSchemaParserOptions options)
+	private static MinimumKeyword Parse(string keyword, NodeMetadata nodeInfo, JsonSchemaParserOptions options)
 	{
-		// TODO
+		if (nodeInfo.Node is JsonValue val && val.TryGetValue<decimal>(out var value))
+			return new MinimumKeyword(keyword, value);
+		// TODO - parsing errors
 		throw new NotImplementedException();
 	}
 
-	public string Keyword => throw new System.NotImplementedException();
+	public string Keyword => keyword;
+	public decimal Value => value;
 
 	public IEnumerable<EvaluationResults> Evaluate(JsonNode? node, JsonPointer currentPosition, JsonSchemaViaKeywords context)
 	{

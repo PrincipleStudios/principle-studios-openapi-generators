@@ -6,23 +6,23 @@ using Json.Pointer;
 
 namespace PrincipleStudios.OpenApi.Transformations.Specifications.Keywords;
 
-public class ItemsKeyword : IJsonSchemaKeyword
+public class ItemsKeyword(string keyword, JsonSchema shema) : IJsonSchemaKeyword
 {
 	public static readonly IJsonSchemaKeywordDefinition Instance = new JsonSchemaKeywordDefinition(Parse);
 
-	private static IJsonSchemaKeyword Parse(string keyword, NodeMetadata nodeInfo, JsonSchemaParserOptions options)
+	private static ItemsKeyword Parse(string keyword, NodeMetadata nodeInfo, JsonSchemaParserOptions options)
 	{
-		// TODO
-		throw new NotImplementedException();
+		return new ItemsKeyword(keyword, JsonSchemaParser.Deserialize(nodeInfo, options));
 	}
 
-	public string Keyword => throw new System.NotImplementedException();
+	public string Keyword => keyword;
 
-	public JsonSchema SingleSchema => throw new System.NotImplementedException();
+	// TODO: array of schemas
+	public JsonSchema SingleSchema => shema;
 
 	public IEnumerable<EvaluationResults> Evaluate(JsonNode? node, JsonPointer currentPosition, JsonSchemaViaKeywords context)
 	{
-		// TODO
+		// TODO - leverage prefixItems and contains
 		throw new System.NotImplementedException();
 	}
 }
