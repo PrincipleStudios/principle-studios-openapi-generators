@@ -6,21 +6,20 @@ using Json.Pointer;
 
 namespace PrincipleStudios.OpenApi.Transformations.Specifications.Keywords;
 
-public class MinimumKeyword : IJsonSchemaKeyword
+public class UnknownKeyword(string keyword, NodeMetadata nodeInfo) : IJsonSchemaKeyword
 {
 	public static readonly IJsonSchemaKeywordDefinition Instance = new JsonSchemaKeywordDefinition(Parse);
 
-	private static IJsonSchemaKeyword Parse(string keyword, NodeMetadata nodeInfo, JsonSchemaParserOptions options)
+	private static UnknownKeyword Parse(string keyword, NodeMetadata nodeInfo, JsonSchemaParserOptions options)
 	{
-		// TODO
-		throw new NotImplementedException();
+		return new UnknownKeyword(keyword, nodeInfo);
 	}
 
-	public string Keyword => throw new System.NotImplementedException();
+	public string Keyword => keyword;
+	public JsonNode? Value => nodeInfo.Node;
 
 	public IEnumerable<EvaluationResults> Evaluate(JsonNode? node, JsonPointer currentPosition, JsonSchemaViaKeywords context)
 	{
-		// TODO
-		throw new System.NotImplementedException();
+		yield break;
 	}
 }

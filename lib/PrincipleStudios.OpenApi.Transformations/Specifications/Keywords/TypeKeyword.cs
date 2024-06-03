@@ -1,22 +1,52 @@
 
+using System;
 using System.Collections.Generic;
 using System.Text.Json.Nodes;
 using Json.Pointer;
 
 namespace PrincipleStudios.OpenApi.Transformations.Specifications.Keywords;
 
-public class TypeKeyword : IJsonSchemaKeyword
+public class TypeKeyword(string keyword, string value) : IJsonSchemaKeyword
 {
-	public static readonly IJsonSchemaKeywordDefinition Instance = new JsonSchemaKeywordDefinition();
+	public static readonly IJsonSchemaKeywordDefinition Instance = new JsonSchemaKeywordDefinition(Parse);
 
-	public string Keyword => throw new System.NotImplementedException();
+	private static TypeKeyword Parse(string keyword, NodeMetadata nodeInfo, JsonSchemaParserOptions options)
+	{
+		if (nodeInfo.Node?.AsValue()?.TryGetValue<string>(out var s) ?? false)
+			return new TypeKeyword(keyword, s);
+		// TODO - array of types
+		// TODO - parsing errors
+		throw new NotImplementedException();
+	}
 
-	public string Value => throw new System.NotImplementedException();
+	public string Keyword => keyword;
+
+	public string Value => value;
 
 	public IEnumerable<EvaluationResults> Evaluate(JsonNode? node, JsonPointer currentPosition, JsonSchemaViaKeywords context)
 	{
-		// TODO
-		throw new System.NotImplementedException();
+		switch (value)
+		{
+			case Common.Array:
+				if (node is JsonArray) yield break;
+				break;
+			case Common.Object:
+				if (node is JsonObject) yield break;
+				break;
+			case Common.Boolean:
+				if ((node as JsonValue)?.TryGetValue<bool>(out var _) ?? false) yield break;
+				break;
+			case Common.String:
+				if ((node as JsonValue)?.TryGetValue<string>(out var _) ?? false) yield break;
+				break;
+			case Common.Number:
+				if ((node as JsonValue)?.TryGetValue<double>(out var _) ?? false) yield break;
+				break;
+			case Common.Integer:
+				if ((node as JsonValue)?.TryGetValue<int>(out var _) ?? false) yield break;
+				break;
+		}
+		yield return new EvaluationResults(currentPosition, false, context.Id, Errors.SchemaKeywordType_DidNotMatch);
 	}
 
 	public static class Common

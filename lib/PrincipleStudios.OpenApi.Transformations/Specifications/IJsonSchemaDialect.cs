@@ -7,13 +7,14 @@ namespace PrincipleStudios.OpenApi.Transformations.Specifications;
 public interface IJsonSchemaDialect
 {
 	Uri Id { get; }
-
 	IReadOnlyCollection<IJsonSchemaVocabulary> Vocabularies { get; }
+	IJsonSchemaKeywordDefinition UnknownKeyword { get; }
 }
 
 public record JsonSchemaDialect(
 	Uri Id,
-	IReadOnlyCollection<IJsonSchemaVocabulary> Vocabularies
+	IReadOnlyCollection<IJsonSchemaVocabulary> Vocabularies,
+	IJsonSchemaKeywordDefinition UnknownKeyword
 ) : IJsonSchemaDialect;
 
 public interface IJsonSchemaVocabulary

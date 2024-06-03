@@ -24,26 +24,39 @@ public record EvaluationResults(
 	Uri SchemaId,
 	string? Message,
 	IReadOnlyDictionary<string, IReadOnlyList<EvaluationResults>> Errors
-);
-
-public class JsonSchemaBool(Uri id, bool value) : JsonSchema
+)
 {
-	public override Uri Id => id;
+	public EvaluationResults(
+		JsonPointer InstanceLocation,
+		bool IsValid,
+		Uri SchemaId,
+		string? Message)
+	: this(InstanceLocation, IsValid, SchemaId, Message, EmptyErrors)
+	{
+	}
 
 	private static readonly IReadOnlyDictionary<string, IReadOnlyList<EvaluationResults>> EmptyErrors =
 		Enumerable.Empty<KeyValuePair<string, EvaluationResults>>()
 			.GroupBy(k => k.Key, k => k.Value)
 			.ToDictionary(k => k.Key, v => v.ToArray() as IReadOnlyList<EvaluationResults>);
+
+	public static EvaluationResults WithoutErrors(JsonPointer InstanceLocation, Uri SchemaId) =>
+		new EvaluationResults(InstanceLocation, IsValid: true, SchemaId: SchemaId, Message: null);
+};
+
+public class JsonSchemaBool(Uri id, bool value) : JsonSchema
+{
+	public override Uri Id => id;
+
 	public override bool? BoolValue => value;
 
 	public override EvaluationResults Evaluate(JsonNode? node, JsonPointer position)
 	{
-		return new EvaluationResults(
+		return value ? EvaluationResults.WithoutErrors(position, Id) : new EvaluationResults(
 			InstanceLocation: position,
-			IsValid: value,
+			IsValid: false,
 			SchemaId: Id,
-			Message: value ? null : Errors.FalseJsonSchemasFail,
-			Errors: EmptyErrors
+			Message: Errors.FalseJsonSchemasFail
 		);
 	}
 }
@@ -81,10 +94,19 @@ public class JsonSchemaViaKeywords : JsonSchema
 
 public interface IJsonSchemaKeywordDefinition
 {
-	// Defniition for a keyword - TODO: parse nito IJsonSchemaKeyword
+	// Defniition for a keyword - TODO: parse into IJsonSchemaKeyword
+	IJsonSchemaKeyword ParseKeyword(string keyword, NodeMetadata nodeInfo, JsonSchemaParserOptions options);
 }
 
-public record JsonSchemaKeywordDefinition() : IJsonSchemaKeywordDefinition;
+public delegate IJsonSchemaKeyword ParseKeyword(string keyword, NodeMetadata nodeInfo, JsonSchemaParserOptions options);
+
+public record JsonSchemaKeywordDefinition(ParseKeyword ParseKeyword) : IJsonSchemaKeywordDefinition
+{
+	IJsonSchemaKeyword IJsonSchemaKeywordDefinition.ParseKeyword(string keyword, NodeMetadata nodeInfo, JsonSchemaParserOptions options)
+	{
+		return ParseKeyword(keyword, nodeInfo, options);
+	}
+}
 
 public interface IJsonSchemaKeyword
 {

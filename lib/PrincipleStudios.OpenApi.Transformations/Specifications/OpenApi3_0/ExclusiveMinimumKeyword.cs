@@ -11,7 +11,13 @@ namespace PrincipleStudios.OpenApi.Transformations.Specifications.OpenApi3_0;
 [JsonConverter(typeof(ExclusiveMinimumKeywordJsonConverter))]
 public class ExclusiveMinimumKeyword : IJsonSchemaKeyword
 {
-	public static readonly IJsonSchemaKeywordDefinition Instance = new JsonSchemaKeywordDefinition();
+	public static readonly IJsonSchemaKeywordDefinition Instance = new JsonSchemaKeywordDefinition(Parse);
+
+	private static IJsonSchemaKeyword Parse(string keyword, NodeMetadata nodeInfo, JsonSchemaParserOptions options)
+	{
+		// TODO
+		throw new NotImplementedException();
+	}
 
 	/// <summary>
 	/// The JSON name of the keyword.

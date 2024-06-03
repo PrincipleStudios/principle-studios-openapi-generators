@@ -157,4 +157,12 @@
     <value>Evaluation against a false schema always fails</value>
     <comment/>
   </data>
+  <data name="SchemaKeywordType_DidNotMatch" xml:space="preserve">
+    <value>Type did not match schema</value>
+    <comment/>
+  </data>
+  <data name="SchemaKeywordRequired_Missing" xml:space="preserve">
+    <value>Required properties were missing from the object: {0}</value>
+    <comment/>
+  </data>
 </root>
