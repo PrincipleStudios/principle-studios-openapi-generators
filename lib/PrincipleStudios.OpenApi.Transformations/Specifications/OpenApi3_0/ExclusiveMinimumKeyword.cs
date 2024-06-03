@@ -1,9 +1,7 @@
 ﻿using System.Collections.Generic;
-using System.Text.Json.Serialization;
-using System.Text.Json;
 using System;
 using System.Text.Json.Nodes;
-using Json.Pointer;
+using PrincipleStudios.OpenApi.Transformations.Diagnostics;
 
 namespace PrincipleStudios.OpenApi.Transformations.Specifications.OpenApi3_0;
 
@@ -11,10 +9,10 @@ public class ExclusiveMinimumKeyword(string keyword, bool isExclusive) : IJsonSc
 {
 	public static readonly IJsonSchemaKeywordDefinition Instance = new JsonSchemaKeywordDefinition(Parse);
 
-	private static ExclusiveMinimumKeyword Parse(string keyword, NodeMetadata nodeInfo, JsonSchemaParserOptions options)
+	private static ParseKeywordResult Parse(string keyword, NodeMetadata nodeInfo, JsonSchemaParserOptions options)
 	{
 		if (nodeInfo.Node is JsonValue val && val.TryGetValue<bool>(out var value))
-			return new ExclusiveMinimumKeyword(keyword, value);
+			return ParseKeywordResult.Success(new ExclusiveMinimumKeyword(keyword, value));
 		// TODO - parsing errors
 		throw new NotImplementedException();
 	}
@@ -31,7 +29,7 @@ public class ExclusiveMinimumKeyword(string keyword, bool isExclusive) : IJsonSc
 	/// </summary>
 	public bool IsExclusive => isExclusive;
 
-	public IEnumerable<EvaluationResults> Evaluate(JsonNode? node, JsonPointer currentPosition, JsonSchemaViaKeywords context)
+	public IEnumerable<DiagnosticBase> Evaluate(NodeMetadata nodeMetadata, JsonSchemaViaKeywords context, EvaluationContext evaluationContext)
 	{
 		throw new NotImplementedException();
 	}

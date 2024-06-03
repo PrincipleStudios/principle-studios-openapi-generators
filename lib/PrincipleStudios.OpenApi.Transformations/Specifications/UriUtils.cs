@@ -1,8 +1,6 @@
 ﻿using Json.Pointer;
 using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Xml.Linq;
+using System.Globalization;
 
 namespace PrincipleStudios.OpenApi.Transformations.Specifications;
 
@@ -23,4 +21,7 @@ public static class UriUtils
 		resultUri.Fragment = resultUri.Fragment + pointer.ToString();
 		return resolution with { Id = resultUri.Uri, Node = pointer.TryEvaluate(resolution.Node, out var resultNode) ? resultNode : null };
 	}
+
+	public static NodeMetadata Navigate(this NodeMetadata resolution, int pointerStep) =>
+		Navigate(resolution, pointerStep.ToString(CultureInfo.InvariantCulture));
 }

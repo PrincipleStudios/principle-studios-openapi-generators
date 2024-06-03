@@ -153,16 +153,8 @@
     <value>An unsupported deserialization technique was used</value>
     <comment/>
   </data>
-  <data name="FalseJsonSchemasFail" xml:space="preserve">
-    <value>Evaluation against a false schema always fails</value>
-    <comment/>
-  </data>
-  <data name="SchemaKeywordType_DidNotMatch" xml:space="preserve">
-    <value>Type did not match schema</value>
-    <comment/>
-  </data>
-  <data name="SchemaKeywordRequired_Missing" xml:space="preserve">
-    <value>Required properties were missing from the object: {0}</value>
+  <data name="FailedToParseEmbeddedSchema" xml:space="preserve">
+    <value>Failed to parse embedded schema. This is likely a deployment issue with this version of the package.</value>
     <comment/>
   </data>
 </root>

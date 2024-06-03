@@ -20,7 +20,8 @@ internal class OpenApi3_0Parser : SchemaValidatingParser<OpenApiDocument>
 		var yamlDocument = new YamlDocumentLoader().LoadDocument(new Uri("https://spec.openapis.org/oas/3.0/schema/2021-09-28"), schemaStream);
 		var metadata = new NodeMetadata(yamlDocument.BaseUri, yamlDocument.RootNode, yamlDocument);
 
-		return JsonSchemaParser.Deserialize(metadata, new JsonSchemaParserOptions(registry, OpenApi3_0DocumentFactory.OpenApiDialect));
+		return JsonSchemaParser.Deserialize(metadata, new JsonSchemaParserOptions(registry, OpenApi3_0DocumentFactory.OpenApiDialect)).JsonSchema
+			?? throw new InvalidOperationException(Errors.FailedToParseEmbeddedSchema);
 	}
 
 

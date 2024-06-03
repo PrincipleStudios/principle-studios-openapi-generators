@@ -3,9 +3,6 @@ using PrincipleStudios.OpenApi.Transformations.Diagnostics;
 using PrincipleStudios.OpenApi.Transformations.DocumentTypes;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.Json.Nodes;
 
 namespace PrincipleStudios.OpenApi.Transformations.Specifications;
 
@@ -25,47 +22,8 @@ public abstract class SchemaValidatingParser<TInterface> : IParser<TInterface>
 	{
 		if (!CanParse(documentReference)) throw new ArgumentException(Errors.ParserCannotHandleDocument, nameof(documentReference));
 
-		var evaluationResults = schema.Evaluate(documentReference.RootNode);
-		var diagnosticList = evaluationResults.IsValid
-			? new List<Diagnostics.DiagnosticBase>()
-			: ConvertEvaluationToDiagnostics(documentReference, evaluationResults).ToList();
-		return Construct(documentReference, diagnosticList, documentRegistry);
-	}
-
-	private static IEnumerable<Diagnostics.DiagnosticBase> ConvertEvaluationToDiagnostics(IDocumentReference documentReference, EvaluationResults evaluationResults)
-	{
-		return from entry in Inner(evaluationResults)
-			   let range = documentReference.GetLocation(entry.Pointer)
-			   let location = new Location(documentReference.RetrievalUri, range)
-			   select new SchemaValidationDiagnostic(entry.ErrorKey, entry.ErrorMessage, location);
-
-		IEnumerable<(Json.Pointer.JsonPointer Pointer, string ErrorKey, string ErrorMessage)> Inner(EvaluationResults evaluationResults)
-		{
-			if (evaluationResults.IsValid) yield break;
-
-			if (evaluationResults.Errors.TryGetValue("oneOf", out var oneOfErrors))
-			{
-				var details = oneOfErrors.Select(Inner).Select(d => d.ToArray()).ToArray();
-				// "oneOf" rules could be that the user was going for one or the other
-				// The one with deeper errors is probably more correct
-				var resultingDetails = details.OrderByDescending(d => d.Max(err => err.Pointer.ToString().Length)).First();
-				foreach (var entry in resultingDetails)
-					yield return entry;
-				yield break;
-			}
-
-			foreach (var entry in evaluationResults.Errors)
-				foreach (var detail in entry.Value)
-				{
-					if (detail.Message != null)
-						// TODO: depending on the error type, maybe need to highlight the key instead of the full object
-						// For instance, in case of missing "required" fields, highlighting the whole object may not be useful
-						yield return (evaluationResults.InstanceLocation, entry.Key, detail.Message);
-
-					foreach (var result in Inner(detail))
-						yield return result;
-				}
-		}
+		var evaluationResults = schema.Evaluate(NodeMetadata.FromRoot(documentReference), new EvaluationContext(documentRegistry));
+		return Construct(documentReference, evaluationResults, documentRegistry);
 	}
 
 	protected abstract ParseResult<TInterface> Construct(IDocumentReference documentReference, IEnumerable<DiagnosticBase> diagnostics, DocumentRegistry documentRegistry);

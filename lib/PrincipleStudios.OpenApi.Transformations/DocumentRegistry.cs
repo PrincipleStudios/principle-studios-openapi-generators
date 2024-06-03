@@ -1,23 +1,22 @@
-﻿// Throw an exception here because this is a problem with the usage of this class, not data
-using Json.More;
-using Json.Pointer;
-// using Json.Schema;
+﻿using Json.Pointer;
 using PrincipleStudios.OpenApi.Transformations.Diagnostics;
 using PrincipleStudios.OpenApi.Transformations.DocumentTypes;
 using PrincipleStudios.OpenApi.Transformations.Specifications;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Text.Json;
 using System.Text.Json.Nodes;
-using System.Xml.Linq;
 
 namespace PrincipleStudios.OpenApi.Transformations;
 
 public delegate IDocumentReference? DocumentResolver(Uri baseUri, IDocumentReference? currentDocument);
-public record NodeMetadata(Uri Id, JsonNode? Node, IDocumentReference Document);
+public record NodeMetadata(Uri Id, JsonNode? Node, IDocumentReference Document)
+{
+	internal static NodeMetadata FromRoot(IDocumentReference documentReference)
+	{
+		return new NodeMetadata(documentReference.BaseUri, documentReference.RootNode, documentReference);
+	}
+}
+
 
 public class DocumentRegistry
 {
@@ -148,16 +147,7 @@ public class DocumentRegistry
 
 		return InternalAddDocument(document);
 	}
-	public JsonSchema? ResolveSchema(Uri schemaUri, IDocumentReference? relativeDocument)
-	{
-		var registryEntry = InternalResolveDocumentEntry(schemaUri, relativeDocument);
-		var resolved = ResolveFragment(schemaUri.Fragment, registryEntry);
-		return JsonSchemaParser.Deserialize(resolved, new(
-			Dialect: resolved.Document.Dialect,
-			Registry: this
-		));
-	}
-	public JsonSchema? ResolveSchema(NodeMetadata node)
+	public JsonSchemaParseResult ResolveSchema(NodeMetadata node)
 	{
 		var resolved = node.Node == null ? ResolveMetadata(node.Id, node.Document) : node;
 		return JsonSchemaParser.Deserialize(resolved, new(
@@ -166,7 +156,7 @@ public class DocumentRegistry
 		));
 	}
 
-	internal Location ResolveLocation(NodeMetadata key)
+	public Location ResolveLocation(NodeMetadata key)
 	{
 		var registryEntry = InternalResolveDocumentEntry(key.Document.BaseUri, null);
 		if (registryEntry.Document != key.Document) throw new ArgumentException(Errors.DocumentMismatch, nameof(key));

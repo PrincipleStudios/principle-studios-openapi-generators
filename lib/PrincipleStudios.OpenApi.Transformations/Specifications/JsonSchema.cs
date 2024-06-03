@@ -1,10 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.Json.Nodes;
-using Json.Pointer;
-using Microsoft.Win32.SafeHandles;
-using YamlDotNet.Core.Tokens;
+using PrincipleStudios.OpenApi.Transformations.Diagnostics;
 
 namespace PrincipleStudios.OpenApi.Transformations.Specifications;
 
@@ -14,35 +11,10 @@ public abstract class JsonSchema
 	public virtual IReadOnlyCollection<IJsonSchemaKeyword>? Keywords => null;
 	public virtual bool? BoolValue => null;
 
-	public EvaluationResults Evaluate(JsonNode? node) => Evaluate(node, JsonPointer.Empty);
-	public abstract EvaluationResults Evaluate(JsonNode? node, JsonPointer position);
+	public abstract IEnumerable<DiagnosticBase> Evaluate(NodeMetadata nodeMetadata, EvaluationContext evaluationContext);
 }
 
-public record EvaluationResults(
-	JsonPointer InstanceLocation,
-	bool IsValid,
-	Uri SchemaId,
-	string? Message,
-	IReadOnlyDictionary<string, IReadOnlyList<EvaluationResults>> Errors
-)
-{
-	public EvaluationResults(
-		JsonPointer InstanceLocation,
-		bool IsValid,
-		Uri SchemaId,
-		string? Message)
-	: this(InstanceLocation, IsValid, SchemaId, Message, EmptyErrors)
-	{
-	}
-
-	private static readonly IReadOnlyDictionary<string, IReadOnlyList<EvaluationResults>> EmptyErrors =
-		Enumerable.Empty<KeyValuePair<string, EvaluationResults>>()
-			.GroupBy(k => k.Key, k => k.Value)
-			.ToDictionary(k => k.Key, v => v.ToArray() as IReadOnlyList<EvaluationResults>);
-
-	public static EvaluationResults WithoutErrors(JsonPointer InstanceLocation, Uri SchemaId) =>
-		new EvaluationResults(InstanceLocation, IsValid: true, SchemaId: SchemaId, Message: null);
-};
+public record EvaluationContext(DocumentRegistry DocumentRegistry);
 
 public class JsonSchemaBool(Uri id, bool value) : JsonSchema
 {
@@ -50,16 +22,15 @@ public class JsonSchemaBool(Uri id, bool value) : JsonSchema
 
 	public override bool? BoolValue => value;
 
-	public override EvaluationResults Evaluate(JsonNode? node, JsonPointer position)
+	public override IEnumerable<DiagnosticBase> Evaluate(NodeMetadata nodeMetadata, EvaluationContext evaluationContext)
 	{
-		return value ? EvaluationResults.WithoutErrors(position, Id) : new EvaluationResults(
-			InstanceLocation: position,
-			IsValid: false,
-			SchemaId: Id,
-			Message: Errors.FalseJsonSchemasFail
-		);
+		return value
+			? Enumerable.Empty<DiagnosticBase>()
+			: [new FalseJsonSchemasFailDiagnostic(id, evaluationContext.DocumentRegistry.ResolveLocation(nodeMetadata))];
 	}
 }
+
+public record FalseJsonSchemasFailDiagnostic(Uri OriginalSchema, Location Location) : DiagnosticBase(Location);
 
 public class JsonSchemaViaKeywords : JsonSchema
 {
@@ -75,34 +46,35 @@ public class JsonSchemaViaKeywords : JsonSchema
 
 	public override IReadOnlyCollection<IJsonSchemaKeyword> Keywords => keywords.AsReadOnly();
 
-	public override EvaluationResults Evaluate(JsonNode? node, JsonPointer position)
+	public override IEnumerable<DiagnosticBase> Evaluate(NodeMetadata nodeMetadata, EvaluationContext evaluationContext)
 	{
-		var errors = (from keyword in Keywords
-					  let keywordResults = keyword.Evaluate(node, position, this)
-					  from result in keywordResults
-					  where !result.IsValid
-					  group result by keyword.Keyword)
-				.ToDictionary(k => k.Key, v => v.ToArray() as IReadOnlyList<EvaluationResults>);
-		return new EvaluationResults(
-			InstanceLocation: JsonPointer.Empty,
-			IsValid: errors.Count == 0,
-			SchemaId: Id,
-			Message: null,
-			Errors: errors);
+		return (from keyword in Keywords
+				let keywordResults = keyword.Evaluate(nodeMetadata, this, evaluationContext)
+				from result in keywordResults
+				select result);
 	}
 }
 
 public interface IJsonSchemaKeywordDefinition
 {
 	// Defniition for a keyword - TODO: parse into IJsonSchemaKeyword
-	IJsonSchemaKeyword ParseKeyword(string keyword, NodeMetadata nodeInfo, JsonSchemaParserOptions options);
+	ParseKeywordResult ParseKeyword(string keyword, NodeMetadata nodeInfo, JsonSchemaParserOptions options);
 }
 
-public delegate IJsonSchemaKeyword ParseKeyword(string keyword, NodeMetadata nodeInfo, JsonSchemaParserOptions options);
+public record ParseKeywordResult(IJsonSchemaKeyword? Keyword, IReadOnlyList<DiagnosticBase> Diagnostics)
+{
+	public static ParseKeywordResult Success(IJsonSchemaKeyword Keyword) => new ParseKeywordResult(Keyword, Array.Empty<DiagnosticBase>());
+
+	public static ParseKeywordResult Failure(NodeMetadata nodeInfo, JsonSchemaParserOptions options, params DiagnosticException.ToDiagnostic[] diagnostics) =>
+		new ParseKeywordResult(null, diagnostics.Select(d => d(options.Registry.ResolveLocation(nodeInfo))).ToArray());
+	public static ParseKeywordResult Failure(params DiagnosticBase[] diagnostics) => new ParseKeywordResult(null, diagnostics);
+}
+
+public delegate ParseKeywordResult ParseKeyword(string keyword, NodeMetadata nodeInfo, JsonSchemaParserOptions options);
 
 public record JsonSchemaKeywordDefinition(ParseKeyword ParseKeyword) : IJsonSchemaKeywordDefinition
 {
-	IJsonSchemaKeyword IJsonSchemaKeywordDefinition.ParseKeyword(string keyword, NodeMetadata nodeInfo, JsonSchemaParserOptions options)
+	ParseKeywordResult IJsonSchemaKeywordDefinition.ParseKeyword(string keyword, NodeMetadata nodeInfo, JsonSchemaParserOptions options)
 	{
 		return ParseKeyword(keyword, nodeInfo, options);
 	}
@@ -112,5 +84,5 @@ public interface IJsonSchemaKeyword
 {
 	string Keyword { get; }
 
-	IEnumerable<EvaluationResults> Evaluate(JsonNode? node, JsonPointer currentPosition, JsonSchemaViaKeywords context);
+	IEnumerable<DiagnosticBase> Evaluate(NodeMetadata nodeMetadata, JsonSchemaViaKeywords context, EvaluationContext evaluationContext);
 }

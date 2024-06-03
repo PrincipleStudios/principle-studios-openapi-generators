@@ -132,7 +132,7 @@ public class OpenApi3_0ParserShould
 	{
 		var result = GetOpenApiDocument("bad.yaml");
 		// TODO - check more diagnostics here
-		Assert.Contains(result.Diagnostics, (d) => d is CouldNotFindTargetNodeDiagnostic);
-		Assert.Contains(result.Diagnostics, (d) => d is UnableToParseSchema);
+		Assert.Contains(result.Diagnostics, (d) => d is CouldNotFindTargetNodeDiagnostic && d.Location.Range?.Start.Line == 75);
+		Assert.Contains(result.Diagnostics, (d) => d is UnableToParseRequiredKeyword && d.Location.Range?.Start.Line == 26);
 	}
 }

@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text.Json.Nodes;
 using System.Text.RegularExpressions;
-using Json.Pointer;
+using PrincipleStudios.OpenApi.Transformations.Diagnostics;
 
 namespace PrincipleStudios.OpenApi.Transformations.Specifications.Keywords;
 
@@ -11,10 +11,10 @@ public class PatternKeyword(string keyword, string pattern) : IJsonSchemaKeyword
 {
 	public static readonly IJsonSchemaKeywordDefinition Instance = new JsonSchemaKeywordDefinition(Parse);
 
-	private static PatternKeyword Parse(string keyword, NodeMetadata nodeInfo, JsonSchemaParserOptions options)
+	private static ParseKeywordResult Parse(string keyword, NodeMetadata nodeInfo, JsonSchemaParserOptions options)
 	{
 		if (nodeInfo.Node is JsonValue val && val.TryGetValue<string>(out var s))
-			return new PatternKeyword(keyword, s);
+			return ParseKeywordResult.Success(new PatternKeyword(keyword, s));
 		// TODO - parsing errors
 		throw new NotImplementedException();
 	}
@@ -24,9 +24,18 @@ public class PatternKeyword(string keyword, string pattern) : IJsonSchemaKeyword
 	public string Pattern => pattern;
 	public Regex PatternRegex { get; } = new Regex(pattern);
 
-	public IEnumerable<EvaluationResults> Evaluate(JsonNode? node, JsonPointer currentPosition, JsonSchemaViaKeywords context)
+	public IEnumerable<DiagnosticBase> Evaluate(NodeMetadata nodeMetadata, JsonSchemaViaKeywords context, EvaluationContext evaluationContext)
 	{
-		// TODO
-		throw new System.NotImplementedException();
+		if (nodeMetadata.Node is not JsonValue value || !value.TryGetValue<string>(out var s))
+		{
+			// TODO: pattern applied to non-string?
+			yield break;
+		}
+
+		if (!PatternRegex.IsMatch(s))
+			yield return new JsonSchemaPatternMismatchDiagnostic(Pattern, evaluationContext.DocumentRegistry.ResolveLocation(nodeMetadata));
 	}
 }
+
+public record JsonSchemaPatternMismatchDiagnostic(string Pattern, Location Location) : DiagnosticBase(Location);
+

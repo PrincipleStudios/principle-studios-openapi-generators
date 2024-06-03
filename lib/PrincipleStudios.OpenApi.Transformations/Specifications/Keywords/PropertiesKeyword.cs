@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Nodes;
-using Json.Pointer;
+using PrincipleStudios.OpenApi.Transformations.Diagnostics;
 
 namespace PrincipleStudios.OpenApi.Transformations.Specifications.Keywords;
 
@@ -11,38 +11,44 @@ public class PropertiesKeyword(string keyword, IReadOnlyDictionary<string, JsonS
 {
 	public static readonly IJsonSchemaKeywordDefinition Instance = new JsonSchemaKeywordDefinition(Parse);
 
-	private static PropertiesKeyword Parse(string keyword, NodeMetadata nodeInfo, JsonSchemaParserOptions options)
+	private static ParseKeywordResult Parse(string keyword, NodeMetadata nodeInfo, JsonSchemaParserOptions options)
 	{
 		if (nodeInfo.Node is not JsonObject obj)
 			// TODO - parsing errors
 			throw new NotImplementedException();
 
-		return new PropertiesKeyword(
-			keyword,
-			obj.ToDictionary(
+		var results = obj.ToDictionary(
 				(kvp) => kvp.Key,
 				(kvp) => JsonSchemaParser.Deserialize(nodeInfo.Navigate(kvp.Key), options)
+			);
+		var diagnostics = results.Values.SelectMany(v => v.Diagnostics).ToArray();
+		if (diagnostics.Length > 0) return ParseKeywordResult.Failure(diagnostics);
+
+		return ParseKeywordResult.Success(new PropertiesKeyword(
+			keyword,
+			results.ToDictionary(
+				(kvp) => kvp.Key,
+				(kvp) => kvp.Value.JsonSchema!
 			)
-		);
+		));
 	}
 
 	public string Keyword => keyword;
 
-	// TODO: array of schemas
+	// TODO: an array of schemas is supported for each property in a later version of this keyword
 	public IReadOnlyDictionary<string, JsonSchema> Properties => properties;
 
-	public IEnumerable<EvaluationResults> Evaluate(JsonNode? node, JsonPointer currentPosition, JsonSchemaViaKeywords context)
+	public IEnumerable<DiagnosticBase> Evaluate(NodeMetadata nodeMetadata, JsonSchemaViaKeywords context, EvaluationContext evaluationContext)
 	{
-		if (node is not JsonObject obj) yield break;
+		if (nodeMetadata.Node is not JsonObject obj) yield break;
 
 		foreach (var kvp in obj)
 		{
 			if (!properties.TryGetValue(kvp.Key, out var valueSchema))
 				// Ignore properties not defined
 				continue;
-			var result = valueSchema.Evaluate(kvp.Value, currentPosition.Combine(kvp.Key));
-			if (!result.IsValid)
-				yield return result;
+			foreach (var entry in valueSchema.Evaluate(nodeMetadata.Navigate(kvp.Key), evaluationContext))
+				yield return entry;
 		}
 	}
 }

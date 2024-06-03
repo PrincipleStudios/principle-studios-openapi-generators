@@ -1,8 +1,7 @@
 
 using System;
 using System.Collections.Generic;
-using System.Text.Json.Nodes;
-using Json.Pointer;
+using PrincipleStudios.OpenApi.Transformations.Diagnostics;
 
 namespace PrincipleStudios.OpenApi.Transformations.Specifications.Keywords;
 
@@ -10,7 +9,7 @@ public class MinPropertiesKeyword : IJsonSchemaKeyword
 {
 	public static readonly IJsonSchemaKeywordDefinition Instance = new JsonSchemaKeywordDefinition(Parse);
 
-	private static IJsonSchemaKeyword Parse(string keyword, NodeMetadata nodeInfo, JsonSchemaParserOptions options)
+	private static ParseKeywordResult Parse(string keyword, NodeMetadata nodeInfo, JsonSchemaParserOptions options)
 	{
 		// TODO
 		throw new NotImplementedException();
@@ -18,7 +17,7 @@ public class MinPropertiesKeyword : IJsonSchemaKeyword
 
 	public string Keyword => throw new System.NotImplementedException();
 
-	public IEnumerable<EvaluationResults> Evaluate(JsonNode? node, JsonPointer currentPosition, JsonSchemaViaKeywords context)
+	public IEnumerable<DiagnosticBase> Evaluate(NodeMetadata nodeMetadata, JsonSchemaViaKeywords context, EvaluationContext evaluationContext)
 	{
 		// TODO
 		throw new System.NotImplementedException();
