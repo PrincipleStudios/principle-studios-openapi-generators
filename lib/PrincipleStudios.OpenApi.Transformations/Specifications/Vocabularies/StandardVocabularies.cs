@@ -36,7 +36,7 @@ public static class StandardVocabularies
 			// ("prefixItems", null),
 			("items", ItemsKeyword.Instance),
 			// ("contains", null),
-			// ("properties", null),
+			("properties", PropertiesKeyword.Instance),
 			// ("patternProperties", null),
 			// ("additionalProperties", null),
 			// ("propertyNames", null),

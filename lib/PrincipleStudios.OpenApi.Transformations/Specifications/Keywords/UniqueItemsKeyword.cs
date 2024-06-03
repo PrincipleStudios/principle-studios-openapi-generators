@@ -6,17 +6,20 @@ using Json.Pointer;
 
 namespace PrincipleStudios.OpenApi.Transformations.Specifications.Keywords;
 
-public class UniqueItemsKeyword : IJsonSchemaKeyword
+public class UniqueItemsKeyword(string keyword, bool mustBeUnique) : IJsonSchemaKeyword
 {
 	public static readonly IJsonSchemaKeywordDefinition Instance = new JsonSchemaKeywordDefinition(Parse);
 
-	private static IJsonSchemaKeyword Parse(string keyword, NodeMetadata nodeInfo, JsonSchemaParserOptions options)
+	private static UniqueItemsKeyword Parse(string keyword, NodeMetadata nodeInfo, JsonSchemaParserOptions options)
 	{
-		// TODO
+		if (nodeInfo.Node is JsonValue val && val.TryGetValue<bool>(out var value))
+			return new UniqueItemsKeyword(keyword, value);
+		// TODO - parsing errors
 		throw new NotImplementedException();
 	}
 
-	public string Keyword => throw new System.NotImplementedException();
+	public string Keyword => keyword;
+	public bool MustBeUnique => mustBeUnique;
 
 	public IEnumerable<EvaluationResults> Evaluate(JsonNode? node, JsonPointer currentPosition, JsonSchemaViaKeywords context)
 	{
