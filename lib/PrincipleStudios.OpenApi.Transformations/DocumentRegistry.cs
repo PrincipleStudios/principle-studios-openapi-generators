@@ -1,9 +1,10 @@
 ﻿// Throw an exception here because this is a problem with the usage of this class, not data
 using Json.More;
 using Json.Pointer;
-using Json.Schema;
+// using Json.Schema;
 using PrincipleStudios.OpenApi.Transformations.Diagnostics;
 using PrincipleStudios.OpenApi.Transformations.DocumentTypes;
+using PrincipleStudios.OpenApi.Transformations.Specifications;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -147,15 +148,22 @@ public class DocumentRegistry
 
 		return InternalAddDocument(document);
 	}
-	public JsonSchema? ResolveSchema(Uri schemaUri, IDocumentReference? relativeDocument, EvaluationOptions? evaluationOptions = default)
+	public JsonSchema? ResolveSchema(Uri schemaUri, IDocumentReference? relativeDocument)
 	{
 		var registryEntry = InternalResolveDocumentEntry(schemaUri, relativeDocument);
-		var pointer = ResolvePointer(schemaUri, registryEntry);
-
-		evaluationOptions ??= new EvaluationOptions();
-		evaluationOptions.SchemaRegistry.Fetch = SchemaRegistryFetch;
-		var schema = SubschemaLoader.FindSubschema(ResolveFragment(schemaUri.Fragment, registryEntry));
-		return schema;
+		var resolved = ResolveFragment(schemaUri.Fragment, registryEntry);
+		return JsonSchemaParser.Deserialize(resolved, new(
+			Dialect: resolved.Document.Dialect,
+			Registry: this
+		));
+	}
+	public JsonSchema? ResolveSchema(NodeMetadata node)
+	{
+		var resolved = node.Node == null ? ResolveMetadata(node.Id, node.Document) : node;
+		return JsonSchemaParser.Deserialize(resolved, new(
+			Dialect: resolved.Document.Dialect,
+			Registry: this
+		));
 	}
 
 	internal Location ResolveLocation(NodeMetadata key)

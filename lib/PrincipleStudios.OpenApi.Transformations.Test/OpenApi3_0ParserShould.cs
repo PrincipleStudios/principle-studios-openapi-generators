@@ -1,11 +1,6 @@
-﻿using Bogus.DataSets;
-using Json.Schema;
-using PrincipleStudios.OpenApi.Transformations.DocumentTypes;
-using System;
-using System.Collections.Generic;
+﻿using PrincipleStudios.OpenApi.Transformations.DocumentTypes;
+using PrincipleStudios.OpenApi.Transformations.Specifications.Keywords;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 using static PrincipleStudios.OpenApiCodegen.TestUtils.DocumentHelpers;
 
@@ -69,15 +64,15 @@ public class OpenApi3_0ParserShould
 								Assert.Equal("tags to filter by", param.Description);
 								Assert.Equal("form", param.Style);
 								Assert.NotNull(param.Schema);
-								Assert.Equal("proj://embedded/petstore.yaml#/paths/~1pets/get/parameters/0/schema", param.Schema.BaseUri.OriginalString);
+								Assert.Equal("proj://embedded/petstore.yaml#/paths/~1pets/get/parameters/0/schema", param.Schema.Id.OriginalString);
 								Assert.NotNull(param.Schema.Keywords);
 								var schemaType = Assert.Single(param.Schema.Keywords.OfType<TypeKeyword>());
-								Assert.Equal(SchemaValueType.Array, schemaType.Type);
+								Assert.Equal(TypeKeyword.Common.Array, schemaType.Value);
 								var itemsType = Assert.Single(param.Schema.Keywords.OfType<ItemsKeyword>());
 								Assert.NotNull(itemsType.SingleSchema?.Keywords);
-								Assert.Equal("proj://embedded/petstore.yaml#/paths/~1pets/get/parameters/0/schema/items", itemsType.SingleSchema.BaseUri.OriginalString);
+								Assert.Equal("proj://embedded/petstore.yaml#/paths/~1pets/get/parameters/0/schema/items", itemsType.SingleSchema.Id.OriginalString);
 								var itemSchemaType = Assert.Single(itemsType.SingleSchema.Keywords.OfType<TypeKeyword>());
-								Assert.Equal(SchemaValueType.String, itemSchemaType.Type);
+								Assert.Equal(TypeKeyword.Common.String, itemSchemaType.Value);
 							},
 							(param) =>
 							{
@@ -99,7 +94,7 @@ public class OpenApi3_0ParserShould
 										Assert.Equal("application/json", jsonContent.Key);
 										Assert.Equal("proj://embedded/petstore.yaml#/paths/~1pets/get/responses/200/content/application~1json", jsonContent.Value.Id.OriginalString);
 										Assert.NotNull(jsonContent.Value.Schema);
-										Assert.Equal("proj://embedded/petstore.yaml#/paths/~1pets/get/responses/200/content/application~1json/schema", jsonContent.Value.Schema.BaseUri.OriginalString);
+										Assert.Equal("proj://embedded/petstore.yaml#/paths/~1pets/get/responses/200/content/application~1json/schema", jsonContent.Value.Schema.Id.OriginalString);
 									});
 							});
 						Assert.NotNull(operation.Value.Responses.Default);
@@ -120,7 +115,7 @@ public class OpenApi3_0ParserShould
 								Assert.Equal("application/json", jsonContent.Key);
 								Assert.Equal("proj://embedded/petstore.yaml#/paths/~1pets/post/requestBody/content/application~1json", jsonContent.Value.Id.OriginalString);
 								Assert.NotNull(jsonContent.Value.Schema);
-								Assert.Equal("proj://embedded/petstore.yaml#/components/schemas/NewPet", jsonContent.Value.Schema.BaseUri.OriginalString);
+								Assert.Equal("proj://embedded/petstore.yaml#/components/schemas/NewPet", jsonContent.Value.Schema.Id.OriginalString);
 							});
 					});
 			},

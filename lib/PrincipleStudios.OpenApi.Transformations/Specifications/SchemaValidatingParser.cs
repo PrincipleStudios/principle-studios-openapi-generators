@@ -1,8 +1,6 @@
-﻿using Json.Schema;
-using PrincipleStudios.OpenApi.Transformations.Abstractions;
+﻿using PrincipleStudios.OpenApi.Transformations.Abstractions;
 using PrincipleStudios.OpenApi.Transformations.Diagnostics;
 using PrincipleStudios.OpenApi.Transformations.DocumentTypes;
-using PrincipleStudios.OpenApi.Transformations.Specifications.OpenApi3_1;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,7 +25,7 @@ public abstract class SchemaValidatingParser<TInterface> : IParser<TInterface>
 	{
 		if (!CanParse(documentReference)) throw new ArgumentException(Errors.ParserCannotHandleDocument, nameof(documentReference));
 
-		var evaluationResults = schema.Evaluate(documentReference.RootNode, new EvaluationOptions { OutputFormat = OutputFormat.Hierarchical });
+		var evaluationResults = schema.Evaluate(documentReference.RootNode);
 		var diagnosticList = evaluationResults.IsValid
 			? new List<Diagnostics.DiagnosticBase>()
 			: ConvertEvaluationToDiagnostics(documentReference, evaluationResults).ToList();
@@ -45,32 +43,28 @@ public abstract class SchemaValidatingParser<TInterface> : IParser<TInterface>
 		{
 			if (evaluationResults.IsValid) yield break;
 
-			if (evaluationResults.Errors != null)
+			if (evaluationResults.Errors.TryGetValue("oneOf", out var oneOfErrors))
 			{
-				if (evaluationResults.Errors.ContainsKey("oneOf"))
-				{
-					var details = evaluationResults.Details.Select(Inner).Select(d => d.ToArray()).ToArray();
-					// "oneOf" rules could be that the user was going for one or the other
-					// The one with deeper errors is probably more correct
-					var resultingDetails = details.OrderByDescending(d => d.Max(err => err.Pointer.ToString().Length)).First();
-					foreach (var entry in resultingDetails)
-						yield return entry;
-					yield break;
-				}
-
-				foreach (var error in evaluationResults.Errors)
-				{
-					// TODO: depending on the error type, maybe need to highlight the key instead of the full object
-					// For instance, in case of missing "required" fields, highlighting the whole object may not be useful
-					yield return (evaluationResults.InstanceLocation, error.Key, error.Value);
-				}
+				var details = oneOfErrors.Select(Inner).Select(d => d.ToArray()).ToArray();
+				// "oneOf" rules could be that the user was going for one or the other
+				// The one with deeper errors is probably more correct
+				var resultingDetails = details.OrderByDescending(d => d.Max(err => err.Pointer.ToString().Length)).First();
+				foreach (var entry in resultingDetails)
+					yield return entry;
+				yield break;
 			}
 
-			foreach (var entry in evaluationResults.Details)
-			{
-				foreach (var result in Inner(entry))
-					yield return result;
-			}
+			foreach (var entry in evaluationResults.Errors)
+				foreach (var detail in entry.Value)
+				{
+					if (detail.Message != null)
+						// TODO: depending on the error type, maybe need to highlight the key instead of the full object
+						// For instance, in case of missing "required" fields, highlighting the whole object may not be useful
+						yield return (evaluationResults.InstanceLocation, entry.Key, detail.Message);
+
+					foreach (var result in Inner(detail))
+						yield return result;
+				}
 		}
 	}
 

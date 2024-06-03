@@ -1,7 +1,7 @@
 ﻿using Json.Pointer;
-using Json.Schema;
 using PrincipleStudios.OpenApi.Transformations;
 using PrincipleStudios.OpenApi.Transformations.Diagnostics;
+using PrincipleStudios.OpenApi.Transformations.Specifications;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -55,16 +55,9 @@ public class YamlDocumentLoader : IDocumentTypeLoader
 
 		public JsonNode? RootNode { get; }
 
-		public JsonSchema Dialect { get; set; } = MetaSchemas.CoreNext;
+		public IJsonSchemaDialect Dialect { get; set; } = Specifications.Dialects.StandardDialects.CoreNext;
 
 		string IDocumentReference.OriginalPath => RetrievalUri.OriginalString;
-
-		public JsonSchema? FindSubschema(JsonPointer pointer, EvaluationOptions options)
-		{
-			if (!pointer.TryEvaluate(RootNode, out var node)) return null;
-			var schema = SubschemaLoader.FindSubschema(new NodeMetadata(BaseUri, node, this));
-			return schema;
-		}
 
 		public FileLocationRange? GetLocation(JsonPointer path)
 		{

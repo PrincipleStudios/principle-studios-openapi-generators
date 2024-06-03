@@ -10,8 +10,8 @@
 
 namespace PrincipleStudios.OpenApi.Transformations {
     using System;
-    
-    
+
+
     /// <summary>
     ///   A strongly-typed resource class, for looking up localized strings, etc.
     /// </summary>
@@ -23,15 +23,15 @@ namespace PrincipleStudios.OpenApi.Transformations {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Errors {
-        
+
         private static global::System.Resources.ResourceManager resourceMan;
-        
+
         private static global::System.Globalization.CultureInfo resourceCulture;
-        
+
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
         internal Errors() {
         }
-        
+
         /// <summary>
         ///   Returns the cached ResourceManager instance used by this class.
         /// </summary>
@@ -45,7 +45,7 @@ namespace PrincipleStudios.OpenApi.Transformations {
                 return resourceMan;
             }
         }
-        
+
         /// <summary>
         ///   Overrides the current thread's CurrentUICulture property for all
         ///   resource lookups using this strongly typed resource class.
@@ -59,7 +59,7 @@ namespace PrincipleStudios.OpenApi.Transformations {
                 resourceCulture = value;
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Provided document did not match registry.
         /// </summary>
@@ -68,7 +68,7 @@ namespace PrincipleStudios.OpenApi.Transformations {
                 return ResourceManager.GetString("DocumentMismatch", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Keyword implementation `{0}` does not carry `{1}`.
         /// </summary>
@@ -77,7 +77,7 @@ namespace PrincipleStudios.OpenApi.Transformations {
                 return ResourceManager.GetString("InvalidKeywordType", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Root node of an OpenApi document must be an object.
         /// </summary>
@@ -86,7 +86,7 @@ namespace PrincipleStudios.OpenApi.Transformations {
                 return ResourceManager.GetString("InvalidOpenApiRootNode", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Parser could not handle the document provided.
         /// </summary>
@@ -95,7 +95,7 @@ namespace PrincipleStudios.OpenApi.Transformations {
                 return ResourceManager.GetString("ParserCannotHandleDocument", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Received a relative URI without a relative document.
         /// </summary>
@@ -104,7 +104,7 @@ namespace PrincipleStudios.OpenApi.Transformations {
                 return ResourceManager.GetString("ReceivedRelativeUriWithoutDocument", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to An error occurred resolving a document from a URI.
         /// </summary>
@@ -113,7 +113,7 @@ namespace PrincipleStudios.OpenApi.Transformations {
                 return ResourceManager.GetString("ResolveDocumentException", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to An error occurred resolving a node from a URI.
         /// </summary>
@@ -122,7 +122,7 @@ namespace PrincipleStudios.OpenApi.Transformations {
                 return ResourceManager.GetString("ResolveNodeException", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to An error occurred while loading JSON or YAML file.
         /// </summary>
@@ -131,13 +131,22 @@ namespace PrincipleStudios.OpenApi.Transformations {
                 return ResourceManager.GetString("UnableToLoadYaml", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to An unsupported deserialization technique was used.
         /// </summary>
         internal static string UnsupportedDeserialization {
             get {
                 return ResourceManager.GetString("UnsupportedDeserialization", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Evaluation against a false schema always fails.
+        /// </summary>
+        internal static string FalseJsonSchemasFail {
+            get {
+                return ResourceManager.GetString("FalseJsonSchemasFail", resourceCulture);
             }
         }
     }

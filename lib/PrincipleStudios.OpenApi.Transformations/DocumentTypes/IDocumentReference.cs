@@ -1,6 +1,7 @@
 ﻿using Json.Pointer;
 using Json.Schema;
 using PrincipleStudios.OpenApi.Transformations.Diagnostics;
+using PrincipleStudios.OpenApi.Transformations.Specifications;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -27,7 +28,7 @@ public interface IDocumentReference : IBaseDocument
 	/// <summary>
 	/// The json schema dialect to use for this document
 	/// </summary>
-	JsonSchema Dialect { get; set; }
+	IJsonSchemaDialect Dialect { get; set; }
 
 	FileLocationRange? GetLocation(JsonPointer path);
 }

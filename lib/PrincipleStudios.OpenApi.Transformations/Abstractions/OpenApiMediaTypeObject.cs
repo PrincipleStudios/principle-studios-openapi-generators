@@ -1,5 +1,5 @@
-﻿using Json.Schema;
-using System;
+﻿using System;
+using PrincipleStudios.OpenApi.Transformations.Specifications;
 
 namespace PrincipleStudios.OpenApi.Transformations.Abstractions;
 

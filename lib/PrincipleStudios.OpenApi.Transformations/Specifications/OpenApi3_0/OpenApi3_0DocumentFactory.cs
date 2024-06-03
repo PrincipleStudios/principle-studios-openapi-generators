@@ -1,9 +1,13 @@
 ﻿using Json.More;
 using Json.Pointer;
-using Json.Schema;
+
+// using Json.Schema;
 using PrincipleStudios.OpenApi.Transformations.Abstractions;
 using PrincipleStudios.OpenApi.Transformations.Diagnostics;
 using PrincipleStudios.OpenApi.Transformations.DocumentTypes;
+using PrincipleStudios.OpenApi.Transformations.Specifications;
+using PrincipleStudios.OpenApi.Transformations.Specifications.Keywords;
+using PrincipleStudios.OpenApi.Transformations.Specifications.Vocabularies;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -39,54 +43,51 @@ internal class OpenApi3_0DocumentFactory : IOpenApiDocumentFactory
 	private readonly DocumentRegistry documentRegistry;
 
 	public ICollection<DiagnosticBase> Diagnostics { get; }
-	public static Vocabulary Vocabulary { get; }
-
-
-	public static readonly JsonSchema OpenApiDialect =
-		new JsonSchemaBuilder()
-			.Id(jsonSchemaDialect)
-			.Title("OpenAPI 3.0 Schema Object Dialect")
-			.Description("A JSON Schema dialect describing schemas found in OpenAPI documents")
-			.Vocabulary(
-				(Vocabularies.Core202012Id, true),
-				(Vocabularies.Applicator202012Id, true),
-				(Vocabularies.Unevaluated202012Id, true),
-				(Vocabularies.Metadata202012Id, true),
-				(Vocabularies.FormatAnnotation202012Id, true),
-				(Vocabularies.Content202012Id, true),
-				(jsonSchemaMeta.OriginalString, false)
-			)
-			.DynamicAnchor("meta")
-			.AllOf(
-				new JsonSchemaBuilder().Ref("https://spec.openapis.org/oas/3.0/schema/2021-09-28")
-			);
+	public static IJsonSchemaVocabulary Vocabulary { get; }
+	public static IJsonSchemaDialect OpenApiDialect { get; }
 
 	static OpenApi3_0DocumentFactory()
 	{
 		//Vocabularies.Core201909.Keywords
-		Vocabulary = new Vocabulary(jsonSchemaMeta.OriginalString,
-			// OpenAPI 3.0 is not truly JsonSchema compliant, which is why this is an "example" metaschema
-			// "type" must also be included.
-			typeof(TypeKeyword),
+		Vocabulary = new JsonSchemaVocabulary(
+			jsonSchemaMeta,
+			[
+				// OpenAPI 3.0 is not truly JsonSchema compliant, which is why this has its own Uri with "example" in it
+				// "type" must also be included.
+				("type", TypeKeyword.Instance),
 
-			// Most of `Vocabularies.Validation202012Id` works, but the exclusiveMinimum / exclusiveMaximum work differently
-			typeof(MultipleOfKeyword),
-			typeof(MinimumKeyword),
-			typeof(MaximumKeyword),
-			typeof(OpenApi3_0.ExclusiveMinimumKeyword),
-			typeof(OpenApi3_0.ExclusiveMaximumKeyword),
-			typeof(MaxLengthKeyword),
-			typeof(MinLengthKeyword),
-			typeof(PatternKeyword),
-			typeof(MaxItemsKeyword),
-			typeof(MinItemsKeyword),
-			typeof(UniqueItemsKeyword),
-			typeof(MaxPropertiesKeyword),
-			typeof(MinPropertiesKeyword),
-			typeof(RequiredKeyword),
-			typeof(EnumKeyword)
+				// Most of `Vocabularies.Validation202012Id` works, but the exclusiveMinimum / exclusiveMaximum work differently
+				("multipleOf", MultipleOfKeyword.Instance),
+				("minimum", MinimumKeyword.Instance),
+				("maximum", MaximumKeyword.Instance),
+				("exclusiveMinimum", OpenApi3_0.ExclusiveMinimumKeyword.Instance),
+				("exclusiveMaimum", OpenApi3_0.ExclusiveMaximumKeyword.Instance),
+				("maxLength", MaxLengthKeyword.Instance),
+				("minLength", MinLengthKeyword.Instance),
+				("pattern", PatternKeyword.Instance),
+				("maxItems", MaxItemsKeyword.Instance),
+				("minItems", MinItemsKeyword.Instance),
+				("uniqueItems", UniqueItemsKeyword.Instance),
+				("maxProperties", MaxPropertiesKeyword.Instance),
+				("minProperties", MinPropertiesKeyword.Instance),
+				("required", RequiredKeyword.Instance),
+				("enum", EnumKeyword.Instance),
+			]
 		);
-		VocabularyRegistry.Global.Register(Vocabulary);
+		OpenApiDialect =
+			new JsonSchemaDialect(
+				jsonSchemaDialect,
+				[
+					StandardVocabularies.Core202012,
+					StandardVocabularies.Applicator202012,
+					StandardVocabularies.Unevaluated202012,
+					StandardVocabularies.Metadata202012,
+					StandardVocabularies.FormatAnnotation202012,
+					StandardVocabularies.Content202012,
+					Vocabulary,
+					// should be all of "https://spec.openapis.org/oas/3.0/schema/2021-09-28"
+				]
+			);
 	}
 
 	public OpenApi3_0DocumentFactory(DocumentRegistry documentRegistry, IEnumerable<DiagnosticBase> initialDiagnostics)
@@ -242,7 +243,8 @@ internal class OpenApi3_0DocumentFactory : IOpenApiDocumentFactory
 		CatchDiagnostic(AllowReference(AllowNull(InternalConstructSchema)), (_) => null)(key);
 	private JsonSchema InternalConstructSchema(NodeMetadata key)
 	{
-		return SubschemaLoader.FindSubschema(key) ?? JsonSchema.Empty;
+		return documentRegistry.ResolveSchema(key) ??
+			throw new DiagnosticException(UnableToResolveSchema.Builder());
 	}
 
 	private ParameterLocation ToParameterLocation(JsonNode? jsonNode)
@@ -421,6 +423,11 @@ internal class OpenApi3_0DocumentFactory : IOpenApiDocumentFactory
 	}
 }
 
+
+public record UnableToResolveSchema(Location Location) : DiagnosticBase(Location)
+{
+	public static DiagnosticException.ToDiagnostic Builder() => (Location) => new UnableToResolveSchema(Location);
+}
 
 public record InvalidNode(string NodeType, Location Location) : DiagnosticBase(Location)
 {

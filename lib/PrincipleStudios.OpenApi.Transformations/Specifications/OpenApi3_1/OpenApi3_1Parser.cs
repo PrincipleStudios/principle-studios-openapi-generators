@@ -1,5 +1,4 @@
-﻿using Json.Schema;
-using PrincipleStudios.OpenApi.Transformations.Abstractions;
+﻿using PrincipleStudios.OpenApi.Transformations.Abstractions;
 using PrincipleStudios.OpenApi.Transformations.Diagnostics;
 using PrincipleStudios.OpenApi.Transformations.DocumentTypes;
 using System;
@@ -10,9 +9,12 @@ namespace PrincipleStudios.OpenApi.Transformations.Specifications.OpenApi3_1;
 
 internal class OpenApi3_1Parser : SchemaValidatingParser<OpenApiDocument>
 {
-	public OpenApi3_1Parser() : base(Json.Schema.OpenApi.MetaSchemas.DocumentSchema)
-	{
+	// TODO
+	/// <see cref="Json.Schema.OpenApi.MetaSchemas.DocumentSchema"/>
+	public static readonly JsonSchema DocumentSchema = new JsonSchemaViaKeywords(new Uri("https://spec.openapis.org/oas/3.1/schema/2022-02-27"), []);
 
+	public OpenApi3_1Parser(DocumentRegistry registry) : base(DocumentSchema)
+	{
 	}
 
 	public override bool CanParse(IDocumentReference documentReference)
