@@ -1,3 +1,4 @@
+import { describe, it } from 'vitest';
 import type allOperations from './no-refs/operations';
 import { conversion as getPhoto } from './no-refs/operations/getPhoto';
 import type {

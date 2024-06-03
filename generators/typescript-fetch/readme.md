@@ -3,20 +3,26 @@
 Provides an adapter layer method for
 [@principlestudios/openapi-codegen-typescript][1] to integrate with fetch.
 
-    npm i -D @principlestudios/openapi-codegen-typescript-fetch
+```sh
+npm i -D @principlestudios/openapi-codegen-typescript-fetch
+```
 
 You must also have `dotnet` 8.0 runtime installed on your machine.
 
 This will provide a corresponding bin to generate the typescript files.
 
-    openapi-codegen-typescript api.yaml api-generated/ -c
+```sh
+openapi-codegen-typescript api.yaml api-generated/ -c
+```
 
 You can then create an API wrapper such as:
 
-    import { toFetchApi } from '@principlestudios/openapi-codegen-typescript-fetch';
-    import operations from './api-generated/operations';
+```ts
+import { toFetchApi } from '@principlestudios/openapi-codegen-typescript-fetch';
+import operations from './api-generated/operations';
 
-    export default toFetchApi(operations, fetch);
+export default toFetchApi(operations, fetch);
+```
 
 This API will use the type safety from OpenAPI along with `fetch`.
 

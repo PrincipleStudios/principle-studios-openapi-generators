@@ -13,12 +13,19 @@
 		"isolatedModules": true,
 		"noEmit": false,
 		"composite": true,
-		"types": ["node", "jest"],
 		"declaration": true,
 		"rootDir": ".",
 		"outDir": "../../../artifacts/generators/typescript-rxjs/npm",
 		"paths": {
-			"@principlestudios/openapi-codegen-typescript-rxjs": ["./src"]
+			"@principlestudios/openapi-codegen-typescript-rxjs": ["./src"],
+			"@principlestudios/openapi-codegen-typescript-msw": [
+				"../../typescript-msw/npm/src"
+			]
 		}
-	}
+	},
+	"references": [
+		{
+			"path": "../../typescript-msw/npm/tsconfig.json"
+		}
+	]
 }
