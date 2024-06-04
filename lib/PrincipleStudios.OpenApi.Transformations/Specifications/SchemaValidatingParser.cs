@@ -18,7 +18,7 @@ public abstract class SchemaValidatingParser<TInterface> : IParser<TInterface>
 
 	public abstract bool CanParse(IDocumentReference documentReference);
 
-	public ParseResult<TInterface>? Parse(IDocumentReference documentReference, DocumentRegistry documentRegistry)
+	public ParseResult<TInterface> Parse(IDocumentReference documentReference, DocumentRegistry documentRegistry)
 	{
 		if (!CanParse(documentReference)) throw new ArgumentException(Errors.ParserCannotHandleDocument, nameof(documentReference));
 

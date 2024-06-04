@@ -9,6 +9,9 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using System.Linq;
+using PrincipleStudios.OpenApi.Transformations.DocumentTypes;
+using PrincipleStudios.OpenApi.Transformations.Specifications;
+using System.IO;
 
 namespace PrincipleStudios.OpenApi.CSharp;
 
@@ -25,16 +28,24 @@ public class MvcServerGenerator : IOpenApiCodeGenerator
 		propIdentity,
 		propLink,
 	};
+	private static readonly YamlDocumentLoader docLoader = new YamlDocumentLoader();
 
 	public IEnumerable<string> MetadataKeys => metadataKeys;
 
-	public GenerationResult Generate(string documentContents, IReadOnlyDictionary<string, string?> additionalTextMetadata)
+	public GenerationResult Generate(string documentPath, string documentContents, IReadOnlyDictionary<string, string?> additionalTextMetadata)
 	{
+		var options = LoadOptionsFromMetadata(additionalTextMetadata);
+		var registry = CreateRegistry(options);
+		var baseDocument = LoadDocument(documentPath, documentContents, registry, options);
+		var parseResult = CommonParsers.DefaultParsers.Parse(baseDocument, registry);
+		if (parseResult == null)
+			return new GenerationResult(Array.Empty<OpenApiCodegen.SourceEntry>(), [/* TODO */]);
+
 		if (!TryParseFile(documentContents, out var document, out var diagnostic))
 		{
 			return new GenerationResult(Array.Empty<OpenApiCodegen.SourceEntry>(), diagnostic);
 		}
-		var sourceProvider = CreateSourceProvider(document, additionalTextMetadata);
+		var sourceProvider = CreateSourceProvider(document, options, additionalTextMetadata);
 		var openApiDiagnostic = new OpenApiTransformDiagnostic();
 
 		var sources = (from entry in sourceProvider.GetSources(openApiDiagnostic)
@@ -75,14 +86,18 @@ public class MvcServerGenerator : IOpenApiCodeGenerator
 		}
 	}
 
-	private static ISourceProvider CreateSourceProvider(OpenApiDocument document, IReadOnlyDictionary<string, string?> opt)
+	private static ISourceProvider CreateSourceProvider(OpenApiDocument document, CSharpServerSchemaOptions options, IReadOnlyDictionary<string, string?> opt)
 	{
-		var options = LoadOptions(opt[propConfig]);
 		var documentNamespace = opt[propNamespace];
 		if (string.IsNullOrEmpty(documentNamespace))
 			documentNamespace = GetStandardNamespace(opt, options);
 
 		return document.BuildCSharpPathControllerSourceProvider(GetVersionInfo(), documentNamespace, options);
+	}
+
+	private static CSharpServerSchemaOptions LoadOptionsFromMetadata(IReadOnlyDictionary<string, string?> additionalTextMetadata)
+	{
+		return LoadOptions(additionalTextMetadata[propConfig]);
 	}
 
 	private static CSharpServerSchemaOptions LoadOptions(string? optionsFiles)
@@ -119,5 +134,32 @@ public class MvcServerGenerator : IOpenApiCodeGenerator
 		opt.TryGetValue("build_property.rootnamespace", out var rootNamespace);
 
 		return CSharpNaming.ToNamespace(rootNamespace, projectDir, identity, link, options.ReservedIdentifiers());
+	}
+
+	private static Uri ToInternalUri(string documentPath, CSharpServerSchemaOptions options)
+	{
+		// TODO: use path mapping in options
+		return new Uri(documentPath);
+	}
+
+	private static IDocumentReference LoadDocument(string documentPath, string documentContents, DocumentRegistry registry, CSharpServerSchemaOptions options)
+	{
+		using var ms = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(documentContents));
+		return docLoader.LoadDocument(ToInternalUri(documentPath, options), ms);
+	}
+
+	public static DocumentRegistry CreateRegistry(CSharpServerSchemaOptions options)
+	{
+		return new DocumentRegistry { Fetch = DocumentResolver };
+
+		IDocumentReference? DocumentResolver(Uri baseUri, IDocumentReference? currentDocument = null)
+		{
+			switch (baseUri)
+			{
+				// TODO: use the loaded options (via LoadOptions used in this file) to determine how to resolve additional documents
+				default:
+					return null;
+			}
+		}
 	}
 }

@@ -22,6 +22,9 @@ public static class CommonParsers
 	public static ParseResult<TResult>? Parse<TResult>(this IEnumerable<IParser<TResult>> parsers, IDocumentReference document, DocumentRegistry documentRegistry)
 		where TResult : class, IReferenceableDocument
 	{
-		return parsers.Select(parser => parser.Parse(document, documentRegistry)).Where(result => result != null).FirstOrDefault();
+		return parsers
+			.Where(parser => parser.CanParse(document))
+			.Select(parser => parser.Parse(document, documentRegistry))
+			.FirstOrDefault();
 	}
 }

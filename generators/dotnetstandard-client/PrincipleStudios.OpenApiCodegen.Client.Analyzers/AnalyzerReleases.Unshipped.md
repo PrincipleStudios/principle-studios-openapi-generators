@@ -5,3 +5,4 @@
 Rule ID | Category | Severity | Notes
 --------|----------|----------|-------
 PSAPICLNT001 | PrincipleStudios.OpenApiCodegen.Client | Warning | ClientGenerator
+PSAPIPARSE001 | PrincipleStudios.OpenApiCodegen | Error | A conversion error was encountered

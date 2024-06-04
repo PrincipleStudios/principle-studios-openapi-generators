@@ -16,5 +16,5 @@ public interface IOpenApiCodeGenerator
 {
 	IEnumerable<string> MetadataKeys { get; }
 
-	GenerationResult Generate(string documentContents, IReadOnlyDictionary<string, string?> additionalTextMetadata);
+	GenerationResult Generate(string documentPath, string documentContents, IReadOnlyDictionary<string, string?> additionalTextMetadata);
 }

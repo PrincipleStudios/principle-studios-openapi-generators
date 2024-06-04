@@ -10,7 +10,7 @@ public interface IParser<TResult>
 	where TResult : class, IReferenceableDocument
 {
 	bool CanParse(IDocumentReference documentReference);
-	ParseResult<TResult>? Parse(IDocumentReference documentReference, DocumentRegistry documentRegistry);
+	ParseResult<TResult> Parse(IDocumentReference documentReference, DocumentRegistry documentRegistry);
 }
 
 public record ParseResult<TResult>(TResult? Document, IReadOnlyList<Diagnostics.DiagnosticBase> Diagnostics)

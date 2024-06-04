@@ -27,7 +27,7 @@ public class ClientGenerator : IOpenApiCodeGenerator
 	};
 	public IEnumerable<string> MetadataKeys => metadataKeys;
 
-	public GenerationResult Generate(string documentContents, IReadOnlyDictionary<string, string?> additionalTextMetadata)
+	public GenerationResult Generate(string documentPath, string documentContents, IReadOnlyDictionary<string, string?> additionalTextMetadata)
 	{
 		if (!TryParseFile(documentContents, out var document, out var diagnostic))
 		{
