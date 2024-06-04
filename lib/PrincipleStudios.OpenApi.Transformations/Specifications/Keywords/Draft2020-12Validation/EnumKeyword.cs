@@ -1,21 +1,26 @@
 
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Nodes;
 using PrincipleStudios.OpenApi.Transformations.Diagnostics;
 
-namespace PrincipleStudios.OpenApi.Transformations.Specifications.Keywords;
+namespace PrincipleStudios.OpenApi.Transformations.Specifications.Keywords.Draft2020_12Validation;
 
-public class MaxPropertiesKeyword : IJsonSchemaKeyword
+/// <see href="https://json-schema.org/draft/2020-12/json-schema-validation#name-enum">Draft 2020-12 enum keyword</see>
+public class EnumKeyword(string keyword, JsonArray values) : IJsonSchemaKeyword
 {
 	public static readonly IJsonSchemaKeywordDefinition Instance = new JsonSchemaKeywordDefinition(Parse);
 
 	private static ParseKeywordResult Parse(string keyword, NodeMetadata nodeInfo, JsonSchemaParserOptions options)
 	{
-		// TODO
+		if (nodeInfo.Node is JsonArray values)
+			return ParseKeywordResult.Success(new EnumKeyword(keyword, values));
+		// TODO - parsing errors
 		throw new NotImplementedException();
 	}
 
-	public string Keyword => throw new System.NotImplementedException();
+	public string Keyword => keyword;
+	public JsonArray Values => values;
 
 	public IEnumerable<DiagnosticBase> Evaluate(NodeMetadata nodeMetadata, JsonSchemaViaKeywords context, EvaluationContext evaluationContext)
 	{

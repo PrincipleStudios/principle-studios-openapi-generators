@@ -3,8 +3,9 @@ using System.Linq;
 using System.Text.Json.Nodes;
 using PrincipleStudios.OpenApi.Transformations.Diagnostics;
 
-namespace PrincipleStudios.OpenApi.Transformations.Specifications.Keywords;
+namespace PrincipleStudios.OpenApi.Transformations.Specifications.Keywords.Draft2020_12Validation;
 
+/// <see href="https://json-schema.org/draft/2020-12/json-schema-validation#name-required">Draft 2020-12 required keyword</see>
 public class RequiredKeyword(string keyword, IReadOnlyList<string> requiredProperties) : IJsonSchemaKeyword
 {
 	public static readonly IJsonSchemaKeywordDefinition Instance = new JsonSchemaKeywordDefinition(Parse);

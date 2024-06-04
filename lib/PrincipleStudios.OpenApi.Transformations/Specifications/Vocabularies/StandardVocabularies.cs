@@ -1,6 +1,7 @@
 
 using System;
 using PrincipleStudios.OpenApi.Transformations.Specifications.Keywords;
+using PrincipleStudios.OpenApi.Transformations.Specifications.Keywords.Draft2020_12Core;
 
 namespace PrincipleStudios.OpenApi.Transformations.Specifications.Vocabularies;
 

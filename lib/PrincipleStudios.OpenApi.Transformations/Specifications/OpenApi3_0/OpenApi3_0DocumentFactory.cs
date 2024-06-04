@@ -2,6 +2,7 @@
 using PrincipleStudios.OpenApi.Transformations.Diagnostics;
 using PrincipleStudios.OpenApi.Transformations.DocumentTypes;
 using PrincipleStudios.OpenApi.Transformations.Specifications.Keywords;
+using PrincipleStudios.OpenApi.Transformations.Specifications.Keywords.Draft2020_12Validation;
 using PrincipleStudios.OpenApi.Transformations.Specifications.Vocabularies;
 using System;
 using System.Collections.Generic;

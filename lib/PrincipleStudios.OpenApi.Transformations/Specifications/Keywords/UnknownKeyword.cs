@@ -4,6 +4,9 @@ using PrincipleStudios.OpenApi.Transformations.Diagnostics;
 
 namespace PrincipleStudios.OpenApi.Transformations.Specifications.Keywords;
 
+/// <summary>
+/// Holds a keyword that is provided but not specified by the dialect/vocabularies
+/// </summary>
 public class UnknownKeyword(string keyword, NodeMetadata nodeInfo) : IJsonSchemaKeyword
 {
 	public static readonly IJsonSchemaKeywordDefinition Instance = new JsonSchemaKeywordDefinition(Parse);

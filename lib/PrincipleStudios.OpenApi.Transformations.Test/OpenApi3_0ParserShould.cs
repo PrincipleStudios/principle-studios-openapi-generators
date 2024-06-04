@@ -1,5 +1,7 @@
 ﻿using PrincipleStudios.OpenApi.Transformations.DocumentTypes;
 using PrincipleStudios.OpenApi.Transformations.Specifications.Keywords;
+using PrincipleStudios.OpenApi.Transformations.Specifications.Keywords.Draft2020_12Core;
+using PrincipleStudios.OpenApi.Transformations.Specifications.Keywords.Draft2020_12Validation;
 using PrincipleStudios.OpenApi.Transformations.Specifications.OpenApi3_0;
 using System.Linq;
 using Xunit;
@@ -70,9 +72,9 @@ public class OpenApi3_0ParserShould
 								var schemaType = Assert.Single(param.Schema.Keywords.OfType<TypeKeyword>());
 								Assert.Equal(TypeKeyword.Common.Array, schemaType.Value);
 								var itemsType = Assert.Single(param.Schema.Keywords.OfType<ItemsKeyword>());
-								Assert.NotNull(itemsType.SingleSchema?.Keywords);
-								Assert.Equal("proj://embedded/petstore.yaml#/paths/~1pets/get/parameters/0/schema/items", itemsType.SingleSchema.Id.OriginalString);
-								var itemSchemaType = Assert.Single(itemsType.SingleSchema.Keywords.OfType<TypeKeyword>());
+								Assert.NotNull(itemsType.Schema?.Keywords);
+								Assert.Equal("proj://embedded/petstore.yaml#/paths/~1pets/get/parameters/0/schema/items", itemsType.Schema.Id.OriginalString);
+								var itemSchemaType = Assert.Single(itemsType.Schema.Keywords.OfType<TypeKeyword>());
 								Assert.Equal(TypeKeyword.Common.String, itemSchemaType.Value);
 							},
 							(param) =>
