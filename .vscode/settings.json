@@ -12,6 +12,9 @@
 	"files.eol": "\n",
 	"typescript.tsdk": "node_modules/typescript/lib",
 	"prettier.requireConfig": true,
+	"[csharp]": {
+		"editor.formatOnSave": true
+	},
 	"[javascript]": {
 		"editor.formatOnSave": true,
 		"editor.defaultFormatter": "esbenp.prettier-vscode"

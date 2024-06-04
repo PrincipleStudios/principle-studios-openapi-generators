@@ -47,8 +47,10 @@ internal class OpenApi3_0DocumentFactory : IOpenApiDocumentFactory
 		Vocabulary = new JsonSchemaVocabulary(
 			jsonSchemaMeta,
 			[
-				// OpenAPI 3.0 is not truly JsonSchema compliant, which is why this has its own Uri with "example" in it
-				// "type" must also be included.
+				// OpenAPI 3.0 is not truly JsonSchema compliant, which is why
+				// this has its own Uri with "example" in it "type" must also be
+				// included. See
+				// https://swagger.io/docs/specification/data-models/keywords/
 				("type", TypeKeyword.Instance),
 
 				// Most of `Vocabularies.Validation202012Id` works, but the exclusiveMinimum / exclusiveMaximum work differently
