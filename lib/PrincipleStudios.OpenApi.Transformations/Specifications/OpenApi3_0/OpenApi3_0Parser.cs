@@ -3,6 +3,7 @@ using PrincipleStudios.OpenApi.Transformations.Diagnostics;
 using PrincipleStudios.OpenApi.Transformations.DocumentTypes;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text.Json.Nodes;
 
@@ -17,7 +18,8 @@ internal class OpenApi3_0Parser : SchemaValidatingParser<OpenApiDocument>
 	private static JsonSchema LoadOpenApi3_0Schema(DocumentRegistry registry)
 	{
 		using var schemaStream = typeof(OpenApi3_0Parser).Assembly.GetManifestResourceStream($"{typeof(OpenApi3_0Parser).Namespace}.Schemas.schema.yaml");
-		var yamlDocument = new YamlDocumentLoader().LoadDocument(new Uri("https://spec.openapis.org/oas/3.0/schema/2021-09-28"), schemaStream);
+		using var sr = new StreamReader(schemaStream);
+		var yamlDocument = new YamlDocumentLoader().LoadDocument(new Uri("https://spec.openapis.org/oas/3.0/schema/2021-09-28"), sr);
 		var metadata = new NodeMetadata(yamlDocument.BaseUri, yamlDocument.RootNode, yamlDocument);
 
 		var result = JsonSchemaParser.Deserialize(metadata, new JsonSchemaParserOptions(registry, OpenApi3_0DocumentFactory.OpenApiDialect));

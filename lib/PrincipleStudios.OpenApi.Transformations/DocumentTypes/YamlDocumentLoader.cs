@@ -19,13 +19,12 @@ namespace PrincipleStudios.OpenApi.Transformations.DocumentTypes;
 
 public class YamlDocumentLoader : IDocumentTypeLoader
 {
-	public IDocumentReference LoadDocument(Uri retrievalUri, Stream stream)
+	public IDocumentReference LoadDocument(Uri retrievalUri, TextReader textReader)
 	{
 		var yamlStream = new YamlStream();
-		using var sr = new StreamReader(stream);
 		try
 		{
-			yamlStream.Load(sr);
+			yamlStream.Load(textReader);
 		}
 		catch (YamlException ex)
 		{

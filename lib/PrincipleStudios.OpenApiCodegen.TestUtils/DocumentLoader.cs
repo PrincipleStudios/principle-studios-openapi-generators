@@ -8,6 +8,7 @@ using PrincipleStudios.OpenApi.Transformations.Specifications.OpenApi3_1;
 using PrincipleStudios.OpenApi.Transformations.Specifications;
 using System.Linq;
 using PrincipleStudios.OpenApi.Transformations.Abstractions;
+using System.IO;
 
 namespace PrincipleStudios.OpenApiCodegen.TestUtils;
 
@@ -30,7 +31,8 @@ public class DocumentLoader
 	private static IDocumentReference LoadEmbeddedDocument(Uri baseUri, string embeddedName)
 	{
 		using var documentStream = typeof(DocumentHelpers).Assembly.GetManifestResourceStream($"PrincipleStudios.OpenApiCodegen.TestUtils.schemas.{embeddedName.Substring(1)}");
-		var result = docLoader.LoadDocument(baseUri, documentStream);
+		using var sr = new StreamReader(documentStream);
+		var result = docLoader.LoadDocument(baseUri, sr);
 		return result;
 	}
 

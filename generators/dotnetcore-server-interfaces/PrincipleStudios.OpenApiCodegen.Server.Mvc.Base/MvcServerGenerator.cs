@@ -144,8 +144,8 @@ public class MvcServerGenerator : IOpenApiCodeGenerator
 
 	private static IDocumentReference LoadDocument(string documentPath, string documentContents, DocumentRegistry registry, CSharpServerSchemaOptions options)
 	{
-		using var ms = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(documentContents));
-		return docLoader.LoadDocument(ToInternalUri(documentPath, options), ms);
+		using var sr = new StringReader(documentContents);
+		return docLoader.LoadDocument(ToInternalUri(documentPath, options), sr);
 	}
 
 	public static DocumentRegistry CreateRegistry(CSharpServerSchemaOptions options)

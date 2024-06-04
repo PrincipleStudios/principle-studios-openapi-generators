@@ -7,5 +7,5 @@ namespace PrincipleStudios.OpenApi.Transformations.DocumentTypes;
 
 public interface IDocumentTypeLoader
 {
-	DocumentTypes.IDocumentReference LoadDocument(Uri retrievalUri, Stream stream);
+	DocumentTypes.IDocumentReference LoadDocument(Uri retrievalUri, TextReader textReader);
 }
