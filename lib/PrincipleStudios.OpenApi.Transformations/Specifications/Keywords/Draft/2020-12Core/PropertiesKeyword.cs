@@ -12,7 +12,7 @@ public class PropertiesKeyword(string keyword, IReadOnlyDictionary<string, JsonS
 {
 	public static readonly IJsonSchemaKeyword Instance = new JsonSchemaKeyword(Parse);
 
-	private static ParseAnnotationResult Parse(string keyword, NodeMetadata nodeInfo, JsonSchemaParserOptions options)
+	private static DiagnosableResult<IJsonSchemaAnnotation> Parse(string keyword, NodeMetadata nodeInfo, JsonSchemaParserOptions options)
 	{
 		if (nodeInfo.Node is not JsonObject obj)
 			// TODO - parsing errors
@@ -22,14 +22,15 @@ public class PropertiesKeyword(string keyword, IReadOnlyDictionary<string, JsonS
 				(kvp) => kvp.Key,
 				(kvp) => JsonSchemaParser.Deserialize(nodeInfo.Navigate(kvp.Key), options)
 			);
-		var diagnostics = results.Values.SelectMany(v => v.Diagnostics).ToArray();
-		if (diagnostics.Length > 0) return ParseAnnotationResult.Failure(diagnostics);
+		var failures = results.Values.OfType<DiagnosableResult<JsonSchema>.Failure>().ToArray();
+		if (failures.Length > 0)
+			return DiagnosableResult<IJsonSchemaAnnotation>.Fail(failures.SelectMany(v => v.Diagnostics).ToArray());
 
-		return ParseAnnotationResult.Success(new PropertiesKeyword(
+		return DiagnosableResult<IJsonSchemaAnnotation>.Pass(new PropertiesKeyword(
 			keyword,
 			results.ToDictionary(
 				(kvp) => kvp.Key,
-				(kvp) => kvp.Value.JsonSchema!
+				(kvp) => ((DiagnosableResult<JsonSchema>.Success)kvp.Value).Value
 			)
 		));
 	}

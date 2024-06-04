@@ -11,10 +11,10 @@ public class MinimumKeyword(string keyword, decimal value) : IJsonSchemaAnnotati
 {
 	public static readonly IJsonSchemaKeyword Instance = new JsonSchemaKeyword(Parse);
 
-	private static ParseAnnotationResult Parse(string keyword, NodeMetadata nodeInfo, JsonSchemaParserOptions options)
+	private static DiagnosableResult<IJsonSchemaAnnotation> Parse(string keyword, NodeMetadata nodeInfo, JsonSchemaParserOptions options)
 	{
 		if (nodeInfo.Node is JsonValue val && val.TryGetValue<decimal>(out var value))
-			return ParseAnnotationResult.Success(new MinimumKeyword(keyword, value));
+			return DiagnosableResult<IJsonSchemaAnnotation>.Pass(new MinimumKeyword(keyword, value));
 		// TODO - parsing errors
 		throw new NotImplementedException();
 	}

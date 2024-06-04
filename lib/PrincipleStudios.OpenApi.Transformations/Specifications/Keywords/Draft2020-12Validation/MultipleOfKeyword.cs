@@ -10,7 +10,7 @@ public class MultipleOfKeyword : IJsonSchemaAnnotation
 {
 	public static readonly IJsonSchemaKeyword Instance = new JsonSchemaKeyword(Parse);
 
-	private static ParseAnnotationResult Parse(string keyword, NodeMetadata nodeInfo, JsonSchemaParserOptions options)
+	private static DiagnosableResult<IJsonSchemaAnnotation> Parse(string keyword, NodeMetadata nodeInfo, JsonSchemaParserOptions options)
 	{
 		// TODO
 		throw new NotImplementedException();

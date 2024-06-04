@@ -10,12 +10,10 @@ public class ItemsKeyword(string keyword, JsonSchema schema) : IJsonSchemaAnnota
 {
 	public static readonly IJsonSchemaKeyword Instance = new JsonSchemaKeyword(Parse);
 
-	private static ParseAnnotationResult Parse(string keyword, NodeMetadata nodeInfo, JsonSchemaParserOptions options)
+	private static DiagnosableResult<IJsonSchemaAnnotation> Parse(string keyword, NodeMetadata nodeInfo, JsonSchemaParserOptions options)
 	{
 		var schemaResult = JsonSchemaParser.Deserialize(nodeInfo, options);
-		if (schemaResult.JsonSchema is JsonSchema schema)
-			return ParseAnnotationResult.Success(new ItemsKeyword(keyword, schema));
-		return new ParseAnnotationResult(Keyword: null, Diagnostics: schemaResult.Diagnostics);
+		return schemaResult.Select<IJsonSchemaAnnotation>(schema => new ItemsKeyword(keyword, schema));
 	}
 
 	public string Keyword => keyword;

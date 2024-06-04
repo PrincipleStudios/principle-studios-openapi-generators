@@ -9,10 +9,10 @@ public class ExclusiveMaximumKeyword(string keyword, bool isExclusive) : IJsonSc
 {
 	public static readonly IJsonSchemaKeyword Instance = new JsonSchemaKeyword(Parse);
 
-	private static ParseAnnotationResult Parse(string keyword, NodeMetadata nodeInfo, JsonSchemaParserOptions options)
+	private static DiagnosableResult<IJsonSchemaAnnotation> Parse(string keyword, NodeMetadata nodeInfo, JsonSchemaParserOptions options)
 	{
 		if (nodeInfo.Node is JsonValue val && val.TryGetValue<bool>(out var value))
-			return ParseAnnotationResult.Success(new ExclusiveMaximumKeyword(keyword, value));
+			return DiagnosableResult<IJsonSchemaAnnotation>.Pass(new ExclusiveMaximumKeyword(keyword, value));
 		// TODO - parsing errors
 		throw new NotImplementedException();
 	}

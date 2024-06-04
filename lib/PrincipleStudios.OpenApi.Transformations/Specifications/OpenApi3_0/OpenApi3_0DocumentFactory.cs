@@ -241,9 +241,10 @@ internal class OpenApi3_0DocumentFactory : IOpenApiDocumentFactory
 	private JsonSchema InternalConstructSchema(NodeMetadata key)
 	{
 		var resolved = documentRegistry.ResolveSchema(key);
-		return resolved.JsonSchema is JsonSchema schema
-			? schema
-			: throw new MultipleDiagnosticException(resolved.Diagnostics);
+		return resolved.Fold(
+			schema => schema,
+			diagnostics => throw new MultipleDiagnosticException(diagnostics)
+		);
 	}
 
 	private ParameterLocation ToParameterLocation(JsonNode? jsonNode)

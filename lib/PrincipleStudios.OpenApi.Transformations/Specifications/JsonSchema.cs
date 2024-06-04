@@ -58,23 +58,14 @@ public class AnnotatedJsonSchema : JsonSchema
 public interface IJsonSchemaKeyword
 {
 	// Defnition for a keyword - TODO: parse into IJsonSchemaKeyword
-	ParseAnnotationResult ParseAnnotation(string keyword, NodeMetadata nodeInfo, JsonSchemaParserOptions options);
+	DiagnosableResult<IJsonSchemaAnnotation> ParseAnnotation(string keyword, NodeMetadata nodeInfo, JsonSchemaParserOptions options);
 }
 
-public record ParseAnnotationResult(IJsonSchemaAnnotation? Keyword, IReadOnlyList<DiagnosticBase> Diagnostics)
-{
-	public static ParseAnnotationResult Success(IJsonSchemaAnnotation Keyword) => new ParseAnnotationResult(Keyword, Array.Empty<DiagnosticBase>());
-
-	public static ParseAnnotationResult Failure(NodeMetadata nodeInfo, JsonSchemaParserOptions options, params DiagnosticException.ToDiagnostic[] diagnostics) =>
-		new ParseAnnotationResult(null, diagnostics.Select(d => d(options.Registry.ResolveLocation(nodeInfo))).ToArray());
-	public static ParseAnnotationResult Failure(params DiagnosticBase[] diagnostics) => new ParseAnnotationResult(null, diagnostics);
-}
-
-public delegate ParseAnnotationResult ParseAnnotation(string keyword, NodeMetadata nodeInfo, JsonSchemaParserOptions options);
+public delegate DiagnosableResult<IJsonSchemaAnnotation> ParseAnnotation(string keyword, NodeMetadata nodeInfo, JsonSchemaParserOptions options);
 
 public record JsonSchemaKeyword(ParseAnnotation ParseAnnotation) : IJsonSchemaKeyword
 {
-	ParseAnnotationResult IJsonSchemaKeyword.ParseAnnotation(string keyword, NodeMetadata nodeInfo, JsonSchemaParserOptions options)
+	DiagnosableResult<IJsonSchemaAnnotation> IJsonSchemaKeyword.ParseAnnotation(string keyword, NodeMetadata nodeInfo, JsonSchemaParserOptions options)
 	{
 		return ParseAnnotation(keyword, nodeInfo, options);
 	}

@@ -11,9 +11,9 @@ public class UnknownKeyword(string keyword, NodeMetadata nodeInfo) : IJsonSchema
 {
 	public static readonly IJsonSchemaKeyword Instance = new JsonSchemaKeyword(Parse);
 
-	private static ParseAnnotationResult Parse(string keyword, NodeMetadata nodeInfo, JsonSchemaParserOptions options)
+	private static DiagnosableResult<IJsonSchemaAnnotation> Parse(string keyword, NodeMetadata nodeInfo, JsonSchemaParserOptions options)
 	{
-		return ParseAnnotationResult.Success(new UnknownKeyword(keyword, nodeInfo));
+		return DiagnosableResult<IJsonSchemaAnnotation>.Pass(new UnknownKeyword(keyword, nodeInfo));
 	}
 
 	public string Keyword => keyword;

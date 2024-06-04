@@ -12,10 +12,10 @@ public class PatternKeyword(string keyword, string pattern) : IJsonSchemaAnnotat
 {
 	public static readonly IJsonSchemaKeyword Instance = new JsonSchemaKeyword(Parse);
 
-	private static ParseAnnotationResult Parse(string keyword, NodeMetadata nodeInfo, JsonSchemaParserOptions options)
+	private static DiagnosableResult<IJsonSchemaAnnotation> Parse(string keyword, NodeMetadata nodeInfo, JsonSchemaParserOptions options)
 	{
 		if (nodeInfo.Node is JsonValue val && val.TryGetValue<string>(out var s))
-			return ParseAnnotationResult.Success(new PatternKeyword(keyword, s));
+			return DiagnosableResult<IJsonSchemaAnnotation>.Pass(new PatternKeyword(keyword, s));
 		// TODO - parsing errors
 		throw new NotImplementedException();
 	}

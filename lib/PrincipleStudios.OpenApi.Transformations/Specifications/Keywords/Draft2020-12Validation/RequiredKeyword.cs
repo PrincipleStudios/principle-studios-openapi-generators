@@ -13,9 +13,9 @@ public class RequiredKeyword(string keyword, IReadOnlyList<string> requiredPrope
 	public string Keyword => keyword;
 	public IReadOnlyList<string> RequiredProperties => requiredProperties;
 
-	private static ParseAnnotationResult Parse(string keyword, NodeMetadata nodeInfo, JsonSchemaParserOptions options)
+	private static DiagnosableResult<IJsonSchemaAnnotation> Parse(string keyword, NodeMetadata nodeInfo, JsonSchemaParserOptions options)
 	{
-		if (nodeInfo.Node is not JsonArray array) return ParseAnnotationResult.Failure(nodeInfo, options, UnableToParseRequiredKeyword.Builder());
+		if (nodeInfo.Node is not JsonArray array) return DiagnosableResult<IJsonSchemaAnnotation>.Fail(nodeInfo, options.Registry, UnableToParseRequiredKeyword.Builder());
 
 		var requiredProperties = array.Select(entry => entry is JsonValue v && v.TryGetValue<string>(out var s) ? s : null).ToArray();
 
@@ -23,9 +23,9 @@ public class RequiredKeyword(string keyword, IReadOnlyList<string> requiredPrope
 						 where e.prop == null
 						 select UnableToParseRequiredKeyword.Builder()(options.Registry.ResolveLocation(nodeInfo.Navigate(e.i)))).ToArray();
 		if (nullProps.Length > 0)
-			return ParseAnnotationResult.Failure(nullProps);
+			return DiagnosableResult<IJsonSchemaAnnotation>.Fail(nullProps);
 
-		return ParseAnnotationResult.Success(new RequiredKeyword(
+		return DiagnosableResult<IJsonSchemaAnnotation>.Pass(new RequiredKeyword(
 			keyword,
 			requiredProperties!
 		));

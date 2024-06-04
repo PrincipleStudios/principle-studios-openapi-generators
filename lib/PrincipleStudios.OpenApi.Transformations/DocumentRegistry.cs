@@ -147,7 +147,7 @@ public class DocumentRegistry
 
 		return InternalAddDocument(document);
 	}
-	public JsonSchemaParseResult ResolveSchema(NodeMetadata node)
+	public DiagnosableResult<JsonSchema> ResolveSchema(NodeMetadata node)
 	{
 		var resolved = node.Node == null ? ResolveMetadata(node.Id, node.Document) : node;
 		return JsonSchemaParser.Deserialize(resolved, new(
