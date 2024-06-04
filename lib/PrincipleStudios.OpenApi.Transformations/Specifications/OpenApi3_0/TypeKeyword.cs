@@ -8,14 +8,14 @@ namespace PrincipleStudios.OpenApi.Transformations.Specifications.OpenApi3_0;
 
 // This follows OpenApi 3.0 TypeKeyword, not the actual standard at https://json-schema.org/draft/2020-12/json-schema-validation#name-type
 
-public class TypeKeyword(string keyword, string value) : IJsonSchemaKeyword
+public class TypeKeyword(string keyword, string value) : IJsonSchemaAnnotation
 {
-	public static readonly IJsonSchemaKeywordDefinition Instance = new JsonSchemaKeywordDefinition(Parse);
+	public static readonly IJsonSchemaKeyword Instance = new JsonSchemaKeyword(Parse);
 
-	private static ParseKeywordResult Parse(string keyword, NodeMetadata nodeInfo, JsonSchemaParserOptions options)
+	private static ParseAnnotationResult Parse(string keyword, NodeMetadata nodeInfo, JsonSchemaParserOptions options)
 	{
 		if (nodeInfo.Node is JsonValue val && val.TryGetValue<string>(out var s))
-			return ParseKeywordResult.Success(new TypeKeyword(keyword, s));
+			return ParseAnnotationResult.Success(new TypeKeyword(keyword, s));
 		// TODO - parsing errors
 		throw new NotImplementedException();
 	}
@@ -24,7 +24,7 @@ public class TypeKeyword(string keyword, string value) : IJsonSchemaKeyword
 
 	public string Value => value;
 
-	public IEnumerable<DiagnosticBase> Evaluate(NodeMetadata nodeMetadata, JsonSchemaViaKeywords context, EvaluationContext evaluationContext)
+	public IEnumerable<DiagnosticBase> Evaluate(NodeMetadata nodeMetadata, AnnotatedJsonSchema context, EvaluationContext evaluationContext)
 	{
 		switch (value)
 		{

@@ -68,13 +68,13 @@ public class OpenApi3_0ParserShould
 								Assert.Equal("form", param.Style);
 								Assert.NotNull(param.Schema);
 								Assert.Equal("proj://embedded/petstore.yaml#/paths/~1pets/get/parameters/0/schema", param.Schema.Id.OriginalString);
-								Assert.NotNull(param.Schema.Keywords);
-								var schemaType = Assert.Single(param.Schema.Keywords.OfType<TypeKeyword>());
+								Assert.NotNull(param.Schema.Annotations);
+								var schemaType = Assert.Single(param.Schema.Annotations.OfType<TypeKeyword>());
 								Assert.Equal(TypeKeyword.Common.Array, schemaType.Value);
-								var itemsType = Assert.Single(param.Schema.Keywords.OfType<ItemsKeyword>());
-								Assert.NotNull(itemsType.Schema?.Keywords);
+								var itemsType = Assert.Single(param.Schema.Annotations.OfType<ItemsKeyword>());
+								Assert.NotNull(itemsType.Schema?.Annotations);
 								Assert.Equal("proj://embedded/petstore.yaml#/paths/~1pets/get/parameters/0/schema/items", itemsType.Schema.Id.OriginalString);
-								var itemSchemaType = Assert.Single(itemsType.Schema.Keywords.OfType<TypeKeyword>());
+								var itemSchemaType = Assert.Single(itemsType.Schema.Annotations.OfType<TypeKeyword>());
 								Assert.Equal(TypeKeyword.Common.String, itemSchemaType.Value);
 							},
 							(param) =>

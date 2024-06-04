@@ -5,14 +5,14 @@ using PrincipleStudios.OpenApi.Transformations.Diagnostics;
 
 namespace PrincipleStudios.OpenApi.Transformations.Specifications.OpenApi3_0;
 
-public class ExclusiveMinimumKeyword(string keyword, bool isExclusive) : IJsonSchemaKeyword
+public class ExclusiveMinimumKeyword(string keyword, bool isExclusive) : IJsonSchemaAnnotation
 {
-	public static readonly IJsonSchemaKeywordDefinition Instance = new JsonSchemaKeywordDefinition(Parse);
+	public static readonly IJsonSchemaKeyword Instance = new JsonSchemaKeyword(Parse);
 
-	private static ParseKeywordResult Parse(string keyword, NodeMetadata nodeInfo, JsonSchemaParserOptions options)
+	private static ParseAnnotationResult Parse(string keyword, NodeMetadata nodeInfo, JsonSchemaParserOptions options)
 	{
 		if (nodeInfo.Node is JsonValue val && val.TryGetValue<bool>(out var value))
-			return ParseKeywordResult.Success(new ExclusiveMinimumKeyword(keyword, value));
+			return ParseAnnotationResult.Success(new ExclusiveMinimumKeyword(keyword, value));
 		// TODO - parsing errors
 		throw new NotImplementedException();
 	}
@@ -29,7 +29,7 @@ public class ExclusiveMinimumKeyword(string keyword, bool isExclusive) : IJsonSc
 	/// </summary>
 	public bool IsExclusive => isExclusive;
 
-	public IEnumerable<DiagnosticBase> Evaluate(NodeMetadata nodeMetadata, JsonSchemaViaKeywords context, EvaluationContext evaluationContext)
+	public IEnumerable<DiagnosticBase> Evaluate(NodeMetadata nodeMetadata, AnnotatedJsonSchema context, EvaluationContext evaluationContext)
 	{
 		throw new NotImplementedException();
 	}

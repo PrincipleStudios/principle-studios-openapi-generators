@@ -30,21 +30,21 @@ public static class JsonSchemaParser
 			var diagnostics = keywords.SelectMany(k => k.Diagnostics).ToArray();
 			if (diagnostics.Length > 0) return JsonSchemaParseResult.Failure(diagnostics);
 
-			return JsonSchemaParseResult.Success(new JsonSchemaViaKeywords(
+			return JsonSchemaParseResult.Success(new AnnotatedJsonSchema(
 				nodeInfo.Id,
 				// TODO: find a way not to assert non-null here
 				keywords.Select(k => k.Keyword!)
 			));
 		}
 
-		ParseKeywordResult DeserializeKeyword(string keyword, NodeMetadata nodeInfo)
+		ParseAnnotationResult DeserializeKeyword(string keyword, NodeMetadata nodeInfo)
 		{
 			foreach (var vocabulary in options.Dialect.Vocabularies)
 			{
 				if (vocabulary.Keywords.TryGetValue(keyword, out var def))
-					return def.ParseKeyword(keyword, nodeInfo, options);
+					return def.ParseAnnotation(keyword, nodeInfo, options);
 			}
-			return options.Dialect.UnknownKeyword.ParseKeyword(keyword, nodeInfo, options);
+			return options.Dialect.UnknownKeyword.ParseAnnotation(keyword, nodeInfo, options);
 		}
 	}
 }

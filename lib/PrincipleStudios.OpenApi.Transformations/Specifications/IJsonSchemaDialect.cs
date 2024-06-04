@@ -8,27 +8,27 @@ public interface IJsonSchemaDialect
 {
 	Uri Id { get; }
 	IReadOnlyCollection<IJsonSchemaVocabulary> Vocabularies { get; }
-	IJsonSchemaKeywordDefinition UnknownKeyword { get; }
+	IJsonSchemaKeyword UnknownKeyword { get; }
 }
 
 public record JsonSchemaDialect(
 	Uri Id,
 	IReadOnlyCollection<IJsonSchemaVocabulary> Vocabularies,
-	IJsonSchemaKeywordDefinition UnknownKeyword
+	IJsonSchemaKeyword UnknownKeyword
 ) : IJsonSchemaDialect;
 
 public interface IJsonSchemaVocabulary
 {
 	Uri Id { get; }
-	IReadOnlyDictionary<string, IJsonSchemaKeywordDefinition> Keywords { get; }
+	IReadOnlyDictionary<string, IJsonSchemaKeyword> Keywords { get; }
 }
 
 public record JsonSchemaVocabulary(
 	Uri Id,
-	IReadOnlyDictionary<string, IJsonSchemaKeywordDefinition> Keywords
+	IReadOnlyDictionary<string, IJsonSchemaKeyword> Keywords
 ) : IJsonSchemaVocabulary
 {
-	public JsonSchemaVocabulary(Uri id, (string Keyword, IJsonSchemaKeywordDefinition Definition)[] keywords)
+	public JsonSchemaVocabulary(Uri id, (string Keyword, IJsonSchemaKeyword Definition)[] keywords)
 		: this(id, keywords.ToDictionary(e => e.Keyword, e => e.Definition))
 	{
 	}

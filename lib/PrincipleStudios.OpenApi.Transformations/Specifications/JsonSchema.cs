@@ -8,7 +8,7 @@ namespace PrincipleStudios.OpenApi.Transformations.Specifications;
 public abstract class JsonSchema
 {
 	public abstract Uri Id { get; }
-	public virtual IReadOnlyCollection<IJsonSchemaKeyword>? Keywords => null;
+	public virtual IReadOnlyCollection<IJsonSchemaAnnotation> Annotations => Array.Empty<IJsonSchemaAnnotation>();
 	public virtual bool? BoolValue => null;
 
 	public abstract IEnumerable<DiagnosticBase> Evaluate(NodeMetadata nodeMetadata, EvaluationContext evaluationContext);
@@ -32,11 +32,11 @@ public class JsonSchemaBool(Uri id, bool value) : JsonSchema
 
 public record FalseJsonSchemasFailDiagnostic(Uri OriginalSchema, Location Location) : DiagnosticBase(Location);
 
-public class JsonSchemaViaKeywords : JsonSchema
+public class AnnotatedJsonSchema : JsonSchema
 {
-	private readonly List<IJsonSchemaKeyword> keywords;
+	private readonly List<IJsonSchemaAnnotation> keywords;
 
-	public JsonSchemaViaKeywords(Uri id, IEnumerable<IJsonSchemaKeyword> keywords)
+	public AnnotatedJsonSchema(Uri id, IEnumerable<IJsonSchemaAnnotation> keywords)
 	{
 		this.Id = id;
 		this.keywords = keywords.ToList();
@@ -44,45 +44,45 @@ public class JsonSchemaViaKeywords : JsonSchema
 
 	public override Uri Id { get; }
 
-	public override IReadOnlyCollection<IJsonSchemaKeyword> Keywords => keywords.AsReadOnly();
+	public override IReadOnlyCollection<IJsonSchemaAnnotation> Annotations => keywords.AsReadOnly();
 
 	public override IEnumerable<DiagnosticBase> Evaluate(NodeMetadata nodeMetadata, EvaluationContext evaluationContext)
 	{
-		return (from keyword in Keywords
+		return (from keyword in Annotations
 				let keywordResults = keyword.Evaluate(nodeMetadata, this, evaluationContext)
 				from result in keywordResults
 				select result);
 	}
 }
 
-public interface IJsonSchemaKeywordDefinition
+public interface IJsonSchemaKeyword
 {
-	// Defniition for a keyword - TODO: parse into IJsonSchemaKeyword
-	ParseKeywordResult ParseKeyword(string keyword, NodeMetadata nodeInfo, JsonSchemaParserOptions options);
+	// Defnition for a keyword - TODO: parse into IJsonSchemaKeyword
+	ParseAnnotationResult ParseAnnotation(string keyword, NodeMetadata nodeInfo, JsonSchemaParserOptions options);
 }
 
-public record ParseKeywordResult(IJsonSchemaKeyword? Keyword, IReadOnlyList<DiagnosticBase> Diagnostics)
+public record ParseAnnotationResult(IJsonSchemaAnnotation? Keyword, IReadOnlyList<DiagnosticBase> Diagnostics)
 {
-	public static ParseKeywordResult Success(IJsonSchemaKeyword Keyword) => new ParseKeywordResult(Keyword, Array.Empty<DiagnosticBase>());
+	public static ParseAnnotationResult Success(IJsonSchemaAnnotation Keyword) => new ParseAnnotationResult(Keyword, Array.Empty<DiagnosticBase>());
 
-	public static ParseKeywordResult Failure(NodeMetadata nodeInfo, JsonSchemaParserOptions options, params DiagnosticException.ToDiagnostic[] diagnostics) =>
-		new ParseKeywordResult(null, diagnostics.Select(d => d(options.Registry.ResolveLocation(nodeInfo))).ToArray());
-	public static ParseKeywordResult Failure(params DiagnosticBase[] diagnostics) => new ParseKeywordResult(null, diagnostics);
+	public static ParseAnnotationResult Failure(NodeMetadata nodeInfo, JsonSchemaParserOptions options, params DiagnosticException.ToDiagnostic[] diagnostics) =>
+		new ParseAnnotationResult(null, diagnostics.Select(d => d(options.Registry.ResolveLocation(nodeInfo))).ToArray());
+	public static ParseAnnotationResult Failure(params DiagnosticBase[] diagnostics) => new ParseAnnotationResult(null, diagnostics);
 }
 
-public delegate ParseKeywordResult ParseKeyword(string keyword, NodeMetadata nodeInfo, JsonSchemaParserOptions options);
+public delegate ParseAnnotationResult ParseAnnotation(string keyword, NodeMetadata nodeInfo, JsonSchemaParserOptions options);
 
-public record JsonSchemaKeywordDefinition(ParseKeyword ParseKeyword) : IJsonSchemaKeywordDefinition
+public record JsonSchemaKeyword(ParseAnnotation ParseAnnotation) : IJsonSchemaKeyword
 {
-	ParseKeywordResult IJsonSchemaKeywordDefinition.ParseKeyword(string keyword, NodeMetadata nodeInfo, JsonSchemaParserOptions options)
+	ParseAnnotationResult IJsonSchemaKeyword.ParseAnnotation(string keyword, NodeMetadata nodeInfo, JsonSchemaParserOptions options)
 	{
-		return ParseKeyword(keyword, nodeInfo, options);
+		return ParseAnnotation(keyword, nodeInfo, options);
 	}
 }
 
-public interface IJsonSchemaKeyword
+public interface IJsonSchemaAnnotation
 {
 	string Keyword { get; }
 
-	IEnumerable<DiagnosticBase> Evaluate(NodeMetadata nodeMetadata, JsonSchemaViaKeywords context, EvaluationContext evaluationContext);
+	IEnumerable<DiagnosticBase> Evaluate(NodeMetadata nodeMetadata, AnnotatedJsonSchema context, EvaluationContext evaluationContext);
 }

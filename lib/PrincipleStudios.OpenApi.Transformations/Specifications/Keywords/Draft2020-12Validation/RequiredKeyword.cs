@@ -6,16 +6,16 @@ using PrincipleStudios.OpenApi.Transformations.Diagnostics;
 namespace PrincipleStudios.OpenApi.Transformations.Specifications.Keywords.Draft2020_12Validation;
 
 /// <see href="https://json-schema.org/draft/2020-12/json-schema-validation#name-required">Draft 2020-12 required keyword</see>
-public class RequiredKeyword(string keyword, IReadOnlyList<string> requiredProperties) : IJsonSchemaKeyword
+public class RequiredKeyword(string keyword, IReadOnlyList<string> requiredProperties) : IJsonSchemaAnnotation
 {
-	public static readonly IJsonSchemaKeywordDefinition Instance = new JsonSchemaKeywordDefinition(Parse);
+	public static readonly IJsonSchemaKeyword Instance = new JsonSchemaKeyword(Parse);
 
 	public string Keyword => keyword;
 	public IReadOnlyList<string> RequiredProperties => requiredProperties;
 
-	private static ParseKeywordResult Parse(string keyword, NodeMetadata nodeInfo, JsonSchemaParserOptions options)
+	private static ParseAnnotationResult Parse(string keyword, NodeMetadata nodeInfo, JsonSchemaParserOptions options)
 	{
-		if (nodeInfo.Node is not JsonArray array) return ParseKeywordResult.Failure(nodeInfo, options, UnableToParseRequiredKeyword.Builder());
+		if (nodeInfo.Node is not JsonArray array) return ParseAnnotationResult.Failure(nodeInfo, options, UnableToParseRequiredKeyword.Builder());
 
 		var requiredProperties = array.Select(entry => entry is JsonValue v && v.TryGetValue<string>(out var s) ? s : null).ToArray();
 
@@ -23,15 +23,15 @@ public class RequiredKeyword(string keyword, IReadOnlyList<string> requiredPrope
 						 where e.prop == null
 						 select UnableToParseRequiredKeyword.Builder()(options.Registry.ResolveLocation(nodeInfo.Navigate(e.i)))).ToArray();
 		if (nullProps.Length > 0)
-			return ParseKeywordResult.Failure(nullProps);
+			return ParseAnnotationResult.Failure(nullProps);
 
-		return ParseKeywordResult.Success(new RequiredKeyword(
+		return ParseAnnotationResult.Success(new RequiredKeyword(
 			keyword,
 			requiredProperties!
 		));
 	}
 
-	public IEnumerable<DiagnosticBase> Evaluate(NodeMetadata nodeMetadata, JsonSchemaViaKeywords context, EvaluationContext evaluationContext)
+	public IEnumerable<DiagnosticBase> Evaluate(NodeMetadata nodeMetadata, AnnotatedJsonSchema context, EvaluationContext evaluationContext)
 	{
 		if (nodeMetadata.Node is not JsonObject obj) yield break;
 
