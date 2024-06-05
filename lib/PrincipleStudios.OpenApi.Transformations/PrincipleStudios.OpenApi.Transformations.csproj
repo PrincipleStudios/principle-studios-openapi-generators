@@ -32,8 +32,8 @@
 		<PackageReference Include="Microsoft.Extensions.FileProviders.Abstractions" Version="8.0.0" />
 		<PackageReference Include="SharpYaml" Version="2.1.0" />
 		<PackageReference Include="Microsoft.Extensions.FileProviders.Physical" Version="8.0.0" />
-		<PackageReference Include="Yaml2JsonNode" Version="1.2.4" />
-		<PackageReference Include="YamlDotNet" Version="13.2.0" />
+		<PackageReference Include="Yaml2JsonNode" Version="2.1.0" />
+		<PackageReference Include="YamlDotNet" Version="15.1.2" />
 	</ItemGroup>
 	<ItemGroup>
 	  <Compile Update="Errors.Designer.cs">
