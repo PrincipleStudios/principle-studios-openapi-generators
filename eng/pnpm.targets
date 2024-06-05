@@ -77,7 +77,7 @@
         <Touch ForceTouch="true" Files="@(CompileOutputs)" />
     </Target>
 
-    <Target Name="PnpmPack_PreVersion" BeforeTargets="NodeBuild;PrepareLint" DependsOnTargets="_LoadPackageJson">
+    <Target Name="PnpmPack_PreVersion" BeforeTargets="PnpmPack" DependsOnTargets="_LoadPackageJson">
         <PropertyGroup>
             <PackageJsonLastModifiedTime>$([System.IO.File]::GetLastWriteTime('package.json').ToString('g'))</PackageJsonLastModifiedTime>
         </PropertyGroup>
@@ -91,7 +91,7 @@
     </Target>
 
     <Target Name="PnpmPack_PostVersion" AfterTargets="PnpmPack" DependsOnTargets="NodeBuild;PnpmPack_PreVersion">
-        <Exec WorkingDirectory="$(ProjectDir)" Command="npm version $(NpmPackageVersion)" IgnoreExitCode="true" Condition=" '$(NpmPackageVersion)' != '$(Version)' and $(Configuration) != 'Release' " />
+        <Exec WorkingDirectory="$(ProjectDir)" Command="npm version $(NpmPackageVersion)" IgnoreExitCode="true" Condition=" '$(NpmPackageVersion)' != '$(Version)' or '$(Configuration)' != 'Release' " />
         <Touch Files="package.json" Time="$(PackageJsonLastModifiedTime)" />
     </Target>
 
