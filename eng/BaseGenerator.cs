@@ -161,6 +161,7 @@ public abstract class BaseGenerator :
 	private void GenerateSources(AdditionalTextWithOptions additionalText, CompilerApis apis)
 	{
 		IEnumerable<string> metadataKeys = getMetadataKeys();
+		// result is of type PrincipleStudios.OpenApiCodegen.GenerationResult
 		dynamic result = generate(
 			additionalText.Path,
 			additionalText.TextContents,
@@ -175,7 +176,7 @@ public abstract class BaseGenerator :
 		foreach (var diagnostic in result.Diagnostics)
 		{
 			// TODO: use location
-			apis.ReportDiagnostic(Diagnostic.Create(OpenApiConversionError, Location.None));
+			apis.ReportDiagnostic(Diagnostic.Create(OpenApiConversionError, Location.None, diagnostic.Id));
 		}
 	}
 

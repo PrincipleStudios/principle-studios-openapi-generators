@@ -72,12 +72,7 @@ public class DocumentRegistry(DocumentRegistryOptions registryOptions)
 	{
 		var registryEntry = InternalResolveDocumentEntry(uri, relativeDocument);
 		var fullUri = uri.IsAbsoluteUri ? uri
-			: relativeDocument != null
-				// Can't use the .Fragment property of a relative URI, so we need to construct the full resulting URI
-				? new UriBuilder(registryEntry.Document.BaseUri)
-				{
-					Fragment = new Uri(relativeDocument.BaseUri, uri).Fragment
-				}.Uri
+			: relativeDocument != null ? new Uri(registryEntry.Document.BaseUri, uri)
 			// Throw an exception here because this is a problem with the usage of this class, not data
 			: throw new InvalidOperationException(Errors.ReceivedRelativeUriWithoutDocument);
 

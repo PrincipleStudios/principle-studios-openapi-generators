@@ -12,6 +12,7 @@ using System.Linq;
 using PrincipleStudios.OpenApi.Transformations.DocumentTypes;
 using PrincipleStudios.OpenApi.Transformations.Specifications;
 using System.IO;
+using PrincipleStudios.OpenApi.Transformations.Diagnostics;
 
 namespace PrincipleStudios.OpenApi.CSharp;
 
@@ -38,10 +39,12 @@ public class MvcServerGenerator : IOpenApiCodeGenerator
 		var parseResult = CommonParsers.DefaultParsers.Parse(baseDocument, registry);
 		if (parseResult == null)
 			return new GenerationResult(Array.Empty<OpenApiCodegen.SourceEntry>(), [/* TODO */]);
+		var parsedDiagnostics = parseResult.Diagnostics.Select(DiagnosticsConversion.ToResult).ToArray();
 
+		// TODO - use result from `parseResult` instead of re-parsing with alternative
 		if (!TryParseFile(documentContents, out var document, out var diagnostic))
 		{
-			return new GenerationResult(Array.Empty<OpenApiCodegen.SourceEntry>(), diagnostic);
+			return new GenerationResult(Array.Empty<OpenApiCodegen.SourceEntry>(), parsedDiagnostics);
 		}
 		var sourceProvider = CreateSourceProvider(document, options, additionalTextMetadata);
 		var openApiDiagnostic = new OpenApiTransformDiagnostic();
@@ -51,8 +54,7 @@ public class MvcServerGenerator : IOpenApiCodeGenerator
 
 		return new GenerationResult(
 			sources,
-			// TODO - do something with the errors in openApiDiagnostic.Errors!
-			Array.Empty<DiagnosticInfo>()
+			parsedDiagnostics
 		);
 	}
 
@@ -135,7 +137,7 @@ public class MvcServerGenerator : IOpenApiCodeGenerator
 	}
 
 	private static Uri ToInternalUri(string documentPath) =>
-		new Uri(documentPath);
+		new Uri(new Uri(documentPath).AbsoluteUri);
 
 	private static (IDocumentReference, DocumentRegistry) LoadDocument(string documentPath, string documentContents, CSharpServerSchemaOptions options)
 	{
@@ -148,6 +150,6 @@ public class MvcServerGenerator : IOpenApiCodeGenerator
 
 	private static DocumentRegistryOptions ToResolverOptions(CSharpServerSchemaOptions options) =>
 		new DocumentRegistryOptions([
-			// TODO: use the `options` to determine how to resolve additional documents
+		// TODO: use the `options` to determine how to resolve additional documents
 		]);
 }

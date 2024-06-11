@@ -3,6 +3,7 @@ using HandlebarsDotNet.Runtime;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using PrincipleStudios.OpenApi.Transformations;
+using PrincipleStudios.OpenApiCodegen;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -36,14 +37,13 @@ namespace PrincipleStudios.OpenApi.TypeScript
 			if (header == null) yield break;
 			var exportStatements = this.GetExportStatements(referencedSchemas, options, "./models/").ToArray();
 			if (exportStatements.Length > 0)
-				yield return new SourceEntry()
-				{
-					Key = "models/index.ts",
-					SourceText = HandlebarsTemplateProcess.ProcessModelBarrelFile(
+				yield return new SourceEntry(
+					Key: "models/index.ts",
+					SourceText: HandlebarsTemplateProcess.ProcessModelBarrelFile(
 						new Templates.ModelBarrelFile(header, exportStatements),
 						handlebarsFactory.Handlebars
-					),
-				};
+					)
+				);
 		}
 
 		public override void EnsureSchemasRegistered(IOpenApiElement element, OpenApiContext context, OpenApiTransformDiagnostic diagnostic)
@@ -141,11 +141,10 @@ namespace PrincipleStudios.OpenApi.TypeScript
 				model: model,
 				handlebarsFactory.Handlebars
 			);
-			return new SourceEntry
-			{
-				Key = ToSourceEntryKey(schema),
-				SourceText = entry,
-			};
+			return new SourceEntry(
+				Key: ToSourceEntryKey(schema),
+				SourceText: entry
+			);
 		}
 
 #pragma warning disable CA1707 // Identifiers should not contain underscores
