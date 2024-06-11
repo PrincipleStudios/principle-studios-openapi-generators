@@ -13,7 +13,7 @@ internal class OpenApi3_1Parser : SchemaValidatingParser<OpenApiDocument>
 	/// <see cref="Json.Schema.OpenApi.MetaSchemas.DocumentSchema"/>
 	public static readonly JsonSchema DocumentSchema = new AnnotatedJsonSchema(new Uri("https://spec.openapis.org/oas/3.1/schema/2022-02-27"), []);
 
-	public OpenApi3_1Parser(DocumentRegistry registry) : base(DocumentSchema)
+	public OpenApi3_1Parser() : base((_) => DocumentSchema)
 	{
 	}
 

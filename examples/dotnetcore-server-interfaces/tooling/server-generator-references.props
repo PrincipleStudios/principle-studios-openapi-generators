@@ -1,4 +1,7 @@
 <Project>
+	<PropertyGroup>
+		<UseProjectReferences Condition=" '$(UseProjectReferences)' == '' ">true</UseProjectReferences>
+	</PropertyGroup>
 
 	<ItemGroup Condition=" '$(UseProjectReferences)' == '' ">
 		<PackageReference Include="PrincipleStudios.OpenApiCodegen.Server.Mvc" Condition=" '$(OpenApiMvcServerFullVersion)' != '' " Version="$(OpenApiMvcServerFullVersion)" />

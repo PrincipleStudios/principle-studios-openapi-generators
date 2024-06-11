@@ -4,6 +4,7 @@ using PrincipleStudios.OpenApi.Transformations.DocumentTypes;
 using PrincipleStudios.OpenApi.Transformations.Specifications;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Nodes;
 
 namespace PrincipleStudios.OpenApi.Transformations;
@@ -64,6 +65,14 @@ public class DocumentRegistry
 	{
 		var docUri = new UriBuilder(uri) { Fragment = "" }.Uri;
 		return entries.ContainsKey(docUri);
+	}
+
+	public bool TryGetDocument(Uri uri, [NotNullWhen(true)] out IDocumentReference? doc)
+	{
+		var docUri = new UriBuilder(uri) { Fragment = "" }.Uri;
+		var result = entries.TryGetValue(docUri, out var entry);
+		doc = entry?.Document;
+		return result;
 	}
 
 	public IEnumerable<Uri> RegisteredDocumentIds => entries.Keys;

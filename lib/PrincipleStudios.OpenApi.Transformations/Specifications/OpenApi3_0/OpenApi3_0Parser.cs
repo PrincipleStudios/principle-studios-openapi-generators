@@ -11,15 +11,24 @@ namespace PrincipleStudios.OpenApi.Transformations.Specifications.OpenApi3_0;
 
 internal class OpenApi3_0Parser : SchemaValidatingParser<OpenApiDocument>
 {
-	public OpenApi3_0Parser(DocumentRegistry registry) : base(LoadOpenApi3_0Schema(registry))
+	private static readonly Uri schemaUri = new Uri("https://spec.openapis.org/oas/3.0/schema/2021-09-28");
+
+	public OpenApi3_0Parser() : base(LoadOpenApi3_0Schema)
 	{
+	}
+
+	private static IDocumentReference LoadSchemaDocumentDirectly(DocumentRegistry registry)
+	{
+		using var schemaStream = typeof(OpenApi3_0Parser).Assembly.GetManifestResourceStream($"{typeof(OpenApi3_0Parser).Namespace}.Schemas.schema.yaml");
+		using var sr = new StreamReader(schemaStream);
+		var yamlDocument = new YamlDocumentLoader().LoadDocument(schemaUri, sr);
+		registry.AddDocument(yamlDocument);
+		return yamlDocument;
 	}
 
 	private static JsonSchema LoadOpenApi3_0Schema(DocumentRegistry registry)
 	{
-		using var schemaStream = typeof(OpenApi3_0Parser).Assembly.GetManifestResourceStream($"{typeof(OpenApi3_0Parser).Namespace}.Schemas.schema.yaml");
-		using var sr = new StreamReader(schemaStream);
-		var yamlDocument = new YamlDocumentLoader().LoadDocument(new Uri("https://spec.openapis.org/oas/3.0/schema/2021-09-28"), sr);
+		var yamlDocument = registry.TryGetDocument(schemaUri, out var doc) ? doc : LoadSchemaDocumentDirectly(registry);
 		var metadata = new NodeMetadata(yamlDocument.BaseUri, yamlDocument.RootNode, yamlDocument);
 
 		var result = JsonSchemaParser.Deserialize(metadata, new JsonSchemaParserOptions(registry, OpenApi3_0DocumentFactory.OpenApiDialect));
@@ -27,7 +36,6 @@ internal class OpenApi3_0Parser : SchemaValidatingParser<OpenApiDocument>
 			? schema
 			: throw new InvalidOperationException(Errors.FailedToParseEmbeddedSchema);
 	}
-
 
 	public override bool CanParse(IDocumentReference documentReference)
 	{

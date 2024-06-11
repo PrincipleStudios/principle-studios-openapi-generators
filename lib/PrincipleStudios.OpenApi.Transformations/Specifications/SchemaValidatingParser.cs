@@ -9,11 +9,11 @@ namespace PrincipleStudios.OpenApi.Transformations.Specifications;
 public abstract class SchemaValidatingParser<TInterface> : IParser<TInterface>
 	where TInterface : class, IReferenceableDocument
 {
-	private readonly JsonSchema schema;
+	private readonly Func<DocumentRegistry, JsonSchema> schemaResolver;
 
-	protected SchemaValidatingParser(JsonSchema schema)
+	protected SchemaValidatingParser(Func<DocumentRegistry, JsonSchema> schemaResolver)
 	{
-		this.schema = schema;
+		this.schemaResolver = schemaResolver;
 	}
 
 	public abstract bool CanParse(IDocumentReference documentReference);
@@ -22,6 +22,7 @@ public abstract class SchemaValidatingParser<TInterface> : IParser<TInterface>
 	{
 		if (!CanParse(documentReference)) throw new ArgumentException(Errors.ParserCannotHandleDocument, nameof(documentReference));
 
+		var schema = schemaResolver(documentRegistry);
 		var evaluationResults = schema.Evaluate(NodeMetadata.FromRoot(documentReference), new EvaluationContext(documentRegistry));
 		return Construct(documentReference, evaluationResults, documentRegistry);
 	}
