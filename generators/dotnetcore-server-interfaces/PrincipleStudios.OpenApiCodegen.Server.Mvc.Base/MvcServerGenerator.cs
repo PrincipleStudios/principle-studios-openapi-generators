@@ -28,15 +28,13 @@ public class MvcServerGenerator : IOpenApiCodeGenerator
 		propIdentity,
 		propLink,
 	};
-	private static readonly YamlDocumentLoader docLoader = new YamlDocumentLoader();
 
 	public IEnumerable<string> MetadataKeys => metadataKeys;
 
 	public GenerationResult Generate(string documentPath, string documentContents, IReadOnlyDictionary<string, string?> additionalTextMetadata)
 	{
 		var options = LoadOptionsFromMetadata(additionalTextMetadata);
-		var registry = CreateRegistry(options);
-		var baseDocument = LoadDocument(documentPath, documentContents, registry, options);
+		var (baseDocument, registry) = LoadDocument(documentPath, documentContents, options);
 		var parseResult = CommonParsers.DefaultParsers.Parse(baseDocument, registry);
 		if (parseResult == null)
 			return new GenerationResult(Array.Empty<OpenApiCodegen.SourceEntry>(), [/* TODO */]);
@@ -136,32 +134,20 @@ public class MvcServerGenerator : IOpenApiCodeGenerator
 		return CSharpNaming.ToNamespace(rootNamespace, projectDir, identity, link, options.ReservedIdentifiers());
 	}
 
-	private static Uri ToInternalUri(string documentPath, CSharpServerSchemaOptions options)
+	private static Uri ToInternalUri(string documentPath) =>
+		new Uri(documentPath);
+
+	private static (IDocumentReference, DocumentRegistry) LoadDocument(string documentPath, string documentContents, CSharpServerSchemaOptions options)
 	{
-		// TODO: use path mapping in options
-		return new Uri(documentPath);
+		return DocumentResolverFactory.FromInitialDocumentInMemory(
+			ToInternalUri(documentPath),
+			documentContents,
+			ToResolverOptions(options)
+		);
 	}
 
-	private static IDocumentReference LoadDocument(string documentPath, string documentContents, DocumentRegistry registry, CSharpServerSchemaOptions options)
-	{
-		using var sr = new StringReader(documentContents);
-		var doc = docLoader.LoadDocument(ToInternalUri(documentPath, options), sr);
-		registry.AddDocument(doc);
-		return doc;
-	}
-
-	public static DocumentRegistry CreateRegistry(CSharpServerSchemaOptions options)
-	{
-		return new DocumentRegistry { Fetch = DocumentResolver };
-
-		IDocumentReference? DocumentResolver(Uri baseUri, IDocumentReference? currentDocument = null)
-		{
-			switch (baseUri)
-			{
-				// TODO: use the loaded options (via LoadOptions used in this file) to determine how to resolve additional documents
-				default:
-					return null;
-			}
-		}
-	}
+	private static DocumentRegistryOptions ToResolverOptions(CSharpServerSchemaOptions options) =>
+		new DocumentRegistryOptions([
+			// TODO: use the `options` to determine how to resolve additional documents
+		]);
 }

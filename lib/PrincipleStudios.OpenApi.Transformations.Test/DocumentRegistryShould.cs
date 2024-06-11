@@ -15,23 +15,25 @@ namespace PrincipleStudios.OpenApi.Transformations;
 public class DocumentRegistryShould
 {
 	private static Bogus.DataSets.Internet internetDataSet = new Bogus.DataSets.Internet();
+	private DocumentRegistryOptions DefaultOptions() => new([]);
+
 	[Fact]
 	public void Throws_if_a_document_cannot_be_located_without_a_fetch_function()
 	{
-		var target = new DocumentRegistry();
+		var target = new DocumentRegistry(DefaultOptions());
 		var documentId = new Uri(internetDataSet.UrlWithPath());
 
 		var diag = AssertThrowsDiagnostic<ResolveDocumentDiagnostic>(() => target.ResolveNode(documentId));
 		Assert.Equal(documentId, diag.Uri);
 	}
 
+
 	[Fact]
 	public void Throws_if_a_document_cannot_be_located_with_a_fetch_function()
 	{
-		var target = new DocumentRegistry();
 		var mockFetch = new Mock<DocumentResolver>();
 		mockFetch.Setup(a => a(It.IsAny<Uri>(), It.IsAny<IDocumentReference?>())).Returns((IDocumentReference?)null);
-		target.Fetch = mockFetch.Object;
+		var target = new DocumentRegistry(DefaultOptions() with { Resolvers = [mockFetch.Object] });
 
 		var documentId = new Uri(internetDataSet.UrlWithPath());
 
@@ -42,7 +44,7 @@ public class DocumentRegistryShould
 	[Fact]
 	public void Allow_documents_to_be_added()
 	{
-		var target = new DocumentRegistry();
+		var target = new DocumentRegistry(DefaultOptions());
 		var rootJson = "foo".AsJsonElement();
 		CreateDocument(rootJson, out var documentMock, out var documentId);
 		target.AddDocument(documentMock.Object);
@@ -53,7 +55,7 @@ public class DocumentRegistryShould
 	[Fact]
 	public void Allow_documents_to_be_added_with_a_different_base_uri()
 	{
-		var target = new DocumentRegistry();
+		var target = new DocumentRegistry(DefaultOptions());
 		var documentId = new Uri(internetDataSet.UrlWithPath());
 		var rootJson = new Dictionary<string, object> { ["$id"] = documentId }.ToJsonDocument().RootElement;
 		CreateDocument(rootJson, out var documentMock, out _);
@@ -66,7 +68,7 @@ public class DocumentRegistryShould
 	[Fact]
 	public void Allow_documents_to_be_retrieved()
 	{
-		var target = new DocumentRegistry();
+		var target = new DocumentRegistry(DefaultOptions());
 		var rootJson = "foo".AsJsonElement();
 		CreateDocument(rootJson, out var documentMock, out var documentId);
 		target.AddDocument(documentMock.Object);
@@ -79,10 +81,14 @@ public class DocumentRegistryShould
 	[Fact]
 	public void Finds_a_document_via_fetch()
 	{
-		var target = new DocumentRegistry();
 		var rootJson = "foo".AsJsonElement();
 		CreateDocument(rootJson, out var documentMock, out var documentId);
-		target.Fetch = (uri, relative) => uri == documentId ? documentMock.Object : null;
+		var target = new DocumentRegistry(DefaultOptions() with
+		{
+			Resolvers = [
+				(uri, relative) => uri == documentId ? documentMock.Object : null
+			]
+		});
 
 		var actual = target.ResolveNode(documentId);
 
@@ -92,7 +98,6 @@ public class DocumentRegistryShould
 	[Fact]
 	public void Finds_a_relative_document_via_fetch()
 	{
-		var target = new DocumentRegistry();
 		var rootJson = "foo".AsJsonElement();
 		CreateDocument(rootJson, out var documentMock, out var documentId);
 
@@ -100,8 +105,12 @@ public class DocumentRegistryShould
 		var document2Id = new Uri(documentId, relativePath);
 		var rootJson2 = "foo2".AsJsonElement();
 		CreateDocumentWithRetrievalId(rootJson2, document2Id, out var document2Mock);
-
-		target.Fetch = (uri, relative) => uri == document2Id ? document2Mock.Object : null;
+		var target = new DocumentRegistry(DefaultOptions() with
+		{
+			Resolvers = [
+				(uri, relative) => uri == document2Id ? document2Mock.Object : null
+			]
+		});
 
 		var actual = target.ResolveNode(relativePath, documentMock.Object);
 
@@ -111,7 +120,7 @@ public class DocumentRegistryShould
 	[Fact]
 	public void Throws_if_an_added_document_already_exists()
 	{
-		var target = new DocumentRegistry();
+		var target = new DocumentRegistry(DefaultOptions());
 		var rootJson = "foo".AsJsonElement();
 		CreateDocument(rootJson, out var documentMock, out var documentId);
 		CreateDocumentWithRetrievalId("baz".AsJsonElement(), documentId, out var documentMock2);
@@ -123,7 +132,7 @@ public class DocumentRegistryShould
 	[Fact]
 	public void Allow_fragment_metadata_to_be_retrieved_via_absolute_fragment()
 	{
-		var target = new DocumentRegistry();
+		var target = new DocumentRegistry(DefaultOptions());
 		var rootJson = new { foo = new { bar = "baz" } }.ToJsonDocument().RootElement;
 		CreateDocument(rootJson, out var documentMock, out var documentId);
 		target.AddDocument(documentMock.Object);
@@ -139,7 +148,7 @@ public class DocumentRegistryShould
 	[Fact]
 	public void Allow_fragment_metadata_to_be_retrieved_via_relative_fragment()
 	{
-		var target = new DocumentRegistry();
+		var target = new DocumentRegistry(DefaultOptions());
 		var rootJson = new { foo = new { bar = "baz" } }.ToJsonDocument().RootElement;
 		CreateDocument(rootJson, out var documentMock, out var documentId);
 		target.AddDocument(documentMock.Object);
@@ -155,7 +164,7 @@ public class DocumentRegistryShould
 	[Fact]
 	public void Allow_fragments_to_be_retrieved()
 	{
-		var target = new DocumentRegistry();
+		var target = new DocumentRegistry(DefaultOptions());
 		var rootJson = new { foo = new { bar = "baz" } }.ToJsonDocument().RootElement;
 		CreateDocument(rootJson, out var documentMock, out var documentId);
 		target.AddDocument(documentMock.Object);
@@ -169,7 +178,7 @@ public class DocumentRegistryShould
 	[Fact]
 	public void Throws_if_a_fragment_cannot_be_located()
 	{
-		var target = new DocumentRegistry();
+		var target = new DocumentRegistry(DefaultOptions());
 		var rootJson = new { foo = new { bar = "baz" } }.ToJsonDocument().RootElement;
 		CreateDocument(rootJson, out var documentMock, out var documentId);
 		target.AddDocument(documentMock.Object);
@@ -182,10 +191,12 @@ public class DocumentRegistryShould
 	[Fact]
 	public void Finds_a_fragment_via_fetch()
 	{
-		var target = new DocumentRegistry();
 		var rootJson = new { foo = new { bar = "baz" } }.ToJsonDocument().RootElement;
 		CreateDocument(rootJson, out var documentMock, out var documentId);
-		target.Fetch = (uri, relative) => uri == documentId ? documentMock.Object : null;
+		var target = new DocumentRegistry(DefaultOptions() with
+		{
+			Resolvers = [(uri, relative) => uri == documentId ? documentMock.Object : null]
+		});
 		var fragmentId = new UriBuilder(documentId) { Fragment = "/foo/bar" }.Uri;
 
 		var actual = target.ResolveNode(fragmentId);
@@ -197,7 +208,6 @@ public class DocumentRegistryShould
 	public void Finds_a_fragment_via_relative_fetch()
 	{
 
-		var target = new DocumentRegistry();
 		var rootJson = "foo".AsJsonElement();
 		CreateDocument(rootJson, out var documentMock, out var documentId);
 
@@ -206,8 +216,10 @@ public class DocumentRegistryShould
 		var rootJson2 = new { foo = new { bar = "baz" } }.ToJsonDocument().RootElement;
 		CreateDocumentWithRetrievalId(rootJson2, document2Id, out var document2Mock);
 		var fragmentId = new Uri("/relative/path#/foo/bar", UriKind.Relative);
-
-		target.Fetch = (uri, relative) => uri == document2Id ? document2Mock.Object : null;
+		var target = new DocumentRegistry(DefaultOptions() with
+		{
+			Resolvers = [(uri, relative) => uri == document2Id ? document2Mock.Object : null]
+		});
 
 		var actual = target.ResolveNode(relativePath, documentMock.Object);
 
@@ -217,7 +229,7 @@ public class DocumentRegistryShould
 	[Fact]
 	public void Finds_a_fragment_via_anchor()
 	{
-		var target = new DocumentRegistry();
+		var target = new DocumentRegistry(DefaultOptions());
 		var rootJson = new { foo = new Dictionary<string, object> { ["$anchor"] = "my_anchor", ["bar"] = "baz" } }.ToJsonDocument().RootElement;
 		CreateDocument(rootJson, out var documentMock, out var documentId);
 		target.AddDocument(documentMock.Object);

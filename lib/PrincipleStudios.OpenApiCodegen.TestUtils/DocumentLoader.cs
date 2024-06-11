@@ -38,6 +38,6 @@ public class DocumentLoader
 
 	public static DocumentRegistry CreateRegistry()
 	{
-		return new DocumentRegistry { Fetch = DocumentResolver };
+		return new DocumentRegistry(new([DocumentResolver]));
 	}
 }

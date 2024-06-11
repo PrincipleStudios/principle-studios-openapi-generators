@@ -5,6 +5,7 @@ using PrincipleStudios.OpenApi.Transformations.Specifications;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Text.Json.Nodes;
 
 namespace PrincipleStudios.OpenApi.Transformations;
@@ -19,25 +20,13 @@ public record NodeMetadata(Uri Id, JsonNode? Node, IDocumentReference Document)
 }
 
 
-public class DocumentRegistry
+public class DocumentRegistry(DocumentRegistryOptions registryOptions)
 {
 	private record DocumentRegistryEntry(
 		IDocumentReference Document,
 		IReadOnlyDictionary<string, JsonPointer> Anchors
 	);
 	private readonly Dictionary<Uri, DocumentRegistryEntry> entries = new();
-	private DocumentResolver? fetch;
-
-	private IBaseDocument? SchemaRegistryFetch(Uri uri)
-	{
-		return (IBaseDocument?)ResolveDocument(uri, null);
-	}
-
-	public DocumentResolver Fetch
-	{
-		get => fetch ?? ((uri, relative) => null);
-		set => fetch = value;
-	}
 
 	public void AddDocument(IDocumentReference document)
 	{
@@ -150,7 +139,10 @@ public class DocumentRegistry
 		if (docUri.Fragment is { Length: > 0 })
 			docUri = new UriBuilder(docUri) { Fragment = "" }.Uri;
 
-		var document = fetch?.Invoke(docUri, relativeDocument);
+		var document = (from r in registryOptions.Resolvers
+						let doc = r(docUri, relativeDocument)
+						where doc != null
+						select doc).FirstOrDefault();
 		if (document == null)
 			throw new DiagnosticException(ResolveDocumentDiagnostic.Builder(docUri));
 
