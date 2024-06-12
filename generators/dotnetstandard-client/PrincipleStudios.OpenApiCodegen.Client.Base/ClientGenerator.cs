@@ -9,6 +9,9 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using System.Linq;
+using PrincipleStudios.OpenApi.Transformations.DocumentTypes;
+using PrincipleStudios.OpenApi.Transformations.Specifications;
+using PrincipleStudios.OpenApi.Transformations.Diagnostics;
 
 namespace PrincipleStudios.OpenApi.CSharp;
 
@@ -29,12 +32,17 @@ public class ClientGenerator : IOpenApiCodeGenerator
 
 	public GenerationResult Generate(string documentPath, string documentContents, IReadOnlyDictionary<string, string?> additionalTextMetadata)
 	{
+		var options = LoadOptionsFromMetadata(additionalTextMetadata);
+		var (baseDocument, registry) = LoadDocument(documentPath, documentContents, options);
+		var parseResult = CommonParsers.DefaultParsers.Parse(baseDocument, registry);
+		if (parseResult == null)
+			return new GenerationResult(Array.Empty<OpenApiCodegen.SourceEntry>(), [/* TODO */]);
+		var parsedDiagnostics = parseResult.Diagnostics.Select(DiagnosticsConversion.ToDiagnosticInfo).ToArray();
+
+		// TODO - use result from `parseResult` instead of re-parsing with alternative
 		if (!TryParseFile(documentContents, out var document, out var diagnostic))
 		{
-			if (diagnostic != null)
-				return new GenerationResult(Array.Empty<OpenApiCodegen.SourceEntry>(), diagnostic.ToArray());
-			// TODO - should never happen
-			return new GenerationResult(Array.Empty<OpenApiCodegen.SourceEntry>(), Array.Empty<DiagnosticInfo>());
+			return new GenerationResult(Array.Empty<OpenApiCodegen.SourceEntry>(), parsedDiagnostics);
 		}
 		var sourceProvider = CreateSourceProvider(document, additionalTextMetadata);
 		var openApiDiagnostic = new OpenApiTransformDiagnostic();
@@ -44,8 +52,7 @@ public class ClientGenerator : IOpenApiCodeGenerator
 
 		return new GenerationResult(
 			sources,
-			// TODO - do something with the errors in openApiDiagnostic.Errors!
-			Array.Empty<DiagnosticInfo>()
+			parsedDiagnostics
 		);
 	}
 
@@ -85,6 +92,11 @@ public class ClientGenerator : IOpenApiCodeGenerator
 		return document.BuildCSharpClientSourceProvider(GetVersionInfo(), documentNamespace, options);
 	}
 
+	private static CSharpSchemaOptions LoadOptionsFromMetadata(IReadOnlyDictionary<string, string?> additionalTextMetadata)
+	{
+		return LoadOptions(additionalTextMetadata[propConfig]);
+	}
+
 	private static CSharpSchemaOptions LoadOptions(string? optionsFiles)
 	{
 		using var defaultJsonStream = CSharpSchemaOptions.GetDefaultOptionsJson();
@@ -120,4 +132,21 @@ public class ClientGenerator : IOpenApiCodeGenerator
 
 		return CSharpNaming.ToNamespace(rootNamespace, projectDir, identity, link, options.ReservedIdentifiers());
 	}
+
+	private static Uri ToInternalUri(string documentPath) =>
+		new Uri(new Uri(documentPath).AbsoluteUri);
+
+	private static (IDocumentReference, DocumentRegistry) LoadDocument(string documentPath, string documentContents, CSharpSchemaOptions options)
+	{
+		return DocumentResolverFactory.FromInitialDocumentInMemory(
+			ToInternalUri(documentPath),
+			documentContents,
+			ToResolverOptions(options)
+		);
+	}
+
+	private static DocumentRegistryOptions ToResolverOptions(CSharpSchemaOptions options) =>
+		new DocumentRegistryOptions([
+		// TODO: use the `options` to determine how to resolve additional documents
+		]);
 }
