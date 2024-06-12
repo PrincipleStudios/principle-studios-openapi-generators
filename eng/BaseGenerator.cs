@@ -175,8 +175,20 @@ public abstract class BaseGenerator :
 		}
 		foreach (var diagnostic in result.Diagnostics)
 		{
-			// TODO: use location
-			apis.ReportDiagnostic(Diagnostic.Create(OpenApiConversionError, Location.None, diagnostic.Id));
+			apis.ReportDiagnostic(
+				Diagnostic.Create(
+					// TODO: select error descriptor based on ID
+					OpenApiConversionError,
+					Location.Create(
+						diagnostic.Location.FilePath,
+						default(TextSpan),
+						diagnostic.Location.Range == null ? default(LinePositionSpan) : new LinePositionSpan(
+						new LinePosition(diagnostic.Location.Range.Start.Line - 1, diagnostic.Location.Range.Start.Column - 1),
+						new LinePosition(diagnostic.Location.Range.End.Line - 1, diagnostic.Location.Range.End.Column - 1)
+					)),
+					diagnostic.Id
+				)
+			);
 		}
 	}
 

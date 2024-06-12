@@ -1,6 +1,7 @@
 ﻿using Json.Pointer;
 using PrincipleStudios.OpenApi.Transformations.Diagnostics;
 using PrincipleStudios.OpenApi.Transformations.Specifications;
+using PrincipleStudios.OpenApiCodegen;
 using System;
 
 namespace PrincipleStudios.OpenApi.Transformations.DocumentTypes;

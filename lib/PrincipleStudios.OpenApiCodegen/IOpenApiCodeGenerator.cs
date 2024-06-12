@@ -1,13 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 
 namespace PrincipleStudios.OpenApiCodegen;
 
 public record SourceEntry(string Key, string SourceText);
 
-// TODO: add location info
-public record DiagnosticInfo(string Id);
+
+[DebuggerDisplay("{Line},{Column}")]
+public record DiagnosticLocationMark(int Line, int Column);
+[DebuggerDisplay("{Start},{End}")]
+public record DiagnosticLocationRange(DiagnosticLocationMark Start, DiagnosticLocationMark End)
+{
+}
+
+public record DiagnosticLocation(string FilePath, DiagnosticLocationRange? Range);
+
+// TODO: metadata
+public record DiagnosticInfo(string Id, DiagnosticLocation Location);
 
 public record GenerationResult(IReadOnlyList<SourceEntry> Sources, IReadOnlyList<DiagnosticInfo> Diagnostics);
 

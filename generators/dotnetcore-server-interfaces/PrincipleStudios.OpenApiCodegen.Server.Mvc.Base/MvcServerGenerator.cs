@@ -39,7 +39,7 @@ public class MvcServerGenerator : IOpenApiCodeGenerator
 		var parseResult = CommonParsers.DefaultParsers.Parse(baseDocument, registry);
 		if (parseResult == null)
 			return new GenerationResult(Array.Empty<OpenApiCodegen.SourceEntry>(), [/* TODO */]);
-		var parsedDiagnostics = parseResult.Diagnostics.Select(DiagnosticsConversion.ToResult).ToArray();
+		var parsedDiagnostics = parseResult.Diagnostics.Select(DiagnosticsConversion.ToDiagnosticInfo).ToArray();
 
 		// TODO - use result from `parseResult` instead of re-parsing with alternative
 		if (!TryParseFile(documentContents, out var document, out var diagnostic))
