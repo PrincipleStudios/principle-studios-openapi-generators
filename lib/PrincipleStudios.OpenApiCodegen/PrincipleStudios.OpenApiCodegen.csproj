@@ -5,7 +5,5 @@
 		<TargetFramework>netstandard2.0</TargetFramework>
 		<VersionPrefix>$(SharedAnalyzerLibrariesVersion)</VersionPrefix>
 	</PropertyGroup>
-	<ItemGroup>
-		<Compile Include="$(RepositoryEngineeringDir)IsExternalInit.cs" Visible="false" />
-	</ItemGroup>
+	<Import Project="$(RepositoryEngineeringDir)netstandard/polyfills.targets" />
 </Project>
