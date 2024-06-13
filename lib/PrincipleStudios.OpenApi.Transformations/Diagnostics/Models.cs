@@ -17,4 +17,7 @@ public record Location(Uri RetrievalUri, FileLocationRange? Range = null)
 }
 
 
-public abstract record DiagnosticBase(Location Location);
+public abstract record DiagnosticBase(Location Location)
+{
+	public virtual IReadOnlyList<string> GetTextArguments() => [];
+}

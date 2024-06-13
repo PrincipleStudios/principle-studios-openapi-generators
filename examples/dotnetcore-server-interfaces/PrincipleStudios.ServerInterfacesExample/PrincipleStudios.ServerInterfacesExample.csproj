@@ -15,6 +15,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<OpenApiSchemaMvcServer Include="$(SolutionRoot)schemas\bad.yaml" Link="Controllers\bad.yaml" />
 		<OpenApiSchemaMvcServer Include="$(SolutionRoot)schemas\petstore.yaml" Link="Controllers\petstore.yaml" />
 	</ItemGroup>
 </Project>

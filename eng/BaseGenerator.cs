@@ -22,6 +22,57 @@ public abstract class BaseGenerator :
 	ISourceGenerator
 #endif
 {
+	public static readonly Dictionary<string, DiagnosticDescriptor> DiagnosticBy = new()
+	{
+		// TODO: Test this dictionary
+		// TODO: Split across multiple files for maintainability
+		{
+			"PrincipleStudios.OpenApi.Transformations.InvalidRetrievalUri",
+			new DiagnosticDescriptor(id: "PSAPIPARSE002",
+									title: "An invalid URI was provided to retrieve a document",
+									messageFormat: "An invalid URI was provided to retrieve a document: {0}",
+									category: "PrincipleStudios.OpenApiCodegen",
+									DiagnosticSeverity.Error,
+									isEnabledByDefault: true)
+		},
+		{
+			"PrincipleStudios.OpenApi.Transformations.ResolveDocumentDiagnostic",
+			new DiagnosticDescriptor(id: "PSAPIPARSE003",
+									title: "Could not retrieve the specified document",
+									messageFormat: "Could not resolve the document with the URI {0}",
+									category: "PrincipleStudios.OpenApiCodegen",
+									DiagnosticSeverity.Error,
+									isEnabledByDefault: true)
+		},
+		{
+			"PrincipleStudios.OpenApi.Transformations.Specifications.Keywords.Draft2020_12Validation.UnableToParseRequiredKeyword",
+			new DiagnosticDescriptor(id: "PSAPIPARSE004",
+									title: "Could not parse the 'required' property; is it a string?",
+									messageFormat: "Could not parse the 'required' property; is it a string?",
+									category: "PrincipleStudios.OpenApiCodegen",
+									DiagnosticSeverity.Error,
+									isEnabledByDefault: true)
+		},
+		{
+			"PrincipleStudios.OpenApi.Transformations.Specifications.OpenApi3_0.UnhandledExceptionDiagnostic",
+			new DiagnosticDescriptor(id: "PSAPIPARSE005",
+									title: "Unhandled exception during parsing of an OpenAPI 3.0 document",
+									messageFormat: "Unhandled exception during parsing of an OpenAPI 3.0 document: [{0}] {1}",
+									category: "PrincipleStudios.OpenApiCodegen",
+									DiagnosticSeverity.Error,
+									isEnabledByDefault: true)
+		},
+		{
+			"PrincipleStudios.OpenApi.Transformations.CouldNotFindTargetNodeDiagnostic",
+			new DiagnosticDescriptor(id: "PSAPIPARSE006",
+									title: "Target node did not exist in given document",
+									messageFormat: "Unable to locate node: {0}",
+									category: "PrincipleStudios.OpenApiCodegen",
+									DiagnosticSeverity.Error,
+									isEnabledByDefault: true)
+		}
+	};
+
 	private static readonly DiagnosticDescriptor OpenApiConversionError = new DiagnosticDescriptor(id: "PSAPIPARSE001",
 																								title: "A conversion error was encountered",
 																								messageFormat: "A conversion error was encountered: {0}",
@@ -175,20 +226,36 @@ public abstract class BaseGenerator :
 		}
 		foreach (var diagnostic in result.Diagnostics)
 		{
-			apis.ReportDiagnostic(
-				Diagnostic.Create(
-					// TODO: select error descriptor based on ID
-					OpenApiConversionError,
-					Location.Create(
-						diagnostic.Location.FilePath,
-						default(TextSpan),
-						diagnostic.Location.Range == null ? default(LinePositionSpan) : new LinePositionSpan(
-						new LinePosition(diagnostic.Location.Range.Start.Line - 1, diagnostic.Location.Range.Start.Column - 1),
-						new LinePosition(diagnostic.Location.Range.End.Line - 1, diagnostic.Location.Range.End.Column - 1)
-					)),
-					diagnostic.Id
-				)
-			);
+			if (DiagnosticBy.TryGetValue((string)diagnostic.Id, out var descriptor))
+				apis.ReportDiagnostic(
+					Diagnostic.Create(
+						descriptor,
+						Location.Create(
+							diagnostic.Location.FilePath,
+							default(TextSpan),
+							diagnostic.Location.Range == null ? default : new LinePositionSpan(
+								new LinePosition(diagnostic.Location.Range.Start.Line - 1, diagnostic.Location.Range.Start.Column - 1),
+								new LinePosition(diagnostic.Location.Range.End.Line - 1, diagnostic.Location.Range.End.Column - 1)
+							)
+						),
+						((IReadOnlyList<object>)diagnostic.Metadata).ToArray()
+					)
+				);
+			else
+				apis.ReportDiagnostic(
+					Diagnostic.Create(
+						OpenApiConversionError,
+						Location.Create(
+							diagnostic.Location.FilePath,
+							default(TextSpan),
+							diagnostic.Location.Range == null ? default : new LinePositionSpan(
+								new LinePosition(diagnostic.Location.Range.Start.Line - 1, diagnostic.Location.Range.Start.Column - 1),
+								new LinePosition(diagnostic.Location.Range.End.Line - 1, diagnostic.Location.Range.End.Column - 1)
+							)
+						),
+						(string)diagnostic.Id
+					)
+				);
 		}
 	}
 

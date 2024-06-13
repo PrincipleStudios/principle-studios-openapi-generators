@@ -191,11 +191,13 @@ public static class JsonDocumentUtils
 
 public record InvalidRetrievalUri(Uri RetrievalUri, Location Location) : DiagnosticBase(Location)
 {
+	public override IReadOnlyList<string> GetTextArguments() => [RetrievalUri.OriginalString];
 	public static DiagnosticException.ToDiagnostic Builder(Uri retrievalUri) => (Location) => new InvalidRetrievalUri(retrievalUri, Location);
 }
 
 public record InvalidDocumentBaseUri(Uri RetrievalUri, Uri BaseUri, Location Location) : DiagnosticBase(Location)
 {
+	public override IReadOnlyList<string> GetTextArguments() => [RetrievalUri.OriginalString, BaseUri.OriginalString];
 	public static DiagnosticException.ToDiagnostic Builder(Uri retrievalUri, Uri baseUri) => (Location) => new InvalidDocumentBaseUri(retrievalUri, baseUri, Location);
 }
 
@@ -211,15 +213,18 @@ public record InvalidRefDiagnostic(Location Location) : DiagnosticBase(Location)
 
 public record CouldNotFindTargetNodeDiagnostic(Uri Uri, Location Location) : DiagnosticBase(Location)
 {
+	public override IReadOnlyList<string> GetTextArguments() => [Uri.OriginalString];
 	internal static DiagnosticException.ToDiagnostic Builder(Uri uri) => (Location) => new CouldNotFindTargetNodeDiagnostic(uri, Location);
 }
 
 public record UnknownAnchorDiagnostic(Uri Uri, Location Location) : DiagnosticBase(Location)
 {
+	public override IReadOnlyList<string> GetTextArguments() => [Uri.OriginalString];
 	internal static DiagnosticException.ToDiagnostic Builder(Uri uri) => (Location) => new UnknownAnchorDiagnostic(uri, Location);
 }
 
 public record ResolveDocumentDiagnostic(Uri Uri, Location Location) : DiagnosticBase(Location)
 {
+	public override IReadOnlyList<string> GetTextArguments() => [Uri.OriginalString];
 	internal static DiagnosticException.ToDiagnostic Builder(Uri uri) => (Location) => new ResolveDocumentDiagnostic(uri, Location);
 }

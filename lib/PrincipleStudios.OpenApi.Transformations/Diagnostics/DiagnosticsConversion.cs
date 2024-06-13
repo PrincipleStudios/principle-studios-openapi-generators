@@ -8,7 +8,8 @@ public static class DiagnosticsConversion
 	public static DiagnosticInfo ToDiagnosticInfo(DiagnosticBase diagnostic) =>
 		new DiagnosticInfo(
 			Id: diagnostic.GetType().FullName,
-			Location: ToDiagnosticLocation(diagnostic.Location)
+			Location: ToDiagnosticLocation(diagnostic.Location),
+			Metadata: diagnostic.GetTextArguments()
 		);
 
 	private static DiagnosticLocation ToDiagnosticLocation(Location location)

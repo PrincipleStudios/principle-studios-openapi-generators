@@ -17,8 +17,7 @@ public record DiagnosticLocationRange(DiagnosticLocationMark Start, DiagnosticLo
 
 public record DiagnosticLocation(string FilePath, DiagnosticLocationRange? Range);
 
-// TODO: metadata
-public record DiagnosticInfo(string Id, DiagnosticLocation Location);
+public record DiagnosticInfo(string Id, DiagnosticLocation Location, IReadOnlyList<string> Metadata);
 
 public record GenerationResult(IReadOnlyList<SourceEntry> Sources, IReadOnlyList<DiagnosticInfo> Diagnostics);
 

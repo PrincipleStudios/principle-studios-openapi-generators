@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using PrincipleStudios.OpenApi.Transformations.Diagnostics;
 using PrincipleStudios.OpenApi.Transformations.DocumentTypes;
 
 namespace PrincipleStudios.OpenApi.Transformations;
@@ -17,7 +18,23 @@ public static class DocumentResolverFactory
 	public static DocumentResolver RelativeFrom(IDocumentReference documentReference)
 	{
 		// TODO
-		return (_, _) => null;
+		return (baseUri, _) =>
+		{
+			var relative = documentReference.BaseUri.MakeRelativeUri(baseUri);
+			if (relative.IsAbsoluteUri) return null;
+			var path = new Uri(documentReference.RetrievalUri, relative);
+			if (path.Scheme != "file") return null;
+			try
+			{
+				using var sr = new StreamReader(path.LocalPath);
+				return docLoader.LoadDocument(baseUri, sr);
+			}
+			catch
+			{
+				// return null;
+				throw;
+			}
+		};
 	}
 
 	public static readonly DocumentResolver RelativeFromCurrentDocument =

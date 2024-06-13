@@ -440,4 +440,5 @@ public record InvalidNode(string NodeType, Location Location) : DiagnosticBase(L
 
 public record UnhandledExceptionDiagnostic(Exception Exception, Location Location) : DiagnosticBase(Location)
 {
+	public override IReadOnlyList<string> GetTextArguments() => [Exception.GetType().FullName, Exception.ToString()];
 }
