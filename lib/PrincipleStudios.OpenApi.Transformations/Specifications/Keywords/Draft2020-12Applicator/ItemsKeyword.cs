@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text.Json.Nodes;
 using PrincipleStudios.OpenApi.Transformations.Diagnostics;
 
-namespace PrincipleStudios.OpenApi.Transformations.Specifications.Keywords.Draft2020_12Core;
+namespace PrincipleStudios.OpenApi.Transformations.Specifications.Keywords.Draft2020_12Applicator;
 
 /// <see href="https://json-schema.org/draft/2020-12/json-schema-core#section-10.3.1.2">Draft 2020-12 items keyword</see>
 public class ItemsKeyword(string keyword, JsonSchema schema) : IJsonSchemaAnnotation

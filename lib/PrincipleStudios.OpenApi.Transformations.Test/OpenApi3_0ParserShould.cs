@@ -1,6 +1,6 @@
 ﻿using PrincipleStudios.OpenApi.Transformations.DocumentTypes;
 using PrincipleStudios.OpenApi.Transformations.Specifications.Keywords;
-using PrincipleStudios.OpenApi.Transformations.Specifications.Keywords.Draft2020_12Core;
+using PrincipleStudios.OpenApi.Transformations.Specifications.Keywords.Draft2020_12Applicator;
 using PrincipleStudios.OpenApi.Transformations.Specifications.Keywords.Draft2020_12Validation;
 using PrincipleStudios.OpenApi.Transformations.Specifications.OpenApi3_0;
 using System.Linq;
