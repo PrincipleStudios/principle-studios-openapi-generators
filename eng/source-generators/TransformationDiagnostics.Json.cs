@@ -28,4 +28,12 @@ public partial class TransformationDiagnostics
 								category: "PrincipleStudios.OpenApiCodegen",
 								DiagnosticSeverity.Error,
 								isEnabledByDefault: true);
+	[TransformationDiagnostic("PrincipleStudios.OpenApi.Transformations.Specifications.Keywords.UnableToParseKeyword")]
+	public static readonly DiagnosticDescriptor UnableToParseKeywordDiagnostic =
+		new DiagnosticDescriptor(id: "PS-JSON-004",
+								title: "Could not parse the keyword",
+								messageFormat: "Could not parse the '{0}' keyword; ensure it is the correct format",
+								category: "PrincipleStudios.OpenApiCodegen",
+								DiagnosticSeverity.Error,
+								isEnabledByDefault: true);
 }

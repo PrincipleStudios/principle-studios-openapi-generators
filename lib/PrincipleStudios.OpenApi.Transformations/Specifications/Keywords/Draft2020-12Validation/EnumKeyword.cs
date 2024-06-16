@@ -15,8 +15,7 @@ public class EnumKeyword(string keyword, JsonArray values) : IJsonSchemaAnnotati
 	{
 		if (nodeInfo.Node is JsonArray values)
 			return DiagnosableResult<IJsonSchemaAnnotation>.Pass(new EnumKeyword(keyword, values));
-		// TODO - parsing errors
-		throw new NotImplementedException();
+		return DiagnosableResult<IJsonSchemaAnnotation>.Fail(new UnableToParseKeyword(keyword, options.Registry.ResolveLocation(nodeInfo)));
 	}
 
 	public string Keyword => keyword;

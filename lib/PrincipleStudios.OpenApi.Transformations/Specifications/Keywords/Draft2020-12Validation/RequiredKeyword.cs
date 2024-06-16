@@ -15,13 +15,13 @@ public class RequiredKeyword(string keyword, IReadOnlyList<string> requiredPrope
 
 	private static DiagnosableResult<IJsonSchemaAnnotation> Parse(string keyword, NodeMetadata nodeInfo, JsonSchemaParserOptions options)
 	{
-		if (nodeInfo.Node is not JsonArray array) return DiagnosableResult<IJsonSchemaAnnotation>.Fail(nodeInfo, options.Registry, UnableToParseRequiredKeyword.Builder());
+		if (nodeInfo.Node is not JsonArray array) return DiagnosableResult<IJsonSchemaAnnotation>.Fail(new UnableToParseKeyword(keyword, options.Registry.ResolveLocation(nodeInfo)));
 
 		var requiredProperties = array.Select(entry => entry is JsonValue v && v.TryGetValue<string>(out var s) ? s : null).ToArray();
 
 		var nullProps = (from e in requiredProperties.Select((p, i) => (prop: p, i))
 						 where e.prop == null
-						 select UnableToParseRequiredKeyword.Builder()(options.Registry.ResolveLocation(nodeInfo.Navigate(e.i)))).ToArray();
+						 select new UnableToParseKeyword("required", options.Registry.ResolveLocation(nodeInfo.Navigate(e.i)))).ToArray();
 		if (nullProps.Length > 0)
 			return DiagnosableResult<IJsonSchemaAnnotation>.Fail(nullProps);
 
@@ -39,11 +39,6 @@ public class RequiredKeyword(string keyword, IReadOnlyList<string> requiredPrope
 		if (missing.Length > 0)
 			yield return new MissingRequiredProperties(missing, evaluationContext.DocumentRegistry.ResolveLocation(nodeMetadata));
 	}
-}
-
-public record UnableToParseRequiredKeyword(Location Location) : DiagnosticBase(Location)
-{
-	public static DiagnosticException.ToDiagnostic Builder() => (Location) => new UnableToParseRequiredKeyword(Location);
 }
 
 public record MissingRequiredProperties(IReadOnlyList<string> Missing, Location Location) : DiagnosticBase(Location)

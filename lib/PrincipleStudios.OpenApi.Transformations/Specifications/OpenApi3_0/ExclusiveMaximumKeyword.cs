@@ -2,6 +2,7 @@
 using System;
 using System.Text.Json.Nodes;
 using PrincipleStudios.OpenApi.Transformations.Diagnostics;
+using PrincipleStudios.OpenApi.Transformations.Specifications.Keywords;
 
 namespace PrincipleStudios.OpenApi.Transformations.Specifications.OpenApi3_0;
 
@@ -13,8 +14,7 @@ public class ExclusiveMaximumKeyword(string keyword, bool isExclusive) : IJsonSc
 	{
 		if (nodeInfo.Node is JsonValue val && val.TryGetValue<bool>(out var value))
 			return DiagnosableResult<IJsonSchemaAnnotation>.Pass(new ExclusiveMaximumKeyword(keyword, value));
-		// TODO - parsing errors
-		throw new NotImplementedException();
+		return DiagnosableResult<IJsonSchemaAnnotation>.Fail(new UnableToParseKeyword(keyword, options.Registry.ResolveLocation(nodeInfo)));
 	}
 
 	/// <summary>

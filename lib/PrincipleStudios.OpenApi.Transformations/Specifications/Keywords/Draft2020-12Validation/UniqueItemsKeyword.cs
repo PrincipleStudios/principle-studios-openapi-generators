@@ -16,8 +16,7 @@ public class UniqueItemsKeyword(string keyword, bool mustBeUnique) : IJsonSchema
 	{
 		if (nodeInfo.Node is JsonValue val && val.TryGetValue<bool>(out var value))
 			return DiagnosableResult<IJsonSchemaAnnotation>.Pass(new UniqueItemsKeyword(keyword, value));
-		// TODO - parsing errors
-		throw new NotImplementedException();
+		return DiagnosableResult<IJsonSchemaAnnotation>.Fail(new UnableToParseKeyword(keyword, options.Registry.ResolveLocation(nodeInfo)));
 	}
 
 	public string Keyword => keyword;

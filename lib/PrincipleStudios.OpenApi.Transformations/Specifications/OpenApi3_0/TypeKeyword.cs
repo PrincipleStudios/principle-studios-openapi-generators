@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text.Json.Nodes;
 using PrincipleStudios.OpenApi.Transformations.Diagnostics;
+using PrincipleStudios.OpenApi.Transformations.Specifications.Keywords;
 
 namespace PrincipleStudios.OpenApi.Transformations.Specifications.OpenApi3_0;
 
@@ -16,8 +17,7 @@ public class TypeKeyword(string keyword, string value) : IJsonSchemaAnnotation
 	{
 		if (nodeInfo.Node is JsonValue val && val.TryGetValue<string>(out var s))
 			return DiagnosableResult<IJsonSchemaAnnotation>.Pass(new TypeKeyword(keyword, s));
-		// TODO - parsing errors
-		throw new NotImplementedException();
+		return DiagnosableResult<IJsonSchemaAnnotation>.Fail(new UnableToParseKeyword(keyword, options.Registry.ResolveLocation(nodeInfo)));
 	}
 
 	public string Keyword => keyword;

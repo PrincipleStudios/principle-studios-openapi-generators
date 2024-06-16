@@ -15,8 +15,7 @@ public class PropertiesKeyword(string keyword, IReadOnlyDictionary<string, JsonS
 	private static DiagnosableResult<IJsonSchemaAnnotation> Parse(string keyword, NodeMetadata nodeInfo, JsonSchemaParserOptions options)
 	{
 		if (nodeInfo.Node is not JsonObject obj)
-			// TODO - parsing errors
-			throw new NotImplementedException();
+			return DiagnosableResult<IJsonSchemaAnnotation>.Fail(new UnableToParseKeyword(keyword, options.Registry.ResolveLocation(nodeInfo)));
 
 		var results = obj.ToDictionary(
 				(kvp) => kvp.Key,

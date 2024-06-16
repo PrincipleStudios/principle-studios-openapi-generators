@@ -16,8 +16,7 @@ public class PatternKeyword(string keyword, string pattern) : IJsonSchemaAnnotat
 	{
 		if (nodeInfo.Node is JsonValue val && val.TryGetValue<string>(out var s))
 			return DiagnosableResult<IJsonSchemaAnnotation>.Pass(new PatternKeyword(keyword, s));
-		// TODO - parsing errors
-		throw new NotImplementedException();
+		return DiagnosableResult<IJsonSchemaAnnotation>.Fail(new UnableToParseKeyword(keyword, options.Registry.ResolveLocation(nodeInfo)));
 	}
 
 	public string Keyword => keyword;
