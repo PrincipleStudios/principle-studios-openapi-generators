@@ -24,7 +24,6 @@ public abstract class BaseGenerator :
 {
 	public static readonly Dictionary<string, DiagnosticDescriptor> DiagnosticBy = new()
 	{
-		// TODO: Test this dictionary
 		// TODO: Split across multiple files for maintainability
 		{
 			"PrincipleStudios.OpenApi.Transformations.InvalidRetrievalUri",
@@ -92,8 +91,8 @@ public abstract class BaseGenerator :
 		var references = myAsm.GetReferencedAssemblies();
 
 		List<Assembly> loadedAssemblies = new() { myAsm };
-		AppDomain.CurrentDomain.ReflectionOnlyAssemblyResolve += ResolveAssembly;
-		AppDomain.CurrentDomain.AssemblyResolve += ResolveAssembly;
+		AppDomain.CurrentDomain.ReflectionOnlyAssemblyResolve += ResolveAssembly!;
+		AppDomain.CurrentDomain.AssemblyResolve += ResolveAssembly!;
 
 		// When using Type.GetType, the `RequestingAssembly` ends up null. If a generic is passed to Assembly.GetType, it also comes through as null.
 		// See https://github.com/dotnet/runtime/issues/11895, https://github.com/dotnet/runtime/issues/12668
@@ -102,7 +101,7 @@ public abstract class BaseGenerator :
 
 		var generator = Activator.CreateInstance(generatorType);
 
-		var generateMethod = generatorType.GetMethod("Generate");
+		var generateMethod = generatorType.GetMethod("Generate")!;
 		var generatorExpression = Constant(generator);
 		var compilerApisParameter = Parameter(typeof(CompilerApis));
 		var pathParameter = Parameter(typeof(string));

@@ -1,0 +1,36 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<IsPackable>false</IsPackable>
+		<IsTestProject>true</IsTestProject>
+		<RootNamespace>PrincipleStudios.OpenApiCodegen</RootNamespace>
+		<AnalyzerRoslynVersion>4.0</AnalyzerRoslynVersion>
+
+		<NoWarn>$(NoWarn);RS2008</NoWarn>
+	</PropertyGroup>
+
+	<Import Project="$(RepositoryEngineeringDir)source-generators/includes.targets" />
+
+	<ItemGroup>
+		<PackageReference Include="coverlet.collector" Version="6.0.0">
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+			<PrivateAssets>all</PrivateAssets>
+		</PackageReference>
+		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
+		<PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.2" />
+		<PackageReference Include="xunit" Version="2.5.3" />
+		<PackageReference Include="xunit.runner.visualstudio" Version="2.5.3">
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+			<PrivateAssets>all</PrivateAssets>
+		</PackageReference>
+	</ItemGroup>
+
+	<ItemGroup>
+		<Using Include="Xunit" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="$(SolutionRoot)lib/PrincipleStudios.OpenApi.Transformations/PrincipleStudios.OpenApi.Transformations.csproj" SpecificVersion="true" />
+	</ItemGroup>
+</Project>
