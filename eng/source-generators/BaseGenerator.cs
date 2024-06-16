@@ -22,7 +22,7 @@ public abstract class BaseGenerator :
 	ISourceGenerator
 #endif
 {
-	private static readonly DiagnosticDescriptor OpenApiConversionError = new DiagnosticDescriptor(id: "PSAPIPARSE001",
+	private static readonly DiagnosticDescriptor OpenApiConversionError = new DiagnosticDescriptor(id: "PS-PARSE-UNK",
 																								title: "A conversion error was encountered",
 																								messageFormat: "A conversion error was encountered: {0}",
 																								category: "PrincipleStudios.OpenApiCodegen",
