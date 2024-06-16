@@ -13,7 +13,7 @@ public class DiagnosticsShould
 	[Theory]
 	public void CoverAllDiagnosticBases(string typeName)
 	{
-		Assert.True(BaseGenerator.DiagnosticBy.ContainsKey(typeName), $"Missing diagnostic for '{typeName}'");
+		Assert.True(TransformationDiagnostics.DiagnosticBy.ContainsKey(typeName), $"Missing diagnostic for '{typeName}'");
 	}
 
 	public static IEnumerable<object[]> DiagnosticBaseNames()

@@ -98,7 +98,7 @@ public class DocumentRegistry(DocumentRegistryOptions registryOptions)
 		if (uri.Fragment is not { Length: > 1 }) return JsonPointer.Empty;
 		if (uri.Fragment.StartsWith("#/"))
 		{
-			if (!JsonPointer.TryParse(Uri.UnescapeDataString(uri.Fragment).Substring(1), out var pointer)) throw new DiagnosticException(InvalidFragmentDiagnostic.Builder());
+			if (!JsonPointer.TryParse(Uri.UnescapeDataString(uri.Fragment).Substring(1), out var pointer)) throw new DiagnosticException(InvalidFragmentDiagnostic.Builder(uri.Fragment));
 			// needs not-null assertion because we're supporting .NET Standard 2.0, which was pre-NotNullWhenAttribute
 			return pointer!;
 		}
@@ -201,9 +201,10 @@ public record InvalidDocumentBaseUri(Uri RetrievalUri, Uri BaseUri, Location Loc
 	public static DiagnosticException.ToDiagnostic Builder(Uri retrievalUri, Uri baseUri) => (Location) => new InvalidDocumentBaseUri(retrievalUri, baseUri, Location);
 }
 
-public record InvalidFragmentDiagnostic(Location Location) : DiagnosticBase(Location)
+public record InvalidFragmentDiagnostic(string ActualFragment, Location Location) : DiagnosticBase(Location)
 {
-	public static DiagnosticException.ToDiagnostic Builder() => (Location) => new InvalidFragmentDiagnostic(Location);
+	public override IReadOnlyList<string> GetTextArguments() => [ActualFragment];
+	public static DiagnosticException.ToDiagnostic Builder(string actualFragment) => (Location) => new InvalidFragmentDiagnostic(actualFragment, Location);
 }
 
 public record InvalidRefDiagnostic(Location Location) : DiagnosticBase(Location)
