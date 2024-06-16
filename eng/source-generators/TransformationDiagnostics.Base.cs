@@ -28,11 +28,27 @@ public partial class TransformationDiagnostics
 								category: "PrincipleStudios.OpenApiCodegen",
 								DiagnosticSeverity.Error,
 								isEnabledByDefault: true);
+	[TransformationDiagnostic("PrincipleStudios.OpenApi.Transformations.InvalidRefDiagnostic")]
+	public static readonly DiagnosticDescriptor InvalidRefDiagnostic =
+		new DiagnosticDescriptor(id: "PS-PARSE-006",
+								title: "Invalid URI provided for ref",
+								messageFormat: "Unable to parse provided URI for ref: {0}",
+								category: "PrincipleStudios.OpenApiCodegen",
+								DiagnosticSeverity.Error,
+								isEnabledByDefault: true);
 	[TransformationDiagnostic("PrincipleStudios.OpenApi.Transformations.CouldNotFindTargetNodeDiagnostic")]
 	public static readonly DiagnosticDescriptor CouldNotFindTargetNodeDiagnostic =
 		new DiagnosticDescriptor(id: "PS-PARSE-007",
 								title: "Target node did not exist in given document",
 								messageFormat: "Unable to locate node: {0}",
+								category: "PrincipleStudios.OpenApiCodegen",
+								DiagnosticSeverity.Error,
+								isEnabledByDefault: true);
+	[TransformationDiagnostic("PrincipleStudios.OpenApi.Transformations.UnknownAnchorDiagnostic")]
+	public static readonly DiagnosticDescriptor UnknownAnchorDiagnostic =
+		new DiagnosticDescriptor(id: "PS-PARSE-008",
+								title: "Unknown anchor provided in ref",
+								messageFormat: "Unable to locate anchor referenced from fragment: {0}",
 								category: "PrincipleStudios.OpenApiCodegen",
 								DiagnosticSeverity.Error,
 								isEnabledByDefault: true);

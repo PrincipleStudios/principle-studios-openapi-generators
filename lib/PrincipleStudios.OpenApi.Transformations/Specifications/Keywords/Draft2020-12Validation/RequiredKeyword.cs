@@ -48,5 +48,6 @@ public record UnableToParseRequiredKeyword(Location Location) : DiagnosticBase(L
 
 public record MissingRequiredProperties(IReadOnlyList<string> Missing, Location Location) : DiagnosticBase(Location)
 {
+	public override IReadOnlyList<string> GetTextArguments() => [string.Join(", ", Missing)];
 	public static DiagnosticException.ToDiagnostic Builder(IReadOnlyList<string> Missing) => (Location) => new MissingRequiredProperties(Missing, Location);
 }

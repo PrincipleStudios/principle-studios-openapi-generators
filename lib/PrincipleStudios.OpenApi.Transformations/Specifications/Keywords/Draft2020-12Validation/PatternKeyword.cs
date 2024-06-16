@@ -38,5 +38,8 @@ public class PatternKeyword(string keyword, string pattern) : IJsonSchemaAnnotat
 	}
 }
 
-public record JsonSchemaPatternMismatchDiagnostic(string Pattern, Location Location) : DiagnosticBase(Location);
+public record JsonSchemaPatternMismatchDiagnostic(string Pattern, Location Location) : DiagnosticBase(Location)
+{
+	public override IReadOnlyList<string> GetTextArguments() => [Pattern];
+}
 

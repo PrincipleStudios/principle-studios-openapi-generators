@@ -66,5 +66,6 @@ public class TypeKeyword(string keyword, string value) : IJsonSchemaAnnotation
 
 public record TypeKeywordMismatch(string TypeValue, Location Location) : DiagnosticBase(Location)
 {
+	public override IReadOnlyList<string> GetTextArguments() => [TypeValue];
 	public static DiagnosticException.ToDiagnostic Builder(string TypeValue) => (Location) => new TypeKeywordMismatch(TypeValue, Location);
 }

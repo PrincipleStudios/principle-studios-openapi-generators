@@ -207,9 +207,10 @@ public record InvalidFragmentDiagnostic(string ActualFragment, Location Location
 	public static DiagnosticException.ToDiagnostic Builder(string actualFragment) => (Location) => new InvalidFragmentDiagnostic(actualFragment, Location);
 }
 
-public record InvalidRefDiagnostic(Location Location) : DiagnosticBase(Location)
+public record InvalidRefDiagnostic(string RefValue, Location Location) : DiagnosticBase(Location)
 {
-	public static DiagnosticException.ToDiagnostic Builder() => (Location) => new InvalidRefDiagnostic(Location);
+	public override IReadOnlyList<string> GetTextArguments() => [RefValue];
+	public static DiagnosticException.ToDiagnostic Builder(string refValue) => (Location) => new InvalidRefDiagnostic(refValue, Location);
 }
 
 public record CouldNotFindTargetNodeDiagnostic(Uri Uri, Location Location) : DiagnosticBase(Location)

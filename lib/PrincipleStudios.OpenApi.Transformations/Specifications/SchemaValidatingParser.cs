@@ -29,5 +29,3 @@ public abstract class SchemaValidatingParser<TInterface> : IParser<TInterface>
 
 	protected abstract ParseResult<TInterface> Construct(IDocumentReference documentReference, IEnumerable<DiagnosticBase> diagnostics, DocumentRegistry documentRegistry);
 }
-
-public record SchemaValidationDiagnostic(string SchemaValidationRule, string SchemaValidationMessage, Location Location) : DiagnosticBase(Location);

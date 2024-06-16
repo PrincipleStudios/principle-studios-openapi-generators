@@ -109,6 +109,8 @@ public static class YamlUtils
 
 public record YamlLoadDiagnostic(Location Location, string Message) : DiagnosticBase(Location)
 {
+	public override IReadOnlyList<string> GetTextArguments() => [Message];
+
 	public static DocumentException.ToDiagnostic Builder(YamlException ex)
 	{
 		var location = YamlUtils.FromException(ex);

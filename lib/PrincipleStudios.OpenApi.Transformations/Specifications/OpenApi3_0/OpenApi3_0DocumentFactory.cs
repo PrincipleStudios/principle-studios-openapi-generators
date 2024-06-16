@@ -389,7 +389,7 @@ internal class OpenApi3_0DocumentFactory : IOpenApiDocumentFactory
 			if (obj["$ref"]?.GetValue<string>() is not string refName) return toItem(key);
 
 			if (!Uri.TryCreate(refName, UriKind.RelativeOrAbsolute, out var uri))
-				throw new DiagnosticException(InvalidRefDiagnostic.Builder());
+				throw new DiagnosticException(InvalidRefDiagnostic.Builder(refName));
 
 			var newKey = documentRegistry.ResolveMetadata(uri, key.Document);
 			return toItem(newKey);
@@ -425,12 +425,6 @@ internal class OpenApi3_0DocumentFactory : IOpenApiDocumentFactory
 			return constructDefault(key.Id);
 		};
 	}
-}
-
-
-public record UnableToResolveSchema(Location Location) : DiagnosticBase(Location)
-{
-	public static DiagnosticException.ToDiagnostic Builder() => (Location) => new UnableToResolveSchema(Location);
 }
 
 public record InvalidNode(string NodeType, Location Location) : DiagnosticBase(Location)
