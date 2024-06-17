@@ -2,6 +2,7 @@
 using System;
 using PrincipleStudios.OpenApi.Transformations.Specifications.Keywords;
 using PrincipleStudios.OpenApi.Transformations.Specifications.Keywords.Draft2020_12Applicator;
+using PrincipleStudios.OpenApi.Transformations.Specifications.Keywords.Draft2020_12Metadata;
 using PrincipleStudios.OpenApi.Transformations.Specifications.Keywords.Draft2020_12Validation;
 
 namespace PrincipleStudios.OpenApi.Transformations.Specifications.Vocabularies;
@@ -91,13 +92,13 @@ public static class StandardVocabularies
 		new Uri("https://json-schema.org/draft/2020-12/vocab/meta-data"),
 		// TODO
 		[
-		// ("title", null),
-		// ("description", null),
-		// ("default", null),
-		// ("deprecated", null),
-		// ("readOnly", null),
-		// ("writeOnly", null),
-		// ("examples", null),
+			("title", TitleKeyword.Instance),
+			("description", DescriptionKeyword.Instance),
+			// ("default", null),
+			("deprecated", DeprecatedKeyword.Instance),
+			("readOnly", ReadOnlyKeyword.Instance),
+			("writeOnly", WriteOnlyKeyword.Instance),
+			// ("examples", null),
 		]
 	);
 

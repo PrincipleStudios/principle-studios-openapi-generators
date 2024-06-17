@@ -2,6 +2,7 @@
 using PrincipleStudios.OpenApi.Transformations.Diagnostics;
 using PrincipleStudios.OpenApi.Transformations.DocumentTypes;
 using PrincipleStudios.OpenApi.Transformations.Specifications.Keywords;
+using PrincipleStudios.OpenApi.Transformations.Specifications.Keywords.Draft2020_12Metadata;
 using PrincipleStudios.OpenApi.Transformations.Specifications.Keywords.Draft2020_12Validation;
 using PrincipleStudios.OpenApi.Transformations.Specifications.Vocabularies;
 using System;
@@ -53,7 +54,7 @@ internal class OpenApi3_0DocumentFactory : IOpenApiDocumentFactory
 				// $schema
 
 				// Most of `Vocabularies.Validation202012Id` works, but the exclusiveMinimum / exclusiveMaximum work differently
-				// title
+				("title", TitleKeyword.Instance),
 				("multipleOf", MultipleOfKeyword.Instance),
 				("maximum", MaximumKeyword.Instance),
 				("exclusiveMaimum", Draft04.ExclusiveMaximumKeyword.Instance),
@@ -83,16 +84,16 @@ internal class OpenApi3_0DocumentFactory : IOpenApiDocumentFactory
 				("items", ItemsKeyword.Instance),
 				("properties", Keywords.Draft2020_12Applicator.PropertiesKeyword.Instance),
 				// additionalProperties
-				// description
-				// format
+				("description", DescriptionKeyword.Instance),
+				("format", Draft04.FormatKeyword.Instance),
 				// default
-				// nullable
+				("nullable", NullableKeyword.Instance),
 				// discriminator
-				// readOnly
-				// writeOnly
+				("readOnly", ReadOnlyKeyword.Instance),
+				("writeOnly", WriteOnlyKeyword.Instance),
 				// example
 				// externalDocs
-				// deprecated
+				("deprecated", DeprecatedKeyword.Instance),
 				// xml
 			]
 		);
