@@ -2,9 +2,8 @@
 using System;
 using System.Text.Json.Nodes;
 using PrincipleStudios.OpenApi.Transformations.Diagnostics;
-using PrincipleStudios.OpenApi.Transformations.Specifications.Keywords;
 
-namespace PrincipleStudios.OpenApi.Transformations.Specifications.OpenApi3_0;
+namespace PrincipleStudios.OpenApi.Transformations.Specifications.Keywords.Draft04;
 
 public class ExclusiveMaximumKeyword(string keyword, bool isExclusive) : IJsonSchemaAnnotation
 {

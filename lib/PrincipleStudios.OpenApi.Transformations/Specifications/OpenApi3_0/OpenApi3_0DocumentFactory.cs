@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text.Json.Nodes;
+using Draft04 = PrincipleStudios.OpenApi.Transformations.Specifications.Keywords.Draft04;
 
 namespace PrincipleStudios.OpenApi.Transformations.Specifications.OpenApi3_0;
 
@@ -45,20 +46,19 @@ internal class OpenApi3_0DocumentFactory : IOpenApiDocumentFactory
 	{
 		//Vocabularies.Core201909.Keywords
 		Vocabulary = new JsonSchemaVocabulary(
+			// https://github.com/OAI/OpenAPI-Specification/blob/d4fdc6cae9043dfc1abcad3c1a55282c49b3a7eb/schemas/v3.0/schema.yaml#L203
 			jsonSchemaMeta,
 			[
-				// OpenAPI 3.0 is not truly JsonSchema compliant, which is why
-				// this has its own Uri with "example" in it "type" must also be
-				// included. See
-				// https://swagger.io/docs/specification/data-models/keywords/
-				("type", TypeKeyword.Instance),
+				// id
+				// $schema
 
 				// Most of `Vocabularies.Validation202012Id` works, but the exclusiveMinimum / exclusiveMaximum work differently
+				// title
 				("multipleOf", MultipleOfKeyword.Instance),
-				("minimum", MinimumKeyword.Instance),
 				("maximum", MaximumKeyword.Instance),
-				("exclusiveMinimum", OpenApi3_0.ExclusiveMinimumKeyword.Instance),
-				("exclusiveMaimum", OpenApi3_0.ExclusiveMaximumKeyword.Instance),
+				("exclusiveMaimum", Draft04.ExclusiveMaximumKeyword.Instance),
+				("minimum", MinimumKeyword.Instance),
+				("exclusiveMinimum", Draft04.ExclusiveMinimumKeyword.Instance),
 				("maxLength", MaxLengthKeyword.Instance),
 				("minLength", MinLengthKeyword.Instance),
 				("pattern", PatternKeyword.Instance),
@@ -69,6 +69,31 @@ internal class OpenApi3_0DocumentFactory : IOpenApiDocumentFactory
 				("minProperties", MinPropertiesKeyword.Instance),
 				("required", RequiredKeyword.Instance),
 				("enum", EnumKeyword.Instance),
+
+				// OpenAPI 3.0 is not truly JsonSchema compliant, which is why
+				// this has its own Uri with "example" in it "type" must also be
+				// included. See
+				// https://swagger.io/docs/specification/data-models/keywords/
+				("type", TypeKeyword.Instance),
+
+				// not
+				// allOf
+				// oneOf
+				// anyOf
+				("items", ItemsKeyword.Instance),
+				("properties", Keywords.Draft2020_12Applicator.PropertiesKeyword.Instance),
+				// additionalProperties
+				// description
+				// format
+				// default
+				// nullable
+				// discriminator
+				// readOnly
+				// writeOnly
+				// example
+				// externalDocs
+				// deprecated
+				// xml
 			]
 		);
 		OpenApiDialect =
@@ -76,12 +101,6 @@ internal class OpenApi3_0DocumentFactory : IOpenApiDocumentFactory
 				jsonSchemaDialect,
 				"id",
 				[
-					StandardVocabularies.Core202012,
-					StandardVocabularies.Applicator202012,
-					StandardVocabularies.Unevaluated202012,
-					StandardVocabularies.Metadata202012,
-					StandardVocabularies.FormatAnnotation202012,
-					StandardVocabularies.Content202012,
 					Vocabulary,
 					// should be all of "https://spec.openapis.org/oas/3.0/schema/2021-09-28"
 				],

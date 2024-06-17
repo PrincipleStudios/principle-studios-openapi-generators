@@ -1,7 +1,5 @@
 ﻿using PrincipleStudios.OpenApi.Transformations.DocumentTypes;
 using PrincipleStudios.OpenApi.Transformations.Specifications.Keywords;
-using PrincipleStudios.OpenApi.Transformations.Specifications.Keywords.Draft2020_12Applicator;
-using PrincipleStudios.OpenApi.Transformations.Specifications.Keywords.Draft2020_12Validation;
 using PrincipleStudios.OpenApi.Transformations.Specifications.OpenApi3_0;
 using System.Linq;
 using Xunit;
@@ -71,7 +69,7 @@ public class OpenApi3_0ParserShould
 								Assert.NotNull(param.Schema.Annotations);
 								var schemaType = Assert.Single(param.Schema.Annotations.OfType<TypeKeyword>());
 								Assert.Equal(TypeKeyword.Common.Array, schemaType.Value);
-								var itemsType = Assert.Single(param.Schema.Annotations.OfType<ItemsKeyword>());
+								var itemsType = Assert.Single(param.Schema.Annotations.OfType<Specifications.Keywords.Draft2020_12Applicator.ItemsKeyword>());
 								Assert.NotNull(itemsType.Schema?.Annotations);
 								Assert.Equal("proj://embedded/petstore.yaml#/paths/~1pets/get/parameters/0/schema/items", itemsType.Schema.Id.OriginalString);
 								var itemSchemaType = Assert.Single(itemsType.Schema.Annotations.OfType<TypeKeyword>());
