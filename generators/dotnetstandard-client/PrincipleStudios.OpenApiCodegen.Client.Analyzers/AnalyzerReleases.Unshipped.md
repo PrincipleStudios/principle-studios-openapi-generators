@@ -8,6 +8,8 @@ PS_JSON_001 | PrincipleStudios.OpenApiCodegen | Error | TransformationDiagnostic
 PS_JSON_002 | PrincipleStudios.OpenApiCodegen | Error | TransformationDiagnostics
 PS_JSON_003 | PrincipleStudios.OpenApiCodegen | Error | TransformationDiagnostics
 PS_JSON_004 | PrincipleStudios.OpenApiCodegen | Error | TransformationDiagnostics
+PS_JSON_2020_12_APP_001 | PrincipleStudios.OpenApiCodegen | Error | TransformationDiagnostics
+PS_JSON_2020_12_APP_002 | PrincipleStudios.OpenApiCodegen | Error | TransformationDiagnostics
 PS_JSON_2020_12_VAL_001 | PrincipleStudios.OpenApiCodegen | Error | TransformationDiagnostics
 PS_JSON_2020_12_VAL_002 | PrincipleStudios.OpenApiCodegen | Error | TransformationDiagnostics
 PS_JSON_2020_12_VAL_003 | PrincipleStudios.OpenApiCodegen | Error | TransformationDiagnostics

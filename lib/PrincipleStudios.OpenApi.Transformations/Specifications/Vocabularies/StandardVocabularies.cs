@@ -41,10 +41,10 @@ public static class StandardVocabularies
 			// ("if", null),
 			// ("then", null),
 			// ("else", null),
-			// ("allOf", null),
-			// ("anyOf", null),
-			// ("oneOf", null),
-			// ("not", null),
+			("allOf", AllOfKeyword.Instance),
+			("anyOf", AnyOfKeyword.Instance),
+			("oneOf", OneOfKeyword.Instance),
+			("not", NotKeyword.Instance),
 		]
 	);
 

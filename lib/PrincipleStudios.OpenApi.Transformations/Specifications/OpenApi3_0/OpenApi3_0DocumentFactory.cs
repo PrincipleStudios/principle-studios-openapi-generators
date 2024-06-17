@@ -76,10 +76,10 @@ internal class OpenApi3_0DocumentFactory : IOpenApiDocumentFactory
 				// https://swagger.io/docs/specification/data-models/keywords/
 				("type", TypeKeyword.Instance),
 
-				// not
-				// allOf
-				// oneOf
-				// anyOf
+				("not", Keywords.Draft2020_12Applicator.NotKeyword.Instance),
+				("allOf", Keywords.Draft2020_12Applicator.AllOfKeyword.Instance),
+				("oneOf", Keywords.Draft2020_12Applicator.OneOfKeyword.Instance),
+				("anyOf", Keywords.Draft2020_12Applicator.AnyOfKeyword.Instance),
 				("items", ItemsKeyword.Instance),
 				("properties", Keywords.Draft2020_12Applicator.PropertiesKeyword.Instance),
 				// additionalProperties

@@ -39,3 +39,23 @@ public abstract record DiagnosableResult<T>
 			failure(Diagnostics);
 	}
 }
+
+public static class DiagnosableResult
+{
+	public static DiagnosableResult<IEnumerable<T>> AggregateAll<T>(this IEnumerable<DiagnosableResult<T>> target)
+	{
+		return target
+			.Aggregate(DiagnosableResult<IEnumerable<T>>.Pass(Enumerable.Empty<T>()),
+				(prev, next) =>
+					prev.Fold(
+						list => next.Fold(
+							(schema) => DiagnosableResult<IEnumerable<T>>.Pass(list.ConcatOne(schema)),
+							(diagnostics) => DiagnosableResult<IEnumerable<T>>.Fail(diagnostics.ToArray())
+						),
+						oldDiagnotics => next.Fold(
+							_ => prev,
+							(diagnostics) => DiagnosableResult<IEnumerable<T>>.Fail(oldDiagnotics.Concat(diagnostics).ToArray())
+						))
+			);
+	}
+}
