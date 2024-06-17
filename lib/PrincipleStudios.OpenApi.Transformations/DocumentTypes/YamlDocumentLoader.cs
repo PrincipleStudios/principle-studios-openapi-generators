@@ -19,7 +19,7 @@ namespace PrincipleStudios.OpenApi.Transformations.DocumentTypes;
 
 public class YamlDocumentLoader : IDocumentTypeLoader
 {
-	public IDocumentReference LoadDocument(Uri retrievalUri, TextReader textReader)
+	public IDocumentReference LoadDocument(Uri retrievalUri, TextReader textReader, IJsonSchemaDialect? dialect)
 	{
 		var yamlStream = new YamlStream();
 		try
@@ -32,29 +32,28 @@ public class YamlDocumentLoader : IDocumentTypeLoader
 		}
 
 		// TODO: check $ top-level variables for vocabulary overrides
-		return new YamlDocument(retrievalUri, yamlStream);
+		return new YamlDocument(retrievalUri, yamlStream, dialect ?? Specifications.Dialects.StandardDialects.CoreNext);
 	}
 
 	private class YamlDocument : IDocumentReference
 	{
 		private YamlStream yamlStream;
 
-		public YamlDocument(Uri retrievalUri, YamlStream yamlStream)
+		public YamlDocument(Uri retrievalUri, YamlStream yamlStream, IJsonSchemaDialect dialect)
 		{
 			this.RetrievalUri = retrievalUri;
 			this.yamlStream = yamlStream;
 			this.RootNode = yamlStream.Documents[0].ToJsonNode();
-
-			this.BaseUri = JsonDocumentUtils.GetBaseUri(this.RootNode, retrievalUri);
+			this.Dialect = dialect;
 		}
 
-		public Uri BaseUri { get; }
+		public Uri BaseUri => JsonDocumentUtils.GetDocumentBaseUri(this);
 
 		public Uri RetrievalUri { get; }
 
 		public JsonNode? RootNode { get; }
 
-		public IJsonSchemaDialect Dialect { get; set; } = Specifications.Dialects.StandardDialects.CoreNext;
+		public IJsonSchemaDialect Dialect { get; set; }
 
 		string IDocumentReference.OriginalPath => RetrievalUri.OriginalString;
 

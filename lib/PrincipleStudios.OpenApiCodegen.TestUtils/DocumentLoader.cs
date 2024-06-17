@@ -1,13 +1,7 @@
 ﻿using PrincipleStudios.OpenApi.Transformations.DocumentTypes;
 using PrincipleStudios.OpenApi.Transformations;
 using System;
-using System.Collections.Generic;
-using System.Text;
-using Bogus.DataSets;
-using PrincipleStudios.OpenApi.Transformations.Specifications.OpenApi3_1;
 using PrincipleStudios.OpenApi.Transformations.Specifications;
-using System.Linq;
-using PrincipleStudios.OpenApi.Transformations.Abstractions;
 using System.IO;
 
 namespace PrincipleStudios.OpenApiCodegen.TestUtils;
@@ -21,18 +15,18 @@ public class DocumentLoader
 		switch (baseUri)
 		{
 			case { Scheme: "proj", Host: "embedded", LocalPath: var embeddedName }:
-				return LoadEmbeddedDocument(baseUri, embeddedName);
+				return LoadEmbeddedDocument(baseUri, embeddedName, currentDocument?.Dialect);
 			default:
 				return null;
 		}
 	}
 
 
-	private static IDocumentReference LoadEmbeddedDocument(Uri baseUri, string embeddedName)
+	private static IDocumentReference LoadEmbeddedDocument(Uri baseUri, string embeddedName, IJsonSchemaDialect? dialect)
 	{
 		using var documentStream = typeof(DocumentHelpers).Assembly.GetManifestResourceStream($"PrincipleStudios.OpenApiCodegen.TestUtils.schemas.{embeddedName.Substring(1)}");
 		using var sr = new StreamReader(documentStream);
-		var result = docLoader.LoadDocument(baseUri, sr);
+		var result = docLoader.LoadDocument(baseUri, sr, dialect);
 		return result;
 	}
 

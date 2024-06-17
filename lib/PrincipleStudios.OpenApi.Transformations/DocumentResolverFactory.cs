@@ -27,7 +27,7 @@ public static class DocumentResolverFactory
 			try
 			{
 				using var sr = new StreamReader(path.LocalPath);
-				return docLoader.LoadDocument(baseUri, sr);
+				return docLoader.LoadDocument(baseUri, sr, documentReference.Dialect);
 			}
 			catch
 			{
@@ -44,7 +44,7 @@ public static class DocumentResolverFactory
 	public static (IDocumentReference, DocumentRegistry) FromInitialDocumentInMemory(Uri uri, string documentContents, DocumentRegistryOptions resolverOptions)
 	{
 		using var sr = new StringReader(documentContents);
-		var doc = docLoader.LoadDocument(uri, sr);
+		var doc = docLoader.LoadDocument(uri, sr, null);
 
 		var registry = new DocumentRegistry(resolverOptions with
 		{

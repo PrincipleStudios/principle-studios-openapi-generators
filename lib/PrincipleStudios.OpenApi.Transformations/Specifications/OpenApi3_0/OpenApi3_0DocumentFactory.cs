@@ -74,6 +74,7 @@ internal class OpenApi3_0DocumentFactory : IOpenApiDocumentFactory
 		OpenApiDialect =
 			new JsonSchemaDialect(
 				jsonSchemaDialect,
+				"id",
 				[
 					StandardVocabularies.Core202012,
 					StandardVocabularies.Applicator202012,

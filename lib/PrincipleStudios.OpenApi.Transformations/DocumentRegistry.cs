@@ -26,7 +26,7 @@ public class DocumentRegistry(DocumentRegistryOptions registryOptions)
 		IDocumentReference Document,
 		IReadOnlyDictionary<string, JsonPointer> Anchors
 	);
-	private readonly Dictionary<Uri, DocumentRegistryEntry> entries = new();
+	private readonly ICollection<DocumentRegistryEntry> entries = new HashSet<DocumentRegistryEntry>();
 
 	public void AddDocument(IDocumentReference document)
 	{
@@ -39,32 +39,30 @@ public class DocumentRegistry(DocumentRegistryOptions registryOptions)
 	private DocumentRegistryEntry InternalAddDocument(IDocumentReference document)
 	{
 		var uri = document.BaseUri;
-		// TODO: should this be a warning and instead just use the retrieval uri?
 		if (uri.Fragment is { Length: > 0 }) throw new DiagnosticException(InvalidDocumentBaseUri.Builder(retrievalUri: document.RetrievalUri, baseUri: document.BaseUri));
+
+		if (entries.Any(e => e.Document.BaseUri == uri))
+			throw new ArgumentException(string.Format(Errors.DuplicateDocumentBaseUri, uri), nameof(document));
 
 		var visitor = new DocumentRefVisitor();
 		visitor.Visit(document.RootNode);
 
 		var result = new DocumentRegistryEntry(document, visitor.Anchors);
-		entries.Add(uri, result);
+		entries.Add(result);
 		return result;
 	}
 
 	public bool HasDocument(Uri uri)
 	{
-		var docUri = new UriBuilder(uri) { Fragment = "" }.Uri;
-		return entries.ContainsKey(docUri);
+		return entries.Any(doc => doc.Document.BaseUri == uri);
 	}
 
 	public bool TryGetDocument(Uri uri, [NotNullWhen(true)] out IDocumentReference? doc)
 	{
 		var docUri = new UriBuilder(uri) { Fragment = "" }.Uri;
-		var result = entries.TryGetValue(docUri, out var entry);
-		doc = entry?.Document;
-		return result;
+		doc = entries.FirstOrDefault(e => e.Document.BaseUri == docUri)?.Document;
+		return doc != null;
 	}
-
-	public IEnumerable<Uri> RegisteredDocumentIds => entries.Keys;
 
 	public JsonNode? ResolveNode(Uri uri, IDocumentReference? relativeDocument = null) => ResolveMetadata(uri, relativeDocument).Node;
 
@@ -121,11 +119,8 @@ public class DocumentRegistry(DocumentRegistryOptions registryOptions)
 			: throw new InvalidOperationException(Errors.ReceivedRelativeUriWithoutDocument);
 
 		// .NET's Uri type doesn't include the Fragment in equality, so we don't need to check until we fetch
-		if (!entries.TryGetValue(docUri, out var document))
-		{
-			document = InternalFetch(relativeDocument, docUri);
-		}
-
+		var document = entries.FirstOrDefault(e => e.Document.BaseUri == docUri)
+			?? InternalFetch(relativeDocument, docUri);
 		return document;
 	}
 
@@ -179,11 +174,11 @@ public class DocumentRegistry(DocumentRegistryOptions registryOptions)
 public static class JsonDocumentUtils
 {
 	public static Uri GetDocumentBaseUri(IDocumentReference document) =>
-		document.RootNode.GetBaseUri(document.RetrievalUri);
+		document.RootNode.GetBaseUri(document.RetrievalUri, document.Dialect);
 
 
-	public static Uri GetBaseUri(this JsonNode? jsonNode, Uri retrievalUri) =>
-		jsonNode is JsonObject obj && obj.TryGetPropertyValue("$id", out var id) && id?.GetValue<string>() is string baseId
+	public static Uri GetBaseUri(this JsonNode? jsonNode, Uri retrievalUri, IJsonSchemaDialect dialect) =>
+		jsonNode is JsonObject obj && obj.TryGetPropertyValue(dialect.IdField, out var id) && id?.GetValue<string>() is string baseId
 			? new Uri(retrievalUri, baseId)
 			: retrievalUri;
 

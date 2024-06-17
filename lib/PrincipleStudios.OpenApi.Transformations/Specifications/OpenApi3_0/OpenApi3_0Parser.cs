@@ -21,7 +21,7 @@ internal class OpenApi3_0Parser : SchemaValidatingParser<OpenApiDocument>
 	{
 		using var schemaStream = typeof(OpenApi3_0Parser).Assembly.GetManifestResourceStream($"{typeof(OpenApi3_0Parser).Namespace}.Schemas.schema.yaml");
 		using var sr = new StreamReader(schemaStream);
-		var yamlDocument = new YamlDocumentLoader().LoadDocument(schemaUri, sr);
+		var yamlDocument = new YamlDocumentLoader().LoadDocument(schemaUri, sr, OpenApi3_0DocumentFactory.OpenApiDialect);
 		registry.AddDocument(yamlDocument);
 		return yamlDocument;
 	}

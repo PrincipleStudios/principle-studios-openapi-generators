@@ -1,8 +1,6 @@
-# This document has been slightly changed from https://github.com/OAI/OpenAPI-Specification/blob/d4fdc6cae9043dfc1abcad3c1a55282c49b3a7eb/schemas/v3.0/schema.yaml
-# - 'id' prop was changed to '$id'
-# - '$schema' prop was removed because it was older than JsonSchema.Net supports by default
-# - '#/definitions/Schema/properties/multipleOf' updated to match JSON Schema spec
-$id: https://spec.openapis.org/oas/3.0/schema/2021-09-28
+# Source https://github.com/OAI/OpenAPI-Specification/blob/d4fdc6cae9043dfc1abcad3c1a55282c49b3a7eb/schemas/v3.0/schema.yaml
+id: https://spec.openapis.org/oas/3.0/schema/2021-09-28
+$schema: http://json-schema.org/draft-04/schema#
 description: The description of OpenAPI v3.0.x documents, as defined by https://spec.openapis.org/oas/v3.0.3
 type: object
 required:
@@ -209,7 +207,8 @@ definitions:
         type: string
       multipleOf:
         type: number
-        exclusiveMinimum: 0
+        minimum: 0
+        exclusiveMinimum: true
       maximum:
         type: number
       exclusiveMaximum:

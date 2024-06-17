@@ -49,7 +49,7 @@ public class DocumentRegistryShould
 		CreateDocument(rootJson, out var documentMock, out var documentId);
 		target.AddDocument(documentMock.Object);
 
-		Assert.Contains(documentId, target.RegisteredDocumentIds);
+		Assert.True(target.HasDocument(documentId));
 	}
 
 	[Fact]
@@ -62,7 +62,7 @@ public class DocumentRegistryShould
 		documentMock.Setup(d => d.BaseUri).Returns(documentId);
 		target.AddDocument(documentMock.Object);
 
-		Assert.Contains(documentId, target.RegisteredDocumentIds);
+		Assert.True(target.HasDocument(documentId));
 	}
 
 	[Fact]
