@@ -98,8 +98,9 @@ namespace PrincipleStudios.OpenApiCodegen.Client.TypeScript
 			var position = d.Location.Range is FileLocationRange { Start: var start }
 				? $"({start.Line},{start.Column})"
 				: "";
-			// TODO: diagnostic message line
-			return $"{d.Location.RetrievalUri.LocalPath}{position}: {d.GetType().FullName}";
+			var messageFormat = CommonDiagnostics.ResourceManager.GetString(d.GetType().FullName!)!;
+			var message = string.Format(messageFormat, d.GetTextArguments().ToArray());
+			return $"{d.Location.RetrievalUri.LocalPath}{position}: {message}";
 		}
 
 		private static Uri ToInternalUri(string documentPath) =>
