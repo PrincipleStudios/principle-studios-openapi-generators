@@ -1,4 +1,5 @@
 using Microsoft.CodeAnalysis;
+using static PrincipleStudios.OpenApiCodegen.CommonDiagnostics;
 
 namespace PrincipleStudios.OpenApiCodegen;
 
@@ -8,7 +9,7 @@ public partial class TransformationDiagnostics
 	public static readonly DiagnosticDescriptor InvalidRetrievalUriDiagnostic =
 		new DiagnosticDescriptor(id: "PS_PARSE_002",
 								title: "An invalid URI was provided to retrieve a document",
-								messageFormat: "An invalid URI was provided to retrieve a document: {0}",
+								messageFormat: PrincipleStudios_OpenApi_Transformations_InvalidRetrievalUri,
 								category: "PrincipleStudios.OpenApiCodegen",
 								DiagnosticSeverity.Error,
 								isEnabledByDefault: true);
@@ -16,7 +17,7 @@ public partial class TransformationDiagnostics
 	public static readonly DiagnosticDescriptor InvalidDocumentBaseUriDiagostic =
 		new DiagnosticDescriptor(id: "PS_PARSE_004",
 								title: "An invalid base URI was provided by a document",
-								messageFormat: "An invalid base URI was provided by a document: {0}",
+								messageFormat: PrincipleStudios_OpenApi_Transformations_InvalidDocumentBaseUri,
 								category: "PrincipleStudios.OpenApiCodegen",
 								DiagnosticSeverity.Error,
 								isEnabledByDefault: true);
@@ -24,7 +25,7 @@ public partial class TransformationDiagnostics
 	public static readonly DiagnosticDescriptor InvalidFragmentDiagostic =
 		new DiagnosticDescriptor(id: "PS_PARSE_005",
 								title: "The fragment provided was not a valid JSON pointer",
-								messageFormat: "The fragment provided was not a valid JSON pointer: {0}",
+								messageFormat: PrincipleStudios_OpenApi_Transformations_InvalidFragmentDiagnostic,
 								category: "PrincipleStudios.OpenApiCodegen",
 								DiagnosticSeverity.Error,
 								isEnabledByDefault: true);
@@ -32,7 +33,7 @@ public partial class TransformationDiagnostics
 	public static readonly DiagnosticDescriptor InvalidRefDiagnostic =
 		new DiagnosticDescriptor(id: "PS_PARSE_006",
 								title: "Invalid URI provided for ref",
-								messageFormat: "Unable to parse provided URI for ref: {0}",
+								messageFormat: PrincipleStudios_OpenApi_Transformations_InvalidRefDiagnostic,
 								category: "PrincipleStudios.OpenApiCodegen",
 								DiagnosticSeverity.Error,
 								isEnabledByDefault: true);
@@ -40,7 +41,7 @@ public partial class TransformationDiagnostics
 	public static readonly DiagnosticDescriptor CouldNotFindTargetNodeDiagnostic =
 		new DiagnosticDescriptor(id: "PS_PARSE_007",
 								title: "Target node did not exist in given document",
-								messageFormat: "Unable to locate node: {0}",
+								messageFormat: PrincipleStudios_OpenApi_Transformations_CouldNotFindTargetNodeDiagnostic,
 								category: "PrincipleStudios.OpenApiCodegen",
 								DiagnosticSeverity.Error,
 								isEnabledByDefault: true);
@@ -48,15 +49,15 @@ public partial class TransformationDiagnostics
 	public static readonly DiagnosticDescriptor UnknownAnchorDiagnostic =
 		new DiagnosticDescriptor(id: "PS_PARSE_008",
 								title: "Unknown anchor provided in ref",
-								messageFormat: "Unable to locate anchor referenced from fragment: {0}",
+								messageFormat: PrincipleStudios_OpenApi_Transformations_UnknownAnchorDiagnostic,
 								category: "PrincipleStudios.OpenApiCodegen",
 								DiagnosticSeverity.Error,
 								isEnabledByDefault: true);
 	[TransformationDiagnostic("PrincipleStudios.OpenApi.Transformations.ResolveDocumentDiagnostic")]
-	public static readonly DiagnosticDescriptor ResolveDocumentDiagnosticDiagnostic =
+	public static readonly DiagnosticDescriptor ResolveDocumentDiagnostic =
 		new DiagnosticDescriptor(id: "PS_PARSE_009",
 								title: "Could not retrieve the specified document",
-								messageFormat: "Could not resolve the document with the URI {0}",
+								messageFormat: PrincipleStudios_OpenApi_Transformations_ResolveDocumentDiagnostic,
 								category: "PrincipleStudios.OpenApiCodegen",
 								DiagnosticSeverity.Error,
 								isEnabledByDefault: true);

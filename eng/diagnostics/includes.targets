@@ -1,0 +1,11 @@
+<Project>
+	<ItemGroup>
+		<EmbeddedResource Include="$(MSBuildThisFileDirectory)CommonDiagnostics.resx">
+			<Generator>MSBuild:Compile</Generator>
+			<StronglyTypedFileName>$(IntermediateOutputPath)\CommonDiagnostics.resx.g$(DefaultLanguageSourceExtension)</StronglyTypedFileName>
+			<StronglyTypedLanguage>$(Language)</StronglyTypedLanguage>
+			<StronglyTypedNamespace>PrincipleStudios.OpenApiCodegen</StronglyTypedNamespace>
+			<StronglyTypedClassName>CommonDiagnostics</StronglyTypedClassName>
+		</EmbeddedResource>
+	</ItemGroup>
+</Project>

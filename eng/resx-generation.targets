@@ -1,6 +1,6 @@
 <Project>
 	<ItemGroup>
-		<EmbeddedResource Update="@(EmbeddedResource)">
+		<EmbeddedResource Update="$(ProjectDir)**/*">
 			<Generator>MSBuild:Compile</Generator>
 			<StronglyTypedFileName>$(IntermediateOutputPath)\$([MSBuild]::ValueOrDefault('%(RelativeDir)', '').Replace('\', '.').Replace('/', '.'))%(Filename).g$(DefaultLanguageSourceExtension)</StronglyTypedFileName>
 			<StronglyTypedLanguage>$(Language)</StronglyTypedLanguage>

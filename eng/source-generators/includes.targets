@@ -2,4 +2,5 @@
 	<ItemGroup>
 		<Compile Include="$(MSBuildThisFileDirectory)*.cs" Visible="false" />
 	</ItemGroup>
+	<Import Project="$(RepositoryEngineeringDir)diagnostics/includes.targets" />
 </Project>
