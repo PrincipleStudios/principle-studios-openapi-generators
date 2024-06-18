@@ -83,15 +83,15 @@ internal class OpenApi3_0DocumentFactory : IOpenApiDocumentFactory
 				("anyOf", Keywords.Draft2020_12Applicator.AnyOfKeyword.Instance),
 				("items", ItemsKeyword.Instance),
 				("properties", Keywords.Draft2020_12Applicator.PropertiesKeyword.Instance),
-				// additionalProperties
+				("additionalProperties", Keywords.Draft2020_12Applicator.AdditionalPropertiesKeyword.Instance),
 				("description", DescriptionKeyword.Instance),
 				("format", Draft04.FormatKeyword.Instance),
-				// default
+				("default", DefaultKeyword.Instance),
 				("nullable", NullableKeyword.Instance),
 				// discriminator
 				("readOnly", ReadOnlyKeyword.Instance),
 				("writeOnly", WriteOnlyKeyword.Instance),
-				// example
+				("example", ExampleKeyword.Instance),
 				// externalDocs
 				("deprecated", DeprecatedKeyword.Instance),
 				// xml

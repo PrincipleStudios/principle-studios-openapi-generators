@@ -34,7 +34,7 @@ public static class StandardVocabularies
 			// ("prefixItems", null),
 			("items", ItemsKeyword.Instance),
 			// ("contains", null),
-			// ("additionalProperties", null),
+			("additionalProperties", AdditionalPropertiesKeyword.Instance),
 			("properties", PropertiesKeyword.Instance),
 			// ("patternProperties", null),
 			// ("dependentSchemas", null),
@@ -94,7 +94,7 @@ public static class StandardVocabularies
 		[
 			("title", TitleKeyword.Instance),
 			("description", DescriptionKeyword.Instance),
-			// ("default", null),
+			("default", DefaultKeyword.Instance),
 			("deprecated", DeprecatedKeyword.Instance),
 			("readOnly", ReadOnlyKeyword.Instance),
 			("writeOnly", WriteOnlyKeyword.Instance),
