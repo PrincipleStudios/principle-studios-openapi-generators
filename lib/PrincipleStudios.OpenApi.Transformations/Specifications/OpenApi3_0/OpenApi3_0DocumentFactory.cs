@@ -2,9 +2,6 @@
 using PrincipleStudios.OpenApi.Transformations.Diagnostics;
 using PrincipleStudios.OpenApi.Transformations.DocumentTypes;
 using PrincipleStudios.OpenApi.Transformations.Specifications.Keywords;
-using PrincipleStudios.OpenApi.Transformations.Specifications.Keywords.Draft2020_12Metadata;
-using PrincipleStudios.OpenApi.Transformations.Specifications.Keywords.Draft2020_12Validation;
-using PrincipleStudios.OpenApi.Transformations.Specifications.Vocabularies;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -50,26 +47,23 @@ internal class OpenApi3_0DocumentFactory : IOpenApiDocumentFactory
 			// https://github.com/OAI/OpenAPI-Specification/blob/d4fdc6cae9043dfc1abcad3c1a55282c49b3a7eb/schemas/v3.0/schema.yaml#L203
 			jsonSchemaMeta,
 			[
-				// id
-				// $schema
-
 				// Most of `Vocabularies.Validation202012Id` works, but the exclusiveMinimum / exclusiveMaximum work differently
-				("title", TitleKeyword.Instance),
-				("multipleOf", MultipleOfKeyword.Instance),
-				("maximum", MaximumKeyword.Instance),
+				("title", Keywords.Draft2020_12Metadata.TitleKeyword.Instance),
+				("multipleOf", Keywords.Draft2020_12Validation.MultipleOfKeyword.Instance),
+				("maximum", Keywords.Draft2020_12Validation.MaximumKeyword.Instance),
 				("exclusiveMaimum", Draft04.ExclusiveMaximumKeyword.Instance),
-				("minimum", MinimumKeyword.Instance),
+				("minimum", Keywords.Draft2020_12Validation.MinimumKeyword.Instance),
 				("exclusiveMinimum", Draft04.ExclusiveMinimumKeyword.Instance),
-				("maxLength", MaxLengthKeyword.Instance),
-				("minLength", MinLengthKeyword.Instance),
-				("pattern", PatternKeyword.Instance),
-				("maxItems", MaxItemsKeyword.Instance),
-				("minItems", MinItemsKeyword.Instance),
-				("uniqueItems", UniqueItemsKeyword.Instance),
-				("maxProperties", MaxPropertiesKeyword.Instance),
-				("minProperties", MinPropertiesKeyword.Instance),
-				("required", RequiredKeyword.Instance),
-				("enum", EnumKeyword.Instance),
+				("maxLength", Keywords.Draft2020_12Validation.MaxLengthKeyword.Instance),
+				("minLength", Keywords.Draft2020_12Validation.MinLengthKeyword.Instance),
+				("pattern", Keywords.Draft2020_12Validation.PatternKeyword.Instance),
+				("maxItems", Keywords.Draft2020_12Validation.MaxItemsKeyword.Instance),
+				("minItems", Keywords.Draft2020_12Validation.MinItemsKeyword.Instance),
+				("uniqueItems", Keywords.Draft2020_12Validation.UniqueItemsKeyword.Instance),
+				("maxProperties", Keywords.Draft2020_12Validation.MaxPropertiesKeyword.Instance),
+				("minProperties", Keywords.Draft2020_12Validation.MinPropertiesKeyword.Instance),
+				("required", Keywords.Draft2020_12Validation.RequiredKeyword.Instance),
+				("enum", Keywords.Draft2020_12Validation.EnumKeyword.Instance),
 
 				// OpenAPI 3.0 is not truly JsonSchema compliant, which is why
 				// this has its own Uri with "example" in it "type" must also be
@@ -84,16 +78,16 @@ internal class OpenApi3_0DocumentFactory : IOpenApiDocumentFactory
 				("items", ItemsKeyword.Instance),
 				("properties", Keywords.Draft2020_12Applicator.PropertiesKeyword.Instance),
 				("additionalProperties", Keywords.Draft2020_12Applicator.AdditionalPropertiesKeyword.Instance),
-				("description", DescriptionKeyword.Instance),
+				("description", Keywords.Draft2020_12Metadata.DescriptionKeyword.Instance),
 				("format", Draft04.FormatKeyword.Instance),
-				("default", DefaultKeyword.Instance),
+				("default", Keywords.Draft2020_12Metadata.DefaultKeyword.Instance),
 				("nullable", NullableKeyword.Instance),
-				// discriminator
-				("readOnly", ReadOnlyKeyword.Instance),
-				("writeOnly", WriteOnlyKeyword.Instance),
+				("discriminator", DiscriminatorKeyword.Instance),
+				("readOnly", Keywords.Draft2020_12Metadata.ReadOnlyKeyword.Instance),
+				("writeOnly", Keywords.Draft2020_12Metadata.WriteOnlyKeyword.Instance),
 				("example", ExampleKeyword.Instance),
 				// externalDocs
-				("deprecated", DeprecatedKeyword.Instance),
+				("deprecated", Keywords.Draft2020_12Metadata.DeprecatedKeyword.Instance),
 				// xml
 			]
 		);
