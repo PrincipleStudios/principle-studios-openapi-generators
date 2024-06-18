@@ -34,26 +34,4 @@
 		<PackageReference Include="Yaml2JsonNode" Version="2.1.0" />
 		<PackageReference Include="YamlDotNet" Version="15.1.2" />
 	</ItemGroup>
-	<ItemGroup>
-	  <Compile Update="Errors.Designer.cs">
-	    <DesignTime>True</DesignTime>
-	    <AutoGen>True</AutoGen>
-	    <DependentUpon>Errors.resx</DependentUpon>
-	  </Compile>
-	</ItemGroup>
-  <PropertyGroup>
-    <!-- For VSCode/Razor compat -->
-    <CoreCompileDependsOn>PrepareResources;$(CoreCompileDependsOn)</CoreCompileDependsOn>
-  </PropertyGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Update="@(EmbeddedResource)">
-      <Generator>MSBuild:Compile</Generator>
-      <StronglyTypedFileName>$(IntermediateOutputPath)\$([MSBuild]::ValueOrDefault('%(RelativeDir)', '').Replace('\', '.').Replace('/', '.'))%(Filename).g$(DefaultLanguageSourceExtension)</StronglyTypedFileName>
-      <StronglyTypedLanguage>$(Language)</StronglyTypedLanguage>
-      <StronglyTypedNamespace Condition="'%(RelativeDir)' == ''">$(RootNamespace)</StronglyTypedNamespace>
-      <StronglyTypedNamespace Condition="'%(RelativeDir)' != ''">$(RootNamespace).$([MSBuild]::ValueOrDefault('%(RelativeDir)', '').Replace('\', '.').Replace('/', '.').TrimEnd('.'))</StronglyTypedNamespace>
-      <StronglyTypedClassName>%(Filename)</StronglyTypedClassName>
-    </EmbeddedResource>
-  </ItemGroup>
 </Project>

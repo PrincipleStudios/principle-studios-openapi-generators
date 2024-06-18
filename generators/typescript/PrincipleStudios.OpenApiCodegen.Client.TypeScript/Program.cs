@@ -3,6 +3,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers;
 using PrincipleStudios.OpenApi.Transformations;
+using PrincipleStudios.OpenApi.Transformations.Diagnostics;
+using PrincipleStudios.OpenApi.Transformations.DocumentTypes;
+using PrincipleStudios.OpenApi.Transformations.Specifications;
 using PrincipleStudios.OpenApi.TypeScript;
 using System;
 using System.IO;
@@ -37,6 +40,17 @@ namespace PrincipleStudios.OpenApiCodegen.Client.TypeScript
 				var clean = commandLineApplication.Options.Find(opt => opt.LongName == "clean")?.HasValue() ?? false;
 
 				var options = LoadOptions(optionsPath);
+
+				var (baseDocument, registry) = LoadDocument(inputPath, options);
+				var parseResult = CommonParsers.DefaultParsers.Parse(baseDocument, registry);
+				if (parseResult == null)
+					return 3;
+				if (parseResult.Diagnostics.Count > 0)
+				{
+					foreach (var d in parseResult.Diagnostics)
+						Console.Error.WriteLine(ToDiagnosticMessage(d));
+					return 4;
+				}
 
 				var openApiDocument = LoadOpenApiDocument(inputPath);
 				if (openApiDocument == null)
@@ -79,6 +93,31 @@ namespace PrincipleStudios.OpenApiCodegen.Client.TypeScript
 			commandLineApplication.Execute(args);
 		}
 
+		private static string ToDiagnosticMessage(DiagnosticBase d)
+		{
+			var position = d.Location.Range is FileLocationRange { Start: var start }
+				? $"({start.Line},{start.Column})"
+				: "";
+			// TODO: diagnostic message line
+			return $"{d.Location.RetrievalUri.LocalPath}{position}: {d.GetType().FullName}";
+		}
+
+		private static Uri ToInternalUri(string documentPath) =>
+			new Uri(new Uri(documentPath).AbsoluteUri);
+
+		private static (IDocumentReference, DocumentRegistry) LoadDocument(string documentPath, TypeScriptSchemaOptions options)
+		{
+			return DocumentResolverFactory.FromInitialDocumentInMemory(
+				ToInternalUri(Path.Combine(Directory.GetCurrentDirectory(), documentPath)),
+				File.ReadAllText(documentPath),
+				ToResolverOptions(options)
+			);
+		}
+
+		private static DocumentRegistryOptions ToResolverOptions(TypeScriptSchemaOptions options) =>
+			new DocumentRegistryOptions([
+			// TODO: use the `options` to determine how to resolve additional documents
+			]);
 
 		private static string GetVersionInfo()
 		{

@@ -2,4 +2,5 @@
 <Project>
 	<Import Project="$(RepositoryEngineeringDir)AutoCodeFormat.targets" Condition="exists('$(MSBuildThisFileDirectory)eng/AutoCodeFormat.targets')" />
 	<Import Project="$(RepositoryEngineeringDir)packaging.targets" />
+	<Import Project="$(RepositoryEngineeringDir)resx-generation.targets" />
 </Project>
