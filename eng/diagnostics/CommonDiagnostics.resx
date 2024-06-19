@@ -193,4 +193,8 @@
     <value>Unable to parse node of type {0} in OpenAPI 3.0 document</value>
     <comment/>
   </data>
+  <data name="PrincipleStudios.OpenApi.Transformations.Specifications.UnableToParseDiagnostic" xml:space="preserve">
+    <value>Unable to parse the document; unknown document type</value>
+    <comment/>
+  </data>
 </root>

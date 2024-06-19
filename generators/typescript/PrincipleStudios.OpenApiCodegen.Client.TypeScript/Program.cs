@@ -43,13 +43,11 @@ namespace PrincipleStudios.OpenApiCodegen.Client.TypeScript
 
 				var (baseDocument, registry) = LoadDocument(inputPath, options);
 				var parseResult = CommonParsers.DefaultParsers.Parse(baseDocument, registry);
-				if (parseResult == null)
-					return 3;
 				if (parseResult.Diagnostics.Count > 0)
 				{
 					foreach (var d in parseResult.Diagnostics)
 						Console.Error.WriteLine(ToDiagnosticMessage(d));
-					return 4;
+					return 3;
 				}
 
 				var openApiDocument = LoadOpenApiDocument(inputPath);

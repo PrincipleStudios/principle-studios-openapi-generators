@@ -35,9 +35,9 @@ public class ClientGenerator : IOpenApiCodeGenerator
 		var options = LoadOptionsFromMetadata(additionalTextMetadata);
 		var (baseDocument, registry) = LoadDocument(documentPath, documentContents, options);
 		var parseResult = CommonParsers.DefaultParsers.Parse(baseDocument, registry);
-		if (parseResult == null)
-			return new GenerationResult(Array.Empty<OpenApiCodegen.SourceEntry>(), [/* TODO */]);
 		var parsedDiagnostics = parseResult.Diagnostics.Select(DiagnosticsConversion.ToDiagnosticInfo).ToArray();
+		if (!parseResult.HasDocument)
+			return new GenerationResult(Array.Empty<OpenApiCodegen.SourceEntry>(), parsedDiagnostics);
 
 		// TODO - use result from `parseResult` instead of re-parsing with alternative
 		if (!TryParseFile(documentContents, out var document, out var diagnostic))
@@ -66,8 +66,6 @@ public class ClientGenerator : IOpenApiCodeGenerator
 			document = reader.Read(openapiTextContent, out var openApiDiagnostic);
 			if (openApiDiagnostic.Errors.Any())
 			{
-				// TODO - report issues
-
 				return false;
 			}
 
@@ -77,7 +75,6 @@ public class ClientGenerator : IOpenApiCodeGenerator
 		catch
 #pragma warning restore CA1031 // Do not catch general exception types
 		{
-			// TODO - report invalid files
 			return false;
 		}
 	}

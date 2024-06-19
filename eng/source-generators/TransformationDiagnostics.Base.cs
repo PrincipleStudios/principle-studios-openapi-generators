@@ -13,6 +13,14 @@ public partial class TransformationDiagnostics
 								category: "PrincipleStudios.OpenApiCodegen",
 								DiagnosticSeverity.Error,
 								isEnabledByDefault: true);
+	[TransformationDiagnostic("PrincipleStudios.OpenApi.Transformations.Specifications.UnableToParseDiagnostic")]
+	public static readonly DiagnosticDescriptor UnableToParseDiagnostic =
+		new DiagnosticDescriptor(id: "PS_PARSE_003",
+								title: "Could not identify the document type",
+								messageFormat: PrincipleStudios_OpenApi_Transformations_Specifications_UnableToParseDiagnostic,
+								category: "PrincipleStudios.OpenApiCodegen",
+								DiagnosticSeverity.Error,
+								isEnabledByDefault: true);
 	[TransformationDiagnostic("PrincipleStudios.OpenApi.Transformations.InvalidDocumentBaseUri")]
 	public static readonly DiagnosticDescriptor InvalidDocumentBaseUriDiagostic =
 		new DiagnosticDescriptor(id: "PS_PARSE_004",
