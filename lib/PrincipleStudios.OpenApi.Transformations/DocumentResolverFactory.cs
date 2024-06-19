@@ -17,23 +17,14 @@ public static class DocumentResolverFactory
 
 	public static DocumentResolver RelativeFrom(IDocumentReference documentReference)
 	{
-		// TODO
 		return (baseUri, _) =>
 		{
 			var relative = documentReference.BaseUri.MakeRelativeUri(baseUri);
 			if (relative.IsAbsoluteUri) return null;
 			var path = new Uri(documentReference.RetrievalUri, relative);
 			if (path.Scheme != "file") return null;
-			try
-			{
-				using var sr = new StreamReader(path.LocalPath);
-				return docLoader.LoadDocument(baseUri, sr, documentReference.Dialect);
-			}
-			catch
-			{
-				// return null;
-				throw;
-			}
+			using var sr = new StreamReader(path.LocalPath);
+			return docLoader.LoadDocument(baseUri, sr, documentReference.Dialect);
 		};
 	}
 

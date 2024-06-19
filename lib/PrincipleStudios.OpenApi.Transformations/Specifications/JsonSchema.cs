@@ -57,7 +57,6 @@ public class AnnotatedJsonSchema : JsonSchema
 
 public interface IJsonSchemaKeyword
 {
-	// Defnition for a keyword - TODO: parse into IJsonSchemaKeyword
 	DiagnosableResult<IJsonSchemaAnnotation> ParseAnnotation(string keyword, NodeMetadata nodeInfo, JsonSchemaParserOptions options);
 }
 
