@@ -21,13 +21,11 @@ namespace PrincipleStudios.OpenApiCodegen.TestUtils
 
 		public static Microsoft.OpenApi.Models.OpenApiDocument GetDocument(string name)
 		{
-			GetOpenApiDocument(name);
+			var doc = GetOpenApiDocument(name);
 
-			using (var documentStream = typeof(DocumentHelpers).Assembly.GetManifestResourceStream($"PrincipleStudios.OpenApiCodegen.TestUtils.schemas.{name}"))
-			{
-				var reader = new OpenApiStreamReader();
-				return reader.Read(documentStream, out var openApiDiagnostic);
-			}
+			using var documentStream = DocumentLoader.GetEmbeddedDocumentStream(doc.Document!.Id);
+			var reader = new OpenApiStreamReader();
+			return reader.Read(documentStream, out var openApiDiagnostic);
 		}
 
 		public static IDocumentReference GetDocumentReference(string name)
@@ -35,7 +33,7 @@ namespace PrincipleStudios.OpenApiCodegen.TestUtils
 
 		public static IDocumentReference GetDocumentReference(OpenApi.Transformations.DocumentRegistry registry, string name)
 		{
-			var uri = new Uri($"proj://embedded/{name}");
+			var uri = new Uri(DocumentLoader.Embedded, name);
 			return GetDocumentByUri(registry, uri);
 		}
 
@@ -46,7 +44,7 @@ namespace PrincipleStudios.OpenApiCodegen.TestUtils
 
 		public static IDocumentReference GetDocumentByUri(OpenApi.Transformations.DocumentRegistry registry, Uri uri)
 		{
-			return registry.ResolveDocument(new UriBuilder(uri) { Fragment = "" }.Uri, null) ?? throw new InvalidOperationException("Embeded document not found");
+			return registry.ResolveDocument(uri, null) ?? throw new InvalidOperationException("Embeded document not found");
 		}
 
 		public static Microsoft.OpenApi.OpenApiSpecVersion ToSpecVersion(string? inputVersion)

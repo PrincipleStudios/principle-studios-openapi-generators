@@ -59,8 +59,7 @@ public class DocumentRegistry(DocumentRegistryOptions registryOptions)
 
 	public bool TryGetDocument(Uri uri, [NotNullWhen(true)] out IDocumentReference? doc)
 	{
-		var docUri = new UriBuilder(uri) { Fragment = "" }.Uri;
-		doc = entries.FirstOrDefault(e => e.Document.BaseUri == docUri)?.Document;
+		doc = entries.FirstOrDefault(e => e.Document.BaseUri == uri)?.Document;
 		return doc != null;
 	}
 
@@ -129,8 +128,8 @@ public class DocumentRegistry(DocumentRegistryOptions registryOptions)
 		if (docUri.Fragment is { Length: > 0 })
 			docUri = new UriBuilder(docUri) { Fragment = "" }.Uri;
 
-		var document = (from r in registryOptions.Resolvers
-						let doc = r(docUri, relativeDocument)
+		var document = (from resolver in registryOptions.Resolvers
+						let doc = resolver(docUri, relativeDocument)
 						where doc != null
 						select doc).FirstOrDefault();
 		if (document == null)
