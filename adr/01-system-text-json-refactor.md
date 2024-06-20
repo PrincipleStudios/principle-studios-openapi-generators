@@ -1,7 +1,9 @@
 # System.Text.Json refactor
 
 In order to leverage features such as `$ref` to other documents, we'll be
-refactoring to use System.Text.Json via [json-everything][json-everything].
+refactoring to use System.Text.Json and a custom JSON Schema implementation. The
+custom JSON Schema implementation is needed to support newer and older versions
+of JSON Schema side-by-side; existing libraries do not provide that capability.
 
 ## Concepts
 
@@ -12,9 +14,9 @@ beyond the first do not need to follow a specific schema.
 
 ### Registry
 
-We'll keep in memory a registry of [Schema URI](json-schema-structuring)s to JSON nodes. This
-registry will also contain a reference to the original document for use with
-error reporting.
+We'll keep in memory a registry of [Schema URI][json-schema-structuring]s to
+JSON nodes. This registry will also contain a reference to the original document
+for use with error reporting.
 
 ### Validation
 
