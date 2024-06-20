@@ -17,6 +17,7 @@ PS_OPENAPI_3.0_001 | PrincipleStudios.OpenApiCodegen | Error | TransformationDia
 PS_OPENAPI_3.0_002 | PrincipleStudios.OpenApiCodegen | Error | TransformationDiagnostics
 PS_OPENAPI_3.0_UNK | PrincipleStudios.OpenApiCodegen | Error | TransformationDiagnostics
 PS_PARSE_002 | PrincipleStudios.OpenApiCodegen | Error | TransformationDiagnostics
+PS_PARSE_003 | PrincipleStudios.OpenApiCodegen | Error | TransformationDiagnostics
 PS_PARSE_004 | PrincipleStudios.OpenApiCodegen | Error | TransformationDiagnostics
 PS_PARSE_005 | PrincipleStudios.OpenApiCodegen | Error | TransformationDiagnostics
 PS_PARSE_006 | PrincipleStudios.OpenApiCodegen | Error | TransformationDiagnostics
