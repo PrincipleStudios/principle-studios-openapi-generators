@@ -3,7 +3,7 @@
 		<UseProjectReferences Condition=" '$(UseProjectReferences)' == '' ">true</UseProjectReferences>
 	</PropertyGroup>
 
-	<ItemGroup Condition=" '$(UseProjectReferences)' == '' ">
+	<ItemGroup Condition=" '$(UseProjectReferences)' != 'true' ">
 		<PackageReference Include="PrincipleStudios.OpenApiCodegen.Server.Mvc" Condition=" '$(OpenApiMvcServerFullVersion)' != '' " Version="$(OpenApiMvcServerFullVersion)" />
 		<PackageReference Include="PrincipleStudios.OpenApiCodegen.Server.Mvc" Condition=" '$(OpenApiMvcServerFullVersion)' == '' and '$(VersionSuffix)' == '' " Version="$(OpenApiMvcServerVersion)" />
 		<PackageReference Include="PrincipleStudios.OpenApiCodegen.Server.Mvc" Condition=" '$(OpenApiMvcServerFullVersion)' == '' and '$(VersionSuffix)' != '' " Version="$(OpenApiMvcServerVersion)-$(VersionSuffix)" />
@@ -12,7 +12,7 @@
 		<PackageReference Include="PrincipleStudios.OpenApiCodegen.Json.Extensions" Condition=" '$(OpenApiJsonExtensionsFullVersion)' == '' and '$(VersionSuffix)' == '' " Version="$(OpenApiJsonExtensionsVersion)" />
 		<PackageReference Include="PrincipleStudios.OpenApiCodegen.Json.Extensions" Condition=" '$(OpenApiJsonExtensionsFullVersion)' == '' and '$(VersionSuffix)' != '' " Version="$(OpenApiJsonExtensionsVersion)-$(VersionSuffix)" />
 	</ItemGroup>
-	<ItemGroup Condition=" '$(UseProjectReferences)' != '' ">
+	<ItemGroup Condition=" '$(UseProjectReferences)' == 'true' ">
 		<ProjectReference Include="$(SolutionRoot)lib\PrincipleStudios.OpenApiCodegen.Json.Extensions\PrincipleStudios.OpenApiCodegen.Json.Extensions.csproj" />
 
 		<ProjectReference
@@ -27,7 +27,7 @@
 	</ItemGroup>
 
 	<!-- When using project references, props/targets that are in the NuGet package don't get automatically picked up -->
-	<Import Condition=" '$(UseProjectReferences)' != '' "
+	<Import Condition=" '$(UseProjectReferences)' == 'true' "
 		Project="$(SolutionRoot)generators\dotnetcore-server-interfaces\PrincipleStudios.OpenApiCodegen.Server.Mvc\PrincipleStudios.OpenApiCodegen.Server.Mvc.props" />
 
 </Project>

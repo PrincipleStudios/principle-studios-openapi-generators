@@ -12,10 +12,11 @@ COPY ./examples/dotnetcore-server-interfaces/tooling/NuGet.Sample.Config ./NuGet
 ARG VersionSuffix
 ARG GitHubToken
 RUN dotnet restore -p VersionSuffix=${VersionSuffix} \
-                   -p TreatWarningsAsErrors=true
+                   -p TreatWarningsAsErrors=true \
+                   -p UseProjectReferences=false
 
 COPY ./schemas/ ./schemas/
 COPY ./examples/dotnetcore-server-interfaces/PrincipleStudios.ServerInterfacesExample/ ./PrincipleStudios.ServerInterfacesExample/
 COPY ./examples/dotnetcore-server-interfaces/PrincipleStudios.ServerInterfacesExample.Oauth/ ./PrincipleStudios.ServerInterfacesExample.Oauth/
-RUN dotnet build --no-restore -p VersionSuffix=${VersionSuffix}
+RUN dotnet build --no-restore -p VersionSuffix=${VersionSuffix} -p UseProjectReferences=false
 
