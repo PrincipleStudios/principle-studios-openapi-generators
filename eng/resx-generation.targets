@@ -1,6 +1,6 @@
 <Project>
 	<PropertyGroup>
-		<CoreCompileDependsOn>PrepareResources;$(CompileDependsOn)</CoreCompileDependsOn>
+		<CoreCompileDependsOn>PrepareResources;$(CoreCompileDependsOn)</CoreCompileDependsOn>
 	</PropertyGroup>
 	<ItemGroup>
 		<EmbeddedResource Update="$(ProjectDir)**/*">
