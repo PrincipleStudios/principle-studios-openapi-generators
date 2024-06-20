@@ -1,4 +1,7 @@
 <Project>
+	<PropertyGroup>
+		<CoreCompileDependsOn>PrepareResources;$(CompileDependsOn)</CoreCompileDependsOn>
+	</PropertyGroup>
 	<ItemGroup>
 		<EmbeddedResource Include="$(MSBuildThisFileDirectory)CommonDiagnostics.resx">
 			<Generator>MSBuild:Compile</Generator>
