@@ -1,6 +1,8 @@
 <Project>
 	<ItemGroup>
-		<Compile Include="$(MSBuildThisFileDirectory)*.cs" Visible="false" />
+		<Compile Include="$(MSBuildThisFileDirectory)*.cs">
+			<Link>source-generation/%(filename).resx</Link>
+		</Compile>
 	</ItemGroup>
 	<Import Project="$(RepositoryEngineeringDir)diagnostics/includes.targets" />
 </Project>

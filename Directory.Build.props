@@ -54,6 +54,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<None Include="$(MSBuildThisFileDirectory)assets\logo_black_small.png" Pack="true" PackagePath="\" Visible="false"/>
+		<None Include="$(MSBuildThisFileDirectory)assets\logo_black_small.png" Pack="true" PackagePath="\" Link="nuget/logo_black_small.png" />
+		<None Condition="exists('$(ProjectDir)readme.md')" Include="$(ProjectDir)readme.md" Pack="true" PackagePath="\" Link="nuget/readme.md" />
 	</ItemGroup>
 </Project>
