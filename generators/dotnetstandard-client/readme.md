@@ -1,6 +1,6 @@
 # OpenAPI Codegen for .NET Standard HttpClient
 
-See the Readme in /generators/dotnetcore-server-interfaces/PrincipleStudios.OpenApiCodegen.Server.Mvc for usage details.
+See the Readme in /generators/dotnetcore-server-interfaces/OpenApiCodegen.Server.Mvc for usage details.
 
 ## Testing locally
 
@@ -11,7 +11,7 @@ See the Readme in /generators/dotnetcore-server-interfaces/PrincipleStudios.Open
 
 3. Run:
 
-        dotnet build examples\dotnetstandard-client\PrincipleStudios.ClientInterfacesExample\PrincipleStudios.ClientInterfacesExample.csproj -p:UseProjectReferences=true --no-incremental
+        dotnet build examples\dotnetstandard-client\ClientInterfacesExample\ClientInterfacesExample.csproj -p:UseProjectReferences=true --no-incremental
 
 You must repeat step 2 each time the code changes; this should detatch your debugger.
 
@@ -19,5 +19,5 @@ Consider:
 
 - Adding binary log to the build command and use the [MSBuild Binary and Structured Log Viewer](https://msbuildlog.com/)
 
-        dotnet build examples\dotnetstandard-client\PrincipleStudios.ClientInterfacesExample\PrincipleStudios.ClientInterfacesExample.csproj -bl:..\binlogs\client-examples.binlog --no-incremental -p:UseProjectReferences=true; start ..\binlogs\client-examples.binlog
+        dotnet build examples\dotnetstandard-client\ClientInterfacesExample\ClientInterfacesExample.csproj -bl:..\binlogs\client-examples.binlog --no-incremental -p:UseProjectReferences=true; start ..\binlogs\client-examples.binlog
 

@@ -1,0 +1,39 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<RootNamespace>$(RootNamespacePrefix).OpenApi.CSharp</RootNamespace>
+		<TargetFramework>netstandard2.0</TargetFramework>
+		<VersionPrefix Condition=" '$(VersionPrefix)' == '' ">$(OpenApiMvcServerVersion)</VersionPrefix>
+
+		<IsPackable>true</IsPackable>
+		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+
+		<PackageLicenseExpression>BSD-2-Clause</PackageLicenseExpression>
+		<title>Controller source generators from OpenAPI specification for .NET 5</title>
+		<PackageSummary>Adds source generators to generate C# controller base classes from an OpenAPI specification file.</PackageSummary>
+		<description>Adds source generators to generate C# controller base classes from an OpenAPI specification file.</description>
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<IncludeBuildOutput>false</IncludeBuildOutput>
+		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+		<PackageReadmeFile>readme.md</PackageReadmeFile>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<None Include="*.props" Exclude="$(MSBuildProjectName).props" Pack="true" PackagePath="build" />
+		<None Include="$(MSBuildProjectName).props" Pack="true" PackagePath="build/$(RootNamespacePrefix).$(MSBuildProjectName).props" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<AnalyzerReference Include="..\OpenApiCodegen.Server.Mvc.Analyzers\OpenApiCodegen.Server.Mvc.Roslyn3.11.csproj" />
+		<AnalyzerReference Include="..\OpenApiCodegen.Server.Mvc.Analyzers\OpenApiCodegen.Server.Mvc.Roslyn4.0.csproj"
+						   ReferenceAnalyzer="false" />
+	</ItemGroup>
+
+	<Target Name="AddDlls" BeforeTargets="_GetPackageFiles">
+		<!-- Resolves NU5128 -->
+		<Touch Files="$(OutputPath)\_._" AlwaysCreate="true" />
+		<ItemGroup>
+			<None Include="$(OutputPath)\_._" Pack="true" PackagePath="lib/$(TargetFramework)" Visible="false" />
+		</ItemGroup>
+	</Target>
+</Project>

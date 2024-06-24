@@ -13,21 +13,21 @@
 		<PackageReference Include="PrincipleStudios.OpenApiCodegen.Json.Extensions" Condition=" '$(OpenApiJsonExtensionsFullVersion)' == '' and '$(VersionSuffix)' != '' " Version="$(OpenApiJsonExtensionsVersion)-$(VersionSuffix)" />
 	</ItemGroup>
 	<ItemGroup Condition=" '$(UseProjectReferences)' == 'true' ">
-		<ProjectReference Include="$(SolutionRoot)lib\PrincipleStudios.OpenApiCodegen.Json.Extensions\PrincipleStudios.OpenApiCodegen.Json.Extensions.csproj" />
+		<ProjectReference Include="$(SolutionRoot)lib\OpenApiCodegen.Json.Extensions\OpenApiCodegen.Json.Extensions.csproj" />
 
 		<ProjectReference
-			Include="$(SolutionRoot)generators\dotnetcore-server-interfaces\PrincipleStudios.OpenApiCodegen.Server.Mvc.Analyzers\PrincipleStudios.OpenApiCodegen.Server.Mvc.Roslyn3.11.csproj"
+			Include="$(SolutionRoot)generators\dotnetcore-server-interfaces\OpenApiCodegen.Server.Mvc.Analyzers\OpenApiCodegen.Server.Mvc.Roslyn3.11.csproj"
 			OutputItemType="Analyzer"
 			ReferenceOutputAssembly="false" />
 		<!-- Not an analyzer, but the project-reference analyzer needs all child dependencies, too -->
 		<ProjectReference
-			Include="$(SolutionRoot)lib\PrincipleStudios.OpenApiCodegen\PrincipleStudios.OpenApiCodegen.csproj"
+			Include="$(SolutionRoot)lib\OpenApiCodegen\OpenApiCodegen.csproj"
 			OutputItemType="Analyzer"
 			ReferenceOutputAssembly="false" />
 	</ItemGroup>
 
 	<!-- When using project references, props/targets that are in the NuGet package don't get automatically picked up -->
 	<Import Condition=" '$(UseProjectReferences)' == 'true' "
-		Project="$(SolutionRoot)generators\dotnetcore-server-interfaces\PrincipleStudios.OpenApiCodegen.Server.Mvc\PrincipleStudios.OpenApiCodegen.Server.Mvc.props" />
+		Project="$(SolutionRoot)generators\dotnetcore-server-interfaces\OpenApiCodegen.Server.Mvc\OpenApiCodegen.Server.Mvc.props" />
 
 </Project>

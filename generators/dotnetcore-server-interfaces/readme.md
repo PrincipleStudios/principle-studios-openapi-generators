@@ -17,8 +17,8 @@ Prerequisites:
 
 3. Run one of the following:
 
-        dotnet build examples\dotnetcore-server-interfaces\PrincipleStudios.ServerInterfacesExample\PrincipleStudios.ServerInterfacesExample.csproj -p:UseProjectReferences=true --no-incremental
-        dotnet build examples\dotnetcore-server-interfaces\PrincipleStudios.ServerInterfacesExample.Oauth\PrincipleStudios.ServerInterfacesExample.Oauth.csproj -p:UseProjectReferences=true --no-incremental
+        dotnet build examples\dotnetcore-server-interfaces\ServerInterfacesExample\ServerInterfacesExample.csproj -p:UseProjectReferences=true --no-incremental
+        dotnet build examples\dotnetcore-server-interfaces\ServerInterfacesExample.Oauth\ServerInterfacesExample.Oauth.csproj -p:UseProjectReferences=true --no-incremental
 
 You must repeat step 2 each time the code changes; this should detatch your debugger.
 
@@ -26,8 +26,8 @@ Consider:
 
 - Adding binary log to the build command and use the [MSBuild Binary and Structured Log Viewer](https://msbuildlog.com/)
 
-        dotnet build examples\dotnetcore-server-interfaces\PrincipleStudios.ServerInterfacesExample\PrincipleStudios.ServerInterfacesExample.csproj -bl:..\binlogs\server-examples.binlog --no-incremental -p:UseProjectReferences=true; start ..\binlogs\server-examples.binlog
-        dotnet build examples\dotnetcore-server-interfaces\PrincipleStudios.ServerInterfacesExample.Oauth\PrincipleStudios.ServerInterfacesExample.Oauth.csproj -p:UseProjectReferences=true --no-incremental -bl:..\binlogs\server-examples-oauth.binlog --no-incremental -p:UseProjectReferences=true; start ..\binlogs\server-examples-oauth.binlog
+        dotnet build examples\dotnetcore-server-interfaces\ServerInterfacesExample\ServerInterfacesExample.csproj -bl:..\binlogs\server-examples.binlog --no-incremental -p:UseProjectReferences=true; start ..\binlogs\server-examples.binlog
+        dotnet build examples\dotnetcore-server-interfaces\ServerInterfacesExample.Oauth\ServerInterfacesExample.Oauth.csproj -p:UseProjectReferences=true --no-incremental -bl:..\binlogs\server-examples-oauth.binlog --no-incremental -p:UseProjectReferences=true; start ..\binlogs\server-examples-oauth.binlog
 
 
 [1]: https://github.com/microsoft/OpenAPI.NET

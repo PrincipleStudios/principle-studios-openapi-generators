@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<RootNamespace>$(RootNamespacePrefix).OpenApi.CSharp</RootNamespace>
+		<TargetFramework>netstandard2.0</TargetFramework>
+		<VersionPrefix>$(SharedAnalyzerLibrariesVersion)</VersionPrefix>
+		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+	</PropertyGroup>
+
+	<Import Project="$(RepositoryEngineeringDir)netstandard/polyfills.targets" />
+
+	<ItemGroup>
+		<None Remove="Templates\*.handlebars" />
+		<EmbeddedResource Include="Templates\*.handlebars" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="$(SolutionRoot)lib\OpenApi.CSharp\OpenApi.CSharp.csproj" SpecificVersion="true" />
+		<ProjectReference Include="$(SolutionRoot)lib\OpenApiCodegen\OpenApiCodegen.csproj" SpecificVersion="true" />
+	</ItemGroup>
+</Project>

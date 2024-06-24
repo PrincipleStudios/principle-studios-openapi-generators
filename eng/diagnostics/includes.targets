@@ -8,8 +8,8 @@
 			<Generator>MSBuild:Compile</Generator>
 			<StronglyTypedFileName>$(IntermediateOutputPath)\CommonDiagnostics.resx.g$(DefaultLanguageSourceExtension)</StronglyTypedFileName>
 			<StronglyTypedLanguage>$(Language)</StronglyTypedLanguage>
-			<StronglyTypedNamespace>PrincipleStudios.OpenApiCodegen</StronglyTypedNamespace>
-			<ManifestResourceName>PrincipleStudios.OpenApiCodegen.CommonDiagnostics</ManifestResourceName>
+			<StronglyTypedNamespace>$(RootNamespacePrefix).OpenApiCodegen</StronglyTypedNamespace>
+			<ManifestResourceName>$(RootNamespacePrefix).OpenApiCodegen.CommonDiagnostics</ManifestResourceName>
 			<StronglyTypedClassName>CommonDiagnostics</StronglyTypedClassName>
 		</EmbeddedResource>
 	</ItemGroup>

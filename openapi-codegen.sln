@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31912.275
 MinimumVisualStudioVersion = 15.0.26124.0
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PrincipleStudios.OpenApiCodegen.Server.Mvc", "generators\dotnetcore-server-interfaces\PrincipleStudios.OpenApiCodegen.Server.Mvc\PrincipleStudios.OpenApiCodegen.Server.Mvc.csproj", "{62DE31B8-C290-4005-91A5-EC91F276DCC5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenApiCodegen.Server.Mvc", "generators\dotnetcore-server-interfaces\OpenApiCodegen.Server.Mvc\OpenApiCodegen.Server.Mvc.csproj", "{62DE31B8-C290-4005-91A5-EC91F276DCC5}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{D2200E3D-74EF-46B0-90B8-A2042FDA416F}"
 	ProjectSection(SolutionItems) = preProject
@@ -11,53 +11,53 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Directory.Build.props = Directory.Build.props
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PrincipleStudios.OpenApiCodegen.Server.Mvc.Test", "lib\PrincipleStudios.OpenApiCodegen.Server.Mvc.Test\PrincipleStudios.OpenApiCodegen.Server.Mvc.Test.csproj", "{DC8A6FFA-DD3A-4B33-800E-CD8D9166A58D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenApiCodegen.Server.Mvc.Test", "lib\OpenApiCodegen.Server.Mvc.Test\OpenApiCodegen.Server.Mvc.Test.csproj", "{DC8A6FFA-DD3A-4B33-800E-CD8D9166A58D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PrincipleStudios.OpenApiCodegen.Server.Mvc.Roslyn3.11", "generators\dotnetcore-server-interfaces\PrincipleStudios.OpenApiCodegen.Server.Mvc.Analyzers\PrincipleStudios.OpenApiCodegen.Server.Mvc.Roslyn3.11.csproj", "{9946C7BF-F669-48A1-AAF8-17ED1EC44C6F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenApiCodegen.Server.Mvc.Roslyn3.11", "generators\dotnetcore-server-interfaces\OpenApiCodegen.Server.Mvc.Analyzers\OpenApiCodegen.Server.Mvc.Roslyn3.11.csproj", "{9946C7BF-F669-48A1-AAF8-17ED1EC44C6F}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Server.Mvc", "Server.Mvc", "{C800B3FC-9890-4858-B2F3-4DA9B6957415}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Client.TypeScript", "Client.TypeScript", "{6425AC08-57C0-4453-A78A-537E9514CE7B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PrincipleStudios.OpenApiCodegen.Client.TypeScript", "generators\typescript\PrincipleStudios.OpenApiCodegen.Client.TypeScript\PrincipleStudios.OpenApiCodegen.Client.TypeScript.csproj", "{C0E47301-8CB1-44F6-8321-BCB9C09219BB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenApiCodegen.Client.TypeScript", "generators\typescript\OpenApiCodegen.Client.TypeScript\OpenApiCodegen.Client.TypeScript.csproj", "{C0E47301-8CB1-44F6-8321-BCB9C09219BB}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PrincipleStudios.OpenApiCodegen.Client.TypeScript.Test", "lib\PrincipleStudios.OpenApiCodegen.Client.TypeScript.Test\PrincipleStudios.OpenApiCodegen.Client.TypeScript.Test.csproj", "{7F4E8BD3-E0B2-44B0-B175-40852137E928}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenApiCodegen.Client.TypeScript.Test", "lib\OpenApiCodegen.Client.TypeScript.Test\OpenApiCodegen.Client.TypeScript.Test.csproj", "{7F4E8BD3-E0B2-44B0-B175-40852137E928}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Client.CSharp", "Client.CSharp", "{BFF7FB51-DB27-4E46-B575-DDD11430DE8C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PrincipleStudios.OpenApiCodegen.Client.Roslyn3.11", "generators\dotnetstandard-client\PrincipleStudios.OpenApiCodegen.Client.Analyzers\PrincipleStudios.OpenApiCodegen.Client.Roslyn3.11.csproj", "{6280AE1B-7534-4450-A502-2657D3B1F5D4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenApiCodegen.Client.Roslyn3.11", "generators\dotnetstandard-client\OpenApiCodegen.Client.Analyzers\OpenApiCodegen.Client.Roslyn3.11.csproj", "{6280AE1B-7534-4450-A502-2657D3B1F5D4}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PrincipleStudios.OpenApiCodegen.Client.CSharp.Test", "lib\PrincipleStudios.OpenApiCodegen.Client.CSharp.Test\PrincipleStudios.OpenApiCodegen.Client.CSharp.Test.csproj", "{ADC3DB9C-888A-483E-A146-00683CDC4698}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenApiCodegen.Client.CSharp.Test", "lib\OpenApiCodegen.Client.CSharp.Test\OpenApiCodegen.Client.CSharp.Test.csproj", "{ADC3DB9C-888A-483E-A146-00683CDC4698}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PrincipleStudios.OpenApiCodegen.Client", "generators\dotnetstandard-client\PrincipleStudios.OpenApiCodegen.Client\PrincipleStudios.OpenApiCodegen.Client.csproj", "{4CA8F765-D7CC-44DD-B752-F5A38FFAD977}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenApiCodegen.Client", "generators\dotnetstandard-client\OpenApiCodegen.Client\OpenApiCodegen.Client.csproj", "{4CA8F765-D7CC-44DD-B752-F5A38FFAD977}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PrincipleStudios.OpenApiCodegen.TestUtils", "lib\PrincipleStudios.OpenApiCodegen.TestUtils\PrincipleStudios.OpenApiCodegen.TestUtils.csproj", "{31AF9FE6-B031-4080-9F11-BBBEAE1A8C0D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenApiCodegen.TestUtils", "lib\OpenApiCodegen.TestUtils\OpenApiCodegen.TestUtils.csproj", "{31AF9FE6-B031-4080-9F11-BBBEAE1A8C0D}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "lib", "lib", "{AAC9998B-F9AF-4096-92CB-81914E85BE56}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PrincipleStudios.OpenApi.Transformations", "lib\PrincipleStudios.OpenApi.Transformations\PrincipleStudios.OpenApi.Transformations.csproj", "{61FF4A9C-3FAF-4DD2-BE92-233B894758F9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenApi.Transformations", "lib\OpenApi.Transformations\OpenApi.Transformations.csproj", "{61FF4A9C-3FAF-4DD2-BE92-233B894758F9}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PrincipleStudios.OpenApi.CSharp", "lib\PrincipleStudios.OpenApi.CSharp\PrincipleStudios.OpenApi.CSharp.csproj", "{3FF0B60D-AEEB-401F-BB97-51D42EFE7D55}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenApi.CSharp", "lib\OpenApi.CSharp\OpenApi.CSharp.csproj", "{3FF0B60D-AEEB-401F-BB97-51D42EFE7D55}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PrincipleStudios.OpenApi.TypeScript", "lib\PrincipleStudios.OpenApi.TypeScript\PrincipleStudios.OpenApi.TypeScript.csproj", "{91FFC178-D772-4C7A-BC98-E23BAA4D9B09}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenApi.TypeScript", "lib\OpenApi.TypeScript\OpenApi.TypeScript.csproj", "{91FFC178-D772-4C7A-BC98-E23BAA4D9B09}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PrincipleStudios.OpenApiCodegen.Server.Mvc.Roslyn4.0", "generators\dotnetcore-server-interfaces\PrincipleStudios.OpenApiCodegen.Server.Mvc.Analyzers\PrincipleStudios.OpenApiCodegen.Server.Mvc.Roslyn4.0.csproj", "{9623E35A-E80B-4643-B867-071C072A6EE7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenApiCodegen.Server.Mvc.Roslyn4.0", "generators\dotnetcore-server-interfaces\OpenApiCodegen.Server.Mvc.Analyzers\OpenApiCodegen.Server.Mvc.Roslyn4.0.csproj", "{9623E35A-E80B-4643-B867-071C072A6EE7}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PrincipleStudios.OpenApiCodegen.Client.Roslyn4.0", "generators\dotnetstandard-client\PrincipleStudios.OpenApiCodegen.Client.Analyzers\PrincipleStudios.OpenApiCodegen.Client.Roslyn4.0.csproj", "{C724EA82-3A7D-4171-957D-7CF998B6B4EF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenApiCodegen.Client.Roslyn4.0", "generators\dotnetstandard-client\OpenApiCodegen.Client.Analyzers\OpenApiCodegen.Client.Roslyn4.0.csproj", "{C724EA82-3A7D-4171-957D-7CF998B6B4EF}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PrincipleStudios.OpenApiCodegen.Json.Extensions", "lib\PrincipleStudios.OpenApiCodegen.Json.Extensions\PrincipleStudios.OpenApiCodegen.Json.Extensions.csproj", "{2014CC5F-3E0A-4D2E-9AEE-1A020142784F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenApiCodegen.Json.Extensions", "lib\OpenApiCodegen.Json.Extensions\OpenApiCodegen.Json.Extensions.csproj", "{2014CC5F-3E0A-4D2E-9AEE-1A020142784F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PrincipleStudios.OpenApiCodegen.JsonExtensions.Test", "lib\PrincipleStudios.OpenApiCodegen.Json.Extensions.Test\PrincipleStudios.OpenApiCodegen.JsonExtensions.Test.csproj", "{60BDF8F2-6A1B-4676-8064-3AADF3A66285}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenApiCodegen.JsonExtensions.Test", "lib\OpenApiCodegen.Json.Extensions.Test\OpenApiCodegen.JsonExtensions.Test.csproj", "{60BDF8F2-6A1B-4676-8064-3AADF3A66285}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PrincipleStudios.OpenApiCodegen.Server.Mvc.Cli", "generators\dotnetcore-server-interfaces\PrincipleStudios.OpenApiCodegen.Server.Mvc.Cli\PrincipleStudios.OpenApiCodegen.Server.Mvc.Cli.csproj", "{3C758002-8D87-4C29-8E2C-6E16CE9F2D27}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenApiCodegen.Server.Mvc.Cli", "generators\dotnetcore-server-interfaces\OpenApiCodegen.Server.Mvc.Cli\OpenApiCodegen.Server.Mvc.Cli.csproj", "{3C758002-8D87-4C29-8E2C-6E16CE9F2D27}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PrincipleStudios.OpenApiCodegen.Server.Mvc.TestApp", "lib\TestApp\PrincipleStudios.OpenApiCodegen.Server.Mvc.TestApp.csproj", "{D32247C4-1645-4DFB-88D2-6BC8D923051A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenApiCodegen.Server.Mvc.TestApp", "lib\TestApp\OpenApiCodegen.Server.Mvc.TestApp.csproj", "{D32247C4-1645-4DFB-88D2-6BC8D923051A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PrincipleStudios.OpenApiCodegen.Server.Mvc.Base", "generators\dotnetcore-server-interfaces\PrincipleStudios.OpenApiCodegen.Server.Mvc.Base\PrincipleStudios.OpenApiCodegen.Server.Mvc.Base.csproj", "{7F6316D3-3824-4DC6-A68D-01BC82F9B028}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenApiCodegen.Server.Mvc.Base", "generators\dotnetcore-server-interfaces\OpenApiCodegen.Server.Mvc.Base\OpenApiCodegen.Server.Mvc.Base.csproj", "{7F6316D3-3824-4DC6-A68D-01BC82F9B028}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PrincipleStudios.OpenApiCodegen", "lib\PrincipleStudios.OpenApiCodegen\PrincipleStudios.OpenApiCodegen.csproj", "{D1702287-F937-4429-BF77-4A3862746C1F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenApiCodegen", "lib\OpenApiCodegen\OpenApiCodegen.csproj", "{D1702287-F937-4429-BF77-4A3862746C1F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PrincipleStudios.OpenApiCodegen.Client.Base", "generators\dotnetstandard-client\PrincipleStudios.OpenApiCodegen.Client.Base\PrincipleStudios.OpenApiCodegen.Client.Base.csproj", "{11554C34-D81C-4F07-A38D-1E1995014AD2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenApiCodegen.Client.Base", "generators\dotnetstandard-client\OpenApiCodegen.Client.Base\OpenApiCodegen.Client.Base.csproj", "{11554C34-D81C-4F07-A38D-1E1995014AD2}"
 EndProject
 Project("{13B669BE-BB05-4DDF-9536-439F39A36129}") = "npm-typescript", "generators\typescript\npm\npm-typescript.esproj", "{4F53F6E7-E23C-46FB-888C-F139E785F90F}"
 EndProject
@@ -69,15 +69,15 @@ Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "npm-typescript-msw", "gener
 EndProject
 Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "npm-typescript-fetch", "generators\typescript-fetch\npm-typescript-fetch.esproj", "{B3B027A0-8911-4EBC-AEBC-85420F7E5F34}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PrincipleStudios.OpenApi.Transformations.Test", "lib\PrincipleStudios.OpenApi.Transformations.Test\PrincipleStudios.OpenApi.Transformations.Test.csproj", "{3E05CC19-276A-4813-96BA-C13A70DBCCE8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenApi.Transformations.Test", "lib\OpenApi.Transformations.Test\OpenApi.Transformations.Test.csproj", "{3E05CC19-276A-4813-96BA-C13A70DBCCE8}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PrincipleStudios.OpenApiCodegen.Client.TypeScript.Test", "PrincipleStudios.OpenApiCodegen.Client.TypeScript.Test", "{92C4D8A8-9406-4E16-9C7B-B2F097AAE585}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "OpenApiCodegen.Client.TypeScript.Test", "OpenApiCodegen.Client.TypeScript.Test", "{92C4D8A8-9406-4E16-9C7B-B2F097AAE585}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PrincipleStudios.OpenApiCodegen.Client.TypeScript.TestProject", "lib\PrincipleStudios.OpenApiCodegen.Client.TypeScript.Test\testing\PrincipleStudios.OpenApiCodegen.Client.TypeScript.TestProject.esproj", "{197DEECA-6BD6-49FB-BA0B-B19A172819A4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenApiCodegen.Client.TypeScript.TestProject", "lib\OpenApiCodegen.Client.TypeScript.Test\testing\OpenApiCodegen.Client.TypeScript.TestProject.esproj", "{197DEECA-6BD6-49FB-BA0B-B19A172819A4}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "generators", "generators", "{E1F51D46-DB3D-4E9E-BF40-9DA215001E71}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PrincipleStudios.SourceGenertors.Test", "generators\PrincipleStudios.SourceGenertors.Test\PrincipleStudios.SourceGenertors.Test.csproj", "{EB6E2DAE-7A1B-4FA2-9940-AB20E7BFCA7A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SourceGenertors.Test", "generators\SourceGenertors.Test\SourceGenertors.Test.csproj", "{EB6E2DAE-7A1B-4FA2-9940-AB20E7BFCA7A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

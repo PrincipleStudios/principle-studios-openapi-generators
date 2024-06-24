@@ -1,0 +1,8 @@
+<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<AssemblyName>$(RootNamespacePrefix).$(MSBuildProjectName).$(SharedAnalyzerLibrariesVersion)</AssemblyName>
+		<TargetFramework>netstandard2.0</TargetFramework>
+		<VersionPrefix>$(SharedAnalyzerLibrariesVersion)</VersionPrefix>
+	</PropertyGroup>
+	<Import Project="$(RepositoryEngineeringDir)netstandard/polyfills.targets" />
+</Project>

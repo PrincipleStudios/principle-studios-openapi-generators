@@ -95,7 +95,7 @@ importers:
 
   generators/typescript/npm: {}
 
-  lib/PrincipleStudios.OpenApiCodegen.Client.TypeScript.Test/testing:
+  lib/OpenApiCodegen.Client.TypeScript.Test/testing:
     devDependencies:
       '@principlestudios/openapi-codegen-typescript':
         specifier: workspace:*

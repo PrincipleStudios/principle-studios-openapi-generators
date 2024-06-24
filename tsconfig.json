@@ -13,7 +13,7 @@
 			"path": "./generators/typescript-rxjs/npm"
 		},
 		{
-			"path": "./lib/PrincipleStudios.OpenApiCodegen.Client.TypeScript.Test/testing"
+			"path": "./lib/OpenApiCodegen.Client.TypeScript.Test/testing"
 		}
 	],
 	"exclude": ["./artifacts", "./examples", "./lib", "./generators"]

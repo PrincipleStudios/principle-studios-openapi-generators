@@ -1,0 +1,49 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<ApplicationIcon />
+		<OutputType>Exe</OutputType>
+		<StartupObject />
+
+		<!-- CA1861 - use static readonly fields -->
+		<NoWarn>$(NoWarn);CA1861</NoWarn>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="3.1.20" />
+	</ItemGroup>
+	<ItemGroup Condition=" '$(UseProjectReferences)' != 'true' ">
+		<PackageReference Include="PrincipleStudios.OpenApiCodegen.Client" Condition=" '$(OpenApiCSharpClientFullVersion)' != '' " Version="$(OpenApiCSharpClientFullVersion)" />
+		<PackageReference Include="PrincipleStudios.OpenApiCodegen.Client" Condition=" '$(OpenApiCSharpClientFullVersion)' == '' and '$(VersionSuffix)' == '' " Version="$(OpenApiCSharpClientVersion)" />
+		<PackageReference Include="PrincipleStudios.OpenApiCodegen.Client" Condition=" '$(OpenApiCSharpClientFullVersion)' == '' and '$(VersionSuffix)' != '' " Version="$(OpenApiCSharpClientVersion)-$(VersionSuffix)" />
+
+		<PackageReference Include="PrincipleStudios.OpenApiCodegen.Json.Extensions" Condition=" '$(OpenApiJsonExtensionsFullVersion)' != '' " Version="$(OpenApiJsonExtensionsFullVersion)" />
+		<PackageReference Include="PrincipleStudios.OpenApiCodegen.Json.Extensions" Condition=" '$(OpenApiJsonExtensionsFullVersion)' == '' and '$(VersionSuffix)' == '' " Version="$(OpenApiJsonExtensionsVersion)" />
+		<PackageReference Include="PrincipleStudios.OpenApiCodegen.Json.Extensions" Condition=" '$(OpenApiJsonExtensionsFullVersion)' == '' and '$(VersionSuffix)' != '' " Version="$(OpenApiJsonExtensionsVersion)-$(VersionSuffix)" />
+	</ItemGroup>
+	<ItemGroup Condition=" '$(UseProjectReferences)' == 'true' ">
+		<ProjectReference Include="$(SolutionRoot)lib\OpenApiCodegen.Json.Extensions\OpenApiCodegen.Json.Extensions.csproj" />
+
+		<ProjectReference
+			Include="$(SolutionRoot)generators\dotnetstandard-client\OpenApiCodegen.Client.Analyzers\OpenApiCodegen.Client.Roslyn3.11.csproj"
+			OutputItemType="Analyzer"
+			ReferenceOutputAssembly="false" />
+		<!-- Not an analyzer, but the project-reference analyzer needs all child dependencies, too -->
+		<ProjectReference
+			Include="$(SolutionRoot)lib\OpenApiCodegen\OpenApiCodegen.csproj"
+			OutputItemType="Analyzer"
+			ReferenceOutputAssembly="false" />
+	</ItemGroup>
+
+	<!-- When using project references, props/targets that are in the NuGet package don't get automatically picked up -->
+	<Import Condition=" '$(UseProjectReferences)' == 'true' "
+		Project="$(SolutionRoot)generators\dotnetstandard-client\OpenApiCodegen.Client\OpenApiCodegen.Client.props" />
+
+	<ItemGroup>
+		<OpenApiSchemaClient Include="$(SolutionRoot)schemas\petstore.yaml" Link="Clients\Petstore\petstore.yaml" />
+		<OpenApiSchemaClient Include="$(SolutionRoot)schemas\petstore3.json" Link="Clients\Petstore3\petstore3.json" />
+	</ItemGroup>
+
+
+</Project>

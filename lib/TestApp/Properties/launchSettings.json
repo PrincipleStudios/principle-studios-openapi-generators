@@ -1,6 +1,6 @@
 {
 	"profiles": {
-		"PrincipleStudios.OpenApiCodegen.Server.Mvc.TestApp": {
+		"OpenApiCodegen.Server.Mvc.TestApp": {
 			"commandName": "Project",
 			"launchBrowser": true,
 			"environmentVariables": {

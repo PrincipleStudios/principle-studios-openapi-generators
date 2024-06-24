@@ -7,6 +7,10 @@
 
 		<SolutionRoot>$(MSBuildThisFileDirectory)</SolutionRoot>
 		<RepositoryEngineeringDir>$(SolutionRoot)eng/</RepositoryEngineeringDir>
+		<RootNamespacePrefix>PrincipleStudios</RootNamespacePrefix>
+		<AssemblyName Condition=" '$(AssemblyName)' == '' ">$(RootNamespacePrefix).$(MSBuildProjectName)</AssemblyName>
+		<RootNamespace>$(RootNamespacePrefix).$(MSBuildProjectName)</RootNamespace>
+		<PackageId>$(RootNamespacePrefix).$(MSBuildProjectName)</PackageId>
 
 		<Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
 		<Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>

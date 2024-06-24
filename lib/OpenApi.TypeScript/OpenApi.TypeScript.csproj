@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<AssemblyName>$(RootNamespacePrefix).OpenApi.TypeScript.$(SharedAnalyzerLibrariesVersion)</AssemblyName>
+		<TargetFramework>netstandard2.0</TargetFramework>
+		<VersionPrefix>$(SharedAnalyzerLibrariesVersion)</VersionPrefix>
+	</PropertyGroup>
+	<ItemGroup>
+		<PackageReference Include="Handlebars.Net" Version="2.1.4" />
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+		<PackageReference Include="SharpYaml" Version="2.1.0" />
+	</ItemGroup>
+	<Import Project="$(RepositoryEngineeringDir)netstandard/polyfills.targets" />
+	<ItemGroup>
+		<EmbeddedResource Include="$(MSBuildThisFileDirectory)Templates\*.handlebars">
+			<LogicalName>$(RootNamespacePrefix).OpenApi.TypeScript.Templates.%(Filename)%(Extension)</LogicalName>
+		</EmbeddedResource>
+		<EmbeddedResource Include="$(MSBuildThisFileDirectory)typescript.config.yaml">
+			<CopyToOutputDirectory>Never</CopyToOutputDirectory>
+			<LogicalName>$(RootNamespacePrefix).OpenApi.TypeScript.%(Filename)%(Extension)</LogicalName>
+		</EmbeddedResource>
+	</ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\OpenApi.Transformations\OpenApi.Transformations.csproj" SpecificVersion="true" />
+	</ItemGroup>
+</Project>

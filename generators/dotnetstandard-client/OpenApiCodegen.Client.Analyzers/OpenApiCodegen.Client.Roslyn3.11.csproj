@@ -1,0 +1,10 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<AssemblyName>$(RootNamespacePrefix).OpenApiCodegen.Client.Roslyn3_11</AssemblyName>
+
+		<AnalyzerRoslynVersion>3.11</AnalyzerRoslynVersion>
+	</PropertyGroup>
+
+	<Import Project="Analyzer.targets" />
+</Project>
