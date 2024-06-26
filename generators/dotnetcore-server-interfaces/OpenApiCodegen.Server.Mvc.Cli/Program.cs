@@ -6,6 +6,10 @@
 using Microsoft.Extensions.Configuration;
 using PrincipleStudios.OpenApi.CSharp;
 using PrincipleStudios.OpenApi.Transformations;
+using PrincipleStudios.OpenApi.Transformations.Specifications;
+using PrincipleStudios.OpenApi.Transformations.Diagnostics;
+using PrincipleStudios.OpenApiCodegen;
+using PrincipleStudios.OpenApi.Transformations.DocumentTypes;
 
 var openApiFilePath = args[0];
 var csharpNamespace = args[1];
@@ -23,8 +27,17 @@ if (Directory.Exists(outputFolder))
 	Directory.Delete(outputFolder, recursive: true);
 Directory.CreateDirectory(outputFolder);
 
-var document = GetDocument(openApiFilePath);
 var options = LoadOptions();
+var (baseDocument, registry) = LoadDocument(openApiFilePath, File.ReadAllText(openApiFilePath), options);
+var parseResult = CommonParsers.DefaultParsers.Parse(baseDocument, registry);
+var parsedDiagnostics = parseResult.Diagnostics.Select(DiagnosticsConversion.ToDiagnosticInfo).ToArray();
+if (!parseResult.HasDocument)
+{
+	LogDiagnostics(parsedDiagnostics);
+	return 1;
+}
+
+var document = GetDocument(openApiFilePath);
 options.PathPrefix = pathPrefix;
 
 var transformer = document.BuildCSharpPathControllerSourceProvider("", csharpNamespace, options);
@@ -34,7 +47,7 @@ var entries = transformer.GetSources(diagnostic).ToArray();
 
 foreach (var entry in entries)
 	File.WriteAllText(Path.Combine(outputFolder, entry.Key), entry.SourceText);
-
+return 0;
 
 Microsoft.OpenApi.Models.OpenApiDocument GetDocument(string path)
 {
@@ -51,4 +64,29 @@ CSharpServerSchemaOptions LoadOptions(Action<IConfigurationBuilder>? configureBu
 	var result = builder.Build().Get<CSharpServerSchemaOptions>()
 		?? throw new InvalidOperationException("Could not construct options");
 	return result;
+}
+
+static Uri ToInternalUri(string documentPath) =>
+		new Uri(new Uri(documentPath).AbsoluteUri);
+static (IDocumentReference, DocumentRegistry) LoadDocument(string documentPath, string documentContents, CSharpServerSchemaOptions options)
+{
+	return DocumentResolverFactory.FromInitialDocumentInMemory(
+		ToInternalUri(documentPath),
+		documentContents,
+		ToResolverOptions(options)
+	);
+}
+
+static DocumentRegistryOptions ToResolverOptions(CSharpServerSchemaOptions options) =>
+	new DocumentRegistryOptions([
+	// TODO: use the `options` to determine how to resolve additional documents
+	]);
+
+void LogDiagnostics(DiagnosticInfo[] parsedDiagnostics)
+{
+	foreach (var d in parsedDiagnostics)
+	{
+		var position = d.Location.Range is not { Start: var s } ? "" : $":{s.Line}:{s.Column}";
+		Console.Error.WriteLine($"{d.Location.FilePath}{position}: {d.Id} {string.Join(" ", d.Metadata)}");
+	}
 }

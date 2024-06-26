@@ -16,11 +16,6 @@ public class ExclusiveMinimumKeyword(string keyword, bool isExclusive) : IJsonSc
 		return DiagnosableResult<IJsonSchemaAnnotation>.Fail(new UnableToParseKeyword(keyword, options.Registry.ResolveLocation(nodeInfo)));
 	}
 
-	/// <summary>
-	/// The JSON name of the keyword.
-	/// </summary>
-	public const string Name = "exclusiveMinimum";
-
 	public string Keyword => keyword;
 
 	/// <summary>
