@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using PrincipleStudios.OpenApi.CSharp;
 using Microsoft.OpenApi.Any;
+using PrincipleStudios.OpenApiCodegen;
 
 namespace PrincipleStudios.OpenApi.CSharp
 {
@@ -59,11 +60,10 @@ namespace PrincipleStudios.OpenApi.CSharp
 			);
 
 			var entry = handlebarsFactory.Handlebars.ProcessController(template);
-			return new SourceEntry
-			{
-				Key = $"{baseNamespace}.{className}.cs",
-				SourceText = entry,
-			};
+			return new SourceEntry(
+				Key: $"{baseNamespace}.{className}.cs",
+				SourceText: entry
+			);
 		}
 
 		public string SanitizeGroupName(string groupName)
@@ -73,10 +73,9 @@ namespace PrincipleStudios.OpenApi.CSharp
 
 		internal SourceEntry TransformAddServicesHelper(OpenApiTransformDiagnostic diagnostic)
 		{
-			return new SourceEntry
-			{
-				Key = $"{baseNamespace}.AddServicesExtensions.cs",
-				SourceText = handlebarsFactory.Handlebars.ProcessAddServices(new Templates.AddServicesModel(
+			return new SourceEntry(
+				Key: $"{baseNamespace}.AddServicesExtensions.cs",
+				SourceText: handlebarsFactory.Handlebars.ProcessAddServices(new Templates.AddServicesModel(
 					Header: new Templates.PartialHeader(
 						AppName: document.Info.Title,
 						AppDescription: document.Info.Description,
@@ -86,8 +85,8 @@ namespace PrincipleStudios.OpenApi.CSharp
 					),
 					MethodName: CSharpNaming.ToMethodName(document.Info.Title, options.ReservedIdentifiers()),
 					PackageName: baseNamespace
-				)),
-			};
+				))
+			);
 		}
 
 		public IEnumerable<SourceEntry> GetSources(OpenApiTransformDiagnostic diagnostic)

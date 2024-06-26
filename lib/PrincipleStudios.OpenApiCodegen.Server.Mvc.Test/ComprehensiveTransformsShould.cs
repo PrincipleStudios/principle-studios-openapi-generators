@@ -45,7 +45,7 @@ namespace PrincipleStudios.OpenApiCodegen.Server.Mvc
 		}
 
 		[Fact]
-		public void ReportDiagnosticsForMissingReferences()
+		public void Report_unresolved_external_references()
 		{
 			OpenApiTransformDiagnostic diagnostic = GetDocumentDiagnostics("bad.yaml");
 

@@ -51,11 +51,10 @@ namespace PrincipleStudios.OpenApiCodegen.Client.TypeScript
 			);
 
 			var entry = handlebarsFactory.Handlebars.ProcessOperation(template);
-			return new SourceEntry
-			{
-				Key = OperationFileName(operation),
-				SourceText = entry,
-			};
+			return new SourceEntry(
+				Key: OperationFileName(operation),
+				SourceText: entry
+			);
 		}
 
 		private Templates.Operation ToOperation(OpenApiOperation operation, OpenApiContext context, OpenApiTransformDiagnostic diagnostic)
@@ -77,10 +76,9 @@ namespace PrincipleStudios.OpenApiCodegen.Client.TypeScript
 		internal SourceEntry TransformBarrelFileHelper(IEnumerable<OpenApiOperation> operations, OpenApiTransformDiagnostic diagnostic)
 		{
 			var thisPath = $"operations/index.ts";
-			return new SourceEntry
-			{
-				Key = thisPath,
-				SourceText = handlebarsFactory.Handlebars.ProcessBarrelFile(new Templates.OperationBarrelFileModel(
+			return new SourceEntry(
+				Key: thisPath,
+				SourceText: handlebarsFactory.Handlebars.ProcessBarrelFile(new Templates.OperationBarrelFileModel(
 					Header: new PartialHeader(
 						AppName: document.Info.Title,
 						AppDescription: document.Info.Description,
@@ -91,8 +89,8 @@ namespace PrincipleStudios.OpenApiCodegen.Client.TypeScript
 					Operations: (from op in operations
 								 select new Templates.OperationReference(OperationFileName(op).ToNodePath(thisPath), TypeScriptNaming.ToMethodName(op.OperationId, options.ReservedIdentifiers()))
 								 ).ToArray()
-				)),
-			};
+				))
+			);
 		}
 
 	}

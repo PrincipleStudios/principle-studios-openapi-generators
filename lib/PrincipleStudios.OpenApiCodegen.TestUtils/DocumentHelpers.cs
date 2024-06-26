@@ -1,28 +1,50 @@
-﻿using Microsoft.Extensions.Configuration;
-using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Readers;
+﻿using Microsoft.OpenApi.Readers;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using PrincipleStudios.OpenApi.Transformations.DocumentTypes;
+using PrincipleStudios.OpenApi.Transformations.Specifications;
+using PrincipleStudios.OpenApi.Transformations.Abstractions;
 
 namespace PrincipleStudios.OpenApiCodegen.TestUtils
 {
 	public static class DocumentHelpers
 	{
-		public static OpenApiDocument GetDocument(string name)
+		public static ParseResult<OpenApi.Transformations.Abstractions.OpenApiDocument> GetOpenApiDocument(string name)
 		{
-			using var documentStream = typeof(DocumentHelpers).Assembly.GetManifestResourceStream($"PrincipleStudios.OpenApiCodegen.TestUtils.schemas.{name}");
+			var registry = DocumentLoader.CreateRegistry();
+			var documentReference = GetDocumentReference(registry, name);
+			var parseResult = CommonParsers.DefaultParsers.Parse(documentReference, registry);
+			if (parseResult == null)
+				throw new InvalidOperationException("No parser found");
+
+			return parseResult;
+		}
+
+		public static Microsoft.OpenApi.Models.OpenApiDocument GetDocument(string name)
+		{
+			var doc = GetOpenApiDocument(name);
+
+			using var documentStream = DocumentLoader.GetEmbeddedDocumentStream(doc.Document!.Id);
 			var reader = new OpenApiStreamReader();
 			return reader.Read(documentStream, out var openApiDiagnostic);
 		}
 
-		public static string GetDocumentString(string name)
+		public static IDocumentReference GetDocumentReference(string name)
+			=> GetDocumentReference(DocumentLoader.CreateRegistry(), name);
+
+		public static IDocumentReference GetDocumentReference(OpenApi.Transformations.DocumentRegistry registry, string name)
 		{
-			using var documentStream = typeof(DocumentHelpers).Assembly.GetManifestResourceStream($"PrincipleStudios.OpenApiCodegen.TestUtils.schemas.{name}");
-			using var reader = new System.IO.StreamReader(documentStream!);
-			return reader.ReadToEnd();
+			var uri = new Uri(DocumentLoader.Embedded, name);
+			return GetDocumentByUri(registry, uri);
+		}
+
+		public static IDocumentReference GetDocumentByUri(Uri uri)
+		{
+			return GetDocumentByUri(DocumentLoader.CreateRegistry(), uri);
+		}
+
+		public static IDocumentReference GetDocumentByUri(OpenApi.Transformations.DocumentRegistry registry, Uri uri)
+		{
+			return registry.ResolveDocument(uri, null) ?? throw new InvalidOperationException("Embeded document not found");
 		}
 
 		public static Microsoft.OpenApi.OpenApiSpecVersion ToSpecVersion(string? inputVersion)

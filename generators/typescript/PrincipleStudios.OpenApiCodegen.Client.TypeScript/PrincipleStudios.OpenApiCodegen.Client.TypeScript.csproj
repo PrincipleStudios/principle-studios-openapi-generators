@@ -6,6 +6,7 @@
 		<UseAppHost>false</UseAppHost>
 		<VersionPrefix>$(OpenApiTypeScriptClientVersion)</VersionPrefix>
 	</PropertyGroup>
+	<Import Project="$(RepositoryEngineeringDir)diagnostics/includes.targets" />
 
 	<ItemGroup>
 		<None Remove="Templates\*.handlebars" />

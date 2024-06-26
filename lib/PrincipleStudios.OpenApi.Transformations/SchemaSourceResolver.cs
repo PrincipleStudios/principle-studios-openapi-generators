@@ -1,4 +1,5 @@
 ﻿using Microsoft.OpenApi.Models;
+using PrincipleStudios.OpenApiCodegen;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,7 +35,7 @@ namespace PrincipleStudios.OpenApi.Transformations
 			(from entry in referencedSchemas.Values
 			 let sourceEntry = entry.GetSourceEntry?.Invoke()
 			 where sourceEntry != null
-			 select sourceEntry.Value)
+			 select sourceEntry)
 			.Concat(GetAdditionalSources(referencedSchemas.Values.Select(v => v.Schema), diagnostic));
 
 		protected virtual IEnumerable<SourceEntry> GetAdditionalSources(IEnumerable<OpenApiSchema> referencedSchemas, OpenApiTransformDiagnostic diagnostic) => Enumerable.Empty<SourceEntry>();

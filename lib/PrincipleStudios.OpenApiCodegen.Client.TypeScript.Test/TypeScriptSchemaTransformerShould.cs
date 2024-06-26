@@ -8,6 +8,11 @@ using System.IO;
 using Microsoft.OpenApi.Readers;
 using System.Collections.Generic;
 using System;
+using PrincipleStudios.OpenApi.Transformations.DocumentTypes;
+using Json.Pointer;
+using System.Text.Json;
+using FluentAssertions;
+using PrincipleStudios.OpenApiCodegen.TestUtils;
 
 namespace PrincipleStudios.OpenApiCodegen.Client.TypeScript
 {
@@ -16,25 +21,28 @@ namespace PrincipleStudios.OpenApiCodegen.Client.TypeScript
 	public class TypeScriptSchemaTransformerShould
 	{
 		[Theory]
-		[InlineData(false, "petstore.yaml", "paths./pets.get.parameters[?(@.name=='tags')].schema")]
-		[InlineData(false, "petstore.yaml", "paths./pets.get.parameters[?(@.name=='limit')].schema")]
-		[InlineData(false, "petstore.yaml", "paths./pets.get.responses.200.content.application/json.schema")]
-		[InlineData(true, "petstore.yaml", "paths./pets.get.responses.200.content.application/json.schema.items")]
-		[InlineData(true, "petstore.yaml", "paths./pets.get.responses.default.content.application/json.schema")]
-		[InlineData(true, "petstore.yaml", "paths./pets.post.requestBody.content.application/json.schema")]
-		[InlineData(true, "petstore.yaml", "paths./pets.post.responses.200.content.application/json.schema")]
-		[InlineData(false, "petstore.yaml", "paths./pets/{id}.get.parameters[?(@.name=='id')].schema")]
-		[InlineData(false, "petstore.yaml", "paths./pets/{id}.delete.parameters[?(@.name=='id')].schema")]
-		[InlineData(true, "petstore.yaml", "components.schemas.Pet")]
-		[InlineData(true, "petstore.yaml", "components.schemas.NewPet")]
-		[InlineData(true, "petstore.yaml", "components.schemas.Error")]
-		[InlineData(false, "no-refs.yaml", "paths./address.post.requestBody.content.application/json.schema")]
-		[InlineData(false, "no-refs.yaml", "paths./address.post.requestBody.content.application/json.schema.properties.location")]
-		public void KnowWhenToGenerateSource(bool expectedInline, string documentName, string path)
+		[InlineData(false, "proj://embedded/petstore.yaml#/paths/~1pets/get/parameters/0/schema")]
+		[InlineData(false, "proj://embedded/petstore.yaml#/paths/~1pets/get/parameters/1/schema")]
+		[InlineData(false, "proj://embedded/petstore.yaml#/paths/~1pets/get/responses/200/content/application~1json/schema")]
+		[InlineData(true, "proj://embedded/petstore.yaml#/paths/~1pets/get/responses/200/content/application~1json/schema/items")]
+		[InlineData(true, "proj://embedded/petstore.yaml#/paths/~1pets/get/responses/default/content/application~1json/schema")]
+		[InlineData(true, "proj://embedded/petstore.yaml#/paths/~1pets/post/requestBody/content/application~1json/schema")]
+		[InlineData(true, "proj://embedded/petstore.yaml#/paths/~1pets/post/responses/200/content/application~1json/schema")]
+		[InlineData(false, "proj://embedded/petstore.yaml#/paths/~1pets~1{id}/get/parameters/0/schema")]
+		[InlineData(false, "proj://embedded/petstore.yaml#/paths/~1pets~1{id}/delete/parameters/0/schema")]
+		[InlineData(true, "proj://embedded/petstore.yaml#/components/schemas/Pet")]
+		[InlineData(true, "proj://embedded/petstore.yaml#/components/schemas/NewPet")]
+		[InlineData(true, "proj://embedded/petstore.yaml#/components/schemas/Error")]
+		[InlineData(false, "proj://embedded/no-refs.yaml#/paths/~1address/post/requestBody/content/application~1json/schema")]
+		[InlineData(false, "proj://embedded/no-refs.yaml#/paths/~1address/post/requestBody/content/application~1json/schema/properties/location")]
+		public void Know_when_to_generate_source(bool expectedInline, string schemaUriString)
 		{
-			var docContents = GetDocumentString(documentName);
+			var schemaUri = new Uri(schemaUriString);
+			var docRef = GetDocumentByUri(schemaUri);
 
-			var (document, schema) = GetSchema(docContents, path);
+			// TODO - use json schema instead
+
+			var (document, schema) = GetSchema(docRef, Uri.UnescapeDataString(schemaUri.Fragment.Substring(1)));
 			Assert.NotNull(document);
 			Assert.NotNull(schema);
 
@@ -44,44 +52,62 @@ namespace PrincipleStudios.OpenApiCodegen.Client.TypeScript
 			Assert.Equal(expectedInline, actual);
 		}
 
-		private (OpenApiDocument? document, OpenApiSchema? schema) GetSchema(string docContents, string path)
+		[Theory]
+		[InlineData(false, "petstore.yaml", "/paths/~1pets/get/parameters/0/schema")]
+		[InlineData(false, "petstore.yaml", "/paths/~1pets/get/parameters/1/schema")]
+		[InlineData(false, "petstore.yaml", "/paths/~1pets/get/responses/200/content/application~1json/schema")]
+		[InlineData(true, "petstore.yaml", "/paths/~1pets/get/responses/200/content/application~1json/schema/items")]
+		[InlineData(true, "petstore.yaml", "/paths/~1pets/get/responses/default/content/application~1json/schema")]
+		[InlineData(true, "petstore.yaml", "/paths/~1pets/post/requestBody/content/application~1json/schema")]
+		[InlineData(true, "petstore.yaml", "/paths/~1pets/post/responses/200/content/application~1json/schema")]
+		[InlineData(false, "petstore.yaml", "/paths/~1pets~1{id}/get/parameters/0/schema")]
+		[InlineData(false, "petstore.yaml", "/paths/~1pets~1{id}/delete/parameters/0/schema")]
+		[InlineData(true, "petstore.yaml", "/components/schemas/Pet")]
+		[InlineData(true, "petstore.yaml", "/components/schemas/NewPet")]
+		[InlineData(true, "petstore.yaml", "/components/schemas/Error")]
+		[InlineData(false, "no-refs.yaml", "/paths/~1address/post/requestBody/content/application~1json/schema")]
+		[InlineData(false, "no-refs.yaml", "/paths/~1address/post/requestBody/content/application~1json/schema/properties/location")]
+		public void KnowWhenToGenerateSource(bool expectedInline, string documentName, string path)
 		{
-			const string prefix = "components.schemas.";
+			var docRef = GetDocumentReference(documentName);
+
+			var (document, schema) = GetSchema(docRef, path);
+			Assert.NotNull(document);
+			Assert.NotNull(schema);
+
+			var target = ConstructTarget(document!, LoadOptions());
+			var actual = target.ProduceSourceEntry(schema!);
+
+			Assert.Equal(expectedInline, actual);
+		}
+
+		private static (OpenApiDocument? document, OpenApiSchema? schema) GetSchema(IDocumentReference docRef, string path)
+		{
+			const string prefix = "/components/schemas/";
 			var openApiReader = new OpenApiStringReader();
-			var document = openApiReader.Read(docContents, out var docDiagnostic);
+			var document = openApiReader.Read(docRef.RootNode?.ToJsonString(), out var docDiagnostic);
 
-			if (!path.StartsWith(prefix))
-			{
-				using var reader = new StringReader(docContents);
-				var serializer = new SharpYaml.Serialization.Serializer();
-				var deserialized = serializer.Deserialize(reader);
-				Newtonsoft.Json.Linq.JToken documentJObject = deserialized == null
-					? Newtonsoft.Json.Linq.JValue.CreateNull()
-					: Newtonsoft.Json.Linq.JObject.FromObject(deserialized);
-				var token = documentJObject.SelectToken(path);
-				if (token == null)
-				{
-					return (document, null);
-				}
-
-				var schema = openApiReader.ReadFragment<OpenApiSchema>(token.ToString(), ToSpecVersion((documentJObject["openapi"] ?? documentJObject["swagger"])?.ToObject<string>()), out var openApiDiagnostic);
-				if (schema.UnresolvedReference)
-					schema = (OpenApiSchema)document.ResolveReference(schema.Reference);
-				return (document, schema);
-			}
-			else
+			if (path.StartsWith(prefix))
 			{
 				return (document, document.Components.Schemas[path.Substring(prefix.Length)]);
 			}
+
+			if (!JsonPointer.Parse(path).TryEvaluate(docRef.RootNode, out var node) || node == null)
+			{
+				return (document, null);
+			}
+
+			var schema = openApiReader.ReadFragment<OpenApiSchema>(node.ToJsonString(), ToSpecVersion((docRef.RootNode!.AsObject().TryGetPropertyValue("openapi", out var n) ? n : null)?.GetValue<string>()), out var openApiDiagnostic);
+			if (schema.UnresolvedReference)
+				schema = (OpenApiSchema)document.ResolveReference(schema.Reference);
+			return (document, schema);
 		}
 
 		[Theory]
 		[MemberData(nameof(InlineAssertionData))]
 		public void ConvertToInlineTypes(string documentName, Func<OpenApiDocument, OpenApiSchema> findSchema, string expectedInline)
 		{
-			var docContents = GetDocumentString(documentName);
-			var openApiReader = new OpenApiStringReader();
-			var document = openApiReader.Read(docContents, out var docDiagnostic);
+			var document = GetDocument(documentName);
 
 			var schema = findSchema(document);
 
@@ -116,6 +142,5 @@ namespace PrincipleStudios.OpenApiCodegen.Client.TypeScript
 		{
 			return new TypeScriptSchemaSourceResolver(options, new HandlebarsFactory(HandlebarsTemplateProcess.CreateHandlebars), "");
 		}
-
 	}
 }

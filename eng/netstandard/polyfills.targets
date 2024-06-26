@@ -1,0 +1,7 @@
+<Project>
+	<ItemGroup>
+		<Compile Include="$(MSBuildThisFileDirectory)*.cs">
+			<Link>polyfills/%(filename).resx</Link>
+		</Compile>
+	</ItemGroup>
+</Project>

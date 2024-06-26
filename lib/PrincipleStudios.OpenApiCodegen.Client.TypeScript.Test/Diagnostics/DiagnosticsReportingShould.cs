@@ -1,4 +1,5 @@
 ﻿using PrincipleStudios.OpenApi.Transformations;
+using PrincipleStudios.OpenApi.Transformations.Specifications;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,6 +27,7 @@ public class DiagnosticsReportingShould
 	private static OpenApiTransformDiagnostic GetDocumentDiagnostics(string name)
 	{
 		var document = GetDocument(name);
+
 		var options = LoadOptions();
 
 		var transformer = document.BuildTypeScriptOperationSourceProvider("", options);

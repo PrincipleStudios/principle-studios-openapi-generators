@@ -2,6 +2,7 @@
 using Microsoft.OpenApi.Models;
 using PrincipleStudios.OpenApi.CSharp.Templates;
 using PrincipleStudios.OpenApi.Transformations;
+using PrincipleStudios.OpenApiCodegen;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -111,11 +112,10 @@ namespace PrincipleStudios.OpenApi.CSharp
 				model: model,
 				handlebarsFactory.Handlebars
 			);
-			return new SourceEntry
-			{
-				Key = $"{targetNamespace}.{className}.cs",
-				SourceText = entry,
-			};
+			return new SourceEntry(
+				Key: $"{targetNamespace}.{className}.cs",
+				SourceText: entry
+			);
 		}
 
 		private string GetClassName(OpenApiSchema schema)

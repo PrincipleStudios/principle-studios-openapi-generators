@@ -1,4 +1,5 @@
 ﻿using Microsoft.OpenApi.Models;
+using PrincipleStudios.OpenApiCodegen;
 using System.Collections.Generic;
 
 namespace PrincipleStudios.OpenApi.Transformations

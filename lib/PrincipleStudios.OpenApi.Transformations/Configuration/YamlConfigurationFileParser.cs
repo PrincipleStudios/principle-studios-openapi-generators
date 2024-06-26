@@ -64,7 +64,7 @@ namespace PrincipleStudios.OpenApi.Transformations.Configuration
 
 			if (_data.ContainsKey(currentKey))
 			{
-				throw new FormatException(Resources.FormatError_KeyIsDuplicated(currentKey));
+				throw new FormatException(string.Format(Resources.Error_KeyIsDuplicated, currentKey));
 			}
 
 			_data[currentKey] = IsNullValue(yamlValue) ? null : yamlValue.Value;

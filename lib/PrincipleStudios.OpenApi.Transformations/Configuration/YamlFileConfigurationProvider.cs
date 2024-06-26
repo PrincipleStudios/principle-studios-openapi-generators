@@ -21,7 +21,7 @@ namespace PrincipleStudios.OpenApi.Transformations.Configuration
 			}
 			catch (YamlException e)
 			{
-				throw new FormatException(Resources.FormatError_YamlParseError(e.Message), e);
+				throw new FormatException(string.Format(Resources.Error_YamlParseError, e.Message), e);
 			}
 		}
 	}

@@ -27,8 +27,7 @@
   },
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
-  "dependencies": {
-  },
+  "dependencies": {},
   "peerDependencies": {
     "msw": "^2.3.1",
     "@principlestudios/openapi-codegen-typescript": "workspace:^"

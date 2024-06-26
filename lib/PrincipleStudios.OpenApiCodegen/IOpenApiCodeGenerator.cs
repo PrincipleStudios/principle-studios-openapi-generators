@@ -1,13 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 
 namespace PrincipleStudios.OpenApiCodegen;
 
 public record SourceEntry(string Key, string SourceText);
 
-// TODO: add location info
-public record DiagnosticInfo(string Id);
+
+[DebuggerDisplay("{Line},{Column}")]
+public record DiagnosticLocationMark(int Line, int Column);
+[DebuggerDisplay("{Start},{End}")]
+public record DiagnosticLocationRange(DiagnosticLocationMark Start, DiagnosticLocationMark End)
+{
+}
+
+public record DiagnosticLocation(string FilePath, DiagnosticLocationRange? Range);
+
+public record DiagnosticInfo(string Id, DiagnosticLocation Location, IReadOnlyList<string> Metadata);
 
 public record GenerationResult(IReadOnlyList<SourceEntry> Sources, IReadOnlyList<DiagnosticInfo> Diagnostics);
 
@@ -16,5 +26,5 @@ public interface IOpenApiCodeGenerator
 {
 	IEnumerable<string> MetadataKeys { get; }
 
-	GenerationResult Generate(string documentContents, IReadOnlyDictionary<string, string?> additionalTextMetadata);
+	GenerationResult Generate(string documentPath, string documentContents, IReadOnlyDictionary<string, string?> additionalTextMetadata);
 }

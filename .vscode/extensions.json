@@ -4,6 +4,7 @@
 		"esbenp.prettier-vscode",
 		"bradlc.vscode-tailwindcss",
 		"42Crunch.vscode-openapi",
-		"ms-dotnettools.csdevkit"
+		"ms-dotnettools.csdevkit",
+		"vitest.explorer"
 	]
 }

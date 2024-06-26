@@ -1,5 +1,6 @@
 ﻿using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
+using PrincipleStudios.OpenApiCodegen;
 using System;
 using System.Collections.Generic;
 using System.Linq;

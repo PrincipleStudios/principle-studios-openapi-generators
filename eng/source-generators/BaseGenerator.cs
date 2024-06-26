@@ -22,11 +22,17 @@ public abstract class BaseGenerator :
 	ISourceGenerator
 #endif
 {
+	private static readonly DiagnosticDescriptor OpenApiConversionError = new DiagnosticDescriptor(id: "PS_PARSE_UNK",
+																								title: "A conversion error was encountered",
+																								messageFormat: "A conversion error was encountered: {0}",
+																								category: "PrincipleStudios.OpenApiCodegen",
+																								DiagnosticSeverity.Error,
+																								isEnabledByDefault: true);
 
 	private static readonly object lockHandle = new object();
 
 	private readonly Func<IEnumerable<string>> getMetadataKeys;
-	private readonly Func<string, IReadOnlyDictionary<string, string?>, object> generate;
+	private readonly Func<string, string, IReadOnlyDictionary<string, string?>, object> generate;
 
 	protected BaseGenerator(string generatorTypeName, string assemblyName)
 	{
@@ -35,8 +41,8 @@ public abstract class BaseGenerator :
 		var references = myAsm.GetReferencedAssemblies();
 
 		List<Assembly> loadedAssemblies = new() { myAsm };
-		AppDomain.CurrentDomain.ReflectionOnlyAssemblyResolve += ResolveAssembly;
-		AppDomain.CurrentDomain.AssemblyResolve += ResolveAssembly;
+		AppDomain.CurrentDomain.ReflectionOnlyAssemblyResolve += ResolveAssembly!;
+		AppDomain.CurrentDomain.AssemblyResolve += ResolveAssembly!;
 
 		// When using Type.GetType, the `RequestingAssembly` ends up null. If a generic is passed to Assembly.GetType, it also comes through as null.
 		// See https://github.com/dotnet/runtime/issues/11895, https://github.com/dotnet/runtime/issues/12668
@@ -45,15 +51,16 @@ public abstract class BaseGenerator :
 
 		var generator = Activator.CreateInstance(generatorType);
 
-		var generateMethod = generatorType.GetMethod("Generate");
+		var generateMethod = generatorType.GetMethod("Generate")!;
 		var generatorExpression = Constant(generator);
 		var compilerApisParameter = Parameter(typeof(CompilerApis));
+		var pathParameter = Parameter(typeof(string));
 		var textParameter = Parameter(typeof(string));
 		var dictionaryParameter = Parameter(typeof(IReadOnlyDictionary<string, string?>));
 		getMetadataKeys = Lambda<Func<IEnumerable<string>>>(Property(generatorExpression, "MetadataKeys")).Compile();
-		generate = Lambda<Func<string, IReadOnlyDictionary<string, string?>, object>>(
-			Convert(Call(generatorExpression, generateMethod, textParameter, dictionaryParameter), typeof(object))
-			, textParameter, dictionaryParameter).Compile();
+		generate = Lambda<Func<string, string, IReadOnlyDictionary<string, string?>, object>>(
+			Convert(Call(generatorExpression, generateMethod, pathParameter, textParameter, dictionaryParameter), typeof(object))
+			, pathParameter, textParameter, dictionaryParameter).Compile();
 
 		Assembly? ResolveAssembly(object sender, ResolveEventArgs ev)
 		{
@@ -130,7 +137,7 @@ public abstract class BaseGenerator :
 #endif
 
 
-	protected record AdditionalTextWithOptions(string TextContents, AnalyzerConfigOptions ConfigOptions);
+	protected record AdditionalTextWithOptions(string Path, string TextContents, AnalyzerConfigOptions ConfigOptions);
 	protected record CompilerApis(AddSourceText AddSource, ReportDiagnostic ReportDiagnostic)
 	{
 #pragma warning disable CA2225 // Operator overloads have named alternates
@@ -146,7 +153,7 @@ public abstract class BaseGenerator :
 	private static AdditionalTextWithOptions GetOptions(AdditionalText file, AnalyzerConfigOptionsProvider analyzerConfigOptions)
 	{
 		var opt = analyzerConfigOptions.GetOptions(file);
-		return new(file.GetText()?.ToString()!, opt);
+		return new(file.Path, file.GetText()?.ToString()!, opt);
 	}
 
 	protected abstract void ReportCompilationDiagnostics(Compilation compilation, CompilerApis apis);
@@ -154,7 +161,9 @@ public abstract class BaseGenerator :
 	private void GenerateSources(AdditionalTextWithOptions additionalText, CompilerApis apis)
 	{
 		IEnumerable<string> metadataKeys = getMetadataKeys();
+		// result is of type PrincipleStudios.OpenApiCodegen.GenerationResult
 		dynamic result = generate(
+			additionalText.Path,
 			additionalText.TextContents,
 			new ReadOnlyDictionary<string, string?>(
 				metadataKeys.ToDictionary(key => key, additionalText.ConfigOptions.GetAdditionalFilesMetadata)
@@ -166,7 +175,36 @@ public abstract class BaseGenerator :
 		}
 		foreach (var diagnostic in result.Diagnostics)
 		{
-			// TODO: diagnostics
+			if (TransformationDiagnostics.DiagnosticBy.TryGetValue((string)diagnostic.Id, out var descriptor))
+				apis.ReportDiagnostic(
+					Diagnostic.Create(
+						descriptor,
+						Location.Create(
+							diagnostic.Location.FilePath,
+							default(TextSpan),
+							diagnostic.Location.Range == null ? default : new LinePositionSpan(
+								new LinePosition(diagnostic.Location.Range.Start.Line - 1, diagnostic.Location.Range.Start.Column - 1),
+								new LinePosition(diagnostic.Location.Range.End.Line - 1, diagnostic.Location.Range.End.Column - 1)
+							)
+						),
+						((IReadOnlyList<object>)diagnostic.Metadata).ToArray()
+					)
+				);
+			else
+				apis.ReportDiagnostic(
+					Diagnostic.Create(
+						OpenApiConversionError,
+						Location.Create(
+							diagnostic.Location.FilePath,
+							default(TextSpan),
+							diagnostic.Location.Range == null ? default : new LinePositionSpan(
+								new LinePosition(diagnostic.Location.Range.Start.Line - 1, diagnostic.Location.Range.Start.Column - 1),
+								new LinePosition(diagnostic.Location.Range.End.Line - 1, diagnostic.Location.Range.End.Column - 1)
+							)
+						),
+						(string)diagnostic.Id
+					)
+				);
 		}
 	}
 
