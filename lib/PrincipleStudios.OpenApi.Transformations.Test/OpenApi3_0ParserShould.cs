@@ -10,6 +10,7 @@ namespace PrincipleStudios.OpenApi.Transformations;
 public class OpenApi3_0ParserShould
 {
 	[InlineData("all-of.yaml")]
+	[InlineData("annotations.yaml")]
 	[InlineData("enum.yaml")]
 	[InlineData("controller-extension.yaml")]
 	[InlineData("regex-escape.yaml")]
