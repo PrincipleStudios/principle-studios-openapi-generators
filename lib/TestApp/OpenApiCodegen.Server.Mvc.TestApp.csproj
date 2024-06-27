@@ -6,6 +6,8 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
 
+    <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
+    <CompilerGeneratedFilesOutputPath>generated</CompilerGeneratedFilesOutputPath>
   </PropertyGroup>
 
   <ItemGroup>
@@ -22,45 +24,19 @@
     <OpenApiSchemaMvcServer Include="$(SolutionRoot)schemas\nullable-vs-optional.yaml" Link="NullableVsOptional\nullable-vs-optional.yaml" Key="NullableVsOptional" PathPrefix="/nullable-vs-optional" />
     <OpenApiSchemaMvcServer Include="$(SolutionRoot)schemas\annotations.yaml" Link="Annotations\annotations.yaml" Key="Annotations" PathPrefix="/annotations" />
 
-	<Clean Include="generated/**/*" />
+    <Compile Remove="generated/**/*" />
+    <Clean Include="generated/**/*" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\generators\dotnetcore-server-interfaces\OpenApiCodegen.Server.Mvc.Cli\OpenApiCodegen.Server.Mvc.Cli.csproj" PrivateAssets="all" ReferenceOutputAssembly="false" OutputItemType="CodegenCli" />
+    <ProjectReference
+      Include="$(SolutionRoot)generators\dotnetcore-server-interfaces\OpenApiCodegen.Server.Mvc.Analyzers\OpenApiCodegen.Server.Mvc.Roslyn3.11.csproj"
+      OutputItemType="Analyzer"
+      ReferenceOutputAssembly="false" />
     <ProjectReference Include="..\OpenApiCodegen.Json.Extensions\OpenApiCodegen.Json.Extensions.csproj" />
   </ItemGroup>
 
-  <Target Name="CompileServerOpenApiCodeGen" AfterTargets="ResolveProjectReferences" DependsOnTargets="_GenerateServerOpenApiCodegen" Condition=" '@(OpenApiSchemaMvcServer)' != '' ">
-    <ItemGroup>
-      <Compile Include="generated/**/*.cs" />
-    </ItemGroup>
-  </Target>
-
-	<Target Name="_PrepareCodegenFiles">
-    <ItemGroup>
-      <Compile Remove="generated/**/*.cs" />
-      <CodegenCliFiles Include="@(OpenApiSchemaMvcServer)">
-        <WorkingOutputPath Condition=" '%(OpenApiSchemaMvcServer.Link)' != '' ">$([System.Text.RegularExpressions.Regex]::Replace(%(OpenApiSchemaMvcServer.Link), '(?&lt;=^|\\|/)..(?=$|\\|/)', '__'))</WorkingOutputPath>
-        <WorkingOutputPath Condition=" '%(OpenApiSchemaMvcServer.Link)' == '' ">$([System.Text.RegularExpressions.Regex]::Replace(%(OpenApiSchemaMvcServer.Identity), '(?&lt;=^|\\|/)..(?=$|\\|/)', '__'))</WorkingOutputPath>
-        <Namespace Condition=" '%(OpenApiSchemaMvcServer.Namespace)' != '' ">%(OpenApiSchemaMvcServer.Namespace)</Namespace>
-        <PathPrefix>%(OpenApiSchemaMvcServer.PathPrefix)</PathPrefix>
-        <Key>%(OpenApiSchemaMvcServer.Key)</Key>
-      </CodegenCliFiles>
-      <CodegenCliFiles>
-        <Namespace Condition=" '%(CodegenCliFiles.Namespace)' == '' ">$(RootNamespace)$([System.Text.RegularExpressions.Regex]::Replace($([System.Text.RegularExpressions.Regex]::Replace('/$([System.IO.Path]::GetDirectoryName('%(CodegenCliFiles.WorkingOutputPath)'))', '[/\\]', '.')), '\.$', ''))</Namespace>
-      </CodegenCliFiles>
-		<CodegenOutputFiles Include="$(MSBuildProjectDirectory)/generated/**/*.cs" />
-    </ItemGroup>
-
-	</Target>
-
-    <Target Name="_GenerateServerOpenApiCodegen" DependsOnTargets="_PrepareCodegenFiles" Inputs="%(CodegenCliFiles.FullPath);$(ProjectPath)" Outputs="@(CodegenCliFiles->'$(MSBuildProjectDirectory)/generated/%(Key)/_._')">
-        <PropertyGroup>
-          <CodegenCliPath>%(CodegenCli.Identity)</CodegenCliPath>
-        </PropertyGroup>
-
-		<Exec Command="dotnet &quot;$(CodegenCliPath)&quot; &quot;%(CodegenCliFiles.FullPath)&quot; &quot;%(CodegenCliFiles.Namespace)&quot; &quot;$(MSBuildProjectDirectory)/generated/%(CodegenCliFiles.Key)&quot; &quot;%(CodegenCliFiles.PathPrefix)&quot;" Outputs="CodegenOutputs" />
-		<Touch Files="$(MSBuildProjectDirectory)/generated/%(CodegenCliFiles.Key)/_._" AlwaysCreate="true" />
-	</Target>
+  <!-- The project reference won't include this due to the multi-version targeting trick -->
+  <Import Project="$(SolutionRoot)generators\dotnetcore-server-interfaces\OpenApiCodegen.Server.Mvc\OpenApiCodegen.Server.Mvc.props" />
 
 </Project>

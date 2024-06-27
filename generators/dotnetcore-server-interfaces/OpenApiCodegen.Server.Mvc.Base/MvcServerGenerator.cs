@@ -22,12 +22,14 @@ public class MvcServerGenerator : IOpenApiCodeGenerator
 	const string propConfig = "Configuration";
 	const string propIdentity = "identity";
 	const string propLink = "link";
+	const string propPathPrefix = "pathPrefix";
 	private readonly IEnumerable<string> metadataKeys = new[]
 	{
 		propNamespace,
 		propConfig,
 		propIdentity,
 		propLink,
+		propPathPrefix,
 	};
 
 	public IEnumerable<string> MetadataKeys => metadataKeys;
@@ -92,10 +94,10 @@ public class MvcServerGenerator : IOpenApiCodeGenerator
 
 	private static CSharpServerSchemaOptions LoadOptionsFromMetadata(IReadOnlyDictionary<string, string?> additionalTextMetadata)
 	{
-		return LoadOptions(additionalTextMetadata[propConfig]);
+		return LoadOptions(additionalTextMetadata[propConfig], additionalTextMetadata[propPathPrefix]);
 	}
 
-	private static CSharpServerSchemaOptions LoadOptions(string? optionsFiles)
+	private static CSharpServerSchemaOptions LoadOptions(string? optionsFiles, string? pathPrefix)
 	{
 		using var defaultJsonStream = CSharpSchemaOptions.GetDefaultOptionsJson();
 		var builder = new ConfigurationBuilder();
@@ -113,6 +115,10 @@ public class MvcServerGenerator : IOpenApiCodeGenerator
 		var result = builder.Build().Get<CSharpServerSchemaOptions>();
 		// TODO - generate diagnostic instead of throwing exception
 		if (result == null) throw new InvalidOperationException("Could not build schema options");
+
+		if (pathPrefix != null)
+			result.PathPrefix = pathPrefix;
+
 		return result;
 	}
 
