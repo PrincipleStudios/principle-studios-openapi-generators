@@ -4,24 +4,11 @@ namespace PrincipleStudios.OpenApi.Transformations.Diagnostics;
 
 public class DocumentException : Exception
 {
-	public delegate DiagnosticBase ToDiagnostic(Uri retrievalUri);
-	private readonly ToDiagnostic constructDiagnostic;
+	private readonly DiagnosticBase diagnostic;
+	public DiagnosticBase Diagnostic => diagnostic;
 
-	public DocumentException(ToDiagnostic constructDiagnostic)
+	public DocumentException(DiagnosticBase diagnostic, string message, Exception inner) : base(message, inner)
 	{
-		this.constructDiagnostic = constructDiagnostic;
-	}
-	public DocumentException(ToDiagnostic constructDiagnostic, string message) : base(message)
-	{
-		this.constructDiagnostic = constructDiagnostic;
-	}
-	public DocumentException(ToDiagnostic constructDiagnostic, string message, Exception inner) : base(message, inner)
-	{
-		this.constructDiagnostic = constructDiagnostic;
-	}
-
-	public DiagnosticBase ConstructDiagnostic(Uri retrievalUri)
-	{
-		return constructDiagnostic(retrievalUri);
+		this.diagnostic = diagnostic;
 	}
 }

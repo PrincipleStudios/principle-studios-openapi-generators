@@ -1,4 +1,4 @@
-﻿using PrincipleStudios.OpenApi.Transformations.Abstractions;
+using PrincipleStudios.OpenApi.Transformations.Abstractions;
 using PrincipleStudios.OpenApi.Transformations.Diagnostics;
 using PrincipleStudios.OpenApi.Transformations.DocumentTypes;
 using PrincipleStudios.OpenApi.Transformations.Specifications.Keywords;
@@ -421,7 +421,7 @@ internal class OpenApi3_0DocumentFactory : IOpenApiDocumentFactory
 			}
 			catch (DocumentException ex)
 			{
-				diagnostics.Add(ex.ConstructDiagnostic(key.Document.RetrievalUri));
+				diagnostics.Add(ex.Diagnostic);
 			}
 			catch (DiagnosticException ex)
 			{

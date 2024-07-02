@@ -28,7 +28,7 @@ public class YamlDocumentLoader : IDocumentTypeLoader
 		}
 		catch (YamlException ex)
 		{
-			throw new DocumentException(YamlLoadDiagnostic.Builder(ex), Errors.UnableToLoadYaml, ex);
+			throw new DocumentException(YamlLoadDiagnostic.Builder(ex, retrievalUri), Errors.UnableToLoadYaml, ex);
 		}
 
 		// TODO: check $ top-level variables for vocabulary overrides
@@ -110,12 +110,9 @@ public record YamlLoadDiagnostic(Location Location, string Message) : Diagnostic
 {
 	public override IReadOnlyList<string> GetTextArguments() => [Message];
 
-	public static DocumentException.ToDiagnostic Builder(YamlException ex)
+	public static YamlLoadDiagnostic Builder(YamlException ex, Uri retrievalUri)
 	{
 		var location = YamlUtils.FromException(ex);
-		return (retrievalUri) =>
-		{
-			return new YamlLoadDiagnostic(new Location(retrievalUri, location), ex.Message);
-		};
+		return new YamlLoadDiagnostic(new Location(retrievalUri, location), ex.Message);
 	}
 }
