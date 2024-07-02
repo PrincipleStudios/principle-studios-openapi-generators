@@ -11,7 +11,7 @@ public class MaxPropertiesKeyword(string keyword, int value) : IJsonSchemaAnnota
 {
 	public static readonly IJsonSchemaKeyword Instance = new JsonSchemaKeyword(Parse);
 
-	private static DiagnosableResult<IJsonSchemaAnnotation> Parse(string keyword, NodeMetadata nodeInfo, JsonSchemaParserOptions options)
+	private static DiagnosableResult<IJsonSchemaAnnotation> Parse(string keyword, ResolvableNode nodeInfo, JsonSchemaParserOptions options)
 	{
 		if (nodeInfo.Node is JsonValue val && val.TryGetValue<decimal>(out var value) && value % 1 == 0 && value >= 0)
 			return DiagnosableResult<IJsonSchemaAnnotation>.Pass(new MaxPropertiesKeyword(keyword, (int)value));
@@ -20,7 +20,7 @@ public class MaxPropertiesKeyword(string keyword, int value) : IJsonSchemaAnnota
 
 	public string Keyword => keyword;
 
-	public IEnumerable<DiagnosticBase> Evaluate(NodeMetadata nodeMetadata, AnnotatedJsonSchema context, EvaluationContext evaluationContext)
+	public IEnumerable<DiagnosticBase> Evaluate(ResolvableNode nodeMetadata, AnnotatedJsonSchema context, EvaluationContext evaluationContext)
 	{
 		// TODO
 		throw new System.NotImplementedException($"Not implemented: limit max properties to {value}");

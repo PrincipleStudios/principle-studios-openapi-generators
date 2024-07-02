@@ -23,7 +23,7 @@ public abstract class SchemaValidatingParser<TInterface> : IParser<TInterface>
 		if (!CanParse(documentReference)) throw new ArgumentException(Errors.ParserCannotHandleDocument, nameof(documentReference));
 
 		var schema = schemaResolver(documentRegistry);
-		var evaluationResults = schema.Evaluate(NodeMetadata.FromRoot(documentReference), new EvaluationContext(documentRegistry));
+		var evaluationResults = schema.Evaluate(ResolvableNode.FromRoot(documentReference), new EvaluationContext(documentRegistry));
 		return Construct(documentReference, evaluationResults, documentRegistry);
 	}
 

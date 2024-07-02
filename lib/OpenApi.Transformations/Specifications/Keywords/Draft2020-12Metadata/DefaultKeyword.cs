@@ -9,7 +9,7 @@ public class DefaultKeyword(string keyword, JsonNode? defaultValue) : IJsonSchem
 {
 	public static readonly IJsonSchemaKeyword Instance = new JsonSchemaKeyword(Parse);
 
-	private static DiagnosableResult<IJsonSchemaAnnotation> Parse(string keyword, NodeMetadata nodeInfo, JsonSchemaParserOptions options)
+	private static DiagnosableResult<IJsonSchemaAnnotation> Parse(string keyword, ResolvableNode nodeInfo, JsonSchemaParserOptions options)
 	{
 		return DiagnosableResult<IJsonSchemaAnnotation>.Pass(new DefaultKeyword(keyword, nodeInfo.Node));
 	}
@@ -18,7 +18,7 @@ public class DefaultKeyword(string keyword, JsonNode? defaultValue) : IJsonSchem
 
 	public JsonNode? DefaultValue => defaultValue;
 
-	public IEnumerable<DiagnosticBase> Evaluate(NodeMetadata nodeMetadata, AnnotatedJsonSchema context, EvaluationContext evaluationContext)
+	public IEnumerable<DiagnosticBase> Evaluate(ResolvableNode nodeMetadata, AnnotatedJsonSchema context, EvaluationContext evaluationContext)
 	{
 		yield break;
 	}

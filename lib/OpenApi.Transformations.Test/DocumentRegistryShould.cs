@@ -23,7 +23,7 @@ public class DocumentRegistryShould
 		var target = new DocumentRegistry(DefaultOptions());
 		var documentId = new Uri(internetDataSet.UrlWithPath());
 
-		var diag = AssertThrowsDiagnostic<ResolveDocumentDiagnostic>(() => target.ResolveNode(documentId));
+		var diag = AssertThrowsDiagnostic<ResolveDocumentDiagnostic>(() => target.ResolveMetadataNode(documentId));
 		Assert.Equal(documentId, diag.Uri);
 	}
 
@@ -37,7 +37,7 @@ public class DocumentRegistryShould
 
 		var documentId = new Uri(internetDataSet.UrlWithPath());
 
-		var diag = AssertThrowsDiagnostic<ResolveDocumentDiagnostic>(() => target.ResolveNode(documentId));
+		var diag = AssertThrowsDiagnostic<ResolveDocumentDiagnostic>(() => target.ResolveMetadataNode(documentId));
 		Assert.Equal(documentId, diag.Uri);
 	}
 
@@ -73,9 +73,9 @@ public class DocumentRegistryShould
 		CreateDocument(rootJson, out var documentMock, out var documentId);
 		target.AddDocument(documentMock.Object);
 
-		var actual = target.ResolveNode(documentId);
+		var actual = target.ResolveMetadataNode(documentId);
 
-		Assert.True(actual.IsEquivalentTo(rootJson.AsNode()));
+		Assert.True(actual.Node.IsEquivalentTo(rootJson.AsNode()));
 	}
 
 	[Fact]
@@ -90,31 +90,9 @@ public class DocumentRegistryShould
 			]
 		});
 
-		var actual = target.ResolveNode(documentId);
+		var actual = target.ResolveMetadataNode(documentId);
 
-		Assert.True(actual.IsEquivalentTo(rootJson.AsNode()));
-	}
-
-	[Fact]
-	public void Finds_a_relative_document_via_fetch()
-	{
-		var rootJson = "foo".AsJsonElement();
-		CreateDocument(rootJson, out var documentMock, out var documentId);
-
-		var relativePath = new Uri("/relative/path", UriKind.Relative);
-		var document2Id = new Uri(documentId, relativePath);
-		var rootJson2 = "foo2".AsJsonElement();
-		CreateDocumentWithRetrievalId(rootJson2, document2Id, out var document2Mock);
-		var target = new DocumentRegistry(DefaultOptions() with
-		{
-			Resolvers = [
-				(uri, relative) => uri == document2Id ? document2Mock.Object : null
-			]
-		});
-
-		var actual = target.ResolveNode(relativePath, documentMock.Object);
-
-		Assert.True(actual.IsEquivalentTo(rootJson2.AsNode()));
+		Assert.True(actual.Node.IsEquivalentTo(rootJson.AsNode()));
 	}
 
 	[Fact]
@@ -138,25 +116,8 @@ public class DocumentRegistryShould
 		target.AddDocument(documentMock.Object);
 		var fragmentId = new UriBuilder(documentId) { Fragment = "/foo/bar" }.Uri;
 
-		var actual = target.ResolveMetadata(fragmentId, null);
+		var actual = target.ResolveMetadataNode(fragmentId);
 
-		Assert.Equal(documentMock.Object, actual.Document);
-		Assert.Equal(fragmentId, actual.Id);
-		Assert.Equal("baz", actual.Node?.GetValue<string>());
-	}
-
-	[Fact]
-	public void Allow_fragment_metadata_to_be_retrieved_via_relative_fragment()
-	{
-		var target = new DocumentRegistry(DefaultOptions());
-		var rootJson = new { foo = new { bar = "baz" } }.ToJsonDocument().RootElement;
-		CreateDocument(rootJson, out var documentMock, out var documentId);
-		target.AddDocument(documentMock.Object);
-		var fragmentId = new UriBuilder(documentId) { Fragment = "/foo/bar" }.Uri;
-
-		var actual = target.ResolveMetadata(new Uri("#/foo/bar", UriKind.Relative), documentMock.Object);
-
-		Assert.Equal(documentMock.Object, actual.Document);
 		Assert.Equal(fragmentId, actual.Id);
 		Assert.Equal("baz", actual.Node?.GetValue<string>());
 	}
@@ -170,9 +131,9 @@ public class DocumentRegistryShould
 		target.AddDocument(documentMock.Object);
 		var fragmentId = new UriBuilder(documentId) { Fragment = "/foo/bar" }.Uri;
 
-		var actual = target.ResolveNode(fragmentId);
+		var actual = target.ResolveMetadataNode(fragmentId);
 
-		Assert.Equal("baz", actual?.GetValue<string>());
+		Assert.Equal("baz", actual.Node?.GetValue<string>());
 	}
 
 	[Fact]
@@ -184,7 +145,7 @@ public class DocumentRegistryShould
 		target.AddDocument(documentMock.Object);
 		var fragmentId = new UriBuilder(documentId) { Fragment = "/foo/bad/fragment" }.Uri;
 
-		var diag = AssertThrowsDiagnostic<CouldNotFindTargetNodeDiagnostic>(() => target.ResolveNode(fragmentId));
+		var diag = AssertThrowsDiagnostic<CouldNotFindTargetNodeDiagnostic>(() => target.ResolveMetadataNode(fragmentId));
 		Assert.Equal(fragmentId, diag.Uri);
 	}
 
@@ -199,31 +160,9 @@ public class DocumentRegistryShould
 		});
 		var fragmentId = new UriBuilder(documentId) { Fragment = "/foo/bar" }.Uri;
 
-		var actual = target.ResolveNode(fragmentId);
+		var actual = target.ResolveMetadataNode(fragmentId);
 
-		Assert.Equal("baz", actual?.GetValue<string>());
-	}
-
-	[Fact]
-	public void Finds_a_fragment_via_relative_fetch()
-	{
-
-		var rootJson = "foo".AsJsonElement();
-		CreateDocument(rootJson, out var documentMock, out var documentId);
-
-		var relativePath = new Uri("/relative/path", UriKind.Relative);
-		var document2Id = new Uri(documentId, relativePath);
-		var rootJson2 = new { foo = new { bar = "baz" } }.ToJsonDocument().RootElement;
-		CreateDocumentWithRetrievalId(rootJson2, document2Id, out var document2Mock);
-		var fragmentId = new Uri("/relative/path#/foo/bar", UriKind.Relative);
-		var target = new DocumentRegistry(DefaultOptions() with
-		{
-			Resolvers = [(uri, relative) => uri == document2Id ? document2Mock.Object : null]
-		});
-
-		var actual = target.ResolveNode(relativePath, documentMock.Object);
-
-		Assert.True(actual.IsEquivalentTo(rootJson2.AsNode()));
+		Assert.Equal("baz", actual.Node?.GetValue<string>());
 	}
 
 	[Fact]
@@ -235,9 +174,9 @@ public class DocumentRegistryShould
 		target.AddDocument(documentMock.Object);
 		var fragmentId = new UriBuilder(documentId) { Fragment = "my_anchor" }.Uri;
 
-		var actual = target.ResolveNode(fragmentId);
+		var actual = target.ResolveMetadataNode(fragmentId);
 
-		Assert.Equal("baz", actual?["bar"]?.GetValue<string>());
+		Assert.Equal("baz", actual.Node?["bar"]?.GetValue<string>());
 	}
 
 	[Fact(Skip = "TODO")]

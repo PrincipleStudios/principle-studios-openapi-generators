@@ -12,7 +12,7 @@ public class UniqueItemsKeyword(string keyword, bool mustBeUnique) : IJsonSchema
 {
 	public static readonly IJsonSchemaKeyword Instance = new JsonSchemaKeyword(Parse);
 
-	private static DiagnosableResult<IJsonSchemaAnnotation> Parse(string keyword, NodeMetadata nodeInfo, JsonSchemaParserOptions options)
+	private static DiagnosableResult<IJsonSchemaAnnotation> Parse(string keyword, ResolvableNode nodeInfo, JsonSchemaParserOptions options)
 	{
 		if (nodeInfo.Node is JsonValue val && val.TryGetValue<bool>(out var value))
 			return DiagnosableResult<IJsonSchemaAnnotation>.Pass(new UniqueItemsKeyword(keyword, value));
@@ -22,7 +22,7 @@ public class UniqueItemsKeyword(string keyword, bool mustBeUnique) : IJsonSchema
 	public string Keyword => keyword;
 	public bool MustBeUnique => mustBeUnique;
 
-	public IEnumerable<DiagnosticBase> Evaluate(NodeMetadata nodeMetadata, AnnotatedJsonSchema context, EvaluationContext evaluationContext)
+	public IEnumerable<DiagnosticBase> Evaluate(ResolvableNode nodeMetadata, AnnotatedJsonSchema context, EvaluationContext evaluationContext)
 	{
 		if (nodeMetadata.Node is not JsonArray array) yield break;
 

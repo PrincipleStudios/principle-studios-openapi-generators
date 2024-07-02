@@ -12,7 +12,7 @@ public class PatternKeyword(string keyword, string pattern) : IJsonSchemaAnnotat
 {
 	public static readonly IJsonSchemaKeyword Instance = new JsonSchemaKeyword(Parse);
 
-	private static DiagnosableResult<IJsonSchemaAnnotation> Parse(string keyword, NodeMetadata nodeInfo, JsonSchemaParserOptions options)
+	private static DiagnosableResult<IJsonSchemaAnnotation> Parse(string keyword, ResolvableNode nodeInfo, JsonSchemaParserOptions options)
 	{
 		if (nodeInfo.Node is JsonValue val && val.TryGetValue<string>(out var s))
 			return DiagnosableResult<IJsonSchemaAnnotation>.Pass(new PatternKeyword(keyword, s));
@@ -24,7 +24,7 @@ public class PatternKeyword(string keyword, string pattern) : IJsonSchemaAnnotat
 	public string Pattern => pattern;
 	public Regex PatternRegex { get; } = new Regex(pattern);
 
-	public IEnumerable<DiagnosticBase> Evaluate(NodeMetadata nodeMetadata, AnnotatedJsonSchema context, EvaluationContext evaluationContext)
+	public IEnumerable<DiagnosticBase> Evaluate(ResolvableNode nodeMetadata, AnnotatedJsonSchema context, EvaluationContext evaluationContext)
 	{
 		if (nodeMetadata.Node is not JsonValue value || !value.TryGetValue<string>(out var s))
 		{
@@ -33,7 +33,7 @@ public class PatternKeyword(string keyword, string pattern) : IJsonSchemaAnnotat
 		}
 
 		if (!PatternRegex.IsMatch(s))
-			yield return new JsonSchemaPatternMismatchDiagnostic(Pattern, evaluationContext.DocumentRegistry.ResolveLocation(nodeMetadata));
+			yield return new JsonSchemaPatternMismatchDiagnostic(Pattern, evaluationContext.DocumentRegistry.ResolveLocation(nodeMetadata.Metadata));
 	}
 }
 

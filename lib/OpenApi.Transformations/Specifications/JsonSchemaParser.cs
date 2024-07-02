@@ -9,7 +9,7 @@ namespace PrincipleStudios.OpenApi.Transformations.Specifications;
 
 public static class JsonSchemaParser
 {
-	internal static DiagnosableResult<JsonSchema> Deserialize(NodeMetadata nodeInfo, JsonSchemaParserOptions options)
+	internal static DiagnosableResult<JsonSchema> Deserialize(ResolvableNode nodeInfo, JsonSchemaParserOptions options)
 	{
 		switch (nodeInfo.Node)
 		{
@@ -18,7 +18,7 @@ public static class JsonSchemaParser
 			case JsonValue v when v.TryGetValue<bool>(out var boolValue):
 				return DiagnosableResult<JsonSchema>.Pass(new JsonSchemaBool(nodeInfo.Id, boolValue));
 			default:
-				return DiagnosableResult<JsonSchema>.Fail(nodeInfo, options.Registry, UnableToParseSchema.Builder());
+				return DiagnosableResult<JsonSchema>.Fail(nodeInfo.Metadata, options.Registry, UnableToParseSchema.Builder());
 		}
 
 		DiagnosableResult<JsonSchema> DeserializeKeywords(JsonObject obj)
@@ -35,7 +35,7 @@ public static class JsonSchemaParser
 			));
 		}
 
-		DiagnosableResult<IJsonSchemaAnnotation> DeserializeKeyword(string keyword, NodeMetadata nodeInfo)
+		DiagnosableResult<IJsonSchemaAnnotation> DeserializeKeyword(string keyword, ResolvableNode nodeInfo)
 		{
 			foreach (var vocabulary in options.Dialect.Vocabularies)
 			{

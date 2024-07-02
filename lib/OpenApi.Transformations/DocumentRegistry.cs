@@ -11,14 +11,26 @@ using System.Text.Json.Nodes;
 namespace PrincipleStudios.OpenApi.Transformations;
 
 public delegate IDocumentReference? DocumentResolver(Uri baseUri, IDocumentReference? currentDocument);
-public record NodeMetadata(Uri Id, JsonNode? Node, IDocumentReference Document)
+public record NodeMetadata(Uri Id, NodeMetadata? Context = null)
 {
 	internal static NodeMetadata FromRoot(IDocumentReference documentReference)
 	{
-		return new NodeMetadata(documentReference.BaseUri, documentReference.RootNode, documentReference);
+		return new NodeMetadata(documentReference.BaseUri);
 	}
+
 }
 
+public class ResolvableNode(NodeMetadata metadata, JsonNode? node)
+{
+	internal static ResolvableNode FromRoot(IDocumentReference documentReference)
+	{
+		return new ResolvableNode(NodeMetadata.FromRoot(documentReference), documentReference.RootNode);
+	}
+
+	public Uri Id => metadata.Id;
+	public NodeMetadata Metadata => metadata;
+	public JsonNode? Node => node;
+}
 
 public class DocumentRegistry(DocumentRegistryOptions registryOptions)
 {
@@ -63,30 +75,49 @@ public class DocumentRegistry(DocumentRegistryOptions registryOptions)
 		return doc != null;
 	}
 
-	public JsonNode? ResolveNode(Uri uri, IDocumentReference? relativeDocument = null) => ResolveMetadata(uri, relativeDocument).Node;
+	public ResolvableNode ResolveMetadataNode(Uri uri, NodeMetadata? context = null) => uri.IsAbsoluteUri
+		? ResolveMetadataNode(new NodeMetadata(uri, context))
+		: throw new InvalidOperationException(Errors.ReceivedRelativeUriWithoutDocument);
 
-	public NodeMetadata ResolveMetadata(Uri uri, IDocumentReference? relativeDocument)
+	public ResolvableNode ResolveMetadataNode(NodeMetadata nodeMetadata)
 	{
+		var relativeDocument = nodeMetadata.Context?.Id is Uri prevUri ? InternalResolveDocumentEntry(prevUri, null).Document : null;
+		var uri = nodeMetadata.Id;
 		var registryEntry = InternalResolveDocumentEntry(uri, relativeDocument);
-		var fullUri = uri.IsAbsoluteUri ? uri
-			: relativeDocument != null ? new Uri(registryEntry.Document.BaseUri, uri)
-			// Throw an exception here because this is a problem with the usage of this class, not data
-			: throw new InvalidOperationException(Errors.ReceivedRelativeUriWithoutDocument);
 
-		return ResolveFragment(fullUri.Fragment, registryEntry);
+		return new ResolvableNode(nodeMetadata, ResolveDocumentFragment(uri.Fragment, registryEntry));
 	}
 
-	private static NodeMetadata ResolveFragment(string fragment, DocumentRegistryEntry registryEntry)
+	private DocumentRegistryEntry ResolveDocumentEntryFromMetadata(NodeMetadata nodeMetadata)
+	{
+		var relativeDocument = nodeMetadata.Context?.Id is Uri prevUri ? InternalResolveDocumentEntry(prevUri, null).Document : null;
+		var uri = nodeMetadata.Id;
+		return InternalResolveDocumentEntry(uri, relativeDocument); ;
+	}
+
+	private IDocumentReference ResolveDocumentFromMetadata(NodeMetadata nodeMetadata)
+	{
+		return ResolveDocumentEntryFromMetadata(nodeMetadata).Document;
+	}
+
+	public JsonNode? ResolveNodeFromMetadata(NodeMetadata nodeMetadata)
+	{
+		var registryEntry = ResolveDocumentEntryFromMetadata(nodeMetadata);
+
+		return ResolveDocumentFragment(nodeMetadata.Id.Fragment, registryEntry);
+	}
+
+	private static JsonNode? ResolveDocumentFragment(string fragment, DocumentRegistryEntry registryEntry)
 	{
 		// fragments must start with `#` or be empty
 		if (fragment is not { Length: > 1 })
-			return new(Id: registryEntry.Document.BaseUri, Node: registryEntry.Document.RootNode, Document: registryEntry.Document);
+			return registryEntry.Document.RootNode;
 
 		var uri = new UriBuilder(registryEntry.Document.BaseUri) { Fragment = fragment }.Uri;
 		if (!ResolvePointer(uri, registryEntry).TryEvaluate(registryEntry.Document.RootNode, out var node))
 			throw new DiagnosticException(CouldNotFindTargetNodeDiagnostic.Builder(uri));
 
-		return new(Id: uri, Node: node, Document: registryEntry.Document);
+		return node;
 	}
 
 	private static JsonPointer ResolvePointer(Uri uri, DocumentRegistryEntry registryEntry)
@@ -137,21 +168,29 @@ public class DocumentRegistry(DocumentRegistryOptions registryOptions)
 
 		return InternalAddDocument(document);
 	}
-	public DiagnosableResult<JsonSchema> ResolveSchema(NodeMetadata node)
+	public DiagnosableResult<JsonSchema> ResolveSchema(ResolvableNode resolved)
 	{
-		var resolved = node.Node == null ? ResolveMetadata(node.Id, node.Document) : node;
 		return JsonSchemaParser.Deserialize(resolved, new(
-			Dialect: resolved.Document.Dialect,
+			Dialect: FindDialectAt(resolved),
 			Registry: this
 		));
 	}
 
+	private IJsonSchemaDialect FindDialectAt(ResolvableNode node)
+	{
+		// TODO: allow $dialect at the node to specify an alternate dialect
+		if (TryGetDocument(node.Id, out var doc))
+			return doc.Dialect;
+		throw new InvalidOperationException(string.Format(Errors.DialectNotFound, node.Id.OriginalString));
+	}
+
+	public Location ResolveLocation(ResolvableNode node) => ResolveLocation(node.Metadata);
+
 	public Location ResolveLocation(NodeMetadata key)
 	{
-		var registryEntry = InternalResolveDocumentEntry(key.Document.BaseUri, null);
-		if (registryEntry.Document != key.Document) throw new ArgumentException(Errors.DocumentMismatch, nameof(key));
-		var fileLocation = key.Document.GetLocation(ResolvePointer(key.Id, registryEntry));
-		return new Location(key.Document.RetrievalUri, fileLocation);
+		var registryEntry = InternalResolveDocumentEntry(key.Id, null);
+		var fileLocation = registryEntry.Document.GetLocation(ResolvePointer(key.Id, registryEntry));
+		return new Location(registryEntry.Document.RetrievalUri, fileLocation);
 	}
 
 	private class DocumentRefVisitor : JsonNodeVisitor

@@ -11,7 +11,7 @@ public class NotKeyword(string keyword, JsonSchema schema) : IJsonSchemaAnnotati
 {
 	public static readonly IJsonSchemaKeyword Instance = new JsonSchemaKeyword(Parse);
 
-	private static DiagnosableResult<IJsonSchemaAnnotation> Parse(string keyword, NodeMetadata nodeInfo, JsonSchemaParserOptions options)
+	private static DiagnosableResult<IJsonSchemaAnnotation> Parse(string keyword, ResolvableNode nodeInfo, JsonSchemaParserOptions options)
 	{
 		var schemaResult = JsonSchemaParser.Deserialize(nodeInfo, options);
 		return schemaResult.Select<IJsonSchemaAnnotation>(schema => new NotKeyword(keyword, schema));
@@ -21,7 +21,7 @@ public class NotKeyword(string keyword, JsonSchema schema) : IJsonSchemaAnnotati
 
 	public JsonSchema Schema => schema;
 
-	public IEnumerable<DiagnosticBase> Evaluate(NodeMetadata nodeMetadata, AnnotatedJsonSchema context, EvaluationContext evaluationContext)
+	public IEnumerable<DiagnosticBase> Evaluate(ResolvableNode nodeMetadata, AnnotatedJsonSchema context, EvaluationContext evaluationContext)
 	{
 		if (!Schema.Evaluate(nodeMetadata, evaluationContext).Any())
 			yield return new MustNotMatch(evaluationContext.DocumentRegistry.ResolveLocation(nodeMetadata));

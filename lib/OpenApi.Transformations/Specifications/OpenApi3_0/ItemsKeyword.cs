@@ -11,7 +11,7 @@ public static class ItemsKeyword
 	// `items` does not allow an array in OpenAPI 3.0, but does in Draft 04 and newer. Can still use the same keyword instance.
 	public static readonly IJsonSchemaKeyword Instance = new JsonSchemaKeyword(Parse);
 
-	private static DiagnosableResult<IJsonSchemaAnnotation> Parse(string keyword, NodeMetadata nodeInfo, JsonSchemaParserOptions options)
+	private static DiagnosableResult<IJsonSchemaAnnotation> Parse(string keyword, ResolvableNode nodeInfo, JsonSchemaParserOptions options)
 	{
 		var schemaResult = JsonSchemaParser.Deserialize(nodeInfo, options);
 		return schemaResult.Select<IJsonSchemaAnnotation>(schema => new Keywords.Draft2020_12Applicator.ItemsKeyword(keyword, schema));

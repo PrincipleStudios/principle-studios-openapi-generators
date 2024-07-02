@@ -10,7 +10,7 @@ public class AdditionalPropertiesKeyword(string keyword, JsonSchema schema) : IJ
 {
 	public static readonly IJsonSchemaKeyword Instance = new JsonSchemaKeyword(Parse);
 
-	private static DiagnosableResult<IJsonSchemaAnnotation> Parse(string keyword, NodeMetadata nodeInfo, JsonSchemaParserOptions options)
+	private static DiagnosableResult<IJsonSchemaAnnotation> Parse(string keyword, ResolvableNode nodeInfo, JsonSchemaParserOptions options)
 	{
 		var schemaResult = JsonSchemaParser.Deserialize(nodeInfo, options);
 		return schemaResult.Select<IJsonSchemaAnnotation>(schema => new AdditionalPropertiesKeyword(keyword, schema));
@@ -20,7 +20,7 @@ public class AdditionalPropertiesKeyword(string keyword, JsonSchema schema) : IJ
 
 	public JsonSchema Schema => schema;
 
-	public IEnumerable<DiagnosticBase> Evaluate(NodeMetadata nodeMetadata, AnnotatedJsonSchema context, EvaluationContext evaluationContext)
+	public IEnumerable<DiagnosticBase> Evaluate(ResolvableNode nodeMetadata, AnnotatedJsonSchema context, EvaluationContext evaluationContext)
 	{
 		if (nodeMetadata.Node is not JsonObject array)
 			yield break;

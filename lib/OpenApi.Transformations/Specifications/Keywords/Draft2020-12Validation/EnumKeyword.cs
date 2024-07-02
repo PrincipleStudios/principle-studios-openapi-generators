@@ -11,7 +11,7 @@ public class EnumKeyword(string keyword, JsonArray values) : IJsonSchemaAnnotati
 {
 	public static readonly IJsonSchemaKeyword Instance = new JsonSchemaKeyword(Parse);
 
-	private static DiagnosableResult<IJsonSchemaAnnotation> Parse(string keyword, NodeMetadata nodeInfo, JsonSchemaParserOptions options)
+	private static DiagnosableResult<IJsonSchemaAnnotation> Parse(string keyword, ResolvableNode nodeInfo, JsonSchemaParserOptions options)
 	{
 		if (nodeInfo.Node is JsonArray values)
 			return DiagnosableResult<IJsonSchemaAnnotation>.Pass(new EnumKeyword(keyword, values));
@@ -21,7 +21,7 @@ public class EnumKeyword(string keyword, JsonArray values) : IJsonSchemaAnnotati
 	public string Keyword => keyword;
 	public JsonArray Values => values;
 
-	public IEnumerable<DiagnosticBase> Evaluate(NodeMetadata nodeMetadata, AnnotatedJsonSchema context, EvaluationContext evaluationContext)
+	public IEnumerable<DiagnosticBase> Evaluate(ResolvableNode nodeMetadata, AnnotatedJsonSchema context, EvaluationContext evaluationContext)
 	{
 		// TODO
 		throw new System.NotImplementedException();

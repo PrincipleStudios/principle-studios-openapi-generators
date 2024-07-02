@@ -18,10 +18,22 @@ public static class UriUtils
 		var pointer = JsonPointer.Create(PointerSegment.Create(pointerStep));
 
 		var resultUri = new UriBuilder(resolution.Id);
-		resultUri.Fragment = resultUri.Fragment + pointer.ToString();
-		return resolution with { Id = resultUri.Uri, Node = pointer.TryEvaluate(resolution.Node, out var resultNode) ? resultNode : null };
+		resultUri.Fragment += pointer.ToString();
+		return resolution with { Id = resultUri.Uri };
 	}
 
 	public static NodeMetadata Navigate(this NodeMetadata resolution, int pointerStep) =>
+		Navigate(resolution, pointerStep.ToString(CultureInfo.InvariantCulture));
+
+	public static ResolvableNode Navigate(this ResolvableNode resolution, string pointerStep)
+	{
+		var pointer = JsonPointer.Create(PointerSegment.Create(pointerStep));
+		return new ResolvableNode(
+			node: pointer.TryEvaluate(resolution.Node, out var resultNode) ? resultNode : null,
+			metadata: resolution.Metadata.Navigate(pointerStep)
+		);
+	}
+
+	public static ResolvableNode Navigate(this ResolvableNode resolution, int pointerStep) =>
 		Navigate(resolution, pointerStep.ToString(CultureInfo.InvariantCulture));
 }

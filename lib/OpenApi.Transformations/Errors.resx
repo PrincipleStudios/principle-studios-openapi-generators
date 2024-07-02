@@ -161,4 +161,8 @@
     <value>Failed to parse embedded schema. This is likely a deployment issue with this version of the package.</value>
     <comment/>
   </data>
+  <data name="DialectNotFound" xml:space="preserve">
+    <value>Dialect could not be termined for the node `{0}`</value>
+    <comment/>
+  </data>
 </root>

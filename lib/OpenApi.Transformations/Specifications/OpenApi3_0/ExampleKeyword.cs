@@ -9,7 +9,7 @@ public class ExampleKeyword(string keyword, JsonNode? example) : IJsonSchemaAnno
 {
 	public static readonly IJsonSchemaKeyword Instance = new JsonSchemaKeyword(Parse);
 
-	private static DiagnosableResult<IJsonSchemaAnnotation> Parse(string keyword, NodeMetadata nodeInfo, JsonSchemaParserOptions options)
+	private static DiagnosableResult<IJsonSchemaAnnotation> Parse(string keyword, ResolvableNode nodeInfo, JsonSchemaParserOptions options)
 	{
 		return DiagnosableResult<IJsonSchemaAnnotation>.Pass(new ExampleKeyword(keyword, nodeInfo.Node));
 	}
@@ -18,7 +18,7 @@ public class ExampleKeyword(string keyword, JsonNode? example) : IJsonSchemaAnno
 
 	public JsonNode? Example => example;
 
-	public IEnumerable<DiagnosticBase> Evaluate(NodeMetadata nodeMetadata, AnnotatedJsonSchema context, EvaluationContext evaluationContext)
+	public IEnumerable<DiagnosticBase> Evaluate(ResolvableNode nodeMetadata, AnnotatedJsonSchema context, EvaluationContext evaluationContext)
 	{
 		yield break;
 	}

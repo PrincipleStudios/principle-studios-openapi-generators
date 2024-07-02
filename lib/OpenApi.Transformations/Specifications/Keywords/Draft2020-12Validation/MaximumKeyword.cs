@@ -11,7 +11,7 @@ public class MaximumKeyword(string keyword, decimal value) : IJsonSchemaAnnotati
 {
 	public static readonly IJsonSchemaKeyword Instance = new JsonSchemaKeyword(Parse);
 
-	private static DiagnosableResult<IJsonSchemaAnnotation> Parse(string keyword, NodeMetadata nodeInfo, JsonSchemaParserOptions options)
+	private static DiagnosableResult<IJsonSchemaAnnotation> Parse(string keyword, ResolvableNode nodeInfo, JsonSchemaParserOptions options)
 	{
 		if (nodeInfo.Node is JsonValue val && val.TryGetValue<decimal>(out var value))
 			return DiagnosableResult<IJsonSchemaAnnotation>.Pass(new MaximumKeyword(keyword, value));
@@ -21,7 +21,7 @@ public class MaximumKeyword(string keyword, decimal value) : IJsonSchemaAnnotati
 	public string Keyword => keyword;
 	public decimal Value => value;
 
-	public IEnumerable<DiagnosticBase> Evaluate(NodeMetadata nodeMetadata, AnnotatedJsonSchema context, EvaluationContext evaluationContext)
+	public IEnumerable<DiagnosticBase> Evaluate(ResolvableNode nodeMetadata, AnnotatedJsonSchema context, EvaluationContext evaluationContext)
 	{
 		// TODO
 		throw new System.NotImplementedException();

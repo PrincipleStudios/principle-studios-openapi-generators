@@ -13,7 +13,7 @@ public class TypeKeyword(string keyword, string value) : IJsonSchemaAnnotation
 {
 	public static readonly IJsonSchemaKeyword Instance = new JsonSchemaKeyword(Parse);
 
-	private static DiagnosableResult<IJsonSchemaAnnotation> Parse(string keyword, NodeMetadata nodeInfo, JsonSchemaParserOptions options)
+	private static DiagnosableResult<IJsonSchemaAnnotation> Parse(string keyword, ResolvableNode nodeInfo, JsonSchemaParserOptions options)
 	{
 		if (nodeInfo.Node is JsonValue val && val.TryGetValue<string>(out var s))
 			return DiagnosableResult<IJsonSchemaAnnotation>.Pass(new TypeKeyword(keyword, s));
@@ -24,7 +24,7 @@ public class TypeKeyword(string keyword, string value) : IJsonSchemaAnnotation
 
 	public string Value => value;
 
-	public IEnumerable<DiagnosticBase> Evaluate(NodeMetadata nodeMetadata, AnnotatedJsonSchema context, EvaluationContext evaluationContext)
+	public IEnumerable<DiagnosticBase> Evaluate(ResolvableNode nodeMetadata, AnnotatedJsonSchema context, EvaluationContext evaluationContext)
 	{
 		switch (value)
 		{

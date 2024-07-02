@@ -13,7 +13,7 @@ public class DiscriminatorKeyword(string keyword, string propertyName, IReadOnly
 	private const string propertyNameField = "propertyName";
 	private const string mappingField = "mapping";
 	public static readonly IJsonSchemaKeyword Instance = new JsonSchemaKeyword(Parse);
-	private static DiagnosableResult<IJsonSchemaAnnotation> Parse(string keyword, NodeMetadata nodeInfo, JsonSchemaParserOptions options)
+	private static DiagnosableResult<IJsonSchemaAnnotation> Parse(string keyword, ResolvableNode nodeInfo, JsonSchemaParserOptions options)
 	{
 		if (nodeInfo.Node is not JsonObject obj || !obj.TryGetPropertyValue(propertyNameField, out var propertyNameNode))
 			return DiagnosableResult<IJsonSchemaAnnotation>.Fail(new UnableToParseKeyword(keyword, options.Registry.ResolveLocation(nodeInfo)));
@@ -37,7 +37,7 @@ public class DiscriminatorKeyword(string keyword, string propertyName, IReadOnly
 	public string PropertyName => propertyName;
 	public IReadOnlyDictionary<string, Uri>? Mapping => mapping;
 
-	public IEnumerable<DiagnosticBase> Evaluate(NodeMetadata nodeMetadata, AnnotatedJsonSchema context, EvaluationContext evaluationContext)
+	public IEnumerable<DiagnosticBase> Evaluate(ResolvableNode nodeMetadata, AnnotatedJsonSchema context, EvaluationContext evaluationContext)
 	{
 		// TODO
 		yield break;

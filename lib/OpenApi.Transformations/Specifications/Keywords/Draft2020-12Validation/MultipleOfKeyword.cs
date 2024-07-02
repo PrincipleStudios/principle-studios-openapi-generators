@@ -11,7 +11,7 @@ public class MultipleOfKeyword(string keyword, decimal value) : IJsonSchemaAnnot
 {
 	public static readonly IJsonSchemaKeyword Instance = new JsonSchemaKeyword(Parse);
 
-	private static DiagnosableResult<IJsonSchemaAnnotation> Parse(string keyword, NodeMetadata nodeInfo, JsonSchemaParserOptions options)
+	private static DiagnosableResult<IJsonSchemaAnnotation> Parse(string keyword, ResolvableNode nodeInfo, JsonSchemaParserOptions options)
 	{
 		if (nodeInfo.Node is JsonValue val && val.TryGetValue<decimal>(out var value) && value > 0)
 			return DiagnosableResult<IJsonSchemaAnnotation>.Pass(new MultipleOfKeyword(keyword, value));
@@ -20,7 +20,7 @@ public class MultipleOfKeyword(string keyword, decimal value) : IJsonSchemaAnnot
 
 	public string Keyword => keyword;
 
-	public IEnumerable<DiagnosticBase> Evaluate(NodeMetadata nodeMetadata, AnnotatedJsonSchema context, EvaluationContext evaluationContext)
+	public IEnumerable<DiagnosticBase> Evaluate(ResolvableNode nodeMetadata, AnnotatedJsonSchema context, EvaluationContext evaluationContext)
 	{
 		// TODO
 		throw new System.NotImplementedException($"Check multiple of {value}");

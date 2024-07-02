@@ -9,7 +9,7 @@ public class FormatKeyword(string keyword, string format) : IJsonSchemaAnnotatio
 {
 	public static readonly IJsonSchemaKeyword Instance = new JsonSchemaKeyword(Parse);
 
-	private static DiagnosableResult<IJsonSchemaAnnotation> Parse(string keyword, NodeMetadata nodeInfo, JsonSchemaParserOptions options)
+	private static DiagnosableResult<IJsonSchemaAnnotation> Parse(string keyword, ResolvableNode nodeInfo, JsonSchemaParserOptions options)
 	{
 		if (nodeInfo.Node is JsonValue val && val.TryGetValue<string>(out var s))
 			return DiagnosableResult<IJsonSchemaAnnotation>.Pass(new FormatKeyword(keyword, s));
@@ -20,7 +20,7 @@ public class FormatKeyword(string keyword, string format) : IJsonSchemaAnnotatio
 
 	public string Format => format;
 
-	public IEnumerable<DiagnosticBase> Evaluate(NodeMetadata nodeMetadata, AnnotatedJsonSchema context, EvaluationContext evaluationContext)
+	public IEnumerable<DiagnosticBase> Evaluate(ResolvableNode nodeMetadata, AnnotatedJsonSchema context, EvaluationContext evaluationContext)
 	{
 		yield break;
 	}
