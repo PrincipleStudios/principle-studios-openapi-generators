@@ -20,16 +20,32 @@ public record NodeMetadata(Uri Id, NodeMetadata? Context = null)
 
 }
 
-public class ResolvableNode(NodeMetadata metadata, JsonNode? node)
+public class ResolvableNode(NodeMetadata metadata, DocumentRegistry registry)
 {
-	internal static ResolvableNode FromRoot(IDocumentReference documentReference)
+	private readonly Lazy<IDocumentReference> documentReference = new(() => registry.ResolveDocumentFromMetadata(metadata));
+	private readonly Lazy<JsonNode?> node = new(() => registry.ResolveNodeFromMetadata(metadata));
+
+	public ResolvableNode(NodeMetadata metadata, DocumentRegistry registry, IDocumentReference document) : this(metadata, registry)
 	{
-		return new ResolvableNode(NodeMetadata.FromRoot(documentReference), documentReference.RootNode);
+		this.documentReference = new Lazy<IDocumentReference>(() => document);
+	}
+
+	public ResolvableNode(NodeMetadata metadata, DocumentRegistry registry, IDocumentReference document, JsonNode? node) : this(metadata, registry)
+	{
+		this.documentReference = new(() => document);
+		this.node = new(() => node);
+	}
+
+	internal static ResolvableNode FromRoot(DocumentRegistry registry, IDocumentReference documentReference)
+	{
+		return new ResolvableNode(NodeMetadata.FromRoot(documentReference), registry, documentReference);
 	}
 
 	public Uri Id => metadata.Id;
+	public DocumentRegistry Registry => registry;
 	public NodeMetadata Metadata => metadata;
-	public JsonNode? Node => node;
+	public IDocumentReference Document => documentReference.Value;
+	public JsonNode? Node => node.Value;
 }
 
 public class DocumentRegistry(DocumentRegistryOptions registryOptions)
@@ -81,11 +97,9 @@ public class DocumentRegistry(DocumentRegistryOptions registryOptions)
 
 	public ResolvableNode ResolveMetadataNode(NodeMetadata nodeMetadata)
 	{
-		var relativeDocument = nodeMetadata.Context?.Id is Uri prevUri ? InternalResolveDocumentEntry(prevUri, null).Document : null;
-		var uri = nodeMetadata.Id;
-		var registryEntry = InternalResolveDocumentEntry(uri, relativeDocument);
+		var registryEntry = ResolveDocumentEntryFromMetadata(nodeMetadata);
 
-		return new ResolvableNode(nodeMetadata, ResolveDocumentFragment(uri.Fragment, registryEntry));
+		return new ResolvableNode(nodeMetadata, this, registryEntry.Document, ResolveDocumentFragment(nodeMetadata.Id.Fragment, registryEntry));
 	}
 
 	private DocumentRegistryEntry ResolveDocumentEntryFromMetadata(NodeMetadata nodeMetadata)
@@ -95,7 +109,7 @@ public class DocumentRegistry(DocumentRegistryOptions registryOptions)
 		return InternalResolveDocumentEntry(uri, relativeDocument); ;
 	}
 
-	private IDocumentReference ResolveDocumentFromMetadata(NodeMetadata nodeMetadata)
+	public IDocumentReference ResolveDocumentFromMetadata(NodeMetadata nodeMetadata)
 	{
 		return ResolveDocumentEntryFromMetadata(nodeMetadata).Document;
 	}

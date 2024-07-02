@@ -29,8 +29,10 @@ public static class UriUtils
 	{
 		var pointer = JsonPointer.Create(PointerSegment.Create(pointerStep));
 		return new ResolvableNode(
-			node: pointer.TryEvaluate(resolution.Node, out var resultNode) ? resultNode : null,
-			metadata: resolution.Metadata.Navigate(pointerStep)
+			metadata: resolution.Metadata.Navigate(pointerStep),
+			registry: resolution.Registry,
+			document: resolution.Document,
+			node: pointer.TryEvaluate(resolution.Node, out var resultNode) ? resultNode : null
 		);
 	}
 

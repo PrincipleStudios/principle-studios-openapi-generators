@@ -29,7 +29,7 @@ internal class OpenApi3_0Parser : SchemaValidatingParser<OpenApiDocument>
 	private static JsonSchema LoadOpenApi3_0Schema(DocumentRegistry registry)
 	{
 		var yamlDocument = registry.TryGetDocument(schemaUri, out var doc) ? doc : LoadSchemaDocumentDirectly(registry);
-		var metadata = ResolvableNode.FromRoot(yamlDocument);
+		var metadata = ResolvableNode.FromRoot(registry, yamlDocument);
 
 		var result = JsonSchemaParser.Deserialize(metadata, new JsonSchemaParserOptions(registry, OpenApi3_0DocumentFactory.OpenApiDialect));
 		return result is DiagnosableResult<JsonSchema>.Success { Value: var schema }

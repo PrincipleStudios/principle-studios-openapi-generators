@@ -113,7 +113,7 @@ internal class OpenApi3_0DocumentFactory : IOpenApiDocumentFactory
 	public OpenApiDocument ConstructDocument(IDocumentReference documentReference)
 	{
 		documentReference.Dialect = OpenApiDialect;
-		return ConstructDocument(ResolvableNode.FromRoot(documentReference));
+		return ConstructDocument(ResolvableNode.FromRoot(documentRegistry, documentReference));
 	}
 
 	private OpenApiDocument ConstructDocument(ResolvableNode key)
