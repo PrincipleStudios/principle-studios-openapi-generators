@@ -7,6 +7,7 @@ using System.Text;
 
 namespace PrincipleStudios.OpenApi.TypeScript
 {
+	[Obsolete("Use TypeScriptSchemaSourceProvider instead")]
 	public static class TypeScriptSchemaSourceResolverExtensions
 	{
 		public static IEnumerable<Templates.ExportStatement> GetExportStatements(this ISchemaSourceResolver<InlineDataType> sourceResolver, IEnumerable<OpenApiSchema> schemasReferenced, TypeScriptSchemaOptions options, string path)
@@ -48,28 +49,6 @@ namespace PrincipleStudios.OpenApi.TypeScript
 						IsType: false
 					);
 					break;
-			}
-		}
-
-		public static string ToNodePath(this string path, string fromPath)
-		{
-			if (path.StartsWith("..")) throw new ArgumentException("Cannot start with ..", nameof(path));
-			if (fromPath.StartsWith("..")) throw new ArgumentException("Cannot start with ..", nameof(fromPath));
-			path = Normalize(path);
-			fromPath = Normalize(fromPath);
-			var pathParts = path.Split('/');
-			pathParts[pathParts.Length - 1] = System.IO.Path.GetFileNameWithoutExtension(pathParts[pathParts.Length - 1]);
-			var fromPathParts = System.IO.Path.GetDirectoryName(fromPath).Split('/');
-			var ignored = pathParts.TakeWhile((p, i) => i < fromPathParts.Length && p == fromPathParts[i]).Count();
-			pathParts = pathParts.Skip(ignored).ToArray();
-			fromPathParts = fromPathParts.Skip(ignored).ToArray();
-			return string.Join("/", Enumerable.Repeat(".", 1).Concat(Enumerable.Repeat("..", fromPathParts.Length).Concat(pathParts)));
-
-			string Normalize(string p)
-			{
-				p = p.Replace('\\', '/');
-				if (p.StartsWith("./")) p = p.Substring(2);
-				return p;
 			}
 		}
 	}

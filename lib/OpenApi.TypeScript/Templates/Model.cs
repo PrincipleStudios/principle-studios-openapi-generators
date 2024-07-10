@@ -21,12 +21,12 @@ namespace PrincipleStudios.OpenApi.TypeScript.Templates
 
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Naming", "CA1724:Type names should not match namespaces")]
 	public record Model(
-		string Description,
+		string? Description,
 		string ClassName
 	);
 
 	public record EnumModel(
-		string Description,
+		string? Description,
 		string ClassName,
 		string ConstName,
 		bool IsString,
@@ -39,7 +39,7 @@ namespace PrincipleStudios.OpenApi.TypeScript.Templates
 	);
 
 	public record ArrayModel(
-		string Description,
+		string? Description,
 		string ClassName,
 		string Item,
 		ImportStatement[] Imports
@@ -48,7 +48,7 @@ namespace PrincipleStudios.OpenApi.TypeScript.Templates
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Naming", "CA1724:Type names should not match namespaces")]
 	public record ObjectModel(
 		ImportStatement[] Imports,
-		string Description,
+		string? Description,
 		string ClassName,
 		string? Parent,
 		ModelVar[] Vars
@@ -56,7 +56,7 @@ namespace PrincipleStudios.OpenApi.TypeScript.Templates
 
 	public record TypeUnionModel(
 		ImportStatement[] Imports,
-		string Description,
+		string? Description,
 		string ClassName,
 		bool AllowAnyOf,
 		string? DiscriminatorProperty,

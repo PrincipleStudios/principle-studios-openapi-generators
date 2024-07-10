@@ -11,13 +11,16 @@ using System.Text.RegularExpressions;
 
 namespace PrincipleStudios.OpenApi.TypeScript
 {
+	[Obsolete("Use TypeScriptImportReference instead")]
 	public record ImportReference(OpenApiSchema Schema, string Member, string File);
+	[Obsolete("Use TypeScriptInlineDefinition instead")]
 	public record InlineDataType(string text, IReadOnlyList<ImportReference> Imports, bool nullable = false, bool isEnumerable = false)
 	{
 		public InlineDataType MakeNullable() =>
 			nullable ? this : new(text + " | null", Imports, nullable: true, isEnumerable: isEnumerable);
 	}
 
+	[Obsolete("Use TypeScriptSchemaSourceProvider instead")]
 	public class TypeScriptSchemaSourceResolver : SchemaSourceResolver<InlineDataType>
 	{
 		private readonly TypeScriptSchemaOptions options;

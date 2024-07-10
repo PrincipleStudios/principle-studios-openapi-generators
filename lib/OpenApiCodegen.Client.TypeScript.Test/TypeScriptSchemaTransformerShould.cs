@@ -71,17 +71,17 @@ namespace PrincipleStudios.OpenApiCodegen.Client.TypeScript
 		{
 			var docRef = GetDocumentReference(documentName);
 
-			var (document, schema) = GetSchema(docRef, path);
+			var (registry, document, schema) = GetSchema(docRef, path);
 			Assert.NotNull(document);
 			Assert.NotNull(schema);
 
-			var target = ConstructTarget(document!, LoadOptions());
+			var target = CreateTarget(LoadOptions(), registry);
 			var actual = target.ProduceSourceEntry(schema!);
 
 			Assert.Equal(expectedInline, actual);
 		}
 
-		private static (OpenApiDocument? document, OpenApiSchema? schema) GetSchema(IDocumentReference docRef, string path)
+		private static (DocumentRegistry registry, OpenApiDocument? document, OpenApiSchema? schema) GetSchema(IDocumentReference docRef, string path)
 		{
 			const string prefix = "/components/schemas/";
 			var openApiReader = new OpenApiStringReader();
@@ -107,11 +107,14 @@ namespace PrincipleStudios.OpenApiCodegen.Client.TypeScript
 		[MemberData(nameof(InlineAssertionData))]
 		public void ConvertToInlineTypes(string documentName, Func<OpenApiDocument, OpenApiSchema> findSchema, string expectedInline)
 		{
-			var document = GetMsDocument(documentName);
+			var registry = DocumentLoader.CreateRegistry();
+			var docResult = GetOpenApiDocument(documentName, registry);
+			Assert.NotNull(docResult.Document);
+			var document = docResult.Document;
 
 			var schema = findSchema(document);
 
-			var target = ConstructTarget(document, LoadOptions());
+			var target = CreateTarget(LoadOptions(), registry);
 			target.EnsureSchemasRegistered(document, OpenApiContext.From(document), new());
 			var inline = target.ToInlineDataType(schema)();
 
@@ -138,9 +141,6 @@ namespace PrincipleStudios.OpenApiCodegen.Client.TypeScript
 				("enum.yaml", (OpenApiDocument doc) => doc.Paths["/rock-paper-scissors"].Operations[OperationType.Post].Responses["200"].Content["application/json"].Schema, "\"player1\" | \"player2\""),
 			}.Select(t => new object[] { t.documentName, t.findSchema, t.expectedInline });
 
-		private static TypeScriptSchemaSourceResolver ConstructTarget(OpenApiDocument document, TypeScriptSchemaOptions options)
-		{
-			return new TypeScriptSchemaSourceResolver(options, new HandlebarsFactory(HandlebarsTemplateProcess.CreateHandlebars), "");
-		}
+		private TypeScriptInlineSchemas CreateTarget(TypeScriptSchemaOptions options, DocumentRegistry registry) => new(options, registry);
 	}
 }
