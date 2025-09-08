@@ -98,7 +98,7 @@ types:
     default: number
   integer:
     formats:
-      int64: BigInt
+      int64: number
       uint64: BigInt
     default: number
   object:
