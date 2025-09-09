@@ -22,6 +22,12 @@ components:
         color:
           type: string
           maxLength: 20
+        optionalColors:
+          type: array
+          maxLength: 3
+          items:
+            type: string
+            maxLength: 20
       required:
         - bark
         - breed

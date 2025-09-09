@@ -41,7 +41,7 @@ namespace PrincipleStudios.OpenApiCodegen.Json.Extensions
 
 				length = stringValue.Length;
 			}
-			else if (!CountPropertyHelper.TryGetCount(value, out length))
+			else if (!OptionalCountPropertyHelper.TryGetCount(value, out length))
 			{
 				return true;
 			}

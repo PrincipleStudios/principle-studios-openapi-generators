@@ -157,10 +157,10 @@ public class AnnotationsYamlShould
 		});
 
 	[Fact]
-	public Task Handle_annotations_response_color_included() =>
+	public Task Handle_annotations_response_colors_included() =>
 		TestSingleRequest<Annotations.DogControllerBase.AddDogActionResult, Annotations.Dog>(new(
 			Annotations.DogControllerBase.AddDogActionResult.Ok(),
-			client => client.PostAsync("/annotations/dog", JsonContent.Create(new { bark = true, breed = "Dachshund", lifeExpectancy = 5, color = "yellow" }))
+			client => client.PostAsync("/annotations/dog", JsonContent.Create(new { bark = true, breed = "Dachshund", lifeExpectancy = 5, color = "yellow", optionalColors = new string[] { "green" } }))
 		)
 		{
 			AssertRequest = (controller, request) =>
@@ -171,6 +171,7 @@ public class AnnotationsYamlShould
 				Assert.Equal("Dachshund", dog?.Breed);
 				Assert.Equal(5, dog?.LifeExpectancy);
 				Assert.Equal("yellow", dog?.Color.GetValueOrDefault());
+				Assert.Contains("green", dog?.OptionalColors.GetValueOrDefault()!.First());
 			},
 			AssertResponseMessage = VerifyResponse(200)
 		});
@@ -190,6 +191,7 @@ public class AnnotationsYamlShould
 				Assert.Equal("Dachshund", dog?.Breed);
 				Assert.Equal(5, dog?.LifeExpectancy);
 				Assert.Equal(default, dog?.Color.GetValueOrDefault());
+				Assert.Empty(dog?.OptionalColors.GetValueOrDefault([])!);
 			},
 			AssertResponseMessage = VerifyResponse(200)
 		});
@@ -214,10 +216,26 @@ public class AnnotationsYamlShould
 		});
 
 	[Fact]
+	public Task Handle_annotations_response_optionalColors_max_length() =>
+		TestSingleRequest<Annotations.DogControllerBase.AddDogActionResult, Annotations.Dog>(new(
+			Annotations.DogControllerBase.AddDogActionResult.Ok(),
+			client => client.PostAsync("/annotations/dog", JsonContent.Create(new { bark = true, breed = "Dachshund", lifeExpectancy = 5, color = "yellow", optionalColors = new string[] { "green", "green", "green", "green" } }))
+		)
+		{
+			AssertRequest = (controller, request) =>
+			{
+				Assert.False(controller.ModelState.IsValid);
+				Assert.Contains("OptionalColors", controller.ModelState.Keys);
+				Assert.Equal(1, controller.ModelState.ErrorCount);
+			},
+			AssertResponseMessage = VerifyResponse(200)
+		});
+
+	[Fact]
 	public Task Handle_annotations_response_color_max_length() =>
 		TestSingleRequest<Annotations.DogControllerBase.AddDogActionResult, Annotations.Dog>(new(
 			Annotations.DogControllerBase.AddDogActionResult.Ok(),
-			client => client.PostAsync("/annotations/dog", JsonContent.Create(new { bark = true, breed = "Dachshund", lifeExpectancy = 5, color = "maxLengthTesttesttesttesttest" }))
+			client => client.PostAsync("/annotations/dog", JsonContent.Create(new { bark = true, breed = "Dachshund", lifeExpectancy = 5, color = "masdfasdfasdfasdfasdfdfddddasdfasdfaasdf" }))
 		)
 		{
 			AssertRequest = (controller, request) =>

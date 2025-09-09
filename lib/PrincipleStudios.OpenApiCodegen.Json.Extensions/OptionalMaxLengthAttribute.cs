@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
 using System.Globalization;
@@ -19,6 +20,7 @@ namespace PrincipleStudios.OpenApiCodegen.Json.Extensions
 		public override bool IsValid(object? value)
 		{
 			EnsureLegalLengths();
+
 
 			if (value == null)
 			{
@@ -44,7 +46,7 @@ namespace PrincipleStudios.OpenApiCodegen.Json.Extensions
 
 				length = stringValue.Length;
 			}
-			else if (!CountPropertyHelper.TryGetCount(value, out length))
+			else if (!OptionalCountPropertyHelper.TryGetCount(value, out length))
 			{
 				return true;
 			}
@@ -63,11 +65,36 @@ namespace PrincipleStudios.OpenApiCodegen.Json.Extensions
 		}
 	}
 
-	internal static class CountPropertyHelper
+	internal static class OptionalCountPropertyHelper
 	{
 		public static bool TryGetCount(object value, out int count)
 		{
 			Debug.Assert(value != null);
+
+			var valueType = value?.GetType();
+			if (valueType?.IsGenericType == true && valueType.GetGenericTypeDefinition() == typeof(Optional<>.Present))
+			{
+				var innerType = valueType.GetGenericArguments()[0];
+				if (!innerType.IsGenericType || innerType.GetGenericTypeDefinition() != typeof(IEnumerable<>))
+				{
+					count = -1;
+					return false;
+				}
+
+				var presentValue = valueType.GetProperty("Value");
+				if (presentValue != null)
+				{
+					var presentObject = presentValue.GetValue(value);
+					if (presentObject is ICollection presentCollection)
+					{
+						count = presentCollection.Count;
+						return true;
+					}
+				}
+
+				count = -1;
+				return false;
+			}
 
 			if (value is ICollection collection)
 			{
@@ -84,7 +111,6 @@ namespace PrincipleStudios.OpenApiCodegen.Json.Extensions
 
 			count = -1;
 			return false;
-
 		}
 	}
 }
