@@ -59,7 +59,7 @@ jobs:
       env:
         VERSION_SUFFIX: ${{ github.ref != 'refs/heads/main' && github.sha || '' }}
     - name: 'Upload Code Coverage'
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: code-coverage
         path: ./lib/*/TestResults/*/coverage.cobertura.xml
