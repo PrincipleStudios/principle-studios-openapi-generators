@@ -19,6 +19,9 @@ components:
           type: integer
           minimum: 5
           maximum: 25
+        color:
+          type: string
+          maxLength: 20
       required:
         - bark
         - breed

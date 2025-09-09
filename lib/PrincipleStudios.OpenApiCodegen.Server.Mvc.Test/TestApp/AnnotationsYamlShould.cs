@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using PrincipleStudios.OpenApiCodegen.Json.Extensions;
 using System.Linq;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
@@ -153,6 +154,79 @@ public class AnnotationsYamlShould
 				Assert.Equal(2, controller.ModelState.ErrorCount);
 			},
 			AssertResponseMessage = VerifyResponse(400)
+		});
+
+	[Fact]
+	public Task Handle_annotations_response_color_included() =>
+		TestSingleRequest<Annotations.DogControllerBase.AddDogActionResult, Annotations.Dog>(new(
+			Annotations.DogControllerBase.AddDogActionResult.Ok(),
+			client => client.PostAsync("/annotations/dog", JsonContent.Create(new { bark = true, breed = "Dachshund", lifeExpectancy = 5, color = "yellow" }))
+		)
+		{
+			AssertRequest = (controller, request) =>
+			{
+				Assert.True(controller.ModelState.IsValid);
+				var dog = Assert.IsType<Annotations.Dog>(request);
+				Assert.Equal(true, dog?.Bark);
+				Assert.Equal("Dachshund", dog?.Breed);
+				Assert.Equal(5, dog?.LifeExpectancy);
+				Assert.Equal("yellow", dog?.Color.GetValueOrDefault());
+			},
+			AssertResponseMessage = VerifyResponse(200)
+		});
+
+	[Fact]
+	public Task Handle_annotations_response_color_optional_valid() =>
+		TestSingleRequest<Annotations.DogControllerBase.AddDogActionResult, Annotations.Dog>(new(
+			Annotations.DogControllerBase.AddDogActionResult.Ok(),
+			client => client.PostAsync("/annotations/dog", JsonContent.Create(new { bark = true, breed = "Dachshund", lifeExpectancy = 5 }))
+		)
+		{
+			AssertRequest = (controller, request) =>
+			{
+				Assert.True(controller.ModelState.IsValid);
+				var dog = Assert.IsType<Annotations.Dog>(request);
+				Assert.Equal(true, dog?.Bark);
+				Assert.Equal("Dachshund", dog?.Breed);
+				Assert.Equal(5, dog?.LifeExpectancy);
+				Assert.Equal(default, dog?.Color.GetValueOrDefault());
+			},
+			AssertResponseMessage = VerifyResponse(200)
+		});
+
+	[Fact]
+	public Task Handle_annotations_response_color_empty_valid() =>
+		TestSingleRequest<Annotations.DogControllerBase.AddDogActionResult, Annotations.Dog>(new(
+			Annotations.DogControllerBase.AddDogActionResult.Ok(),
+			client => client.PostAsync("/annotations/dog", JsonContent.Create(new { bark = true, breed = "Dachshund", lifeExpectancy = 5, color = (string?)null }))
+		)
+		{
+			AssertRequest = (controller, request) =>
+			{
+				Assert.True(controller.ModelState.IsValid);
+				var dog = Assert.IsType<Annotations.Dog>(request);
+				Assert.Equal(true, dog?.Bark);
+				Assert.Equal("Dachshund", dog?.Breed);
+				Assert.Equal(5, dog?.LifeExpectancy);
+				Assert.Null(dog?.Color.GetValueOrDefault());
+			},
+			AssertResponseMessage = VerifyResponse(200)
+		});
+
+	[Fact]
+	public Task Handle_annotations_response_color_max_length() =>
+		TestSingleRequest<Annotations.DogControllerBase.AddDogActionResult, Annotations.Dog>(new(
+			Annotations.DogControllerBase.AddDogActionResult.Ok(),
+			client => client.PostAsync("/annotations/dog", JsonContent.Create(new { bark = true, breed = "Dachshund", lifeExpectancy = 5, color = "maxLengthTesttesttesttesttest" }))
+		)
+		{
+			AssertRequest = (controller, request) =>
+			{
+				Assert.False(controller.ModelState.IsValid);
+				Assert.Contains("Color", controller.ModelState.Keys);
+				Assert.Equal(1, controller.ModelState.ErrorCount);
+			},
+			AssertResponseMessage = VerifyResponse(200)
 		});
 
 }
