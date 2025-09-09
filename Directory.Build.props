@@ -32,7 +32,7 @@
 		<OpenApiJsonExtensionsVersion>0.15.1</OpenApiJsonExtensionsVersion>
 		<OpenApiMvcServerVersion>0.15.1</OpenApiMvcServerVersion>
 		<OpenApiCSharpClientVersion>0.15.1</OpenApiCSharpClientVersion>
-		<OpenApiTypeScriptClientVersion>0.8.0</OpenApiTypeScriptClientVersion>
+		<OpenApiTypeScriptClientVersion>0.9.0</OpenApiTypeScriptClientVersion>
 		<OpenApiTypeScriptRxjsClientVersion>0.7.0</OpenApiTypeScriptRxjsClientVersion>
 		<OpenApiTypeScriptMswVersion>0.7.0</OpenApiTypeScriptMswVersion>
 		<OpenApiTypeScriptFetchVersion>0.7.1</OpenApiTypeScriptFetchVersion>
